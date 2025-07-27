@@ -716,7 +716,11 @@ export const ScatterPlot: React.FC<ScatterPlotProps> = ({
       .style('cursor', 'pointer')
       .on('mouseover', (event, d) => setHovered(d.id))
       .on('mouseout', () => setHovered(null))
-      .on('click', (event, d) => setSelected(d));
+      .on('click', (event, d) => setSelected(d))
+      .on('touchstart', (event, d) => {
+        event.preventDefault(); // Prevent double-tap zoom
+        setSelected(d);
+      });
 
     // Advanced label management
     const labelItems = getLabelMode();
