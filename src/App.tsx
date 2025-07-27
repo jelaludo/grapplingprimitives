@@ -283,10 +283,124 @@ function App() {
         masterLists={dataManagement.masterLists}
         selectedMasterList={dataSource.selectedMasterList}
         setSelectedMasterList={dataSource.updateSelectedMasterList}
-        onConvertToMongo={() => {}} // TODO: Implement
-        onSeedFromLocal={() => {}} // TODO: Implement
-        onCreateBackup={() => {}} // TODO: Implement
-        onRestoreFromBackup={() => {}} // TODO: Implement
+        onConvertToMongo={async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/save-mongo-ready', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          timestamp: new Date().toISOString().replace(/[:.]/g, '-'),
+          nodeCount: dataManagement.concepts.length,
+          categories: dataManagement.categories,
+          concepts: dataManagement.concepts,
+          categoriesContent: `module.exports = ${JSON.stringify(dataManagement.categories, null, 2)};`,
+          conceptsContent: `module.exports = ${JSON.stringify(dataManagement.concepts, null, 2)};`,
+          combinedContent: `export const categories = ${JSON.stringify(dataManagement.categories, null, 2)};\n\nexport const skillsMasterList = ${JSON.stringify(dataManagement.concepts, null, 2)};`
+        })
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        snackbar.showMessage(`MongoDB files created: ${result.files.combined}`);
+      } else {
+        throw new Error('MongoDB conversion failed');
+      }
+    } catch (error) {
+      console.error('MongoDB conversion failed:', error);
+      snackbar.showMessage('Failed to convert to MongoDB format');
+    }
+  }}
+        onSeedFromLocal={async () => {
+    try {
+      // First create a temporary backup of current data
+      const backupResponse = await fetch('http://localhost:3001/api/backup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          categories: dataManagement.categories,
+          concepts: dataManagement.concepts,
+          backupName: null
+        })
+      });
+      
+      if (!backupResponse.ok) throw new Error('Failed to create backup before seeding');
+      
+      const backupResult = await backupResponse.json();
+      const backupFileName = backupResult.files.ts;
+      
+      // Now seed MongoDB with this backup
+      const seedResponse = await fetch('http://localhost:3001/api/seed-from-local', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          localFile: backupFileName,
+          clearExisting: true
+        })
+      });
+      
+      if (seedResponse.ok) {
+        snackbar.showMessage('MongoDB seeded successfully from local data');
+      } else {
+        throw new Error('MongoDB seeding failed');
+      }
+    } catch (error) {
+      console.error('MongoDB seeding failed:', error);
+      snackbar.showMessage('Failed to seed MongoDB');
+    }
+  }}
+        onCreateBackup={async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/backup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          categories: dataManagement.categories,
+          concepts: dataManagement.concepts,
+          backupName: null // Let the server generate the name
+        })
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        snackbar.showMessage(`Backup created: ${result.files.ts} and ${result.files.json}`);
+        // Reload master lists to show the new backup
+        await dataManagement.loadMasterLists();
+      } else {
+        throw new Error('Backup creation failed');
+      }
+    } catch (error) {
+      console.error('Backup creation failed:', error);
+      snackbar.showMessage('Failed to create backup');
+    }
+  }}
+        onRestoreFromBackup={async (backupFile: string) => {
+    try {
+      // Load the backup file
+      const response = await fetch(`http://localhost:3001/backups/BackupsSkillMasterLists/${backupFile}`);
+      if (!response.ok) throw new Error('Failed to load backup file');
+      
+      const data = await response.json();
+      
+      // Update the current data
+      if (data.skillsMasterList && data.categories) {
+        // For local mode, we need to update the state directly
+        if (dataSource.dataSource === 'local') {
+          // This is a bit tricky since we removed automatic saving
+          // We'll need to reload the data with the new file
+          dataSource.updateSelectedMasterList(backupFile);
+          await dataManagement.loadData('local', backupFile);
+          snackbar.showMessage(`Restored from backup: ${backupFile}`);
+        } else {
+          snackbar.showMessage('Restore only works in local mode');
+        }
+      } else {
+        throw new Error('Invalid backup file format');
+      }
+    } catch (error) {
+      console.error('Backup restore failed:', error);
+      snackbar.showMessage('Failed to restore backup');
+    }
+  }}
         // onCreateArticle removed from DevModeToggle - PDF feature disabled
       />
       

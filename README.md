@@ -1,188 +1,121 @@
-# Getting Started with Create React App
+# BJJ Skill Matrix
 
-## 🚨 CRITICAL: File Segregation System
+A React-based visualization tool for mapping Brazilian Jiu-Jitsu techniques across mental/physical and self/opponent axes.
 
-**NEVER mix _id fields between local and production files. This is a fundamental system rule.**
-
-### File Types:
-- **Local Files (JSON)**: `backups/BackupsSkillMasterLists/*.json` - WITH `_id` fields
-- **Production Files (TS)**: `src/data/*.ts` - WITHOUT `_id` fields
-
-### Backup System:
-When creating a backup, the system automatically creates TWO files:
-- JSON file (with `_id`) for local development
-- TS file (no `_id`) for production builds
-
-**The file segregation is intentional and necessary. Don't try to "fix" this by making files consistent.**
-
-📖 **See `FILE_SEGREGATION_SYSTEM.md` for complete documentation.**
-
----
-
-## ⚠️ IMPORTANT: Always Run Commands from the Correct Directory
-
-**CRITICAL:** All npm commands (including `npm start`) must be run from the `bjj-skill-matrix` folder, NOT the parent directory.
+## 🚀 Quick Start
 
 ```bash
-# ❌ WRONG - This will fail
-cd C:\Users\owner\Documents\02_CodingProjects\BJJSkill_MatrixMapping
-npm start
-
-# ✅ CORRECT - This will work
-cd C:\Users\owner\Documents\02_CodingProjects\BJJSkill_MatrixMapping\bjj-skill-matrix
-npm start
-```
-
-**Why?** The `package.json` file is located in the `bjj-skill-matrix` subfolder, not in the parent directory.
-
-### Quick Commands Reference
-```bash
-# Navigate to project directory
-cd C:\Users\owner\Documents\02_CodingProjects\BJJSkill_MatrixMapping\bjj-skill-matrix
+# Install dependencies
+npm install
 
 # Start development server
 npm start
 
-# Kill process on port 3000 (if needed)
-netstat -ano | findstr :3000
-taskkill /PID [PID_NUMBER] /F
-
-# Install dependencies
-npm install
+# Start backend server (in separate terminal)
+node server.js
 ```
 
----
+## 🏗️ Architecture
 
-## Tech Stack
-Frontend: React (TypeScript)
-Backend/API: Vercel Serverless Functions (Node.js, CommonJS)
-Database: MongoDB Atlas (Cloud)
-Deployment: Vercel
+### Frontend (React + TypeScript)
+- **Components:** Modular React components with custom hooks
+- **Visualization:** D3.js scatter plot with interactive nodes
+- **UI:** Material-UI v7 with dark theme
+- **State:** Custom hooks for data management and interactions
 
-Development Workflow
-Local Development:
-Use vercel dev (not npm start) to run both the React frontend and API endpoints locally, mirroring the production environment.
-MongoDB Integration:
-All concepts (nodes) and categories are stored in a MongoDB Atlas database.
-Environment variables (MONGODB_URI, MONGODB_DB) must be set both locally (.env.local) and in Vercel’s dashboard for production.
-Master List Logic:
-The skillsMasterList.js file is used only for initial seeding or as a fallback if the database is empty.
-All live data (nodes and categories) is read from and written to MongoDB.
-Adding, editing, or deleting nodes/categories in the app updates MongoDB directly.
-The master list file is not automatically updated when you make changes in the app.
-To back up or version your data, use the app’s export feature and commit the exported file to GitHub manually.
-Production Deployment
-The app is deployed on Vercel and uses the same MongoDB database as local development (if environment variables are set correctly).
-All changes made in the app are immediately reflected in MongoDB and visible to all users.
-Tip:
-If you update your environment variables in Vercel, always trigger a redeploy for changes to take effect.
+### Backend (Node.js + Express)
+- **API:** RESTful endpoints for data operations
+- **Storage:** Local file system with JSON/TypeScript files
+- **Database:** Optional MongoDB integration
+- **Backup:** Automated backup system with versioning
 
+## 📊 Features
 
+### Core Functionality
+- **Interactive Scatter Plot:** Click to create, hover to view, drag to position
+- **Category Management:** Color-coded technique categories
+- **Search & Filter:** Find techniques by name or description
+- **Responsive Design:** Works on desktop and mobile
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Development Tools
+- **Local Development:** Edit techniques in real-time
+- **Backup System:** Create timestamped backups (.json + .ts)
+- **Data Export:** Convert to MongoDB format
+- **Production Deployment:** Clean TypeScript files for builds
 
-## Available Scripts
+### Academic Integration
+- **Studies Tab:** Curated academic research papers
+- **Articles Tab:** PDF extraction and article management
+- **Reference Links:** Direct links to research sources
 
-In the project directory, you can run:
+## 🔧 Development Workflow
 
-### `npm start`
+### Local Development
+1. **Start servers:** `npm start` + `node server.js`
+2. **Select data source:** Dev Mode → Local Files
+3. **Create techniques:** Click on plot to add nodes
+4. **Save work:** Dev Mode → Create Backup
+5. **Test changes:** Refresh browser to verify persistence
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Production Deployment
+1. **Create backup:** Dev Mode → Create Backup
+2. **Deploy:** Production uses latest .ts file
+3. **Verify:** Check production build loads correctly
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 📁 File Structure
 
-### `npm test`
+```
+bjj-skill-matrix/
+├── src/
+│   ├── components/     # React components
+│   ├── hooks/         # Custom React hooks
+│   ├── types/         # TypeScript definitions
+│   ├── utils/         # Utility functions
+│   └── data/          # Static data files
+├── server.js          # Express backend
+├── api/               # API endpoints
+├── backups/           # Data backups
+└── scripts/           # Utility scripts
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🎯 Data Management
 
-### `npm run build`
+### File Types
+- **Local (.json):** Development with MongoDB compatibility
+- **Production (.ts):** Clean TypeScript for builds
+- **Backups:** Timestamped versions with node counts
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Data Flow
+1. **Local Development:** JSON files with _id fields
+2. **Backup Creation:** Both .json and .ts files
+3. **Production:** Clean .ts files without _id fields
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🛠️ Technical Stack
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Frontend:** React 18, TypeScript, Material-UI v7, D3.js
+- **Backend:** Node.js, Express, File System, MongoDB (optional)
+- **Development:** npm, TypeScript, ESLint, Git
 
-### `npm run eject`
+## 📈 Performance
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- **Optimized Rendering:** D3.js with proper enter/update/exit patterns
+- **Memoized Components:** React hooks for performance
+- **Modular Architecture:** Separated concerns for maintainability
+- **Efficient Data Flow:** Custom hooks for state management
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🚨 Important Notes
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- **Manual Saving:** Changes in local mode require manual backup creation
+- **File Compatibility:** Never mix _id fields between local and production files
+- **Development Only:** Node creation disabled in production builds
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 🤝 Contributing
 
-## Learn More
+1. Fork the repository
+2. Create feature branch
+3. Follow TypeScript and ESLint standards
+4. Test thoroughly before submitting PR
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📄 License
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-
-
-
-Bugs so far:
- Compatibility Issues & Solutions
-Node.js Version
-Issue: Vercel now requires Node.js 18.x for builds and serverless functions. Older versions (16.x) are deprecated, and newer (22.x) are not yet supported by all tools.
-Solution:
-Set "engines": { "node": "18.x" } in package.json.
-Ensure your local development environment matches, or use nvm to switch Node versions.
-Webpack/OpenSSL Error
-Issue:
-Apply to README.md
-This occurs when using Webpack 4 (used by react-scripts@3) on Node 17+ due to OpenSSL 3 changes.
-Solution:
-Set the environment variable NODE_OPTIONS=--openssl-legacy-provider in Vercel.
-Best fix: Upgrade to react-scripts@5, which is fully compatible with Node 18+ and does not require this workaround.
-TypeScript & MongoDB _id Field
-Issue:
-MongoDB adds an _id field to every document.
-TypeScript types (BJJConcept) did not include _id, causing build errors when backup files included it.
-Solution:
-Use a “loose” type for backups:
-Apply to README.md
-Use BJJConceptWithId[] for backup/import/export files, and keep app logic using the strict BJJConcept type.
-Fallback Data Files
-Issue:
-Having both skillsMasterList.js and SkillsMasterList.ts in the repo caused case-sensitivity and import issues, especially on case-sensitive file systems and in CI/CD.
-Solution:
-Remove all fallback logic and references to local master list files.
-Rely solely on MongoDB as the source of truth, with manual backups as needed.
-Environment Variables
-Issue:
-Missing or misconfigured MONGODB_URI and MONGODB_DB in Vercel led to empty data or connection errors.
-Solution:
-Set these variables in both local .env.local and Vercel’s dashboard for all environments.
-General Best Practices
-Always use vercel dev for local development to mirror production.
-Keep backup files (with _id) outside of src to avoid TypeScript build errors.
-Regularly export and commit backups for versioning if needed.
-
-
-#7/15/2025
-Step 1: Start Development
-npm start
-
-Step 2: Switch to Local Mode
-Look for the "Development Mode" section in the sidebar
-Toggle to "Local Development"
-Select your local file (e.g., SkillsMasterListSourceOfTruth07032025.ts)
-
-Step 3: Make Changes
-Add new concepts by clicking on the matrix
-Edit existing concepts
-Add new categories
-All changes save to your local file automatically
-
-Step 4: Convert & Deploy
-Click "Convert to MongoDB" → Downloads MongoDB-ready file
-Click "Seed MongoDB" → Updates your production database
-git add . && git commit -m "Updated master list"
-Deploy your app
+MIT License - see LICENSE file for details

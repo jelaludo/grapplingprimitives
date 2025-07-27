@@ -200,6 +200,8 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
         <DialogContent sx={{ pt: 2 }}>
           <Alert severity="info" sx={{ mb: 2 }}>
             Choose your data source for development and testing.
+            <br />
+            <strong>Note:</strong> In local mode, changes are NOT automatically saved. Use "Create Backup" to save your work.
           </Alert>
 
           {/* Data Source Selection */}
