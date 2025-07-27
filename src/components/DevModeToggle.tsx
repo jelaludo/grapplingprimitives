@@ -1,8 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
-  Card,
-  CardContent,
   Typography,
   Chip,
   Button,
@@ -12,9 +10,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  IconButton,
-  TextField,
-  CircularProgress
+  IconButton
 } from '@mui/material';
 import {
   Storage as StorageIcon,
@@ -22,9 +18,7 @@ import {
   CloudUpload as CloudUploadIcon,
   Warning as WarningIcon,
   Close as CloseIcon,
-  Backup as BackupIcon,
-  Article as ArticleIcon,
-  Description as DescriptionIcon
+  Backup as BackupIcon
 } from '@mui/icons-material';
 
 interface DevModeToggleProps {
@@ -45,8 +39,48 @@ interface DevModeToggleProps {
   onSeedFromLocal?: () => void;
   onCreateBackup?: () => void;
   onRestoreFromBackup?: (backupFile: string) => void;
-  onCreateArticle?: (pdfFile: File, articleTitle: string, extractedText: string) => Promise<void>;
 }
+
+// Pre-computed styles
+const DEV_BUTTON_STYLE = {
+  position: 'fixed' as const,
+  bottom: 20,
+  right: 20,
+  zIndex: 1000,
+  borderRadius: 2,
+  px: 2,
+  py: 1,
+  boxShadow: 3,
+  '&:hover': { boxShadow: 6 }
+} as const;
+
+const DIALOG_PAPER_STYLE = {
+  bgcolor: '#232323',
+  color: '#fff',
+  border: '2px solid #ff9800'
+} as const;
+
+const DIALOG_TITLE_STYLE = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  borderBottom: '1px solid #444'
+} as const;
+
+const BACKUP_LIST_STYLE = {
+  maxHeight: 200,
+  overflowY: 'auto' as const,
+  border: '1px solid #444',
+  borderRadius: 1,
+  p: 1
+} as const;
+
+const BACKUP_ITEM_STYLE = {
+  mb: 1,
+  p: 1,
+  border: '1px solid #333',
+  borderRadius: 1
+} as const;
 
 export const DevModeToggle: React.FC<DevModeToggleProps> = ({
   isDevelopment,
@@ -58,8 +92,7 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
   onConvertToMongo,
   onSeedFromLocal,
   onCreateBackup,
-  onRestoreFromBackup,
-  onCreateArticle
+  onRestoreFromBackup
 }) => {
   const [open, setOpen] = useState(false);
   const [backups, setBackups] = useState<Array<{
@@ -76,29 +109,40 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
     };
   }>>([]);
   const [showBackups, setShowBackups] = useState(false);
-  const [showPdfCreator, setShowPdfCreator] = useState(false);
-  const [selectedPdfFile, setSelectedPdfFile] = useState<File | null>(null);
-  const [articleTitle, setArticleTitle] = useState('');
-  const [isCreatingArticle, setIsCreatingArticle] = useState(false);
-  const [extractedText, setExtractedText] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // PDF functionality disabled
-  const PDF_FEATURE_DISABLED = true;
+  if (!isDevelopment) return null;
 
-  if (!isDevelopment) {
-    return null;
-  }
+  // Event handlers
+  const handleOpen = () => {
+    setOpen(true);
+    loadBackups();
+  };
+
+  const handleClose = () => setOpen(false);
 
   const handleDataSourceChange = (newSource: 'mongodb' | 'local' | 'production') => {
     setDataSource(newSource);
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-    loadBackups();
+  const handleCreateBackup = () => {
+    onCreateBackup?.();
+    handleClose();
   };
-  const handleClose = () => setOpen(false);
+
+  const handleRestoreBackup = (backupFile: string) => {
+    onRestoreFromBackup?.(backupFile);
+    handleClose();
+  };
+
+  const handleConvertToMongo = () => {
+    onConvertToMongo?.();
+    handleClose();
+  };
+
+  const handleSeedFromLocal = () => {
+    onSeedFromLocal?.();
+    handleClose();
+  };
 
   const loadBackups = async () => {
     try {
@@ -112,73 +156,7 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
     }
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type === 'application/pdf') {
-      setSelectedPdfFile(file);
-      setArticleTitle(file.name.replace('.pdf', ''));
-      setExtractedText('');
-    }
-  };
-
-  const handleExtractPdf = async () => {
-    if (!selectedPdfFile) return;
-
-    console.log('🔍 Starting PDF extraction for:', selectedPdfFile.name);
-    setIsCreatingArticle(true);
-    try {
-      const formData = new FormData();
-      formData.append('pdf', selectedPdfFile);
-
-      console.log('🔍 Sending request to server...');
-      const response = await fetch('http://localhost:3001/api/extract-pdf', {
-        method: 'POST',
-        body: formData,
-      });
-
-      console.log('🔍 Server response status:', response.status);
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log('🔍 Extracted text length:', data.text?.length || 0);
-        console.log('🔍 First 100 chars:', data.text?.substring(0, 100));
-        setExtractedText(data.text);
-      } else {
-        const errorData = await response.json();
-        console.error('❌ Failed to extract PDF text:', errorData);
-        setExtractedText(`Failed to extract PDF text: ${errorData.error || 'Unknown error'}`);
-      }
-    } catch (error) {
-      console.error('❌ Error extracting PDF:', error);
-      setExtractedText(`Error extracting PDF text: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    } finally {
-      setIsCreatingArticle(false);
-    }
-  };
-
-  const handleCreateArticle = async () => {
-    if (!selectedPdfFile || !articleTitle.trim() || !extractedText) return;
-
-    setIsCreatingArticle(true);
-    try {
-      await onCreateArticle?.(selectedPdfFile, articleTitle, extractedText);
-      setSelectedPdfFile(null);
-      setArticleTitle('');
-      setExtractedText('');
-      setShowPdfCreator(false);
-    } catch (error) {
-      console.error('Error creating article:', error);
-    } finally {
-      setIsCreatingArticle(false);
-    }
-  };
-
   const selectedFile = masterLists.find(file => file.name === selectedMasterList);
-  
-  // Debug logging
-  console.log('DevModeToggle - masterLists:', masterLists);
-  console.log('DevModeToggle - selectedMasterList:', selectedMasterList);
-  console.log('DevModeToggle - dataSource:', dataSource);
 
   return (
     <>
@@ -188,43 +166,20 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
         color="warning"
         startIcon={<WarningIcon />}
         onClick={handleOpen}
-        sx={{
-          position: 'fixed',
-          bottom: 20,
-          right: 20,
-          zIndex: 1000,
-          borderRadius: 2,
-          px: 2,
-          py: 1,
-          boxShadow: 3,
-          '&:hover': {
-            boxShadow: 6
-          }
-        }}
+        sx={DEV_BUTTON_STYLE}
       >
         Dev MODE
       </Button>
 
-      {/* Dev Mode Popup */}
+      {/* Dev Mode Dialog */}
       <Dialog
         open={open}
         onClose={handleClose}
         maxWidth="sm"
         fullWidth
-        PaperProps={{
-          sx: {
-            bgcolor: '#232323',
-            color: '#fff',
-            border: '2px solid #ff9800'
-          }
-        }}
+        PaperProps={{ sx: DIALOG_PAPER_STYLE }}
       >
-        <DialogTitle sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'space-between',
-          borderBottom: '1px solid #444'
-        }}>
+        <DialogTitle sx={DIALOG_TITLE_STYLE}>
           <Box display="flex" alignItems="center">
             <WarningIcon sx={{ color: '#ff9800', mr: 1 }} />
             <Typography variant="h6" color="warning.main">
@@ -237,10 +192,7 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
               sx={{ ml: 1 }}
             />
           </Box>
-          <IconButton
-            onClick={handleClose}
-            sx={{ color: '#fff' }}
-          >
+          <IconButton onClick={handleClose} sx={{ color: '#fff' }}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -285,43 +237,44 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
             {dataSource === 'production' && 'Using bundled production data'}
           </Typography>
 
-                        {(dataSource === 'local' || dataSource === 'production') && (
+          {/* Master List Selection (Local/Production) */}
+          {(dataSource === 'local' || dataSource === 'production') && (
+            <>
+              {dataSource === 'local' && (
                 <>
-                  {dataSource === 'local' && (
-                    <>
-                      <Divider sx={{ my: 2 }} />
-                      
-                      <Typography variant="subtitle2" gutterBottom>
-                        Master List Selection: (Debug: {masterLists.length} files found)
+                  <Divider sx={{ my: 2 }} />
+                  
+                  <Typography variant="subtitle2" gutterBottom>
+                    Master List Selection:
+                  </Typography>
+                  
+                  {masterLists.length === 0 ? (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        No master list files found. Loading...
                       </Typography>
-                      
-                      {masterLists.length === 0 ? (
-                        <Box sx={{ mb: 2 }}>
-                          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                            No master list files found. Loading... (Check console for debug info)
-                          </Typography>
-                          <Button 
-                            size="small" 
-                            variant="outlined" 
-                            onClick={() => window.location.reload()}
-                          >
-                            Refresh Page
-                          </Button>
-                        </Box>
-                      ) : (
-                        <Box display="flex" gap={1} flexWrap="wrap" mb={2}>
-                          {masterLists.map((file) => (
-                            <Chip
-                              key={file.name}
-                              label={file.displayName}
-                              onClick={() => setSelectedMasterList(file.name)}
-                              color={selectedMasterList === file.name ? 'primary' : 'default'}
-                              variant={selectedMasterList === file.name ? 'filled' : 'outlined'}
-                              size="small"
-                            />
-                          ))}
-                        </Box>
-                      )}
+                      <Button 
+                        size="small" 
+                        variant="outlined" 
+                        onClick={() => window.location.reload()}
+                      >
+                        Refresh Page
+                      </Button>
+                    </Box>
+                  ) : (
+                    <Box display="flex" gap={1} flexWrap="wrap" mb={2}>
+                      {masterLists.map((file) => (
+                        <Chip
+                          key={file.name}
+                          label={file.displayName}
+                          onClick={() => setSelectedMasterList(file.name)}
+                          color={selectedMasterList === file.name ? 'primary' : 'default'}
+                          variant={selectedMasterList === file.name ? 'filled' : 'outlined'}
+                          size="small"
+                        />
+                      ))}
+                    </Box>
+                  )}
 
                   {selectedFile && (
                     <Box mb={2}>
@@ -330,137 +283,103 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
                       </Typography>
                     </Box>
                   )}
-                    </>
-                  )}
+                </>
+              )}
 
+              <Divider sx={{ my: 2 }} />
+
+              {/* Backup Management */}
+              <Typography variant="subtitle2" gutterBottom>
+                Backup Management:
+              </Typography>
+              
+              <Box display="flex" flexDirection="column" gap={2}>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  startIcon={<BackupIcon />}
+                  onClick={handleCreateBackup}
+                  title="Create backup (.json) and push to production (.ts)"
+                >
+                  Create Backup (.json) and Push to Production (.ts)
+                </Button>
+
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  startIcon={<CloudUploadIcon />}
+                  onClick={() => setShowBackups(!showBackups)}
+                  title="View available backups"
+                >
+                  {showBackups ? 'Hide Backups' : 'View Backups'} ({backups.length})
+                </Button>
+
+                {showBackups && backups.length > 0 && (
+                  <Box sx={BACKUP_LIST_STYLE}>
+                    {backups.map((backup) => (
+                      <Box key={backup.name} sx={BACKUP_ITEM_STYLE}>
+                        <Typography variant="caption" display="block" color="text.secondary">
+                          {backup.metadata ? `${backup.metadata.date} ${backup.metadata.time} (${backup.metadata.nodeCount} nodes)` : backup.name}
+                        </Typography>
+                        <Typography variant="body2" sx={{ mb: 1 }}>
+                          {backup.name}
+                        </Typography>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          onClick={() => handleRestoreBackup(backup.name)}
+                          title="Restore from this backup"
+                        >
+                          Restore
+                        </Button>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+
+                {showBackups && backups.length === 0 && (
+                  <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                    No backups found
+                  </Typography>
+                )}
+              </Box>
+
+              {/* Data Conversion (Local only) */}
+              {dataSource === 'local' && (
+                <>
                   <Divider sx={{ my: 2 }} />
 
-                  {/* Backup Management */}
                   <Typography variant="subtitle2" gutterBottom>
-                    Backup Management:
+                    Data Conversion:
                   </Typography>
                   
                   <Box display="flex" flexDirection="column" gap={2}>
-                    <Button
-                      variant="outlined"
-                      fullWidth
-                      startIcon={<BackupIcon />}
-                      onClick={() => {
-                        onCreateBackup?.();
-                        handleClose();
-                      }}
-                      title={dataSource === 'production' ? "Create a backup of the current production data" : "Create a backup of the current master list"}
-                    >
-                      Create Backup
-                    </Button>
-
                     <Button
                       variant="outlined"
                       fullWidth
                       startIcon={<CloudUploadIcon />}
-                      onClick={() => setShowBackups(!showBackups)}
-                      title="View available backups"
+                      onClick={handleConvertToMongo}
+                      title="Convert current local data to MongoDB format"
                     >
-                      {showBackups ? 'Hide Backups' : 'View Backups'} ({backups.length})
+                      Convert to MongoDB
                     </Button>
-
-                    {showBackups && backups.length > 0 && (
-                      <Box sx={{ maxHeight: 200, overflowY: 'auto', border: '1px solid #444', borderRadius: 1, p: 1 }}>
-                        {backups.map((backup) => (
-                          <Box key={backup.name} sx={{ mb: 1, p: 1, border: '1px solid #333', borderRadius: 1 }}>
-                            <Typography variant="caption" display="block" color="text.secondary">
-                              {backup.metadata ? `${backup.metadata.date} ${backup.metadata.time} (${backup.metadata.nodeCount} nodes)` : backup.name}
-                            </Typography>
-                            <Typography variant="body2" sx={{ mb: 1 }}>
-                              {backup.name}
-                            </Typography>
-                            <Button
-                              size="small"
-                              variant="outlined"
-                              onClick={() => {
-                                onRestoreFromBackup?.(backup.name);
-                                handleClose();
-                              }}
-                              title="Restore from this backup"
-                            >
-                              Restore
-                            </Button>
-                          </Box>
-                        ))}
-                      </Box>
-                    )}
-
-                    {showBackups && backups.length === 0 && (
-                      <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
-                        No backups found
-                      </Typography>
-                    )}
-                  </Box>
-
-                  {dataSource === 'local' && (
-                    <>
-                      <Divider sx={{ my: 2 }} />
-
-                      {/* Data Conversion */}
-                      <Typography variant="subtitle2" gutterBottom>
-                        Data Conversion:
-                      </Typography>
-                      
-                      <Box display="flex" flexDirection="column" gap={2}>
-                        <Button
-                          variant="outlined"
-                          fullWidth
-                          startIcon={<CloudUploadIcon />}
-                          onClick={() => {
-                            onConvertToMongo?.();
-                            handleClose();
-                          }}
-                          title="Convert current local data to MongoDB format"
-                        >
-                          Convert to MongoDB
-                        </Button>
-                        
-                        <Button
-                          variant="outlined"
-                          fullWidth
-                          startIcon={<StorageIcon />}
-                          onClick={() => {
-                            onSeedFromLocal?.();
-                            handleClose();
-                          }}
-                          title="Seed MongoDB with current local data"
-                        >
-                          Seed MongoDB
-                        </Button>
-                      </Box>
-                    </>
-                  )}
-
-                  <Divider sx={{ my: 2 }} />
-
-                  {/* PDF Article Creator - DISABLED */}
-                  <Typography variant="subtitle2" gutterBottom>
-                    PDF Article Creator (Disabled):
-                  </Typography>
-                  
-                  <Alert severity="info" sx={{ mb: 2 }}>
-                    PDF conversion feature is temporarily disabled. Will be revisited later.
-                  </Alert>
-                  
-                  <Box display="flex" flexDirection="column" gap={2}>
+                    
                     <Button
                       variant="outlined"
                       fullWidth
-                      startIcon={<ArticleIcon />}
-                      disabled={true}
-                      title="PDF feature temporarily disabled"
+                      startIcon={<StorageIcon />}
+                      onClick={handleSeedFromLocal}
+                      title="Seed MongoDB with current local data"
                     >
-                      PDF Article Creator (Disabled)
+                      Seed MongoDB
                     </Button>
                   </Box>
                 </>
               )}
+            </>
+          )}
 
+          {/* MongoDB Info */}
           {dataSource === 'mongodb' && (
             <>
               <Divider sx={{ my: 2 }} />

@@ -54,21 +54,23 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
         </div>
         
         <div style={{ display: 'flex', gap: 8 }}>
-          <Button 
-            variant="outlined" 
-            size="small"
-            startIcon={<AddIcon />}
-            onClick={onCreateNode}
-            sx={{ 
-              color: 'text.primary',
-              borderColor: 'divider',
-              '&:hover': {
-                borderColor: 'primary.main',
-              }
-            }}
-          >
-            Create Node
-          </Button>
+          {process.env.NODE_ENV === 'development' && (
+            <Button 
+              variant="outlined" 
+              size="small"
+              startIcon={<AddIcon />}
+              onClick={onCreateNode}
+              sx={{ 
+                color: 'text.primary',
+                borderColor: 'divider',
+                '&:hover': {
+                  borderColor: 'primary.main',
+                }
+              }}
+            >
+              Create Node
+            </Button>
+          )}
           <Button 
             variant="outlined" 
             size="small"

@@ -34,18 +34,18 @@ app.use('/data', express.static(path.join(__dirname, 'public/data')));
 // Serve backup files
 app.use('/backups', express.static(path.join(__dirname, 'backups')));
 
-// API endpoint to list master list files
-app.get('/api/master-lists', (req, res) => {
+// API endpoint to get the latest backup only
+app.get('/api/latest-backup', (req, res) => {
+  console.log('LATEST:', Date.now());
+  
   const backupDir = path.resolve(__dirname, 'backups/BackupsSkillMasterLists');
-  console.log('Looking for master list files in:', backupDir);
+  console.log('Looking for latest backup in:', backupDir);
   
   try {
     const files = fs.readdirSync(backupDir)
       .filter(file => file.startsWith('BJJMasterList_') && file.endsWith('.json'))
       .map(file => {
         const stats = fs.statSync(path.join(backupDir, file));
-        
-        // Parse filename to extract date and node count
         const match = file.match(/BJJMasterList_(\d{8})_(\d+)Nodes\.json/);
         const date = match ? match[1] : '';
         const nodeCount = match ? parseInt(match[2]) : 0;
@@ -59,19 +59,14 @@ app.get('/api/master-lists', (req, res) => {
           displayName: `${date} (${nodeCount} nodes)`
         };
       })
-      .sort((a, b) => {
-        // Sort by date (descending), then by node count (descending)
-        if (a.date !== b.date) {
-          return b.date.localeCompare(a.date);
-        }
-        return b.nodeCount - a.nodeCount;
-      });
+      .sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime());
     
-    console.log('Found master list files:', files);
-    res.json({ files, latest: files.length > 0 ? files[0] : null });
+    const latest = files.length > 0 ? files[0] : null;
+    console.log('Latest backup:', latest ? latest.name : 'none');
+    res.json(latest);
   } catch (error) {
-    console.error('Failed to list master list files:', error);
-    res.status(500).json({ error: 'Failed to list master list files', details: error.message });
+    console.error('Failed to get latest backup:', error);
+    res.status(500).json({ error: 'Failed to get latest backup', details: error.message });
   }
 });
 

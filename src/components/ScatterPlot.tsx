@@ -61,21 +61,18 @@ const ConceptModal: React.FC<ModalProps & { side?: 'left' | 'right' | 'center', 
   const [customCategoryYAxisBottom, setCustomCategoryYAxisBottom] = useState('Self');
   const [customCategoryYAxisTop, setCustomCategoryYAxisTop] = useState('Opponent');
 
+  // Initialize form state when modal opens or concept changes
   React.useEffect(() => {
-    console.log('ConceptModal - Modal opened with concept:', concept);
-    setEdit(concept);
-    setCategoryMode('select');
-    setCustomCategory('');
-    setCustomCategoryXAxisLeft('Mental');
-    setCustomCategoryXAxisRight('Physical');
-    setCustomCategoryYAxisBottom('Self');
-    setCustomCategoryYAxisTop('Opponent');
+    if (concept) {
+      setEdit(concept);
+      setCategoryMode('select');
+      setCustomCategory('');
+      setCustomCategoryXAxisLeft('Mental');
+      setCustomCategoryXAxisRight('Physical');
+      setCustomCategoryYAxisBottom('Self');
+      setCustomCategoryYAxisTop('Opponent');
+    }
   }, [concept]);
-
-  // Debug logging for edit state changes
-  React.useEffect(() => {
-    console.log('ConceptModal - Edit state changed:', edit);
-  }, [edit]);
 
   // Calculate dynamic offset
   const horizontalOffset = containerSize ? Math.max(0.15 * containerSize.width, 180) : 300;
