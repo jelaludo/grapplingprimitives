@@ -303,7 +303,7 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
                   onClick={handleCreateBackup}
                   title="Create backup (.json) and push to production (.ts)"
                 >
-                  Create Backup (.json) and Push to Production (.ts)
+                  Create Backup & Push to Production
                 </Button>
 
                 <Button

@@ -90,6 +90,8 @@ export const ScatterPlot: React.FC<ScatterPlotProps> = ({
     pingedNodeId,
     pingStep,
     labelItems,
+    setHovered,
+    setSelected,
   });
 
   // Memoized event handlers

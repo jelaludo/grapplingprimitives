@@ -44,7 +44,8 @@
     "test:pdf": "node test-pdf-extraction.js",
     "test:server": "node test-server-endpoints.js",
     "debug:masterlist": "node debug-master-list.js",
-    "test:save-article": "node test-save-article.js"
+    "test:save-article": "node test-save-article.js",
+    "update:latest": "node scripts/updateToLatestBackup.js"
   },
   "eslintConfig": {
     "extends": [

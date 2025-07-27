@@ -203,7 +203,53 @@ export const skillsMasterList: BJJConcept[] = ${JSON.stringify(concepts, null, 2
     const jsonFilePath = path.join(backupDir, `${fileName}.json`);
     fs.writeFileSync(jsonFilePath, jsonContent);
     
+    // Copy TS file to src/data/ for production
+    const srcDataDir = path.resolve(__dirname, 'src/data');
+    if (!fs.existsSync(srcDataDir)) {
+      fs.mkdirSync(srcDataDir, { recursive: true });
+    }
+    
+    const srcDataFilePath = path.join(srcDataDir, `${fileName}.ts`);
+    fs.writeFileSync(srcDataFilePath, tsContent);
+    
+    // Update dynamicMasterList.ts to point to the latest file
+    const dynamicMasterListPath = path.join(srcDataDir, 'dynamicMasterList.ts');
+    const dynamicMasterListContent = `// Dynamic master list import - auto-generated
+// This file is automatically updated to import the latest master list
+// Last updated: ${now.toISOString()}
+// Source file: ${fileName}.ts
+
+// Import the latest master list data
+export { categories, skillsMasterList } from './${fileName}';
+
+// Re-export the interface for type safety
+export interface BJJConcept {
+  id: string;
+  concept: string;
+  description: string;
+  short_description: string;
+  category: string;
+  color: string;
+  axis_self_opponent: number;
+  axis_mental_physical: number;
+  brightness: number;
+  size: number;
+}
+
+// Export metadata about the current file
+export const masterListMetadata = {
+  fileName: '${fileName}.ts',
+  nodeCount: ${nodeCount},
+  date: '${dateStr}',
+  lastModified: '${now.toISOString()}'
+};
+`;
+    
+    fs.writeFileSync(dynamicMasterListPath, dynamicMasterListContent);
+    
     console.log(`Backup created: ${fileName}.ts and ${fileName}.json`);
+    console.log(`Production updated: ${fileName}.ts copied to src/data/`);
+    console.log(`Dynamic master list updated to point to: ${fileName}.ts`);
     
     res.json({
       success: true,
@@ -212,7 +258,8 @@ export const skillsMasterList: BJJConcept[] = ${JSON.stringify(concepts, null, 2
         json: `${fileName}.json`
       },
       nodeCount,
-      timestamp: now.toISOString()
+      timestamp: now.toISOString(),
+      productionUpdated: true
     });
     
   } catch (error) {

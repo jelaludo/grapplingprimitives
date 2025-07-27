@@ -362,7 +362,7 @@ function App() {
       
       if (response.ok) {
         const result = await response.json();
-        snackbar.showMessage(`Backup created: ${result.files.ts} and ${result.files.json}`);
+        snackbar.showMessage(`Backup created: ${result.files.ts} and ${result.files.json} - Production updated!`);
         // Reload master lists to show the new backup
         await dataManagement.loadMasterLists();
       } else {

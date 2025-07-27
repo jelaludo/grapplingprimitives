@@ -12,6 +12,8 @@ interface UseD3ScatterPlotProps {
   pingedNodeId: string | null;
   pingStep: number;
   labelItems: LabelItem[];
+  setHovered: (id: string | null) => void;
+  setSelected: (concept: BJJConcept) => void;
 }
 
 export const useD3ScatterPlot = ({
@@ -24,6 +26,8 @@ export const useD3ScatterPlot = ({
   pingedNodeId,
   pingStep,
   labelItems,
+  setHovered,
+  setSelected,
 }: UseD3ScatterPlotProps) => {
   // Memoize grid data to prevent unnecessary recalculations
   const gridData = useMemo(() => {
@@ -164,7 +168,14 @@ export const useD3ScatterPlot = ({
       .attr('r', d => d.r)
       .attr('opacity', d => d.opacity)
       .attr('stroke', d => d.stroke)
-      .attr('stroke-width', d => d.strokeWidth);
+      .attr('stroke-width', d => d.strokeWidth)
+      .on('mouseover', (event, d) => setHovered(d.id))
+      .on('mouseout', () => setHovered(null))
+      .on('click', (event, d) => setSelected(d))
+      .on('touchstart', (event, d) => {
+        event.preventDefault();
+        setSelected(d);
+      });
 
     // Draw labels with optimized data binding
     const labelItemsGroup = svg.append('g').attr('class', 'concept-labels');
@@ -187,18 +198,5 @@ export const useD3ScatterPlot = ({
       .attr('font-size', item => item.fontSize)
       .text(item => item.d.concept);
 
-  }, [svgRef, gridData, axisLabels, nodeData, labelItems]);
-
-  // Return event handlers for nodes
-  const getNodeEventHandlers = (setHovered: (id: string | null) => void, setSelected: (concept: BJJConcept) => void) => ({
-    onMouseOver: (event: MouseEvent, d: BJJConcept) => setHovered(d.id),
-    onMouseOut: () => setHovered(null),
-    onClick: (event: MouseEvent, d: BJJConcept) => setSelected(d),
-    onTouchStart: (event: TouchEvent, d: BJJConcept) => {
-      event.preventDefault();
-      setSelected(d);
-    }
-  });
-
-  return { getNodeEventHandlers };
+  }, [svgRef, gridData, axisLabels, nodeData, labelItems, setHovered, setSelected]);
 }; 

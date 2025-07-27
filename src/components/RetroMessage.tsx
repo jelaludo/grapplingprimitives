@@ -38,7 +38,7 @@ const OVERLAY_STYLE = {
   justifyContent: 'center',
   pointerEvents: 'none' as const,
   fontFamily: 'monospace',
-  fontSize: '1.5rem',
+  fontSize: '1.3rem',
 };
 
 const CONTAINER_STYLE = {
@@ -49,7 +49,7 @@ const CONTAINER_STYLE = {
   paddingLeft: '60px',
   textAlign: 'left' as const,
   fontFamily: 'monospace',
-  fontSize: '1.5rem',
+  fontSize: '1.3rem',
   lineHeight: '1.5',
   overflow: 'hidden' as const,
 };
