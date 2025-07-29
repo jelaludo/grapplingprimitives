@@ -15,8 +15,8 @@ interface LoginResponse {
 // Dynamic API base URL for production vs development
 const getApiBaseUrl = () => {
   if (process.env.NODE_ENV === 'production') {
-    // In production, use relative URLs or environment variable
-    return process.env.REACT_APP_API_URL || '';
+    // In production, use relative URLs (Vercel serverless functions)
+    return '';
   }
   return 'http://localhost:3001';
 };
