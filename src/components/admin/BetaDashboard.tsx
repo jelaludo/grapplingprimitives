@@ -113,6 +113,39 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
     }
   };
 
+  const handleExportToProduction = async () => {
+    try {
+      setError(null);
+      
+      // Get current development passwords
+      const devPasswords = localStorage.getItem('devBetaPasswords');
+      if (!devPasswords) {
+        setError('No development passwords found');
+        return;
+      }
+
+      const passwordList = JSON.parse(devPasswords);
+      
+      // Call the export API
+      const response = await fetch('http://localhost:3001/api/export-passwords', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passwords: passwordList })
+      });
+
+      if (!response.ok) {
+        throw new Error('Export failed');
+      }
+
+      const result = await response.json();
+      setShowExportDialog(false);
+      alert(`✅ Passwords exported successfully!\n\n${result.message}\n\nRemember to commit and push the changes to deploy to production.`);
+      
+    } catch (error) {
+      setError('Failed to export passwords: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    }
+  };
+
   if (loading) {
     return (
       <Box sx={{ p: 3 }}>
@@ -250,10 +283,7 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
         <DialogActions>
           <Button onClick={() => setShowExportDialog(false)}>Cancel</Button>
           <Button 
-            onClick={() => {
-              // TODO: Implement export functionality
-              setShowExportDialog(false);
-            }} 
+            onClick={handleExportToProduction} 
             variant="contained"
             color="warning"
           >

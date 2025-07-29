@@ -1,11 +1,12 @@
 import { useEffect, useMemo } from 'react';
 import * as d3 from 'd3';
-import { BJJConcept, LabelItem, Category } from '../types/concepts';
+import { BJJConcept, LabelItem, Category, AxisLabel } from '../types/concepts';
 
 interface UseD3ScatterPlotProps {
   svgRef: React.RefObject<SVGSVGElement | null>;
   concepts: BJJConcept[];
   categories: Category[];
+  selectedCategories: string[];
   size: { width: number; height: number };
   margin: number;
   hovered: string | null;
@@ -21,6 +22,7 @@ export const useD3ScatterPlot = ({
   svgRef,
   concepts,
   categories,
+  selectedCategories,
   size,
   margin,
   hovered,
@@ -53,28 +55,55 @@ export const useD3ScatterPlot = ({
     return { verticalLines, horizontalLines };
   }, [size, margin]);
 
-  // Memoize axis labels based on categories
+  // Memoize axis labels based on selected categories
   const axisLabels = useMemo(() => {
     const { width, height } = size;
     
-    // Get the first category's axis labels as default
-    const defaultCategory = categories[0];
-    const xAxisLeft = defaultCategory?.xAxis?.left || 'Mental';
-    const xAxisRight = defaultCategory?.xAxis?.right || 'Physical';
-    const yAxisBottom = defaultCategory?.yAxis?.bottom || 'Self';
-    const yAxisTop = defaultCategory?.yAxis?.top || 'Opponent';
+    // Get axis labels from selected categories
+    let xAxisLeft = 'Opponent';
+    let xAxisRight = 'Self';
+    let yAxisBottom = 'Physical';
+    let yAxisTop = 'Mental';
+    
+    // If specific categories are selected, use their axis labels
+    if (selectedCategories.length > 0) {
+      const selectedCategoryData = categories.find(cat => 
+        selectedCategories.includes(cat.name)
+      );
+      
+      if (selectedCategoryData?.xAxis) {
+        xAxisLeft = selectedCategoryData.xAxis.left;
+        xAxisRight = selectedCategoryData.xAxis.right;
+      }
+      
+      if (selectedCategoryData?.yAxis) {
+        yAxisBottom = selectedCategoryData.yAxis.bottom;
+        yAxisTop = selectedCategoryData.yAxis.top;
+      }
+    } else {
+      // If no categories selected, use the first category as default
+      const defaultCategory = categories[0];
+      if (defaultCategory?.xAxis) {
+        xAxisLeft = defaultCategory.xAxis.left;
+        xAxisRight = defaultCategory.xAxis.right;
+      }
+      if (defaultCategory?.yAxis) {
+        yAxisBottom = defaultCategory.yAxis.bottom;
+        yAxisTop = defaultCategory.yAxis.top;
+      }
+    }
     
     return {
       xAxis: [
-        { x: margin, y: height - 10, text: xAxisLeft, anchor: 'start' },
-        { x: width - margin, y: height - 10, text: xAxisRight, anchor: 'end' }
+        { x: margin, y: height / 2, text: xAxisLeft, anchor: 'middle' as const, rotation: -90 },
+        { x: width - margin, y: height / 2, text: xAxisRight, anchor: 'middle' as const, rotation: 90 }
       ],
       yAxis: [
-        { x: 10, y: height - margin, text: yAxisBottom, anchor: 'start' },
-        { x: 10, y: margin, text: yAxisTop, anchor: 'start' }
+        { x: 10, y: height - margin, text: yAxisBottom, anchor: 'start' as const },
+        { x: 10, y: margin, text: yAxisTop, anchor: 'start' as const }
       ]
     };
-  }, [size, margin, categories]);
+  }, [size, margin, categories, selectedCategories]);
 
   // Memoize node data with computed properties
   const nodeData = useMemo(() => {
@@ -144,6 +173,7 @@ export const useD3ScatterPlot = ({
       .attr('x', d => d.x)
       .attr('y', d => d.y)
       .attr('text-anchor', d => d.anchor)
+      .attr('transform', d => d.rotation ? `rotate(${d.rotation}, ${d.x}, ${d.y})` : '')
       .attr('fill', '#666')
       .attr('font-size', '12px')
       .text(d => d.text);

@@ -84,6 +84,7 @@ export const ScatterPlot: React.FC<ScatterPlotProps> = ({
     svgRef,
     concepts,
     categories,
+    selectedCategories,
     size,
     margin,
     hovered,

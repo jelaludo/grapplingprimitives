@@ -698,6 +698,9 @@ app.post('/api/save-article', (req, res) => {
   }
 });
 
+// Export passwords to production
+app.post('/api/export-passwords', require('./api/export-passwords'));
+
 // ===== BETA AUTHENTICATION ENDPOINTS =====
 
 // Load beta passwords from local file or environment variables

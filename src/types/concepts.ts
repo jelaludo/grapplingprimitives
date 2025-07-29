@@ -43,4 +43,12 @@ export interface ModalPosition {
 export interface ContainerSize {
   width: number;
   height: number;
+}
+
+export interface AxisLabel {
+  x: number;
+  y: number;
+  text: string;
+  anchor: 'start' | 'middle' | 'end';
+  rotation?: number;
 } 
