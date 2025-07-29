@@ -2949,6 +2949,18 @@
       "axis_mental_physical": 0.31,
       "brightness": 1,
       "size": 1
+    },
+    {
+      "id": "BJJ-201",
+      "concept": "Active Denial",
+      "description": "Deny whatever tool they currently need to either escape or threaten you.",
+      "short_description": "",
+      "category": "Grappling Primitives",
+      "color": "#848a94",
+      "axis_self_opponent": 0.49,
+      "axis_mental_physical": 0.09,
+      "brightness": 1,
+      "size": 1
     }
   ]
 }

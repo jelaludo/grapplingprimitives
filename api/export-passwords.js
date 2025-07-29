@@ -46,7 +46,7 @@ module.exports = async function handler(req, res) {
 
     res.status(200).json({
       success: true,
-      message: `Successfully exported ${hashedPasswords.length} passwords to production.\n\nPasswords exported:\n${hashedPasswords.map(pw => `- ${pw.password}`).join('\n')}\n\nFile updated: src/data/productionPasswords.json`,
+      message: `✅ Successfully exported ${hashedPasswords.length} passwords to production.\n\nFile updated: src/data/productionPasswords.json\n\nRemember to commit and push the changes to deploy to production.`,
       exportedCount: hashedPasswords.length,
       filePath: 'src/data/productionPasswords.json'
     });

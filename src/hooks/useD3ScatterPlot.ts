@@ -99,8 +99,8 @@ export const useD3ScatterPlot = ({
         { x: width - margin, y: height / 2, text: xAxisRight, anchor: 'middle' as const, rotation: 90 }
       ],
       yAxis: [
-        { x: 10, y: height - margin, text: yAxisBottom, anchor: 'start' as const },
-        { x: 10, y: margin, text: yAxisTop, anchor: 'start' as const }
+        { x: width / 2, y: height - margin, text: yAxisBottom, anchor: 'middle' as const, rotation: 0 },
+        { x: width / 2, y: margin, text: yAxisTop, anchor: 'middle' as const, rotation: 0 }
       ]
     };
   }, [size, margin, categories, selectedCategories]);
