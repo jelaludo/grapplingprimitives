@@ -18,14 +18,15 @@ const OVERLAY_STYLE = {
 const CONTAINER_STYLE = {
   pointerEvents: 'auto' as const,
   width: '600px',
-  height: '250px', // Increased height for submit button
+  minHeight: '320px', // Changed to minHeight for flexibility
   padding: '20px',
   paddingLeft: '40px', // More to the left
   textAlign: 'left' as const,
   fontFamily: 'monospace',
   fontSize: '1.1rem', // Smaller font
   lineHeight: '1.5',
-  overflow: 'hidden' as const,
+  display: 'flex',
+  flexDirection: 'column' as const,
 };
 
 const PROMPT_STYLE = {
@@ -38,11 +39,13 @@ const PROMPT_STYLE = {
 
 const MESSAGE_STYLE = {
   color: '#0f0',
-  height: 'calc(200px - 2.75em - 40px)',
+  flex: 1, // Take remaining space
   wordWrap: 'break-word' as const,
   whiteSpace: 'pre-wrap' as const,
   lineHeight: '1.5',
-  overflow: 'hidden' as const
+  display: 'flex',
+  flexDirection: 'column' as const,
+  justifyContent: 'space-between' as const
 };
 
 const INPUT_STYLE = {
@@ -147,7 +150,7 @@ const BetaLogin: React.FC<BetaLoginProps> = ({ onLogin, onCancel }) => {
                 </form>
                 
                 {/* Mobile-friendly submit button */}
-                <div style={{ marginTop: '1em', textAlign: 'center' }}>
+                <div style={{ marginTop: 'auto', textAlign: 'center', paddingTop: '1em' }}>
                   <button
                     type="button"
                     onClick={(e) => handleSubmit(e as any)}
