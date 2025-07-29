@@ -705,12 +705,17 @@ const loadBetaPasswords = () => {
   try {
     if (fs.existsSync(BETA_PASSWORDS_FILE)) {
       const data = JSON.parse(fs.readFileSync(BETA_PASSWORDS_FILE, 'utf8'));
-      return data.passwords || [];
+      return {
+        passwords: data.passwords || [],
+        hashes: data.hashes || [],
+        version: data.version || '1.0',
+        bcryptRounds: data.bcryptRounds || 12
+      };
     }
-    return [];
+    return { passwords: [], hashes: [], version: '1.0', bcryptRounds: 12 };
   } catch (error) {
     console.error('Failed to load beta passwords:', error);
-    return [];
+    return { passwords: [], hashes: [], version: '1.0', bcryptRounds: 12 };
   }
 };
 
@@ -725,14 +730,18 @@ app.post('/api/auth/beta-login', async (req, res) => {
 
     const betaPasswords = loadBetaPasswords();
     
-    // Check if password matches any beta password
-    const isValidPassword = betaPasswords.includes(password);
+    // Check if password matches any beta password (plain text for dev)
+    const passwordIndex = betaPasswords.passwords.indexOf(password);
+    const isValidPassword = passwordIndex !== -1;
     
     if (isValidPassword) {
-      // Generate JWT token
+      // Get the corresponding hash for JWT
+      const passwordHash = betaPasswords.hashes[passwordIndex];
+      
+      // Generate JWT token with hash (not plain password)
       const token = jwt.sign(
         { 
-          password: password,
+          passwordHash: passwordHash,
           timestamp: Date.now(),
           ip: req.ip || req.connection.remoteAddress
         },
@@ -795,14 +804,14 @@ app.get('/api/auth/beta-verify', (req, res) => {
 
     const decoded = jwt.verify(token, JWT_SECRET);
     
-    // Check if the password is still valid
+    // Check if the password hash is still valid (no need to check current password list)
     const betaPasswords = loadBetaPasswords();
-    const isPasswordStillValid = betaPasswords.includes(decoded.password);
+    const isPasswordHashValid = betaPasswords.hashes.includes(decoded.passwordHash);
     
-    if (isPasswordStillValid) {
+    if (isPasswordHashValid) {
       res.json({ success: true, message: 'Token valid' });
     } else {
-      res.status(401).json({ success: false, error: 'Password no longer valid' });
+      res.status(401).json({ success: false, error: 'Password hash no longer valid' });
     }
   } catch (error) {
     console.error('Beta token verification error:', error);
@@ -821,12 +830,98 @@ app.get('/api/admin/beta-passwords', (req, res) => {
     const passwords = loadBetaPasswords();
     res.json({
       success: true,
-      passwords: passwords,
-      count: passwords.length
+      passwords: passwords.passwords,
+      hashes: passwords.hashes,
+      count: passwords.passwords.length,
+      version: passwords.version
     });
   } catch (error) {
     console.error('Failed to get beta passwords:', error);
     res.status(500).json({ error: 'Failed to get beta passwords' });
+  }
+});
+
+// Add new password endpoint (dev mode only)
+app.post('/api/admin/beta-passwords', async (req, res) => {
+  try {
+    // Check if we're in development mode
+    if (process.env.NODE_ENV !== 'development') {
+      return res.status(403).json({ error: 'Admin access only available in development' });
+    }
+
+    const { password } = req.body;
+    if (!password || typeof password !== 'string') {
+      return res.status(400).json({ error: 'Valid password required' });
+    }
+
+    const betaPasswords = loadBetaPasswords();
+    
+    // Check if password already exists
+    if (betaPasswords.passwords.includes(password)) {
+      return res.status(400).json({ error: 'Password already exists' });
+    }
+
+    // Hash the password with bcrypt
+    const saltRounds = betaPasswords.bcryptRounds || 12;
+    const hash = await bcrypt.hash(password, saltRounds);
+
+    // Add to arrays
+    betaPasswords.passwords.push(password);
+    betaPasswords.hashes.push(hash);
+    betaPasswords.lastUpdated = new Date().toISOString();
+
+    // Save back to file
+    fs.writeFileSync(BETA_PASSWORDS_FILE, JSON.stringify(betaPasswords, null, 2));
+
+    console.log(`Added new beta password: ${password}`);
+    res.json({
+      success: true,
+      message: 'Password added successfully',
+      count: betaPasswords.passwords.length
+    });
+  } catch (error) {
+    console.error('Failed to add beta password:', error);
+    res.status(500).json({ error: 'Failed to add password' });
+  }
+});
+
+// Delete password endpoint (dev mode only)
+app.delete('/api/admin/beta-passwords/:password', async (req, res) => {
+  try {
+    // Check if we're in development mode
+    if (process.env.NODE_ENV !== 'development') {
+      return res.status(403).json({ error: 'Admin access only available in development' });
+    }
+
+    const { password } = req.params;
+    if (!password) {
+      return res.status(400).json({ error: 'Password required' });
+    }
+
+    const betaPasswords = loadBetaPasswords();
+    const passwordIndex = betaPasswords.passwords.indexOf(password);
+    
+    if (passwordIndex === -1) {
+      return res.status(404).json({ error: 'Password not found' });
+    }
+
+    // Remove from both arrays
+    betaPasswords.passwords.splice(passwordIndex, 1);
+    betaPasswords.hashes.splice(passwordIndex, 1);
+    betaPasswords.lastUpdated = new Date().toISOString();
+
+    // Save back to file
+    fs.writeFileSync(BETA_PASSWORDS_FILE, JSON.stringify(betaPasswords, null, 2));
+
+    console.log(`Deleted beta password: ${password}`);
+    res.json({
+      success: true,
+      message: 'Password deleted successfully',
+      count: betaPasswords.passwords.length
+    });
+  } catch (error) {
+    console.error('Failed to delete beta password:', error);
+    res.status(500).json({ error: 'Failed to delete password' });
   }
 });
 

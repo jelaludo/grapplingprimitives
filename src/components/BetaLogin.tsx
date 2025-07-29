@@ -57,6 +57,13 @@ const INPUT_STYLE = {
   WebkitTextSecurity: 'disc' // Shows asterisks for password input
 };
 
+const PLACEHOLDER_STYLE = {
+  color: '#666',
+  fontFamily: 'monospace',
+  fontSize: '1.1rem',
+  fontStyle: 'italic'
+};
+
 const ERROR_STYLE = {
   color: '#f44336',
   fontSize: '1rem',
@@ -103,6 +110,17 @@ const BetaLogin: React.FC<BetaLoginProps> = ({ onLogin, onCancel }) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       onCancel();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit(e as any);
+    }
+  };
+
+  // Handle mobile keyboard "Done" button
+  const handleInputComplete = (e: React.FormEvent) => {
+    // For mobile, when user finishes typing and taps "Done"
+    if (password.trim()) {
+      handleSubmit(e);
     }
   };
 
@@ -112,20 +130,43 @@ const BetaLogin: React.FC<BetaLoginProps> = ({ onLogin, onCancel }) => {
         <div style={PROMPT_STYLE}>{PROMPT}</div>
         <div style={MESSAGE_STYLE}>
           {MESSAGE}
-          <form onSubmit={handleSubmit} style={{ marginTop: '0.5em' }}>
-            <input
-              ref={inputRef}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={handleKeyDown}
-              style={INPUT_STYLE}
-              placeholder=""
-              disabled={isLoading}
-              autoFocus
-            />
-            {isLoading && <span style={{ color: '#0f0' }}>|</span>}
-          </form>
+                          <form onSubmit={handleSubmit} style={{ marginTop: '0.5em' }}>
+                  <input
+                    ref={inputRef}
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    onBlur={handleInputComplete}
+                    style={INPUT_STYLE}
+                    placeholder="Enter password"
+                    disabled={isLoading}
+                    autoFocus
+                  />
+                  {isLoading && <span style={{ color: '#0f0' }}>|</span>}
+                </form>
+                
+                {/* Mobile-friendly submit button */}
+                <div style={{ marginTop: '1em', textAlign: 'center' }}>
+                  <button
+                    type="button"
+                    onClick={(e) => handleSubmit(e as any)}
+                    disabled={isLoading || !password.trim()}
+                    style={{
+                      background: 'transparent',
+                      border: '1px solid #0f0',
+                      color: '#0f0',
+                      fontFamily: 'monospace',
+                      fontSize: '1rem',
+                      padding: '8px 16px',
+                      cursor: 'pointer',
+                      borderRadius: '4px',
+                      opacity: (!password.trim() || isLoading) ? 0.5 : 1
+                    }}
+                  >
+                    {isLoading ? 'Logging in...' : 'Submit'}
+                  </button>
+                </div>
           {error && <div style={ERROR_STYLE}>{error}</div>}
         </div>
       </div>

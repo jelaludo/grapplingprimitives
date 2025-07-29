@@ -43,7 +43,11 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
   const loadPasswords = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3001/api/admin/beta-passwords');
+      const apiBaseUrl = process.env.NODE_ENV === 'production' 
+        ? (process.env.REACT_APP_API_URL || '') 
+        : 'http://localhost:3001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/admin/beta-passwords`);
       
       if (response.ok) {
         const data = await response.json();
@@ -65,11 +69,26 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
     if (!newPassword.trim()) return;
 
     try {
-      // Add to local state
-      setPasswords(prev => [...prev, newPassword.trim()]);
-      setNewPassword('');
-      setShowAddDialog(false);
-      setError(null); // Clear any previous errors
+      const apiBaseUrl = process.env.NODE_ENV === 'production' 
+        ? (process.env.REACT_APP_API_URL || '') 
+        : 'http://localhost:3001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/admin/beta-passwords`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: newPassword.trim() })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPasswords(prev => [...prev, newPassword.trim()]); // Update local state
+        setNewPassword('');
+        setShowAddDialog(false);
+        setError(null);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Failed to add password');
+      }
     } catch (error) {
       setError('Failed to add password');
     }
@@ -77,9 +96,21 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
 
   const handleDeletePassword = async (password: string) => {
     try {
-      // Remove from local state
-      setPasswords(prev => prev.filter(p => p !== password));
-      setError(null); // Clear any previous errors
+      const apiBaseUrl = process.env.NODE_ENV === 'production' 
+        ? (process.env.REACT_APP_API_URL || '') 
+        : 'http://localhost:3001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/admin/beta-passwords/${encodeURIComponent(password)}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        setPasswords(prev => prev.filter(p => p !== password)); // Update local state
+        setError(null);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Failed to delete password');
+      }
     } catch (error) {
       setError('Failed to delete password');
     }

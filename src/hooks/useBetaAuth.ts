@@ -12,6 +12,15 @@ interface LoginResponse {
   error?: string;
 }
 
+// Dynamic API base URL for production vs development
+const getApiBaseUrl = () => {
+  if (process.env.NODE_ENV === 'production') {
+    // In production, use relative URLs or environment variable
+    return process.env.REACT_APP_API_URL || '';
+  }
+  return 'http://localhost:3001';
+};
+
 export const useBetaAuth = () => {
   const [authState, setAuthState] = useState<BetaAuthState>({
     isAuthenticated: false,
@@ -32,7 +41,8 @@ export const useBetaAuth = () => {
 
   const verifyToken = useCallback(async (token: string) => {
     try {
-      const response = await fetch('http://localhost:3001/api/auth/beta-verify', {
+      const apiBaseUrl = getApiBaseUrl();
+      const response = await fetch(`${apiBaseUrl}/api/auth/beta-verify`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -70,7 +80,8 @@ export const useBetaAuth = () => {
     setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/beta-login', {
+      const apiBaseUrl = getApiBaseUrl();
+      const response = await fetch(`${apiBaseUrl}/api/auth/beta-login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -112,7 +123,8 @@ export const useBetaAuth = () => {
       const token = localStorage.getItem('betaToken');
       if (token) {
         // Notify backend of logout
-        await fetch('http://localhost:3001/api/auth/beta-logout', {
+        const apiBaseUrl = getApiBaseUrl();
+        await fetch(`${apiBaseUrl}/api/auth/beta-logout`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
