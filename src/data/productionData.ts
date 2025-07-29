@@ -8,7 +8,7 @@ import { categories, skillsMasterList, masterListMetadata } from './dynamicMaste
 // Export the data directly
 export const getProductionData = async () => {
   try {
-    console.log('✅ Loading production data from BJJMasterList_20250716_144Nodes');
+    console.log('✅ Loading production data from dynamic master list');
     console.log('📊 Categories count:', categories?.length || 0);
     console.log('📊 Concepts count:', skillsMasterList?.length || 0);
     

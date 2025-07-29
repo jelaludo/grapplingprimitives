@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import productionPasswords from '../../data/productionPasswords.json';
 import {
   Box,
   Typography,
@@ -20,8 +21,8 @@ import { Delete as DeleteIcon, Add as AddIcon, Visibility as VisibilityIcon } fr
 
 interface BetaPassword {
   password: string;
-  usageCount?: number;
-  lastUsed?: string;
+  usageCount: number;
+  lastUsed: string;
 }
 
 interface BetaDashboardProps {
@@ -29,12 +30,13 @@ interface BetaDashboardProps {
 }
 
 export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
-  const [passwords, setPasswords] = useState<string[]>([]);
+  const [passwords, setPasswords] = useState<BetaPassword[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
 
   useEffect(() => {
     loadPasswords();
@@ -43,23 +45,30 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
   const loadPasswords = async () => {
     try {
       setLoading(true);
-      const apiBaseUrl = process.env.NODE_ENV === 'production' 
-        ? (process.env.REACT_APP_API_URL || '') 
-        : 'http://localhost:3001';
       
-      const response = await fetch(`${apiBaseUrl}/api/admin/beta-passwords`);
-      
-      if (response.ok) {
-        const data = await response.json();
-        setPasswords(data.passwords || []);
+      if (process.env.NODE_ENV === 'production') {
+        // Production: show passwords from productionPasswords.json
+        const prodPasswords = productionPasswords.passwords.map(pw => ({
+          password: pw.password,
+          usageCount: pw.usageCount || 0,
+          lastUsed: pw.lastUsed || 'Never'
+        }));
+        setPasswords(prodPasswords);
       } else {
-        // Fallback: try to load from local file
-        console.log('API failed, trying local file...');
-        setPasswords(['kimura42']); // Default password
+        // Development: try to load from local storage or use default
+        const storedPasswords = localStorage.getItem('devBetaPasswords');
+        if (storedPasswords) {
+          setPasswords(JSON.parse(storedPasswords));
+        } else {
+          // Initialize with default password
+          const defaultPasswords = [{ password: 'kimura42', usageCount: 0, lastUsed: 'Never' }];
+          localStorage.setItem('devBetaPasswords', JSON.stringify(defaultPasswords));
+          setPasswords(defaultPasswords);
+        }
       }
     } catch (error) {
-      console.log('Network error, using default password...');
-      setPasswords(['kimura42']); // Default password
+      console.log('Error loading passwords, using default...');
+      setPasswords([{ password: 'kimura42', usageCount: 0, lastUsed: 'Never' }]);
     } finally {
       setLoading(false);
     }
@@ -69,26 +78,19 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
     if (!newPassword.trim()) return;
 
     try {
-      const apiBaseUrl = process.env.NODE_ENV === 'production' 
-        ? (process.env.REACT_APP_API_URL || '') 
-        : 'http://localhost:3001';
-      
-      const response = await fetch(`${apiBaseUrl}/api/admin/beta-passwords`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: newPassword.trim() })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setPasswords(prev => [...prev, newPassword.trim()]); // Update local state
-        setNewPassword('');
-        setShowAddDialog(false);
-        setError(null);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Failed to add password');
+      if (process.env.NODE_ENV === 'production') {
+        setError('Cannot add passwords in production mode');
+        return;
       }
+
+      // Development: add to local storage
+      const newPasswordObj = { password: newPassword.trim(), usageCount: 0, lastUsed: 'Never' };
+      const updatedPasswords = [...passwords, newPasswordObj];
+      localStorage.setItem('devBetaPasswords', JSON.stringify(updatedPasswords));
+      setPasswords(updatedPasswords);
+      setNewPassword('');
+      setShowAddDialog(false);
+      setError(null);
     } catch (error) {
       setError('Failed to add password');
     }
@@ -96,21 +98,16 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
 
   const handleDeletePassword = async (password: string) => {
     try {
-      const apiBaseUrl = process.env.NODE_ENV === 'production' 
-        ? (process.env.REACT_APP_API_URL || '') 
-        : 'http://localhost:3001';
-      
-      const response = await fetch(`${apiBaseUrl}/api/admin/beta-passwords/${encodeURIComponent(password)}`, {
-        method: 'DELETE'
-      });
-
-      if (response.ok) {
-        setPasswords(prev => prev.filter(p => p !== password)); // Update local state
-        setError(null);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Failed to delete password');
+      if (process.env.NODE_ENV === 'production') {
+        setError('Cannot delete passwords in production mode');
+        return;
       }
+
+      // Development: remove from local storage
+      const updatedPasswords = passwords.filter(p => p.password !== password);
+      localStorage.setItem('devBetaPasswords', JSON.stringify(updatedPasswords));
+      setPasswords(updatedPasswords);
+      setError(null);
     } catch (error) {
       setError('Failed to delete password');
     }
@@ -143,18 +140,29 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
         <Typography variant="h6">
           Active Passwords ({passwords.length})
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setShowAddDialog(true)}
-          size="small"
-        >
-          Add Password
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          {process.env.NODE_ENV === 'development' && (
+            <Button
+              variant="outlined"
+              onClick={() => setShowExportDialog(true)}
+              size="small"
+            >
+              Export to Production
+            </Button>
+          )}
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setShowAddDialog(true)}
+            size="small"
+          >
+            Add Password
+          </Button>
+        </Box>
       </Box>
 
       <List>
-        {passwords.map((password, index) => (
+        {passwords.map((passwordObj, index) => (
           <ListItem
             key={index}
             sx={{
@@ -168,7 +176,7 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
               primary={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography variant="body1" sx={{ fontFamily: 'monospace' }}>
-                    {showPassword ? password : '•'.repeat(password.length)}
+                    {showPassword ? passwordObj.password : '•'.repeat(passwordObj.password.length)}
                   </Typography>
                   <IconButton
                     size="small"
@@ -181,14 +189,14 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
               }
               secondary={
                 <Typography variant="caption" color="text.secondary">
-                  Password #{index + 1}
+                  Password #{index + 1} • Used {passwordObj.usageCount} times • Last: {passwordObj.lastUsed}
                 </Typography>
               }
             />
             <ListItemSecondaryAction>
               <IconButton
                 edge="end"
-                onClick={() => handleDeletePassword(password)}
+                onClick={() => handleDeletePassword(passwordObj.password)}
                 sx={{ color: '#f44336' }}
               >
                 <DeleteIcon />
@@ -228,10 +236,38 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
         </DialogActions>
       </Dialog>
 
+      {/* Export to Production Dialog */}
+      <Dialog open={showExportDialog} onClose={() => setShowExportDialog(false)} maxWidth="md" fullWidth>
+        <DialogTitle>Export Passwords to Production</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            This will generate bcrypt hashes for all development passwords and create a new productionPasswords.json file.
+          </Typography>
+          <Typography variant="body2" color="warning.main">
+            ⚠️ Warning: This will overwrite the current production passwords file.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowExportDialog(false)}>Cancel</Button>
+          <Button 
+            onClick={() => {
+              // TODO: Implement export functionality
+              setShowExportDialog(false);
+            }} 
+            variant="contained"
+            color="warning"
+          >
+            Export
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Box sx={{ mt: 3, pt: 2, borderTop: '1px solid #333' }}>
         <Typography variant="body2" color="text.secondary">
-          Note: This dashboard is only available in development mode.
-          Passwords are stored locally and not synced to production.
+          {process.env.NODE_ENV === 'development' 
+            ? 'Development mode: Passwords stored in localStorage. Use "Export to Production" to sync with production.'
+            : 'Production mode: Passwords loaded from productionPasswords.json (read-only).'
+          }
         </Typography>
       </Box>
     </Box>

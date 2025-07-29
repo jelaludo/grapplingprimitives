@@ -1,10 +1,11 @@
 import { useEffect, useMemo } from 'react';
 import * as d3 from 'd3';
-import { BJJConcept, LabelItem } from '../types/concepts';
+import { BJJConcept, LabelItem, Category } from '../types/concepts';
 
 interface UseD3ScatterPlotProps {
   svgRef: React.RefObject<SVGSVGElement | null>;
   concepts: BJJConcept[];
+  categories: Category[];
   size: { width: number; height: number };
   margin: number;
   hovered: string | null;
@@ -19,6 +20,7 @@ interface UseD3ScatterPlotProps {
 export const useD3ScatterPlot = ({
   svgRef,
   concepts,
+  categories,
   size,
   margin,
   hovered,
@@ -51,20 +53,28 @@ export const useD3ScatterPlot = ({
     return { verticalLines, horizontalLines };
   }, [size, margin]);
 
-  // Memoize axis labels
+  // Memoize axis labels based on categories
   const axisLabels = useMemo(() => {
     const { width, height } = size;
+    
+    // Get the first category's axis labels as default
+    const defaultCategory = categories[0];
+    const xAxisLeft = defaultCategory?.xAxis?.left || 'Mental';
+    const xAxisRight = defaultCategory?.xAxis?.right || 'Physical';
+    const yAxisBottom = defaultCategory?.yAxis?.bottom || 'Self';
+    const yAxisTop = defaultCategory?.yAxis?.top || 'Opponent';
+    
     return {
       xAxis: [
-        { x: margin, y: height - 10, text: 'Mental', anchor: 'start' },
-        { x: width - margin, y: height - 10, text: 'Physical', anchor: 'end' }
+        { x: margin, y: height - 10, text: xAxisLeft, anchor: 'start' },
+        { x: width - margin, y: height - 10, text: xAxisRight, anchor: 'end' }
       ],
       yAxis: [
-        { x: 10, y: height - margin, text: 'Self', anchor: 'start' },
-        { x: 10, y: margin, text: 'Opponent', anchor: 'start' }
+        { x: 10, y: height - margin, text: yAxisBottom, anchor: 'start' },
+        { x: 10, y: margin, text: yAxisTop, anchor: 'start' }
       ]
     };
-  }, [size, margin]);
+  }, [size, margin, categories]);
 
   // Memoize node data with computed properties
   const nodeData = useMemo(() => {

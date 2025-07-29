@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
+import bcrypt from 'bcryptjs';
 
-// Simple frontend-only authentication
-// In production, we'll use a hardcoded hash for the default password
-const PRODUCTION_PASSWORD_HASH = '$2a$12$rNod8ETf39GcFVsUuNlZhevwrdqIJJcxhsekoGh1dgA0Ib.eqCpnm'; // kimura42
+// Import production passwords
+import productionPasswords from '../data/productionPasswords.json';
 
 export const useBetaAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -33,13 +33,22 @@ export const useBetaAuth = () => {
     setError(null);
 
     try {
-      // Simple password check - in production, compare with hardcoded hash
+      // Production: check against bcrypt hashes from productionPasswords.json
       if (process.env.NODE_ENV === 'production') {
-        // For production, we'll do a simple string comparison for now
-        // This is not secure but works for basic beta access
-        const isValid = password === 'kimura42';
+        let isValid = false;
+        let matchedPassword = null;
         
-        if (isValid) {
+        // Check against all production passwords
+        for (const pw of productionPasswords.passwords) {
+          const isMatch = await bcrypt.compare(password, pw.hash);
+          if (isMatch) {
+            isValid = true;
+            matchedPassword = pw;
+            break;
+          }
+        }
+        
+        if (isValid && matchedPassword) {
           // Create a simple JWT-like token
           const tokenData = {
             password: password,
@@ -56,21 +65,29 @@ export const useBetaAuth = () => {
           return false;
         }
       } else {
-        // Development mode - use local passwords
-        const response = await fetch('http://localhost:3001/api/auth/beta-login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password })
-        });
-
-        const data = await response.json();
+        // Development mode - check against local storage passwords
+        const storedPasswords = localStorage.getItem('devBetaPasswords');
+        const devPasswords = storedPasswords ? JSON.parse(storedPasswords) : [{ password: 'kimura42', usageCount: 0, lastUsed: 'Never' }];
         
-        if (data.success) {
-          localStorage.setItem('betaAuthToken', data.token);
+        const matchingPassword = devPasswords.find((p: { password: string; usageCount: number; lastUsed: string }) => p.password === password);
+        if (matchingPassword) {
+          // Update usage stats
+          matchingPassword.usageCount += 1;
+          matchingPassword.lastUsed = new Date().toLocaleString();
+          localStorage.setItem('devBetaPasswords', JSON.stringify(devPasswords));
+          // Create a simple JWT-like token
+          const tokenData = {
+            password: password,
+            exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24 hours
+            iat: Math.floor(Date.now() / 1000)
+          };
+          
+          const token = btoa(JSON.stringify(tokenData));
+          localStorage.setItem('betaAuthToken', token);
           setIsAuthenticated(true);
           return true;
         } else {
-          setError(data.error || 'Login failed');
+          setError('Invalid password');
           return false;
         }
       }
@@ -98,12 +115,9 @@ export const useBetaAuth = () => {
         const tokenData = JSON.parse(atob(token));
         return tokenData.exp && tokenData.exp > Date.now() / 1000;
       } else {
-        // Development mode - verify with backend
-        const response = await fetch('http://localhost:3001/api/auth/beta-verify', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await response.json();
-        return data.success;
+        // Development mode - simple token validation
+        const tokenData = JSON.parse(atob(token));
+        return tokenData.exp && tokenData.exp > Date.now() / 1000;
       }
     } catch {
       return false;
