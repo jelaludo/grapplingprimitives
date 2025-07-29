@@ -700,8 +700,20 @@ app.post('/api/save-article', (req, res) => {
 
 // ===== BETA AUTHENTICATION ENDPOINTS =====
 
-// Load beta passwords from local file
+// Load beta passwords from local file or environment variables
 const loadBetaPasswords = () => {
+  // Check if we're in production (environment variables)
+  if (process.env.NODE_ENV === 'production' && process.env.BETA_PASSWORD_HASHES) {
+    const hashes = process.env.BETA_PASSWORD_HASHES.split(',').map(h => h.trim());
+    return {
+      passwords: [], // No plain passwords in production
+      hashes: hashes,
+      version: '1.0',
+      bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS) || 12
+    };
+  }
+  
+  // Development mode - load from local file
   try {
     if (fs.existsSync(BETA_PASSWORDS_FILE)) {
       const data = JSON.parse(fs.readFileSync(BETA_PASSWORDS_FILE, 'utf8'));
@@ -730,14 +742,29 @@ app.post('/api/auth/beta-login', async (req, res) => {
 
     const betaPasswords = loadBetaPasswords();
     
-    // Check if password matches any beta password (plain text for dev)
-    const passwordIndex = betaPasswords.passwords.indexOf(password);
-    const isValidPassword = passwordIndex !== -1;
+    let isValidPassword = false;
+    let passwordHash = null;
     
-    if (isValidPassword) {
-      // Get the corresponding hash for JWT
-      const passwordHash = betaPasswords.hashes[passwordIndex];
-      
+    if (process.env.NODE_ENV === 'production') {
+      // Production: compare against bcrypt hashes
+      for (const hash of betaPasswords.hashes) {
+        const isMatch = await bcrypt.compare(password, hash);
+        if (isMatch) {
+          isValidPassword = true;
+          passwordHash = hash;
+          break;
+        }
+      }
+    } else {
+      // Development: check plain text passwords
+      const passwordIndex = betaPasswords.passwords.indexOf(password);
+      isValidPassword = passwordIndex !== -1;
+      if (isValidPassword) {
+        passwordHash = betaPasswords.hashes[passwordIndex];
+      }
+    }
+    
+    if (isValidPassword && passwordHash) {
       // Generate JWT token with hash (not plain password)
       const token = jwt.sign(
         { 

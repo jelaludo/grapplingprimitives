@@ -18,7 +18,7 @@ const OVERLAY_STYLE = {
 const CONTAINER_STYLE = {
   pointerEvents: 'auto' as const,
   width: '600px',
-  height: '200px',
+  height: '250px', // Increased height for submit button
   padding: '20px',
   paddingLeft: '40px', // More to the left
   textAlign: 'left' as const,
