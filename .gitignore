@@ -24,3 +24,6 @@ yarn-debug.log*
 yarn-error.log*
 
 .vercel
+
+# Beta authentication - local passwords file
+src/data/betaPasswords.json

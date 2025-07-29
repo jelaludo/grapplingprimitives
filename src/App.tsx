@@ -8,6 +8,7 @@ import { DevModeToggle } from './components/DevModeToggle';
 import { HelpDialog } from './components/HelpDialog';
 import Articles from './components/Articles';
 import { Studies } from './components/Studies';
+import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,6 +19,7 @@ import {
   useDataSource, 
   useSnackbar, 
   useViewManagement,
+  useBetaAuth,
   type BJJConcept 
 } from './hooks';
 
@@ -54,6 +56,7 @@ function App() {
   
 
   const [helpDialogOpen, setHelpDialogOpen] = useState(false);
+  const [showBetaLogin, setShowBetaLogin] = useState(false);
   
   const [isDevelopment] = useState(process.env.NODE_ENV === 'development');
   
@@ -62,6 +65,7 @@ function App() {
   const dataSource = useDataSource(isDevelopment);
   const snackbar = useSnackbar();
   const viewManagement = useViewManagement();
+  const betaAuth = useBetaAuth();
 
   // Load data when source changes
   useEffect(() => {
@@ -90,6 +94,24 @@ function App() {
       snackbar.showMessage(`Loaded master list: ${dataSource.selectedMasterList}`);
     }
   }, [dataSource.dataSource, dataSource.selectedMasterList]);
+
+  // Handle beta authentication
+  useEffect(() => {
+    // If user is not authenticated and tries to access protected content, show login
+    if (!betaAuth.isLoading && !betaAuth.isAuthenticated && viewManagement.currentView !== 'matrix') {
+      setShowBetaLogin(true);
+    }
+  }, [betaAuth.isAuthenticated, betaAuth.isLoading, viewManagement.currentView]);
+
+  // Handle first click - show beta login if not authenticated
+  const handleFirstInteraction = () => {
+    if (!betaAuth.isAuthenticated) {
+      setShowBetaLogin(true);
+      return;
+    }
+    // If authenticated, proceed to matrix view
+    viewManagement.switchToMatrix();
+  };
 
   // Filter concepts based on selected filters
   const filteredConcepts = dataManagement.concepts.filter(concept => {
@@ -208,6 +230,7 @@ function App() {
             onStudiesClick={viewManagement.switchToStudies}
           />
         }
+        onFirstInteraction={handleFirstInteraction}
         sidebar={
           viewManagement.currentView === 'matrix' ? (
             <Sidebar
@@ -411,6 +434,25 @@ function App() {
         message={snackbar.message}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       />
+      
+      {/* Beta Login Modal */}
+      {showBetaLogin && (
+        <BetaLogin
+          onLogin={async (password) => {
+            const success = await betaAuth.login(password);
+            if (success) {
+              setShowBetaLogin(false);
+              viewManagement.switchToMatrix();
+              snackbar.showMessage('Beta access granted!');
+            }
+            return success;
+          }}
+          onCancel={() => {
+            setShowBetaLogin(false);
+            // Stay on landing page if user cancels
+          }}
+        />
+      )}
       
       {/* Help Dialog */}
       <HelpDialog 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BetaDashboard } from './admin/BetaDashboard';
 import {
   Box,
   Typography,
@@ -10,7 +11,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  IconButton
+  IconButton,
+  Tabs,
+  Tab
 } from '@mui/material';
 import {
   Storage as StorageIcon,
@@ -18,7 +21,8 @@ import {
   CloudUpload as CloudUploadIcon,
   Warning as WarningIcon,
   Close as CloseIcon,
-  Backup as BackupIcon
+  Backup as BackupIcon,
+  Security as SecurityIcon
 } from '@mui/icons-material';
 
 interface DevModeToggleProps {
@@ -95,6 +99,7 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
   onRestoreFromBackup
 }) => {
   const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
   const [backups, setBackups] = useState<Array<{
     name: string;
     path: string;
@@ -198,11 +203,24 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
         </DialogTitle>
 
         <DialogContent sx={{ pt: 2 }}>
-          <Alert severity="info" sx={{ mb: 2 }}>
-            Choose your data source for development and testing.
-            <br />
-            <strong>Note:</strong> In local mode, changes are NOT automatically saved. Use "Create Backup" to save your work.
-          </Alert>
+          {/* Tabs */}
+          <Tabs 
+            value={activeTab} 
+            onChange={(_, newValue) => setActiveTab(newValue)}
+            sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
+          >
+            <Tab label="Data Management" icon={<StorageIcon />} />
+            <Tab label="Beta Admin" icon={<SecurityIcon />} />
+          </Tabs>
+
+          {/* Data Management Tab */}
+          {activeTab === 0 && (
+            <>
+              <Alert severity="info" sx={{ mb: 2 }}>
+                Choose your data source for development and testing.
+                <br />
+                <strong>Note:</strong> In local mode, changes are NOT automatically saved. Use "Create Backup" to save your work.
+              </Alert>
 
           {/* Data Source Selection */}
           <Typography variant="subtitle2" gutterBottom>
@@ -389,6 +407,13 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
                 Connected to MongoDB. Switch to local mode for development.
               </Typography>
             </>
+          )}
+            </>
+          )}
+
+          {/* Beta Admin Tab */}
+          {activeTab === 1 && (
+            <BetaDashboard onClose={handleClose} />
           )}
         </DialogContent>
 

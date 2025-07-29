@@ -5,9 +5,15 @@ const { execSync } = require('child_process');
 const cors = require('cors');
 const PDFParser = require('pdf2json');
 const multer = require('multer');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = 3001;
+
+// Beta Authentication Configuration
+const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
+const BETA_PASSWORDS_FILE = path.resolve(__dirname, 'src/data/betaPasswords.json');
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
@@ -689,6 +695,138 @@ app.post('/api/save-article', (req, res) => {
       error: 'Failed to save article', 
       details: error.message 
     });
+  }
+});
+
+// ===== BETA AUTHENTICATION ENDPOINTS =====
+
+// Load beta passwords from local file
+const loadBetaPasswords = () => {
+  try {
+    if (fs.existsSync(BETA_PASSWORDS_FILE)) {
+      const data = JSON.parse(fs.readFileSync(BETA_PASSWORDS_FILE, 'utf8'));
+      return data.passwords || [];
+    }
+    return [];
+  } catch (error) {
+    console.error('Failed to load beta passwords:', error);
+    return [];
+  }
+};
+
+// Beta login endpoint
+app.post('/api/auth/beta-login', async (req, res) => {
+  try {
+    const { password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({ success: false, error: 'Password required' });
+    }
+
+    const betaPasswords = loadBetaPasswords();
+    
+    // Check if password matches any beta password
+    const isValidPassword = betaPasswords.includes(password);
+    
+    if (isValidPassword) {
+      // Generate JWT token
+      const token = jwt.sign(
+        { 
+          password: password,
+          timestamp: Date.now(),
+          ip: req.ip || req.connection.remoteAddress
+        },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      // Log successful login
+      console.log(`Beta login successful for password: ${password} from IP: ${req.ip || req.connection.remoteAddress}`);
+
+      res.json({
+        success: true,
+        token: token,
+        message: 'Beta access granted'
+      });
+    } else {
+      // Log failed login attempt
+      console.log(`Beta login failed for password: ${password} from IP: ${req.ip || req.connection.remoteAddress}`);
+      
+      res.status(401).json({
+        success: false,
+        error: 'Invalid beta password'
+      });
+    }
+  } catch (error) {
+    console.error('Beta login error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Authentication failed'
+    });
+  }
+});
+
+// Beta logout endpoint
+app.post('/api/auth/beta-logout', (req, res) => {
+  try {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    if (token) {
+      // In a production system, you might want to blacklist the token
+      // For now, we'll just log the logout
+      console.log('Beta user logged out');
+    }
+    
+    res.json({ success: true, message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Beta logout error:', error);
+    res.status(500).json({ success: false, error: 'Logout failed' });
+  }
+});
+
+// Beta token verification endpoint
+app.get('/api/auth/beta-verify', (req, res) => {
+  try {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    if (!token) {
+      return res.status(401).json({ success: false, error: 'No token provided' });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    // Check if the password is still valid
+    const betaPasswords = loadBetaPasswords();
+    const isPasswordStillValid = betaPasswords.includes(decoded.password);
+    
+    if (isPasswordStillValid) {
+      res.json({ success: true, message: 'Token valid' });
+    } else {
+      res.status(401).json({ success: false, error: 'Password no longer valid' });
+    }
+  } catch (error) {
+    console.error('Beta token verification error:', error);
+    res.status(401).json({ success: false, error: 'Invalid token' });
+  }
+});
+
+// Admin endpoint to manage beta passwords (dev mode only)
+app.get('/api/admin/beta-passwords', (req, res) => {
+  try {
+    // Check if we're in development mode
+    if (process.env.NODE_ENV !== 'development') {
+      return res.status(403).json({ error: 'Admin access only available in development' });
+    }
+
+    const passwords = loadBetaPasswords();
+    res.json({
+      success: true,
+      passwords: passwords,
+      count: passwords.length
+    });
+  } catch (error) {
+    console.error('Failed to get beta passwords:', error);
+    res.status(500).json({ error: 'Failed to get beta passwords' });
   }
 });
 

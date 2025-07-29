@@ -1,23 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const messages = [
-  "All models are wrong, some are useful",
-  "Keep Training",
-  "Don't Quit",
-  "Mindful Practice",
-  "Switch your brain on",
-  "Think. Practice. Repeat",
-  "Theory is nothing without mat time",
-  "Read less, roll more",
-  "Daily beats Perfect",
-  "Mat Time > Screen Time",
-  "Keep Showing up",
-  "Don't let thinking replace doing",
-  "Breathe, feel, adjust",
-  "Build those neuromuscular pathways",
-  "Etch Grappling Grooves in your brain",
-  "Proof of Work on the mats",
-  "Take care of your training partners"
+  { en: "All models are wrong, some are useful", jp: "すべてのモデルは間違っているが、いくつかは役に立つ" },
+  { en: "Flow, Pressure, Finish", jp: "流れ、圧、極め" },
+  { en: "Keep Training", jp: "練習を続けろ" },
+  { en: "Don't Quit", jp: "諦めるな" },
+  { en: "Mindful Practice", jp: "意識しながら練習" },
+  { en: "Switch your brain on", jp: "脳をオンにしろ" },
+  { en: "Think. Practice. Repeat", jp: "思考。練習。反復。" },
+  { en: "Theory is nothing without mat time", jp: "マット時間なければ理論だけは役に立たない" },
+  { en: "Read less, roll more", jp: "見学よりも、動こう" },
+  { en: "Daily beats Perfect", jp: "完璧より毎日" },
+  { en: "Speak Friend, and Enter", jp: "唱えよ、友、そしてはいれ" },
+  { en: "Mat Time > Screen Time", jp: "マット時間 > スクリーン時間" },
+  { en: "Keep Showing up", jp: "現れ続けろ" },
+  { en: "Don't let thinking replace doing", jp: "考えることで行動を置き換えるな" },
+  { en: "Breathe, feel, adjust", jp: "呼吸、感覚、調整" },
+  { en: "Build those neuromuscular pathways", jp: "神経筋経路を構築せよ" },
+  { en: "Etch Grappling Grooves in your brain", jp: "脳にグラップリングの溝を刻め" },
+  { en: "Proof of Work on the mats", jp: "マット上でも作業証明" },
+  { en: "Take care of your training partners", jp: "練習相手を大切に" }
 ];
 
 const PROMPT = 'root@grapplingprimitives:~$';
@@ -38,7 +40,7 @@ const OVERLAY_STYLE = {
   justifyContent: 'center',
   pointerEvents: 'none' as const,
   fontFamily: 'monospace',
-  fontSize: '1.3rem',
+  fontSize: '1.1rem', // Smaller font
 };
 
 const CONTAINER_STYLE = {
@@ -46,10 +48,10 @@ const CONTAINER_STYLE = {
   width: '600px',
   height: '200px',
   padding: '20px',
-  paddingLeft: '60px',
+  paddingLeft: '40px', // More to the left
   textAlign: 'left' as const,
   fontFamily: 'monospace',
-  fontSize: '1.3rem',
+  fontSize: '1.1rem', // Smaller font
   lineHeight: '1.5',
   overflow: 'hidden' as const,
 };
@@ -67,15 +69,20 @@ const MESSAGE_STYLE = {
   height: 'calc(200px - 2.75em - 40px)',
   wordWrap: 'break-word' as const,
   whiteSpace: 'pre-wrap' as const,
-  lineHeight: '1.5',
+  lineHeight: '1.4', // Slightly tighter line height for more content
   overflow: 'hidden' as const
 };
 
-const RetroMessage: React.FC = () => {
+interface RetroMessageProps {
+  onFirstInteraction?: () => void;
+}
+
+const RetroMessage: React.FC<RetroMessageProps> = ({ onFirstInteraction }) => {
   const [visible, setVisible] = useState(true);
   const [msgIndex, setMsgIndex] = useState(0);
   const [text, setText] = useState('');
   const [cursor, setCursor] = useState(true);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const timer = useRef<NodeJS.Timeout | null>(null);
 
   // Single lifecycle manager - Carmack style: direct, no state machine
@@ -92,11 +99,12 @@ const RetroMessage: React.FC = () => {
 
     // Direct message cycling - no complex state transitions
     const message = messages[msgIndex];
+    const fullMessage = `${message.en}\n${message.jp}`;
     let charIndex = 0;
     
     const typeNextChar = () => {
-      if (charIndex < message.length) {
-        setText(message.slice(0, charIndex + 1));
+      if (charIndex < fullMessage.length) {
+        setText(fullMessage.slice(0, charIndex + 1));
         charIndex++;
         timer.current = setTimeout(typeNextChar, TYPING_SPEED);
       } else {
@@ -111,7 +119,13 @@ const RetroMessage: React.FC = () => {
     typeNextChar();
 
     // Event listeners
-    const hide = () => setVisible(false);
+    const hide = () => {
+      if (!hasInteracted && onFirstInteraction) {
+        onFirstInteraction();
+        setHasInteracted(true);
+      }
+      setVisible(false);
+    };
     const events = ['mousedown', 'keydown', 'touchstart', 'scroll', 'wheel'];
     events.forEach(event => window.addEventListener(event, hide, { once: true }));
 
