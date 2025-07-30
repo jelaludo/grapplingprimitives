@@ -59,7 +59,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
           {isMobile && onMobileMenuToggle && (
             <IconButton
               color="inherit"
-              aria-label="open drawer"
+              aria-label="back to matrix"
               edge="start"
               onClick={onMobileMenuToggle}
               sx={{ mr: 2, display: { md: 'none' } }}

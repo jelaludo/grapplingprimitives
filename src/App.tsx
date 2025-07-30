@@ -230,6 +230,7 @@ function App() {
             onArticlesClick={viewManagement.switchToArticles}
             onStudiesClick={viewManagement.switchToStudies}
             onGraphsClick={viewManagement.switchToGraphs}
+            onMobileMenuToggle={viewManagement.currentView === 'graphs' ? viewManagement.switchToMatrix : undefined}
           />
         }
         onFirstInteraction={handleFirstInteraction}
@@ -299,11 +300,6 @@ function App() {
           </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>
-            <div style={{ marginBottom: '20px' }}>
-              <button onClick={viewManagement.switchToMatrix} style={BACK_BUTTON_STYLE}>
-                ← Back to Matrix
-              </button>
-            </div>
             <Graphs />
           </div>
         )}

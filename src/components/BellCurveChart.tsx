@@ -23,7 +23,7 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
   ];
 
   const beltNames = ['White', 'Blue', 'Purple', 'Brown', 'Black'];
-  const padding = 60;
+  const padding = 40; // Reduced padding for better mobile experience
 
   // Function to calculate normal distribution
   const normalDistribution = (x: number, mean: number, stdDev: number) => {
@@ -96,7 +96,36 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
     ctx.stroke();
 
     // Draw distributions
-    belts.forEach(([mean, stdDev, color, alpha]) => {
+    belts.forEach(([mean, stdDev, color, alpha], index) => {
+      const isBlackBelt = beltNames[index] === 'Black';
+      
+      // For black belt, draw white outline first
+      if (isBlackBelt) {
+        ctx.strokeStyle = 'white';
+        ctx.fillStyle = 'white';
+        ctx.globalAlpha = alpha;
+        ctx.lineWidth = 5; // Thicker line for outline
+
+        ctx.beginPath();
+        let firstPoint = true;
+
+        for (let x = 0; x <= 200; x += 0.5) {
+          const y = normalDistribution(x, mean, stdDev);
+          const canvasX = padding + (x / 200) * (width - 2 * padding);
+          const canvasY = height - padding - (y / maxY) * (height - 2 * padding);
+
+          if (firstPoint) {
+            ctx.moveTo(canvasX, canvasY);
+            firstPoint = false;
+          } else {
+            ctx.lineTo(canvasX, canvasY);
+          }
+        }
+
+        ctx.stroke();
+      }
+
+      // Draw the actual curve
       ctx.strokeStyle = color;
       ctx.fillStyle = color;
       ctx.globalAlpha = alpha;

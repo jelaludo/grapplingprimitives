@@ -10,13 +10,166 @@ import {
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import BellCurveChart from './BellCurveChart';
 
+interface FlowDiagramChartProps {
+  data: Array<{ step?: string; position?: number }>;
+}
+
+const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
+  const theme = useTheme();
+  
+  return (
+    <Box sx={{ width: '100%', height: 600, position: 'relative' }}>
+      <svg width="100%" height="100%" viewBox="0 0 800 600">
+        {/* Gradient line from bottom-left to top-right */}
+        <defs>
+          <linearGradient id="positionGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#ff4444" /> {/* Red at bottom */}
+            <stop offset="25%" stopColor="#ff6b35" /> {/* Orange-red */}
+            <stop offset="50%" stopColor="#808080" /> {/* Grey at center */}
+            <stop offset="75%" stopColor="#4caf50" /> {/* Light green */}
+            <stop offset="100%" stopColor="#2e7d32" /> {/* Dark green at top */}
+          </linearGradient>
+        </defs>
+        
+        <line 
+          x1="50" y1="550" x2="750" y2="50" 
+          stroke="url(#positionGradient)" 
+          strokeWidth="3"
+        />
+        
+        {/* Bidirectional arrows */}
+        <defs>
+          <marker 
+            id="arrowhead" 
+            markerWidth="10" 
+            markerHeight="7" 
+            refX="9" 
+            refY="3.5" 
+            orient="auto"
+          >
+            <polygon 
+              points="0 0, 10 3.5, 0 7" 
+              fill={theme.palette.primary.main} 
+            />
+          </marker>
+        </defs>
+        
+        {/* Arrow pointing down (getting worse) - bottom right */}
+        <line 
+          x1="650" y1="500" x2="650" y2="550" 
+          stroke={theme.palette.error.main} 
+          strokeWidth="2"
+          markerEnd="url(#arrowhead)"
+        />
+        <text 
+          x="670" y="525" 
+          fill={theme.palette.error.main} 
+          fontSize="12" 
+          fontWeight="bold"
+        >
+          getting worse
+        </text>
+        
+        {/* Arrow pointing up (getting better) - top left */}
+        <line 
+          x1="150" y1="100" x2="150" y2="50" 
+          stroke={theme.palette.success.main} 
+          strokeWidth="2"
+          markerEnd="url(#arrowhead)"
+        />
+        <text 
+          x="170" y="75" 
+          fill={theme.palette.success.main} 
+          fontSize="12" 
+          fontWeight="bold"
+        >
+          getting better
+        </text>
+        
+        {/* Step labels */}
+        {data.map((item, index) => {
+          if (!item.step || item.position === undefined) return null;
+          
+          const totalSteps = data.length - 1;
+          const progress = item.position / totalSteps;
+          const x = 50 + progress * 700;
+          const y = 550 - progress * 500;
+          
+          // Stagger text positioning to avoid overlap
+          const textOffset = index % 2 === 0 ? -25 : 25;
+          const textAnchor = index % 2 === 0 ? 'end' : 'start';
+          
+          return (
+            <g key={index}>
+              {/* Circle at each step */}
+              <circle 
+                cx={x} cy={y} r="6" 
+                fill={theme.palette.background.paper} 
+                stroke={theme.palette.primary.main} 
+                strokeWidth="2"
+              />
+              
+              {/* Step text with wrapping for long text */}
+              {item.step && item.step.length > 20 ? (
+                // For long text, split into multiple lines
+                <g>
+                  {item.step.split(' ').reduce((lines: string[], word: string, wordIndex: number) => {
+                    const currentLine = lines[lines.length - 1] || '';
+                    if ((currentLine + ' ' + word).length <= 15 && lines.length < 2) {
+                      lines[lines.length - 1] = currentLine + (currentLine ? ' ' : '') + word;
+                    } else {
+                      lines.push(word);
+                    }
+                    return lines;
+                  }, []).map((line, lineIndex) => (
+                    <text 
+                      key={lineIndex}
+                      x={x + (textOffset > 0 ? 15 : -15)} 
+                      y={y + textOffset + (lineIndex * 14)} 
+                      fill={theme.palette.text.primary} 
+                      fontSize="10" 
+                      textAnchor={textAnchor}
+                      dominantBaseline="middle"
+                    >
+                      {line}
+                    </text>
+                  ))}
+                </g>
+              ) : (
+                // For short text, display normally
+                <text 
+                  x={x + (textOffset > 0 ? 15 : -15)} 
+                  y={y + textOffset} 
+                  fill={theme.palette.text.primary} 
+                  fontSize="11" 
+                  textAnchor={textAnchor}
+                  dominantBaseline="middle"
+                >
+                  {item.step}
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+    </Box>
+  );
+};
+
 interface GraphData {
   id: string;
   title: string;
   description: string;
   category: string;
-  type: 'line' | 'bell-curve';
-  data: Array<{ time: string; moarTechs: number; principles: number; health: number }>;
+  type: 'line' | 'bell-curve' | 'flow-diagram';
+  data: Array<{ 
+    time?: string; 
+    moarTechs?: number; 
+    principles?: number; 
+    health?: number;
+    step?: string;
+    position?: number;
+  }>;
 }
 
 const graphsData: GraphData[] = [
@@ -45,6 +198,30 @@ const graphsData: GraphData[] = [
       { time: 'Brown Belt', moarTechs: 75, principles: 16, health: 40 },
       { time: 'Black Belt', moarTechs: 95, principles: 20, health: 60 }
     ]
+  },
+  {
+    id: 'beyond-offense-defense',
+    title: 'Beyond offense and defense',
+    description: 'it\'s always the same : improve your relative position',
+    category: '',
+    type: 'flow-diagram',
+    data: [
+      { step: 'Tapped!', position: 0 },
+      { step: 'Resisting a submission', position: 1 },
+      { step: 'Limbs isolated', position: 2 },
+      { step: 'Alignment compromised', position: 3 },
+      { step: 'Frames collapsing', position: 4 },
+      { step: 'Dominated Position', position: 5 },
+      { step: 'Losing Grip Fight', position: 6 },
+      { step: 'Disengaged', position: 7 },
+      { step: 'Dominant Grips', position: 8 },
+      { step: 'Dominant Position', position: 9 },
+      { step: 'Pressure, Collapsing their frames', position: 10 },
+      { step: 'Opponent\'s alignment compromised', position: 11 },
+      { step: 'Opponent\'s Limbs isolated', position: 12 },
+      { step: 'Applying a controlled submission', position: 13 },
+      { step: 'Opponent tapped.', position: 14 }
+    ]
   }
 ];
 
@@ -62,7 +239,7 @@ const Graphs: React.FC = () => {
 
   if (selectedGraph) {
     return (
-      <Box sx={{ p: 3, maxWidth: 1200, mx: 'auto' }}>
+      <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
         <Box sx={{ mb: 3 }}>
           <Typography 
             variant="h4" 
@@ -122,13 +299,16 @@ const Graphs: React.FC = () => {
             </Typography>
           </Box>
         )}
+        
 
-        <Card sx={{ 
+
+        <Box sx={{ 
           backgroundColor: 'background.paper',
           border: `1px solid ${theme.palette.divider}`,
-          mb: 3
+          mb: 3,
+          width: '100%'
         }}>
-          <CardContent sx={{ p: 3 }}>
+          <Box sx={{ p: { xs: 1, sm: 1, md: 2 } }}>
             {selectedGraph.type === 'line' ? (
               <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={selectedGraph.data}>
@@ -187,33 +367,33 @@ const Graphs: React.FC = () => {
                   />
                 </LineChart>
               </ResponsiveContainer>
+            ) : selectedGraph.type === 'flow-diagram' ? (
+              <FlowDiagramChart data={selectedGraph.data} />
             ) : (
               <BellCurveChart width={800} height={500} />
             )}
-          </CardContent>
-        </Card>
-
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Typography 
-            variant="button"
-            onClick={handleBackClick}
-            sx={{ 
-              color: theme.palette.primary.main,
-              cursor: 'pointer',
-              '&:hover': {
-                textDecoration: 'underline'
-              }
-            }}
-          >
-            ← Back to Graphs
-          </Typography>
+          </Box>
         </Box>
+
+        {selectedGraph.id === 'beyond-offense-defense' && (
+          <Box sx={{ mt: 3, mb: 3 }}>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'text.primary',
+                lineHeight: 1.6
+              }}
+            >
+              This one was inspired by a discussion I had with Wim Deputter, and I like this model. It goes to a simple truth : wherever we are in a match or fight, we want to get to a better place, until it's over.
+            </Typography>
+          </Box>
+        )}
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 3, maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
       <Typography 
         variant="h4" 
         component="h1"
