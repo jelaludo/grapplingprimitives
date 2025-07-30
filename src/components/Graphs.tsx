@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Box, 
   Typography, 
@@ -18,8 +18,8 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
   const theme = useTheme();
   
   return (
-    <Box sx={{ width: '100%', height: 600, position: 'relative' }}>
-      <svg width="100%" height="100%" viewBox="0 0 800 600">
+    <Box sx={{ width: '100%', height: 800, position: 'relative' }}>
+      <svg width="100%" height="100%" viewBox="0 0 800 800">
         {/* Gradient line from bottom-left to top-right */}
         <defs>
           <linearGradient id="positionGradient" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -32,7 +32,7 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
         </defs>
         
         <line 
-          x1="50" y1="550" x2="750" y2="50" 
+          x1="50" y1="750" x2="750" y2="50" 
           stroke="url(#positionGradient)" 
           strokeWidth="3"
         />
@@ -40,7 +40,7 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
         {/* Bidirectional arrows */}
         <defs>
           <marker 
-            id="arrowhead" 
+            id="arrowhead-red" 
             markerWidth="10" 
             markerHeight="7" 
             refX="9" 
@@ -49,22 +49,35 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
           >
             <polygon 
               points="0 0, 10 3.5, 0 7" 
-              fill={theme.palette.primary.main} 
+              fill="#ff4444" 
+            />
+          </marker>
+          <marker 
+            id="arrowhead-green" 
+            markerWidth="10" 
+            markerHeight="7" 
+            refX="9" 
+            refY="3.5" 
+            orient="auto"
+          >
+            <polygon 
+              points="0 0, 10 3.5, 0 7" 
+              fill="#4caf50" 
             />
           </marker>
         </defs>
         
         {/* Arrow pointing down (getting worse) - bottom right */}
         <line 
-          x1="650" y1="500" x2="650" y2="550" 
-          stroke={theme.palette.error.main} 
+          x1="650" y1="700" x2="650" y2="750" 
+          stroke="#ff4444" 
           strokeWidth="2"
-          markerEnd="url(#arrowhead)"
+          markerEnd="url(#arrowhead-red)"
         />
         <text 
-          x="670" y="525" 
-          fill={theme.palette.error.main} 
-          fontSize="12" 
+          x="670" y="725" 
+          fill="#ff4444" 
+          fontSize="14" 
           fontWeight="bold"
         >
           getting worse
@@ -73,14 +86,14 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
         {/* Arrow pointing up (getting better) - top left */}
         <line 
           x1="150" y1="100" x2="150" y2="50" 
-          stroke={theme.palette.success.main} 
+          stroke="#4caf50" 
           strokeWidth="2"
-          markerEnd="url(#arrowhead)"
+          markerEnd="url(#arrowhead-green)"
         />
         <text 
           x="170" y="75" 
-          fill={theme.palette.success.main} 
-          fontSize="12" 
+          fill="#4caf50" 
+          fontSize="14" 
           fontWeight="bold"
         >
           getting better
@@ -93,11 +106,23 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
           const totalSteps = data.length - 1;
           const progress = item.position / totalSteps;
           const x = 50 + progress * 700;
-          const y = 550 - progress * 500;
+          const y = 750 - progress * 700; // Steeper angle for 67.5 degrees, full height utilization
           
-          // Stagger text positioning to avoid overlap
-          const textOffset = index % 2 === 0 ? -25 : 25;
-          const textAnchor = index % 2 === 0 ? 'end' : 'start';
+          // Stagger text positioning to avoid overlap, with special handling for first and last steps
+          let textOffset = index % 2 === 0 ? -25 : 25;
+          let textAnchor = index % 2 === 0 ? 'end' : 'start';
+          
+          // Ensure first step text isn't cut off at bottom
+          if (index === 0) {
+            textOffset = 30; // Move text up from bottom
+            textAnchor = 'start';
+          }
+          
+          // Ensure last step text isn't cut off at top
+          if (index === data.length - 1) {
+            textOffset = -30; // Move text down from top
+            textAnchor = 'end';
+          }
           
           return (
             <g key={index}>
@@ -127,7 +152,7 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
                       x={x + (textOffset > 0 ? 15 : -15)} 
                       y={y + textOffset + (lineIndex * 14)} 
                       fill={theme.palette.text.primary} 
-                      fontSize="10" 
+                      fontSize="12" 
                       textAnchor={textAnchor}
                       dominantBaseline="middle"
                     >
@@ -141,7 +166,7 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
                   x={x + (textOffset > 0 ? 15 : -15)} 
                   y={y + textOffset} 
                   fill={theme.palette.text.primary} 
-                  fontSize="11" 
+                  fontSize="13" 
                   textAnchor={textAnchor}
                   dominantBaseline="middle"
                 >
@@ -206,7 +231,7 @@ const graphsData: GraphData[] = [
     category: '',
     type: 'flow-diagram',
     data: [
-      { step: 'Tapped!', position: 0 },
+      { step: 'had to tap!', position: 0 },
       { step: 'Resisting a submission', position: 1 },
       { step: 'Limbs isolated', position: 2 },
       { step: 'Alignment compromised', position: 3 },
@@ -225,9 +250,20 @@ const graphsData: GraphData[] = [
   }
 ];
 
-const Graphs: React.FC = () => {
+interface GraphsProps {
+  resetToOverview?: boolean;
+}
+
+const Graphs: React.FC<GraphsProps> = ({ resetToOverview = false }) => {
   const theme = useTheme();
   const [selectedGraph, setSelectedGraph] = useState<GraphData | null>(null);
+
+  // Reset to overview when resetToOverview prop changes
+  useEffect(() => {
+    if (resetToOverview) {
+      setSelectedGraph(null);
+    }
+  }, [resetToOverview]);
 
   const handleGraphClick = (graph: GraphData) => {
     setSelectedGraph(graph);

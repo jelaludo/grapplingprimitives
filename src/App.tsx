@@ -58,6 +58,7 @@ function App() {
 
   const [helpDialogOpen, setHelpDialogOpen] = useState(false);
   const [showBetaLogin, setShowBetaLogin] = useState(false);
+  const [graphsResetTrigger, setGraphsResetTrigger] = useState(0);
   
   const [isDevelopment] = useState(process.env.NODE_ENV === 'development');
   
@@ -229,8 +230,11 @@ function App() {
             onHelpClick={() => setHelpDialogOpen(true)}
             onArticlesClick={viewManagement.switchToArticles}
             onStudiesClick={viewManagement.switchToStudies}
-            onGraphsClick={viewManagement.switchToGraphs}
-            onMobileMenuToggle={viewManagement.currentView === 'graphs' ? viewManagement.switchToMatrix : undefined}
+            onGraphsClick={() => {
+              viewManagement.switchToGraphs();
+              setGraphsResetTrigger(prev => prev + 1);
+            }}
+            onMobileMenuToggle={viewManagement.currentView !== 'matrix' ? viewManagement.switchToMatrix : undefined}
           />
         }
         onFirstInteraction={handleFirstInteraction}
@@ -300,7 +304,7 @@ function App() {
           </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>
-            <Graphs />
+            <Graphs resetToOverview={graphsResetTrigger > 0} />
           </div>
         )}
       </MainLayout>
