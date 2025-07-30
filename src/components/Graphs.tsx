@@ -8,28 +8,42 @@ import {
   useTheme
 } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import BellCurveChart from './BellCurveChart';
 
 interface GraphData {
   id: string;
   title: string;
   description: string;
   category: string;
+  type: 'line' | 'bell-curve';
   data: Array<{ time: string; moarTechs: number; principles: number; health: number }>;
 }
 
 const graphsData: GraphData[] = [
   {
     id: 'grappler-training-changes',
-    title: 'Grappler Training Changes Over Time',
-    description: 'How grapplers\' training priorities evolve with experience',
-    category: 'Training Evolution',
+    title: 'Our training evolves',
+    description: 'A Grappler\'s training priorities typically changes with time and wether they\'re a heavy competitor or not.',
+    category: '',
+    type: 'line',
     data: [
       { time: 'Beginner', moarTechs: 80, principles: 20, health: 10 },
-      { time: 'White Belt', moarTechs: 70, principles: 30, health: 15 },
-      { time: 'Blue Belt', moarTechs: 50, principles: 50, health: 25 },
-      { time: 'Purple Belt', moarTechs: 30, principles: 70, health: 40 },
-      { time: 'Brown Belt', moarTechs: 20, principles: 75, health: 60 },
-      { time: 'Black Belt', moarTechs: 15, principles: 80, health: 85 }
+      { time: 'Advanced', moarTechs: 50, principles: 50, health: 25 },
+      { time: 'Veteran', moarTechs: 15, principles: 80, health: 85 }
+    ]
+  },
+  {
+    id: 'bjj-belt-skill-distribution',
+    title: 'BJJ Belt Colors Expectations*',
+    description: 'While higher belts generally indicate greater skill, there\'s significant overlap between levels. An experienced blue belt may outperform a newer purple belt.',
+    category: '',
+    type: 'bell-curve',
+    data: [
+      { time: 'White Belt', moarTechs: 20, principles: 8, health: 10 },
+      { time: 'Blue Belt', moarTechs: 35, principles: 9, health: 15 },
+      { time: 'Purple Belt', moarTechs: 55, principles: 7, health: 25 },
+      { time: 'Brown Belt', moarTechs: 75, principles: 16, health: 40 },
+      { time: 'Black Belt', moarTechs: 95, principles: 20, health: 60 }
     ]
   }
 ];
@@ -49,37 +63,65 @@ const Graphs: React.FC = () => {
   if (selectedGraph) {
     return (
       <Box sx={{ p: 3, maxWidth: 1200, mx: 'auto' }}>
-        <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ mb: 3 }}>
           <Typography 
             variant="h4" 
             component="h1"
             sx={{ 
               color: 'text.primary',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              mb: 2
             }}
           >
             {selectedGraph.title}
           </Typography>
-          <Chip 
-            label={selectedGraph.category} 
-            size="small"
-            sx={{ 
-              backgroundColor: theme.palette.primary.main,
-              color: 'white'
-            }}
-          />
         </Box>
         
         <Typography 
           variant="body1" 
           sx={{ 
             color: 'text.secondary',
-            mb: 4,
+            mb: 3,
             lineHeight: 1.6
           }}
         >
           {selectedGraph.description}
         </Typography>
+        
+        {selectedGraph.id === 'grappler-training-changes' && (
+          <Box sx={{ mb: 4 }}>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'text.primary',
+                mb: 2,
+                lineHeight: 1.6
+              }}
+            >
+              Earlier stages are punctuated by a desire to drink from the firehose and accumulate as much knowledge and techniques as possible.
+            </Typography>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'text.primary',
+                mb: 2,
+                lineHeight: 1.6
+              }}
+            >
+              With time we refine, we see patterns, we seeks the underlying truth common to the techniques.
+            </Typography>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'text.primary',
+                mb: 2,
+                lineHeight: 1.6
+              }}
+            >
+              And every once-athlete and now aging grappler longs for better health and mobility, not all put in the time! but we should.
+            </Typography>
+          </Box>
+        )}
 
         <Card sx={{ 
           backgroundColor: 'background.paper',
@@ -87,58 +129,67 @@ const Graphs: React.FC = () => {
           mb: 3
         }}>
           <CardContent sx={{ p: 3 }}>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart data={selectedGraph.data}>
-                <CartesianGrid 
-                  strokeDasharray="3 3" 
-                  stroke={theme.palette.divider}
-                />
-                <XAxis 
-                  dataKey="time" 
-                  stroke={theme.palette.text.secondary}
-                  tick={{ fill: theme.palette.text.secondary }}
-                />
-                <YAxis 
-                  stroke={theme.palette.text.secondary}
-                  tick={{ fill: theme.palette.text.secondary }}
-                  domain={[0, 100]}
-                />
-                <Tooltip 
-                  contentStyle={{
-                    backgroundColor: theme.palette.background.paper,
-                    border: `1px solid ${theme.palette.divider}`,
-                    color: theme.palette.text.primary
-                  }}
-                />
-                <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="moarTechs" 
-                  stroke="#ff9800" 
-                  strokeWidth={3}
-                  name="MOAR TECHS!"
-                  dot={{ fill: '#ff9800', strokeWidth: 2, r: 4 }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="principles" 
-                  stroke="#9e9e9e" 
-                  strokeWidth={3}
-                  name="PRINCIPLES!"
-                  strokeDasharray="8 4"
-                  dot={{ fill: '#9e9e9e', strokeWidth: 2, r: 4 }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="health" 
-                  stroke="#4caf50" 
-                  strokeWidth={3}
-                  name="Health/Mobility!"
-                  strokeDasharray="12 6"
-                  dot={{ fill: '#4caf50', strokeWidth: 2, r: 4 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            {selectedGraph.type === 'line' ? (
+              <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={selectedGraph.data}>
+                  <CartesianGrid 
+                    strokeDasharray="3 3" 
+                    stroke={theme.palette.divider}
+                  />
+                  <XAxis 
+                    dataKey="time" 
+                    stroke={theme.palette.text.secondary}
+                    tick={{ fill: theme.palette.text.secondary }}
+                  />
+                  <YAxis 
+                    stroke={theme.palette.text.secondary}
+                    tick={{ fill: theme.palette.text.secondary }}
+                    domain={[0, 100]}
+                  />
+                  <Tooltip 
+                    contentStyle={{
+                      backgroundColor: theme.palette.background.paper,
+                      border: `1px solid ${theme.palette.divider}`,
+                      color: theme.palette.text.primary
+                    }}
+                  />
+                  <Legend 
+                    wrapperStyle={{
+                      fontSize: '12px',
+                      paddingTop: '10px'
+                    }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="moarTechs" 
+                    stroke="#ff9800" 
+                    strokeWidth={3}
+                    name="MOAR TECHS!"
+                    dot={{ fill: '#ff9800', strokeWidth: 2, r: 4 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="principles" 
+                    stroke="#9e9e9e" 
+                    strokeWidth={3}
+                    name="PRINCIPLES!"
+                    strokeDasharray="8 4"
+                    dot={{ fill: '#9e9e9e', strokeWidth: 2, r: 4 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="health" 
+                    stroke="#4caf50" 
+                    strokeWidth={3}
+                    name="Health/Mobility!"
+                    strokeDasharray="12 6"
+                    dot={{ fill: '#4caf50', strokeWidth: 2, r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <BellCurveChart width={800} height={500} />
+            )}
           </CardContent>
         </Card>
 
