@@ -18,7 +18,7 @@ const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack }) => {
   // Function to render formatted text with bold and hyperlinks
   const renderFormattedText = (text: string) => {
     // Split text into parts for bold and links
-    const parts = [];
+    const parts: Array<{ type: 'text' | 'bold'; content: string }> = [];
     let currentIndex = 0;
     
     // Match bold text (**text**)
@@ -72,7 +72,7 @@ const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack }) => {
   // Function to render hyperlinks
   const renderLinks = (text: string) => {
     const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-    const parts = [];
+    const parts: Array<{ type: 'text' | 'link'; content: string; url?: string }> = [];
     let currentIndex = 0;
     let linkMatch;
     

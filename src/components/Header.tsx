@@ -19,6 +19,7 @@ import HelpIcon from '@mui/icons-material/Help';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ArticleIcon from '@mui/icons-material/Article';
 import SchoolIcon from '@mui/icons-material/School';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
 
 interface HeaderProps {
   onMobileMenuToggle?: () => void;
@@ -26,9 +27,10 @@ interface HeaderProps {
   onHelpClick?: () => void;
   onArticlesClick?: () => void;
   onStudiesClick?: () => void;
+  onGraphsClick?: () => void;
 }
 
-const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onHelpClick, onArticlesClick, onStudiesClick }, ref) => {
+const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick }, ref) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [actionsMenuAnchor, setActionsMenuAnchor] = useState<null | HTMLElement>(null);
@@ -129,6 +131,20 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             <Button 
               variant="outlined" 
               size="small"
+              onClick={onGraphsClick}
+              sx={{ 
+                color: 'text.primary',
+                borderColor: 'divider',
+                '&:hover': {
+                  borderColor: 'primary.main',
+                }
+              }}
+            >
+              Graphs
+            </Button>
+            <Button 
+              variant="outlined" 
+              size="small"
               startIcon={<HelpIcon />}
               onClick={onHelpClick}
               sx={{ 
@@ -197,6 +213,12 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
               <SchoolIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>Studies</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={() => { onGraphsClick?.(); handleActionsMenuClose(); }}>
+            <ListItemIcon>
+              <ShowChartIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Graphs</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => { onHelpClick?.(); handleActionsMenuClose(); }}>
             <ListItemIcon>

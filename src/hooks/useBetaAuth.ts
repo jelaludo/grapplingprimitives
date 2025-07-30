@@ -36,7 +36,7 @@ export const useBetaAuth = () => {
       // Production: check against bcrypt hashes from productionPasswords.json
       if (process.env.NODE_ENV === 'production') {
         let isValid = false;
-        let matchedPassword = null;
+        let matchedPassword: { hash: string; password: string; created: string; usageCount: number; lastUsed: string } | null = null;
         
         // Check against all production passwords
         for (const pw of productionPasswords.passwords) {

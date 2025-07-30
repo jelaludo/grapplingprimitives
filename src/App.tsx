@@ -8,6 +8,7 @@ import { DevModeToggle } from './components/DevModeToggle';
 import { HelpDialog } from './components/HelpDialog';
 import Articles from './components/Articles';
 import { Studies } from './components/Studies';
+import Graphs from './components/Graphs';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from '@mui/material/styles';
@@ -228,6 +229,7 @@ function App() {
             onHelpClick={() => setHelpDialogOpen(true)}
             onArticlesClick={viewManagement.switchToArticles}
             onStudiesClick={viewManagement.switchToStudies}
+            onGraphsClick={viewManagement.switchToGraphs}
           />
         }
         onFirstInteraction={handleFirstInteraction}
@@ -286,7 +288,7 @@ function App() {
             </div>
             <Articles />
           </div>
-        ) : (
+        ) : viewManagement.currentView === 'studies' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <div style={{ marginBottom: '20px' }}>
               <button onClick={viewManagement.switchToMatrix} style={BACK_BUTTON_STYLE}>
@@ -294,6 +296,15 @@ function App() {
               </button>
             </div>
             <Studies />
+          </div>
+        ) : (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <div style={{ marginBottom: '20px' }}>
+              <button onClick={viewManagement.switchToMatrix} style={BACK_BUTTON_STYLE}>
+                ← Back to Matrix
+              </button>
+            </div>
+            <Graphs />
           </div>
         )}
       </MainLayout>
