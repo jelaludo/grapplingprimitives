@@ -9,6 +9,7 @@ import { HelpDialog } from './components/HelpDialog';
 import Articles from './components/Articles';
 import { Studies } from './components/Studies';
 import Graphs from './components/Graphs';
+import Ludus from './components/Ludus/Ludus';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from '@mui/material/styles';
@@ -236,6 +237,7 @@ function App() {
               viewManagement.switchToGraphs();
               setGraphsResetTrigger(prev => prev + 1);
             }}
+            onLudusClick={viewManagement.switchToLudus}
             onMobileMenuToggle={viewManagement.currentView !== 'matrix' ? viewManagement.switchToMatrix : undefined}
           />
         }
@@ -304,6 +306,8 @@ function App() {
             </div>
             <Studies />
           </div>
+        ) : viewManagement.currentView === 'ludus' ? (
+          <Ludus onBackToMatrix={viewManagement.switchToMatrix} />
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>
             <Graphs resetToOverview={graphsResetTrigger > 0} />

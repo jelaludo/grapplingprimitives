@@ -20,6 +20,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ArticleIcon from '@mui/icons-material/Article';
 import SchoolIcon from '@mui/icons-material/School';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 
 interface HeaderProps {
   onMobileMenuToggle?: () => void;
@@ -28,9 +29,10 @@ interface HeaderProps {
   onArticlesClick?: () => void;
   onStudiesClick?: () => void;
   onGraphsClick?: () => void;
+  onLudusClick?: () => void;
 }
 
-const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick }, ref) => {
+const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick, onLudusClick }, ref) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [actionsMenuAnchor, setActionsMenuAnchor] = useState<null | HTMLElement>(null);
@@ -145,6 +147,21 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             <Button 
               variant="outlined" 
               size="small"
+              startIcon={<SportsEsportsIcon />}
+              onClick={onLudusClick}
+              sx={{ 
+                color: 'text.primary',
+                borderColor: 'divider',
+                '&:hover': {
+                  borderColor: 'primary.main',
+                }
+              }}
+            >
+              Ludus
+            </Button>
+            <Button 
+              variant="outlined" 
+              size="small"
               startIcon={<HelpIcon />}
               onClick={onHelpClick}
               sx={{ 
@@ -219,6 +236,12 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
               <ShowChartIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>Graphs</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={() => { onLudusClick?.(); handleActionsMenuClose(); }}>
+            <ListItemIcon>
+              <SportsEsportsIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Ludus</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => { onHelpClick?.(); handleActionsMenuClose(); }}>
             <ListItemIcon>
