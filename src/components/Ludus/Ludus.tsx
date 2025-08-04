@@ -1,534 +1,424 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { LudusNode } from '../../types/ludus';
 import { useLudusStorage } from '../../hooks/useLudusStorage';
 import { useLudusPhysics } from '../../hooks/useLudusPhysics';
-import { LudusNode } from '../../types/ludus';
-import LudusQuadrants from './LudusQuadrants';
 import { convertBJJConceptToLudusNode } from '../../utils/ludusUtils';
+import LudusQuadrants from './LudusQuadrants';
 
 interface LudusProps {
-  onBackToMatrix?: () => void;
+  onBackToMatrix: () => void;
 }
 
 const Ludus: React.FC<LudusProps> = ({ onBackToMatrix }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const physicsRef = useRef<HTMLDivElement>(null);
   const [isPhysicsInitialized, setIsPhysicsInitialized] = useState(false);
-  const nodesInPhysicsRef = useRef<Set<string>>(new Set());
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [draggedNode, setDraggedNode] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  
+  const [showHelp, setShowHelp] = useState(false);
+
   const ludusStorage = useLudusStorage();
   const physics = useLudusPhysics();
 
-  // Initialize physics when component mounts
+  // Track nodes in physics to prevent duplicates
+  const nodesInPhysicsRef = useRef<Set<string>>(new Set());
+
+  // Initialize physics
   useEffect(() => {
     if (physicsRef.current && !isPhysicsInitialized) {
-      console.log('Physics container ref:', physicsRef.current);
+      console.log('Initializing physics in Ludus component...');
       console.log('Container dimensions:', physicsRef.current.clientWidth, 'x', physicsRef.current.clientHeight);
-      
-      if (physicsRef.current.clientWidth > 0 && physicsRef.current.clientHeight > 0) {
-        physics.initializePhysics(physicsRef.current);
-        setIsPhysicsInitialized(true);
-      } else {
-        console.log('Container has zero dimensions, waiting...');
-        // Try again after a short delay
-        setTimeout(() => {
-          if (physicsRef.current && physicsRef.current.clientWidth > 0 && physicsRef.current.clientHeight > 0) {
-            physics.initializePhysics(physicsRef.current);
-            setIsPhysicsInitialized(true);
-          }
-        }, 100);
-      }
+      physics.initializePhysics(physicsRef.current);
+      setIsPhysicsInitialized(true);
     }
   }, [physics, isPhysicsInitialized]);
 
-  // Add nodes to physics simulation when they're added to storage
+  // Add nodes to physics when they're added to storage
   useEffect(() => {
-    if (!isPhysicsInitialized) return;
+    if (!isPhysicsInitialized || !ludusStorage.storage) return;
 
-    const nodes = ludusStorage.storage.ludusNodes;
+    const { ludusNodes } = ludusStorage.storage;
     
-    // Only add nodes that aren't already in physics
-    nodes.forEach(node => {
-      if (!nodesInPhysicsRef.current.has(node.id)) {
+    // Only add nodes that aren't already in physics AND aren't placed in quadrants
+    ludusNodes.forEach(node => {
+      const isInQuadrant = ludusStorage.storage.quadrantPlacements[node.id];
+      if (!nodesInPhysicsRef.current.has(node.id) && !isInQuadrant) {
         console.log(`Adding node to physics: ${node.concept} (${node.id})`);
+        
+        // Get container dimensions for proper positioning
+        const container = physicsRef.current;
+        const containerWidth = container?.clientWidth || 800;
+        const containerHeight = container?.clientHeight || 600;
+        
+        // Generate random position within the container bounds (with padding)
+        const padding = 50;
+        const x = Math.random() * (containerWidth - 2 * padding) + padding;
+        const y = Math.random() * (containerHeight - 2 * padding) + padding;
+        
+        console.log(`Positioning node at (${x}, ${y}) in container ${containerWidth}x${containerHeight}`);
+        
         physics.addNode({
           ...node,
-          position: node.position || { x: Math.random() * 200 + 50, y: 50 },
-          velocity: node.velocity || { x: 0, y: 0 },
-          r: node.r || 15
+          position: { x, y }, // Always use the calculated position
+          velocity: { x: 0, y: 0 },
+          r: 15
         });
         nodesInPhysicsRef.current.add(node.id);
       }
     });
-  }, [ludusStorage.storage.ludusNodes, isPhysicsInitialized, physics]);
+  }, [ludusStorage.storage, isPhysicsInitialized, physics]);
 
-  // Apply magnetic forces periodically
+  // Apply magnetic forces
   useEffect(() => {
-    if (!isPhysicsInitialized) return;
+    if (!isPhysicsInitialized || !ludusStorage.storage) return;
 
     const interval = setInterval(() => {
-      physics.applyMagneticForces(ludusStorage.storage.ludusNodes);
-    }, 100); // Apply forces every 100ms
+      const nodesInPhysics = ludusStorage.storage.ludusNodes.filter(node => 
+        !ludusStorage.storage.quadrantPlacements[node.id]
+      );
+      if (nodesInPhysics.length > 1) {
+        physics.applyMagneticForces(nodesInPhysics);
+      }
+    }, 100); // More frequent updates for visible movement
 
     return () => clearInterval(interval);
-  }, [physics, ludusStorage.storage.ludusNodes, isPhysicsInitialized]);
+  }, [ludusStorage.storage, isPhysicsInitialized, physics]);
 
-  // Update node positions in storage from physics
+  // Mouse interaction for hover and drag
   useEffect(() => {
-    if (!isPhysicsInitialized) return;
-
-    const interval = setInterval(() => {
-      const positions = physics.getBodyPositions();
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!physicsRef.current) return;
       
-      Object.entries(positions).forEach(([nodeId, position]) => {
-        ludusStorage.updateNode(nodeId, { position });
-      });
-    }, 50); // Update positions every 50ms
-
-    return () => clearInterval(interval);
-  }, [physics, ludusStorage, isPhysicsInitialized]);
-
-  // Handle mouse movement for hover detection
-  useEffect(() => {
-    if (!isPhysicsInitialized || !physicsRef.current) return;
-
-    const handleMouseMove = (event: MouseEvent) => {
-      const rect = physicsRef.current!.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      const rect = physicsRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
       setMousePosition({ x, y });
       
-      const nodeId = physics.getNodeUnderMouse(x, y);
-      setHoveredNode(nodeId);
+      const nodeUnderMouse = physics.getNodeUnderMouse();
+      setHoveredNode(nodeUnderMouse);
     };
 
     const handleMouseLeave = () => {
       setHoveredNode(null);
     };
 
-    const handleMouseDown = (event: MouseEvent) => {
-      const rect = physicsRef.current!.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      
-      const nodeId = physics.getNodeUnderMouse(x, y);
-      if (nodeId) {
-        console.log(`Started dragging node: ${nodeId}`);
-        setDraggedNode(nodeId);
+    const handleMouseDown = (e: MouseEvent) => {
+      const nodeUnderMouse = physics.getNodeUnderMouse();
+      if (nodeUnderMouse) {
+        setDraggedNode(nodeUnderMouse);
         setIsDragging(true);
       }
     };
 
-    const handleMouseUp = (event: MouseEvent) => {
-      if (isDragging && draggedNode) {
-        console.log(`Stopped dragging node: ${draggedNode}`);
-        setDraggedNode(null);
-        setIsDragging(false);
-      }
+    const handleMouseUp = () => {
+      // Don't clear drag state immediately - let quadrant drop handler manage it
     };
 
-    physicsRef.current.addEventListener('mousemove', handleMouseMove);
-    physicsRef.current.addEventListener('mouseleave', handleMouseLeave);
-    physicsRef.current.addEventListener('mousedown', handleMouseDown);
-    physicsRef.current.addEventListener('mouseup', handleMouseUp);
+    const physicsContainer = physicsRef.current;
+    if (physicsContainer) {
+      physicsContainer.addEventListener('mousemove', handleMouseMove);
+      physicsContainer.addEventListener('mouseleave', handleMouseLeave);
+      physicsContainer.addEventListener('mousedown', handleMouseDown);
+      physicsContainer.addEventListener('mouseup', handleMouseUp);
+    }
 
     return () => {
-      if (physicsRef.current) {
-        physicsRef.current.removeEventListener('mousemove', handleMouseMove);
-        physicsRef.current.removeEventListener('mouseleave', handleMouseLeave);
-        physicsRef.current.removeEventListener('mousedown', handleMouseDown);
-        physicsRef.current.removeEventListener('mouseup', handleMouseUp);
+      if (physicsContainer) {
+        physicsContainer.removeEventListener('mousemove', handleMouseMove);
+        physicsContainer.removeEventListener('mouseleave', handleMouseLeave);
+        physicsContainer.removeEventListener('mousedown', handleMouseDown);
+        physicsContainer.removeEventListener('mouseup', handleMouseUp);
       }
     };
-  }, [isPhysicsInitialized, physics]);
+  }, [physics]);
 
   const handleNodeDrop = (nodeId: string, quadrant: string, importance: number, mastery: number) => {
     console.log(`Dropping node ${nodeId} into quadrant ${quadrant}`);
     
-    // Update quadrant placement
-    ludusStorage.setQuadrantPlacement(nodeId, quadrant, importance, mastery);
-    
-    // Remove from physics simulation
+    // Remove from physics
     physics.removeNode(nodeId);
     nodesInPhysicsRef.current.delete(nodeId);
     
     // Clear drag state
     setDraggedNode(null);
     setIsDragging(false);
+    
+    // Add to quadrant placement
+    ludusStorage.setQuadrantPlacement(nodeId, quadrant, importance, mastery);
   };
 
   const handleQuadrantDrop = (quadrant: string) => {
     if (draggedNode) {
-      // Default importance and mastery values (can be adjusted later)
-      const importance = 5;
-      const mastery = 5;
-      handleNodeDrop(draggedNode, quadrant, importance, mastery);
+      handleNodeDrop(draggedNode, quadrant, 5, 5); // Default values
     }
   };
 
   const handleClearAll = () => {
-    // Clear all nodes from physics
-    ludusStorage.storage.ludusNodes.forEach(node => {
-      physics.removeNode(node.id);
-    });
-    
-    // Clear tracking set
+    // Remove all nodes from physics
+    if (ludusStorage.storage) {
+      ludusStorage.storage.ludusNodes.forEach(node => {
+        physics.removeNode(node.id);
+      });
+    }
     nodesInPhysicsRef.current.clear();
     
     // Clear storage
     ludusStorage.clearAllData();
+    
+    // Clear drag state
+    setDraggedNode(null);
+    setIsDragging(false);
   };
 
-  const handleAddTestNodes = () => {
-    console.log('Adding test nodes...');
-    
-    // Get concepts from the current data (we'll need to pass this as a prop later)
-    // For now, let's create a small set of realistic test concepts
-    const testConcepts = [
-      {
-        id: 'BJJ-001',
-        concept: 'Involuntary Yoga',
-        description: 'Somewhat funny. BJJ is involuntary yoga, because we put you in funky twisted positions!',
-        short_description: '',
-        category: 'Memes',
-        color: '#8A2BE2',
-        axis_self_opponent: 0.92,
-        axis_mental_physical: 0.76,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-002',
-        concept: 'Collapse Frames',
-        description: 'Frames are typically strong in one direction yet can be collapsed in another.',
-        short_description: '',
-        category: 'Grappling Primitives',
-        color: '#848a94',
-        axis_self_opponent: 0.2,
-        axis_mental_physical: 0.2,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-003',
-        concept: 'Grip Fighting',
-        description: 'Controlling and breaking grips to dominate exchanges.',
-        short_description: '',
-        category: 'Grappling Primitives',
-        color: '#848a94',
-        axis_self_opponent: 0.3,
-        axis_mental_physical: 0.3,
-        brightness: 2,
-        size: 3
-      },
-      {
-        id: 'BJJ-004',
-        concept: 'Anticipation',
-        description: 'Anticipation is the first line of defense. Don\'t be surprised by a guard pull or a jumping armbar.',
-        short_description: '',
-        category: 'Grappling Primitives',
-        color: '#848a94',
-        axis_self_opponent: 0.9,
-        axis_mental_physical: 0.1,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-005',
-        concept: 'Art & Science',
-        description: '"BJJ is the Art & Science of Control Leading to Submission". Chris Haueter I believe.',
-        short_description: '',
-        category: 'Memes',
-        color: '#8A2BE2',
-        axis_self_opponent: 0.83,
-        axis_mental_physical: 0.68,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-007',
-        concept: 'Murder Yoga',
-        description: 'see. Involutary Yoga, with a more r/iambadass vibe.',
-        short_description: '',
-        category: 'Memes',
-        color: '#8A2BE2',
-        axis_self_opponent: 0.92,
-        axis_mental_physical: 0.86,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-008',
-        concept: 'Legal Strangulation',
-        description: 'Where the dojo becomes a place where consenting adults can legally strangle each other.',
-        short_description: '',
-        category: 'Memes',
-        color: '#8A2BE2',
-        axis_self_opponent: 0.72,
-        axis_mental_physical: 0.65,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-009',
-        concept: 'Position Before Submission',
-        description: 'Get to a dominant position before attempting submissions.',
-        short_description: '',
-        category: 'Strategy',
-        color: '#FF8C00',
-        axis_self_opponent: 0.7,
-        axis_mental_physical: 0.6,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-010',
-        concept: 'Hip Escape',
-        description: 'Fundamental movement to create space and escape bad positions.',
-        short_description: '',
-        category: 'Grappling Primitives',
-        color: '#848a94',
-        axis_self_opponent: 0.4,
-        axis_mental_physical: 0.8,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-011',
-        concept: 'Guard Retention',
-        description: 'Keeping your guard active and preventing passes.',
-        short_description: '',
-        category: 'Tactics',
-        color: '#8A2BE2',
-        axis_self_opponent: 0.6,
-        axis_mental_physical: 0.7,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-012',
-        concept: 'Pressure Passing',
-        description: 'Using weight and pressure to pass the guard.',
-        short_description: '',
-        category: 'Tactics',
-        color: '#8A2BE2',
-        axis_self_opponent: 0.8,
-        axis_mental_physical: 0.9,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-013',
-        concept: 'Cross Collar Choke',
-        description: 'Fundamental submission from mount or guard.',
-        short_description: '',
-        category: 'Grappling Primitives',
-        color: '#848a94',
-        axis_self_opponent: 0.5,
-        axis_mental_physical: 0.6,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-014',
-        concept: 'Triangle Choke',
-        description: 'Submission using legs to create a triangle around the neck.',
-        short_description: '',
-        category: 'Grappling Primitives',
-        color: '#848a94',
-        axis_self_opponent: 0.6,
-        axis_mental_physical: 0.7,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-015',
-        concept: 'Armbar',
-        description: 'Hyperextending the elbow joint for submission.',
-        short_description: '',
-        category: 'Grappling Primitives',
-        color: '#848a94',
-        axis_self_opponent: 0.5,
-        axis_mental_physical: 0.8,
-        brightness: 1,
-        size: 1
-      },
-      {
-        id: 'BJJ-016',
-        concept: 'Kimura',
-        description: 'Shoulder lock using figure-four grip.',
-        short_description: '',
-        category: 'Grappling Primitives',
-        color: '#848a94',
-        axis_self_opponent: 0.7,
-        axis_mental_physical: 0.6,
-        brightness: 1,
-        size: 1
-      }
-    ];
+     const handleAddTestNodes = () => {
+     const testConcepts = [
+       { id: 'kimura', concept: 'Kimura', description: 'Shoulder lock from guard', short_description: 'Shoulder lock', category: 'Submissions', color: '#ff6b6b', axis_mental_physical: 0.3, axis_self_opponent: 0.7, brightness: 1, size: 1 },
+       { id: 'armbar', concept: 'Armbar', description: 'Elbow lock from mount', short_description: 'Elbow lock', category: 'Submissions', color: '#ff6b6b', axis_mental_physical: 0.4, axis_self_opponent: 0.6, brightness: 1, size: 1 },
+       { id: 'triangle', concept: 'Triangle', description: 'Choke using legs', short_description: 'Leg choke', category: 'Submissions', color: '#ff6b6b', axis_mental_physical: 0.5, axis_self_opponent: 0.5, brightness: 1, size: 1 },
+       { id: 'guard-pull', concept: 'Guard Pull', description: 'Bring opponent to guard', short_description: 'Guard entry', category: 'Positioning', color: '#4ecdc4', axis_mental_physical: 0.2, axis_self_opponent: 0.8, brightness: 1, size: 1 },
+       { id: 'hip-escape', concept: 'Hip Escape', description: 'Shrimp to create space', short_description: 'Shrimp escape', category: 'Escapes', color: '#45b7d1', axis_mental_physical: 0.6, axis_self_opponent: 0.4, brightness: 1, size: 1 },
+       { id: 'bridge', concept: 'Bridge', description: 'Lift hips to escape', short_description: 'Bridge escape', category: 'Escapes', color: '#45b7d1', axis_mental_physical: 0.7, axis_self_opponent: 0.3, brightness: 1, size: 1 },
+       { id: 'sweep', concept: 'Sweep', description: 'Reverse position from guard', short_description: 'Guard sweep', category: 'Positioning', color: '#4ecdc4', axis_mental_physical: 0.4, axis_self_opponent: 0.6, brightness: 1, size: 1 },
+       { id: 'pass-guard', concept: 'Pass Guard', description: 'Get past opponent\'s legs', short_description: 'Guard pass', category: 'Positioning', color: '#4ecdc4', axis_mental_physical: 0.5, axis_self_opponent: 0.5, brightness: 1, size: 1 },
+       { id: 'mount', concept: 'Mount', description: 'Sit on opponent\'s chest', short_description: 'Top position', category: 'Positioning', color: '#4ecdc4', axis_mental_physical: 0.6, axis_self_opponent: 0.4, brightness: 1, size: 1 },
+       { id: 'back-control', concept: 'Back Control', description: 'Control opponent\'s back', short_description: 'Back position', category: 'Positioning', color: '#4ecdc4', axis_mental_physical: 0.7, axis_self_opponent: 0.3, brightness: 1, size: 1 },
+       { id: 'choke', concept: 'Choke', description: 'Blood choke from back', short_description: 'Blood choke', category: 'Submissions', color: '#ff6b6b', axis_mental_physical: 0.3, axis_self_opponent: 0.7, brightness: 1, size: 1 },
+       { id: 'leg-lock', concept: 'Leg Lock', description: 'Ankle lock submission', short_description: 'Leg submission', category: 'Submissions', color: '#ff6b6b', axis_mental_physical: 0.8, axis_self_opponent: 0.2, brightness: 1, size: 1 },
+       { id: 'takedown', concept: 'Takedown', description: 'Bring opponent to ground', short_description: 'Ground entry', category: 'Positioning', color: '#4ecdc4', axis_mental_physical: 0.5, axis_self_opponent: 0.5, brightness: 1, size: 1 },
+       { id: 'defense', concept: 'Defense', description: 'Block opponent\'s attacks', short_description: 'Defensive move', category: 'Escapes', color: '#45b7d1', axis_mental_physical: 0.4, axis_self_opponent: 0.6, brightness: 1, size: 1 },
+       { id: 'transition', concept: 'Transition', description: 'Move between positions', short_description: 'Position change', category: 'Positioning', color: '#4ecdc4', axis_mental_physical: 0.3, axis_self_opponent: 0.7, brightness: 1, size: 1 }
+     ];
 
-    // Clear existing nodes first
-    ludusStorage.clearAllData();
+    console.log('Clearing all data...');
+    ludusStorage.clearAllData(); // Clear existing nodes first
+    nodesInPhysicsRef.current.clear(); // Clear physics tracking
     
-    // Add 15 random concepts
     const shuffled = testConcepts.sort(() => 0.5 - Math.random());
-    const selectedConcepts = shuffled.slice(0, 15);
-    
+    const selectedConcepts = shuffled.slice(0, 15); // Limit to 15
     console.log(`Adding ${selectedConcepts.length} test nodes:`, selectedConcepts.map(c => c.concept));
     
-    selectedConcepts.forEach(concept => {
+    selectedConcepts.forEach((concept, index) => {
       const ludusNode = convertBJJConceptToLudusNode(concept);
+      console.log(`Adding node ${index + 1}: ${ludusNode.concept} (${ludusNode.id})`);
       ludusStorage.addNode(ludusNode);
     });
   };
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      height: '100vh', 
-      width: '100vw',
-      backgroundColor: '#1a1a1a',
-      color: '#fff',
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      zIndex: 1000
-    }}>
-      {/* Physics Simulation Area */}
-      <div style={{ 
-        flex: '1', 
-        position: 'relative',
-        borderRight: '2px solid #333'
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 1
-                 }} ref={physicsRef} />
-         
-         {/* Tooltip */}
-         {hoveredNode && (
-           <div style={{
-             position: 'absolute',
-             left: mousePosition.x + 10,
-             top: mousePosition.y - 30,
-             backgroundColor: 'rgba(0,0,0,0.9)',
-             color: '#fff',
-             padding: '8px 12px',
-             borderRadius: 4,
-             fontSize: 14,
-             zIndex: 10,
-             pointerEvents: 'none',
-             maxWidth: 200,
-             whiteSpace: 'nowrap',
-             overflow: 'hidden',
-             textOverflow: 'ellipsis'
-           }}>
-             {ludusStorage.storage.ludusNodes.find(n => n.id === hoveredNode)?.concept || hoveredNode}
-           </div>
-         )}
-         
-         {/* Overlay UI */}
+    <div 
+      ref={containerRef}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: '#1a1a1a',
+        color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        zIndex: 1000
+      }}
+    >
+             {/* Header */}
+       <div style={{
+         display: 'flex',
+         justifyContent: 'space-between',
+         alignItems: 'center',
+         padding: '20px',
+         borderBottom: '1px solid #333',
+         backgroundColor: '#2a2a2a'
+       }}>
+         <h1 style={{ margin: 0 }}>Ludus - Learning Arena</h1>
+         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+           <button 
+             onClick={handleAddTestNodes}
+             style={{
+               padding: '10px 20px',
+               backgroundColor: '#4caf50',
+               color: 'white',
+               border: 'none',
+               borderRadius: 5,
+               cursor: 'pointer'
+             }}
+           >
+             Add Test Nodes
+           </button>
+           <button 
+             onClick={handleClearAll}
+             style={{
+               padding: '10px 20px',
+               backgroundColor: '#f44336',
+               color: 'white',
+               border: 'none',
+               borderRadius: 5,
+               cursor: 'pointer'
+             }}
+           >
+             Clear All
+           </button>
+           <button 
+             onClick={onBackToMatrix}
+             style={{
+               padding: '10px 20px',
+               backgroundColor: '#2196f3',
+               color: 'white',
+               border: 'none',
+               borderRadius: 5,
+               cursor: 'pointer'
+             }}
+           >
+             Back to Matrix
+           </button>
+           <button 
+             onClick={() => setShowHelp(!showHelp)}
+             style={{
+               padding: '8px 12px',
+               backgroundColor: '#666',
+               color: 'white',
+               border: 'none',
+               borderRadius: '50%',
+               cursor: 'pointer',
+               fontSize: '16px',
+               fontWeight: 'bold',
+               width: '32px',
+               height: '32px',
+               display: 'flex',
+               alignItems: 'center',
+               justifyContent: 'center'
+             }}
+           >
+             ?
+           </button>
+         </div>
+       </div>
+
+       {/* Help Modal */}
+       {showHelp && (
          <div style={{
            position: 'absolute',
-           top: 20,
-           left: 20,
-           zIndex: 2
+           top: 80,
+           right: 20,
+           zIndex: 1000,
+           backgroundColor: 'rgba(0,0,0,0.9)',
+           padding: 20,
+           borderRadius: 8,
+           maxWidth: 300,
+           border: '1px solid #333'
          }}>
-           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
-             <button 
-               onClick={onBackToMatrix}
-               style={{
-                 padding: '8px 16px',
-                 backgroundColor: '#666',
-                 color: '#fff',
-                 border: 'none',
-                 borderRadius: 4,
-                 cursor: 'pointer',
-                 fontSize: 14
-               }}
-             >
-               ← Back to Matrix
-             </button>
-             <h2 style={{ margin: 0 }}>Ludus - Physics Playground</h2>
-           </div>
-           <div style={{ fontSize: 14, color: '#aaa', marginBottom: 20 }}>
-             {ludusStorage.storage.ludusNodes.length} nodes in play
-           </div>
-          
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button 
-              onClick={handleAddTestNodes}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#4caf50',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 4,
-                cursor: 'pointer',
-                fontSize: 14
-              }}
-            >
-              Add Test Nodes
-            </button>
-            <button 
-              onClick={handleClearAll}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#d32f2f',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 4,
-                cursor: 'pointer',
-                fontSize: 14
-              }}
-            >
-              Clear All
-            </button>
-          </div>
-        </div>
+           <h4 style={{ margin: 0, marginBottom: 15, color: '#fff' }}>How to Use</h4>
+           <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, lineHeight: 1.4, color: '#fff' }}>
+             <li>Nodes hover with subtle magnetism</li>
+             <li>Similar categories attract each other</li>
+             <li>Drag nodes to quadrants to organize them</li>
+             <li>Rate importance and mastery for each node</li>
+           </ul>
+           <button 
+             onClick={() => setShowHelp(false)}
+             style={{
+               position: 'absolute',
+               top: 5,
+               right: 5,
+               background: 'none',
+               border: 'none',
+               color: '#fff',
+               cursor: 'pointer',
+               fontSize: 16,
+               padding: 0,
+               width: 20,
+               height: 20,
+               display: 'flex',
+               alignItems: 'center',
+               justifyContent: 'center'
+             }}
+           >
+             ×
+           </button>
+         </div>
+       )}
 
-        {/* Instructions */}
-        <div style={{
-          position: 'absolute',
-          bottom: 20,
-          left: 20,
-          zIndex: 2,
-          backgroundColor: 'rgba(0,0,0,0.8)',
-          padding: 15,
-          borderRadius: 8,
-          maxWidth: 300
-        }}>
-          <h4 style={{ margin: 0, marginBottom: 10 }}>How to Play</h4>
-          <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, lineHeight: 1.4 }}>
-            <li>Nodes fall with gravity into the receptacle</li>
-            <li>Similar categories attract each other</li>
-            <li>Drag nodes to quadrants to organize them</li>
-            <li>Rate importance and mastery for each node</li>
-          </ul>
-        </div>
-      </div>
+             {/* Main Content */}
+       <div style={{ 
+         display: 'flex', 
+         flexDirection: 'column',
+         flex: 1, 
+         overflow: 'hidden'
+       }}>
+         {/* Learning Quadrants - Top 2/3 */}
+         <div style={{ 
+           height: '66.67%', 
+           padding: '20px',
+           borderBottom: '2px solid #333'
+         }}>
+           <h2 style={{ margin: 0, marginBottom: 20, textAlign: 'center' }}>
+             Learning Quadrants
+           </h2>
+           <LudusQuadrants
+             nodes={ludusStorage.storage?.ludusNodes || []}
+             quadrantPlacements={ludusStorage.storage?.quadrantPlacements || {}}
+             onNodeDrop={handleNodeDrop}
+             onNodeRemove={(nodeId) => {
+               ludusStorage.removeNode(nodeId);
+               physics.removeNode(nodeId);
+               nodesInPhysicsRef.current.delete(nodeId);
+             }}
+             isDragging={isDragging}
+             draggedNodeId={draggedNode}
+             onQuadrantDrop={handleQuadrantDrop}
+           />
+         </div>
 
-             {/* Quadrants Area */}
-       <div style={{ flex: '1' }}>
-         <LudusQuadrants 
-           nodes={ludusStorage.storage.ludusNodes}
-           quadrantPlacements={ludusStorage.storage.quadrantPlacements}
-           onNodeDrop={handleNodeDrop}
-           onNodeRemove={ludusStorage.removeNode}
-           isDragging={isDragging}
-           draggedNodeId={draggedNode}
-           onQuadrantDrop={handleQuadrantDrop}
-         />
+         {/* Physics Playground - Bottom 1/3 */}
+         <div style={{ 
+           height: '33.33%', 
+           position: 'relative',
+           borderTop: '2px solid #333'
+         }}>
+           <div style={{
+             position: 'absolute',
+             top: 10,
+             left: 10,
+             zIndex: 10,
+             backgroundColor: 'rgba(0,0,0,0.8)',
+             padding: '8px 12px',
+             borderRadius: 4,
+             fontSize: 12,
+             color: 'white'
+           }}>
+             Supply/Storage Ludus
+           </div>
+           <div 
+             ref={physicsRef}
+             style={{ 
+               width: '100%', 
+               height: '100%',
+               position: 'relative'
+             }}
+           />
+           
+           {/* Hover Tooltip */}
+           {hoveredNode && (
+             <div style={{
+               position: 'absolute',
+               left: mousePosition.x + 10,
+               top: mousePosition.y - 10,
+               backgroundColor: 'rgba(0,0,0,0.8)',
+               color: 'white',
+               padding: '5px 10px',
+               borderRadius: 4,
+               fontSize: 12,
+               pointerEvents: 'none',
+               zIndex: 1000
+             }}>
+               {ludusStorage.storage?.ludusNodes.find(n => n.id === hoveredNode)?.concept || hoveredNode}
+             </div>
+           )}
+                  </div>
        </div>
-    </div>
-  );
-};
+     </div>
+   );
+ };
 
 export default Ludus; 

@@ -20,27 +20,28 @@ const LudusQuadrants: React.FC<LudusQuadrantsProps> = ({
   draggedNodeId = null,
   onQuadrantDrop
 }) => {
-  const [dragOverQuadrant, setDragOverQuadrant] = useState<string | null>(null);
+  const [hoveredQuadrant, setHoveredQuadrant] = useState<string | null>(null);
 
   const quadrants = [
-    { id: 'trivial-master', title: 'Trivial', subtitle: 'Master', color: '#4caf50' },
-    { id: 'crucial-master', title: 'Crucial', subtitle: 'Master', color: '#2196f3' },
-    { id: 'trivial-noob', title: 'Trivial', subtitle: 'Noob', color: '#ff9800' },
-    { id: 'crucial-noob', title: 'Crucial', subtitle: 'Noob', color: '#f44336' }
+    { id: 'trivial-master', title: 'Learning 1', subtitle: 'Trivial/Master', color: '#4caf50' },
+    { id: 'crucial-master', title: 'Learning 2', subtitle: 'Crucial/Master', color: '#2196f3' },
+    { id: 'trivial-noob', title: 'Learning 3', subtitle: 'Trivial/Noob', color: '#ff9800' },
+    { id: 'crucial-noob', title: 'Learning 4', subtitle: 'Crucial/Noob', color: '#f44336' }
   ];
 
+  // Get nodes in each quadrant
   const getNodesInQuadrant = (quadrantId: string) => {
     return nodes.filter(node => quadrantPlacements[node.id]?.quadrant === quadrantId);
   };
 
   const handleMouseEnter = (quadrantId: string) => {
     if (isDragging && draggedNodeId) {
-      setDragOverQuadrant(quadrantId);
+      setHoveredQuadrant(quadrantId);
     }
   };
 
   const handleMouseLeave = () => {
-    setDragOverQuadrant(null);
+    setHoveredQuadrant(null);
   };
 
   const handleClick = (quadrantId: string) => {
@@ -49,21 +50,12 @@ const LudusQuadrants: React.FC<LudusQuadrantsProps> = ({
     }
   };
 
-  const handleNodeRemove = (nodeId: string) => {
-    onNodeRemove(nodeId);
-  };
-
   return (
     <div style={{ 
       height: '100%', 
       display: 'flex', 
-      flexDirection: 'column',
-      padding: 20
+      flexDirection: 'column'
     }}>
-      <h2 style={{ margin: 0, marginBottom: 20, textAlign: 'center' }}>
-        Learning Quadrants
-      </h2>
-      
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: '1fr 1fr', 
@@ -73,7 +65,7 @@ const LudusQuadrants: React.FC<LudusQuadrantsProps> = ({
       }}>
         {quadrants.map(quadrant => {
           const nodesInQuadrant = getNodesInQuadrant(quadrant.id);
-          const isDragOver = dragOverQuadrant === quadrant.id;
+          const isHovered = hoveredQuadrant === quadrant.id;
           
           return (
             <div
@@ -82,12 +74,14 @@ const LudusQuadrants: React.FC<LudusQuadrantsProps> = ({
                 border: `2px solid ${quadrant.color}`,
                 borderRadius: 8,
                 padding: 15,
-                backgroundColor: isDragOver ? `${quadrant.color}20` : '#2a2a2a',
+                backgroundColor: isHovered ? `${quadrant.color}20` : '#2a2a2a',
                 transition: 'background-color 0.2s',
                 display: 'flex',
                 flexDirection: 'column',
                 minHeight: 0,
-                cursor: isDragging ? 'pointer' : 'default'
+                cursor: isDragging ? 'pointer' : 'default',
+                position: 'relative',
+                overflow: 'hidden'
               }}
               onMouseEnter={() => handleMouseEnter(quadrant.id)}
               onMouseLeave={handleMouseLeave}
@@ -101,54 +95,51 @@ const LudusQuadrants: React.FC<LudusQuadrantsProps> = ({
                 backgroundColor: quadrant.color,
                 borderRadius: 4,
                 color: '#fff',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                zIndex: 10,
+                position: 'relative'
               }}>
                 <div>{quadrant.title}</div>
                 <div style={{ fontSize: 12, opacity: 0.9 }}>{quadrant.subtitle}</div>
               </div>
 
-              {/* Nodes in this quadrant */}
+              {/* Nodes List */}
               <div style={{ 
                 flex: 1, 
                 overflowY: 'auto',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 8
+                gap: 5
               }}>
                 {nodesInQuadrant.map(node => (
                   <div
                     key={node.id}
                     style={{
-                      padding: 8,
                       backgroundColor: node.color,
+                      color: '#fff',
+                      padding: '8px 12px',
                       borderRadius: 4,
                       fontSize: 12,
-                      position: 'relative',
-                      border: '1px solid #333'
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
                     }}
                   >
-                    <div style={{ fontWeight: 'bold', marginBottom: 4 }}>
-                      {node.concept}
-                    </div>
-                    <div style={{ fontSize: 10, opacity: 0.8 }}>
-                      {node.category}
-                    </div>
-                    
-                    {/* Remove button */}
+                    <span style={{ fontWeight: 'bold' }}>{node.concept}</span>
                     <button
-                      onClick={() => handleNodeRemove(node.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onNodeRemove(node.id);
+                      }}
                       style={{
-                        position: 'absolute',
-                        top: 4,
-                        right: 4,
-                        width: 16,
-                        height: 16,
-                        backgroundColor: '#d32f2f',
-                        color: '#fff',
+                        background: 'none',
                         border: 'none',
-                        borderRadius: '50%',
+                        color: '#fff',
                         cursor: 'pointer',
-                        fontSize: 10,
+                        fontSize: 16,
+                        padding: 0,
+                        width: 20,
+                        height: 20,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'
@@ -158,25 +149,16 @@ const LudusQuadrants: React.FC<LudusQuadrantsProps> = ({
                     </button>
                   </div>
                 ))}
-                
-                {nodesInQuadrant.length === 0 && (
-                  <div style={{ 
-                    textAlign: 'center', 
-                    color: '#666', 
-                    fontSize: 12,
-                    padding: 20
-                  }}>
-                    Drop nodes here
-                  </div>
-                )}
               </div>
-
+              
               {/* Quadrant stats */}
               <div style={{ 
                 marginTop: 10, 
                 fontSize: 11, 
                 color: '#aaa',
-                textAlign: 'center'
+                textAlign: 'center',
+                zIndex: 10,
+                position: 'relative'
               }}>
                 {nodesInQuadrant.length} nodes
               </div>
