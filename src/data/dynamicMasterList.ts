@@ -1,10 +1,10 @@
 // Dynamic master list import - auto-generated
 // This file is automatically updated to import the latest master list
-// Last updated: 2025-07-29T06:27:16.796Z
-// Source file: BJJMasterList_20250729_225Nodes.ts
+// Last updated: 2025-08-04T13:33:42.926Z
+// Source file: BJJMasterList_20250804_237Nodes.ts
 
 // Import the latest master list data
-export { categories, skillsMasterList } from './BJJMasterList_20250729_225Nodes';
+export { categories, skillsMasterList } from './BJJMasterList_20250804_237Nodes';
 
 // Re-export the interface for type safety
 export interface BJJConcept {
@@ -22,8 +22,8 @@ export interface BJJConcept {
 
 // Export metadata about the current file
 export const masterListMetadata = {
-  fileName: 'BJJMasterList_20250729_225Nodes.ts',
-  nodeCount: 225,
-  date: '20250729',
-  lastModified: '2025-07-29T06:27:16.796Z'
+  fileName: 'BJJMasterList_20250804_237Nodes.ts',
+  nodeCount: 237,
+  date: '20250804',
+  lastModified: '2025-08-04T13:33:42.926Z'
 };

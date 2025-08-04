@@ -20,9 +20,9 @@ import {
   useDataSource, 
   useSnackbar, 
   useViewManagement,
-  useBetaAuth,
-  type BJJConcept 
+  useBetaAuth
 } from './hooks';
+import { BJJConcept, Category } from './types/concepts';
 
 // Pre-computed styles
 const BACK_BUTTON_STYLE = {
@@ -198,11 +198,13 @@ function App() {
       await dataManagement.addCategory(cat, dataSource.dataSource, dataSource.selectedMasterList);
       snackbar.showMessage(`Category "${cat.name}" added successfully`);
     } catch (error) {
-      snackbar.showMessage('Failed to add category');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to add category';
+      snackbar.showMessage(errorMessage);
+      throw error; // Re-throw to let the modal handle it
     }
   };
 
-  const updateCategory = async (id: string, updates: { name: string; color: string; xAxis?: { left: string; right: string }; yAxis?: { bottom: string; top: string } }) => {
+  const updateCategory = async (id: string, updates: Partial<Category>) => {
     try {
       await dataManagement.updateCategory(id, updates, dataSource.dataSource, dataSource.selectedMasterList);
       snackbar.showMessage('Category updated successfully');

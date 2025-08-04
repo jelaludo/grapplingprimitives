@@ -1,27 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getProductionData } from '../data/productionData';
-
-export type BJJConcept = {
-  _id?: string;
-  id: string;
-  concept: string;
-  description: string;
-  short_description: string;
-  category: string;
-  color: string;
-  axis_self_opponent: number;
-  axis_mental_physical: number;
-  brightness: number;
-  size: number;
-};
-
-export type Category = {
-  name: string;
-  color: string;
-  _id?: string;
-  xAxis?: { left: string; right: string };
-  yAxis?: { bottom: string; top: string };
-};
+import { BJJConcept, Category } from '../types/concepts';
 
 export type DataSource = 'mongodb' | 'local' | 'production';
 
@@ -199,6 +178,14 @@ export const useDataManagement = (isDevelopment: boolean) => {
   }, [loadData]);
 
   const addCategory = useCallback(async (cat: Omit<Category, '_id'>, dataSource: DataSource, selectedMasterList?: string) => {
+    // Validate required fields
+    if (!cat.name || !cat.name.trim()) {
+      throw new Error('Category name is required');
+    }
+    if (!cat.color) {
+      throw new Error('Category color is required');
+    }
+
     const newCategory = { 
       ...cat, 
       _id: `local-${Date.now()}`,
@@ -207,16 +194,35 @@ export const useDataManagement = (isDevelopment: boolean) => {
     };
     
     if (dataSource === 'mongodb') {
-      await fetch(`${API_BASE}/api/categories`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newCategory),
-      });
-      await loadData('mongodb');
+      try {
+        const response = await fetch(`${API_BASE}/api/categories`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newCategory),
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || `Failed to create category: ${response.status}`);
+        }
+        
+        await loadData('mongodb');
+      } catch (error) {
+        throw new Error(`Failed to create category: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
     } else {
-      setCategories(prevCategories => {
-        return [...prevCategories, newCategory];
-      });
+      // For local mode, check if category already exists before updating state
+      const currentCategories = categories; // Get current state
+      const existingCategory = currentCategories.find(c => c.name.toLowerCase() === cat.name.toLowerCase());
+      if (existingCategory) {
+        throw new Error(`Category "${cat.name}" already exists`);
+      }
+      
+      // Update state with new category
+      setCategories(prevCategories => [...prevCategories, newCategory]);
+      
+      // Return the new category for immediate use
+      return newCategory;
     }
   }, [loadData]);
 

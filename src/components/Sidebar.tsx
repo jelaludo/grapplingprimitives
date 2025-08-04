@@ -1,49 +1,15 @@
 import React, { useState } from 'react';
-
-type BJJConcept = {
-  id: string;
-  concept: string;
-  description: string;
-  short_description: string;
-  category: string;
-  color: string;
-  axis_self_opponent: number;
-  axis_mental_physical: number;
-  brightness: number;
-  size: number;
-};
+import { BJJConcept, Category } from '../types/concepts';
 
 type SidebarProps = {
   concepts: BJJConcept[];
   addConcept: (concept: Omit<BJJConcept, 'id'>) => Promise<void>;
   updateConcept: (id: string, updates: Partial<BJJConcept>) => Promise<void>;
   deleteConcept: (id: string) => Promise<void>;
-  categories: { 
-    name: string; 
-    color: string; 
-    _id?: string;
-    xAxis?: { left: string; right: string };
-    yAxis?: { bottom: string; top: string };
-  }[];
-  setCategories: React.Dispatch<React.SetStateAction<{ 
-    name: string; 
-    color: string; 
-    _id?: string;
-    xAxis?: { left: string; right: string };
-    yAxis?: { bottom: string; top: string };
-  }[]>>;
-  addCategory: (cat: { 
-    name: string; 
-    color: string;
-    xAxis?: { left: string; right: string };
-    yAxis?: { bottom: string; top: string };
-  }) => Promise<void>;
-  updateCategory: (id: string, updates: { 
-    name: string; 
-    color: string;
-    xAxis?: { left: string; right: string };
-    yAxis?: { bottom: string; top: string };
-  }) => Promise<void>;
+  categories: Category[];
+  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  addCategory: (cat: Omit<Category, '_id'>) => Promise<void>;
+  updateCategory: (id: string, updates: Partial<Category>) => Promise<void>;
   deleteCategory: (id: string) => Promise<void>;
   createMode: boolean;
   setCreateMode: (v: boolean) => void;
@@ -134,13 +100,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     await deleteCategory(catId);
   };
 
-  const handleEditCategory = (cat: { 
-    _id?: string; 
-    name: string; 
-    color: string;
-    xAxis?: { left: string; right: string };
-    yAxis?: { bottom: string; top: string };
-  }) => {
+  const handleEditCategory = (cat: Category) => {
     setEditCategoryId(cat._id || null);
     setEditCategoryName(cat.name);
     setEditCategoryColor(cat.color);

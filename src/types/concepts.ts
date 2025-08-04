@@ -10,6 +10,13 @@ export interface BJJConcept {
   axis_mental_physical: number;
   brightness: number;
   size: number;
+  // Optional D3.js visualization properties
+  cx?: number;
+  cy?: number;
+  r?: number;
+  opacity?: number;
+  stroke?: string;
+  strokeWidth?: number;
 }
 
 export interface Category {

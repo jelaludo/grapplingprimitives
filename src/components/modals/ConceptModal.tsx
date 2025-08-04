@@ -29,11 +29,14 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
 }) => {
   const [edit, setEdit] = useState<BJJConcept | null>(concept);
   const [customCategory, setCustomCategory] = useState('');
+  const [customCategoryColor, setCustomCategoryColor] = useState('#888888');
   const [categoryMode, setCategoryMode] = useState<'select' | 'custom'>('select');
   const [customCategoryXAxisLeft, setCustomCategoryXAxisLeft] = useState('Mental');
   const [customCategoryXAxisRight, setCustomCategoryXAxisRight] = useState('Physical');
   const [customCategoryYAxisBottom, setCustomCategoryYAxisBottom] = useState('Self');
   const [customCategoryYAxisTop, setCustomCategoryYAxisTop] = useState('Opponent');
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Initialize form state when modal opens or concept changes
   useEffect(() => {
@@ -41,25 +44,63 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
       setEdit(concept);
       setCategoryMode('select');
       setCustomCategory('');
+      setCustomCategoryColor('#888888');
       setCustomCategoryXAxisLeft('Mental');
       setCustomCategoryXAxisRight('Physical');
       setCustomCategoryYAxisBottom('Self');
       setCustomCategoryYAxisTop('Opponent');
+      setError(null);
     }
   }, [concept]);
 
   if (!edit) return null;
 
-  const handleSave = () => {
-    if (categoryMode === 'custom' && customCategory.trim() && addCategory) {
-      addCategory({
-        name: customCategory.trim(),
-        color: '#888888',
-        xAxis: { left: customCategoryXAxisLeft, right: customCategoryXAxisRight },
-        yAxis: { bottom: customCategoryYAxisBottom, top: customCategoryYAxisTop }
-      });
+  const handleSave = async () => {
+    setIsSaving(true);
+    setError(null);
+    
+    try {
+      let updatedEdit = { ...edit };
+      
+      // Validate concept name
+      if (!updatedEdit.concept.trim()) {
+        throw new Error('Concept name is required');
+      }
+      
+      // If creating a new category, add it first and wait for completion
+      if (categoryMode === 'custom') {
+        if (!customCategory.trim()) {
+          throw new Error('Category name is required when creating a new category');
+        }
+        if (!addCategory) {
+          throw new Error('Category creation is not available');
+        }
+        
+        await addCategory({
+          name: customCategory.trim(),
+          color: customCategoryColor,
+          xAxis: { left: customCategoryXAxisLeft, right: customCategoryXAxisRight },
+          yAxis: { bottom: customCategoryYAxisBottom, top: customCategoryYAxisTop }
+        });
+        
+        // Update the concept to use the newly created category
+        updatedEdit = {
+          ...updatedEdit,
+          category: customCategory.trim(),
+          color: customCategoryColor
+        };
+        
+        // Small delay to ensure state updates are processed
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      
+      // Now save the concept with the updated category
+      onSave(updatedEdit);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create category');
+    } finally {
+      setIsSaving(false);
     }
-    onSave(edit);
   };
 
   const handleDelete = () => {
@@ -90,6 +131,20 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
         <h2 style={{ margin: 0 }}>{isCreateMode ? 'Create New Concept' : 'Edit Concept'}</h2>
         <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#fff', fontSize: 28, cursor: 'pointer', padding: 0, lineHeight: 1 }} title="Close">×</button>
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div style={{ 
+          background: '#F74F4F', 
+          color: '#fff', 
+          padding: 8, 
+          borderRadius: 4, 
+          marginBottom: 16,
+          fontSize: 14 
+        }}>
+          Error: {error}
+        </div>
+      )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {/* Concept Name */}
@@ -160,6 +215,19 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
                 placeholder="New category name"
                 style={{ padding: 8, borderRadius: 4, border: '1px solid #333', background: '#181818', color: '#fff' }}
               />
+              
+              {/* Color Picker */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input
+                  type="color"
+                  value={customCategoryColor}
+                  onChange={e => setCustomCategoryColor(e.target.value)}
+                  style={{ width: 40, height: 40, border: 'none', borderRadius: 4, cursor: 'pointer' }}
+                  title="Category color"
+                />
+                <span style={{ color: '#aaa', fontSize: 12 }}>Category color</span>
+              </div>
+              
               <div style={{ display: 'flex', gap: 8 }}>
                 <input
                   type="text"
@@ -248,18 +316,65 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
           </div>
         </div>
 
+        {/* Position Coordinates */}
+        <div style={{ display: 'flex', gap: 16 }}>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: 4, fontSize: 14 }}>X Position (Mental ↔ Physical):</label>
+            <input
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              value={edit.axis_mental_physical}
+              onChange={e => setEdit({ ...edit, axis_mental_physical: Number(e.target.value) })}
+              style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #333', background: '#181818', color: '#fff' }}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: 4, fontSize: 14 }}>Y Position (Self ↔ Opponent):</label>
+            <input
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              value={edit.axis_self_opponent}
+              onChange={e => setEdit({ ...edit, axis_self_opponent: Number(e.target.value) })}
+              style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #333', background: '#181818', color: '#fff' }}
+            />
+          </div>
+        </div>
+
         {/* Action Buttons */}
         <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
           <button
             onClick={handleSave}
-            style={{ background: '#4F8EF7', color: '#fff', border: 'none', borderRadius: 4, padding: '8px 16px', cursor: 'pointer', flex: 1 }}
+            disabled={isSaving}
+            style={{ 
+              background: isSaving ? '#666' : '#4F8EF7', 
+              color: '#fff', 
+              border: 'none', 
+              borderRadius: 4, 
+              padding: '8px 16px', 
+              cursor: isSaving ? 'not-allowed' : 'pointer', 
+              flex: 1,
+              opacity: isSaving ? 0.7 : 1
+            }}
           >
-            {isCreateMode ? 'Create' : 'Save'}
+            {isSaving ? 'Saving...' : (isCreateMode ? 'Create' : 'Save')}
           </button>
           {!isCreateMode && onDelete && (
             <button
               onClick={handleDelete}
-              style={{ background: '#F74F4F', color: '#fff', border: 'none', borderRadius: 4, padding: '8px 16px', cursor: 'pointer' }}
+              disabled={isSaving}
+              style={{ 
+                background: '#F74F4F', 
+                color: '#fff', 
+                border: 'none', 
+                borderRadius: 4, 
+                padding: '8px 16px', 
+                cursor: isSaving ? 'not-allowed' : 'pointer',
+                opacity: isSaving ? 0.7 : 1
+              }}
             >
               Delete
             </button>
