@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { LudusNode } from '../../types/ludus';
 import { useLudusStorage } from '../../hooks/useLudusStorage';
-import { useLudusPhysics } from '../../hooks/useLudusPhysics';
+import { useLudusPhysics, LudusPhysicsConfig } from '../../hooks/useLudusPhysics';
 import { convertBJJConceptToLudusNode } from '../../utils/ludusUtils';
 import LudusQuadrants from './LudusQuadrants';
+import PhysicsControls from './PhysicsControls';
 
 interface LudusProps {
   onBackToMatrix: () => void;
@@ -18,6 +19,8 @@ const Ludus: React.FC<LudusProps> = ({ onBackToMatrix }) => {
   const [draggedNode, setDraggedNode] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showPhysicsControls, setShowPhysicsControls] = useState(false);
+  const [physicsConfig, setPhysicsConfig] = useState<LudusPhysicsConfig | null>(null);
 
   const ludusStorage = useLudusStorage();
   const physics = useLudusPhysics();
@@ -32,6 +35,11 @@ const Ludus: React.FC<LudusProps> = ({ onBackToMatrix }) => {
       console.log('Container dimensions:', physicsRef.current.clientWidth, 'x', physicsRef.current.clientHeight);
       physics.initializePhysics(physicsRef.current);
       setIsPhysicsInitialized(true);
+      
+      // Sync initial config
+      if (physics.configRef?.current) {
+        setPhysicsConfig(physics.configRef.current);
+      }
     }
   }, [physics, isPhysicsInitialized]);
 
@@ -74,6 +82,9 @@ const Ludus: React.FC<LudusProps> = ({ onBackToMatrix }) => {
   useEffect(() => {
     if (!isPhysicsInitialized || !ludusStorage.storage) return;
 
+    const updateRate = physics.configRef?.current?.updateRate || 100;
+    console.log('Setting up magnetic forces interval with rate:', updateRate);
+
     const interval = setInterval(() => {
       const nodesInPhysics = ludusStorage.storage.ludusNodes.filter(node => 
         !ludusStorage.storage.quadrantPlacements[node.id]
@@ -81,10 +92,10 @@ const Ludus: React.FC<LudusProps> = ({ onBackToMatrix }) => {
       if (nodesInPhysics.length > 1) {
         physics.applyMagneticForces(nodesInPhysics);
       }
-    }, 100); // More frequent updates for visible movement
+    }, updateRate);
 
     return () => clearInterval(interval);
-  }, [ludusStorage.storage, isPhysicsInitialized, physics]);
+  }, [ludusStorage.storage, isPhysicsInitialized, physics, physics.configRef?.current?.updateRate]);
 
   // Mouse interaction for hover and drag
   useEffect(() => {
@@ -155,13 +166,17 @@ const Ludus: React.FC<LudusProps> = ({ onBackToMatrix }) => {
     }
   };
 
+  const handlePhysicsConfigChange = (newConfig: Partial<LudusPhysicsConfig>) => {
+    console.log('Physics config change received:', newConfig);
+    physics.updateConfig(newConfig);
+    
+    // Update local state to trigger re-render
+    setPhysicsConfig(prev => prev ? { ...prev, ...newConfig } : null);
+  };
+
   const handleClearAll = () => {
-    // Remove all nodes from physics
-    if (ludusStorage.storage) {
-      ludusStorage.storage.ludusNodes.forEach(node => {
-        physics.removeNode(node.id);
-      });
-    }
+    // Reset physics engine
+    physics.reset();
     nodesInPhysicsRef.current.clear();
     
     // Clear storage
@@ -295,49 +310,77 @@ const Ludus: React.FC<LudusProps> = ({ onBackToMatrix }) => {
          </div>
        </div>
 
-       {/* Help Modal */}
-       {showHelp && (
-         <div style={{
-           position: 'absolute',
-           top: 80,
-           right: 20,
-           zIndex: 1000,
-           backgroundColor: 'rgba(0,0,0,0.9)',
-           padding: 20,
-           borderRadius: 8,
-           maxWidth: 300,
-           border: '1px solid #333'
-         }}>
-           <h4 style={{ margin: 0, marginBottom: 15, color: '#fff' }}>How to Use</h4>
-           <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, lineHeight: 1.4, color: '#fff' }}>
-             <li>Nodes hover with subtle magnetism</li>
-             <li>Similar categories attract each other</li>
-             <li>Drag nodes to quadrants to organize them</li>
-             <li>Rate importance and mastery for each node</li>
-           </ul>
-           <button 
-             onClick={() => setShowHelp(false)}
-             style={{
-               position: 'absolute',
-               top: 5,
-               right: 5,
-               background: 'none',
-               border: 'none',
-               color: '#fff',
-               cursor: 'pointer',
-               fontSize: 16,
-               padding: 0,
-               width: 20,
-               height: 20,
-               display: 'flex',
-               alignItems: 'center',
-               justifyContent: 'center'
-             }}
-           >
-             ×
-           </button>
-         </div>
-       )}
+               {/* Help Modal */}
+        {showHelp && (
+          <div style={{
+            position: 'absolute',
+            top: 80,
+            right: 20,
+            zIndex: 1000,
+            backgroundColor: 'rgba(0,0,0,0.9)',
+            padding: 20,
+            borderRadius: 8,
+            maxWidth: 350,
+            maxHeight: '80vh',
+            border: '1px solid #333',
+            overflowY: 'auto'
+          }}>
+            <h4 style={{ margin: 0, marginBottom: 15, color: '#fff' }}>How to Use</h4>
+            <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, lineHeight: 1.4, color: '#fff' }}>
+              <li>Nodes hover with subtle magnetism</li>
+              <li>Similar categories attract each other</li>
+              <li>Drag nodes to quadrants to organize them</li>
+              <li>Rate importance and mastery for each node</li>
+            </ul>
+            
+            <div style={{ marginTop: 20, borderTop: '1px solid #333', paddingTop: 15 }}>
+              <button 
+                onClick={() => setShowPhysicsControls(!showPhysicsControls)}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: showPhysicsControls ? '#4caf50' : '#666',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 4,
+                  cursor: 'pointer',
+                  fontSize: 12,
+                  marginBottom: 10
+                }}
+              >
+                {showPhysicsControls ? 'Hide' : 'Show'} Physics Controls
+              </button>
+              
+                             {showPhysicsControls && physicsConfig && (
+                 <PhysicsControls
+                   config={physicsConfig}
+                   onConfigChange={handlePhysicsConfigChange}
+                 />
+               )}
+            </div>
+            
+            <button 
+              onClick={() => setShowHelp(false)}
+              style={{
+                position: 'absolute',
+                top: 5,
+                right: 5,
+                background: 'none',
+                border: 'none',
+                color: '#fff',
+                cursor: 'pointer',
+                fontSize: 16,
+                padding: 0,
+                width: 20,
+                height: 20,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              ×
+            </button>
+          </div>
+        )}
 
              {/* Main Content */}
        <div style={{ 

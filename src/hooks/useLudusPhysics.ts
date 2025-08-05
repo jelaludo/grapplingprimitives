@@ -2,18 +2,30 @@ import { useEffect, useRef, useCallback } from 'react';
 import Matter from 'matter-js';
 import { LudusNode } from '../types/ludus';
 
-interface LudusPhysicsConfig {
+export interface LudusPhysicsConfig {
   magneticStrength: number;
   friction: number;
   restitution: number;
   boundaryPadding: number;
+  sameCategoryAttraction: number;
+  differentCategoryRepulsion: number;
+  distanceThreshold: number;
+  updateRate: number;
+  damping: number;
+  mouseStiffness: number;
 }
 
 const DEFAULT_CONFIG: LudusPhysicsConfig = {
-  magneticStrength: 0.01, // More noticeable magnetic force
-  friction: 0.9, // Less friction to allow more movement
+  magneticStrength: 0.1, // Much stronger magnetic force for visible clustering
+  friction: 0.7, // Less friction to allow more movement
   restitution: 0.01, // Almost no bouncing
-  boundaryPadding: 20
+  boundaryPadding: 20,
+  sameCategoryAttraction: 1.0, // Full attraction for same categories
+  differentCategoryRepulsion: 0.5, // Stronger repulsion for different categories
+  distanceThreshold: 100, // Larger distance for magnetic effects
+  updateRate: 50, // Faster updates for more responsive physics
+  damping: 0.95, // Less damping to allow more movement
+  mouseStiffness: 0.2 // Mouse drag responsiveness
 };
 
 export const useLudusPhysics = (config: Partial<LudusPhysicsConfig> = {}) => {
@@ -89,18 +101,18 @@ export const useLudusPhysics = (config: Partial<LudusPhysicsConfig> = {}) => {
 
     Matter.World.add(engine.world, walls);
 
-    // Add mouse interaction
-    const mouse = Matter.Mouse.create(render.canvas);
-    mouseRef.current = mouse;
-    const mouseConstraint = Matter.MouseConstraint.create(engine, {
-      mouse: mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: {
-          visible: false
-        }
+      // Add mouse interaction
+  const mouse = Matter.Mouse.create(render.canvas);
+  mouseRef.current = mouse;
+  const mouseConstraint = Matter.MouseConstraint.create(engine, {
+    mouse: mouse,
+    constraint: {
+      stiffness: configRef.current.mouseStiffness,
+      render: {
+        visible: false
       }
-    });
+    }
+  });
     mouseConstraintRef.current = mouseConstraint;
     Matter.World.add(engine.world, mouseConstraint);
 
@@ -139,7 +151,7 @@ export const useLudusPhysics = (config: Partial<LudusPhysicsConfig> = {}) => {
     // Set initial velocity to zero to prevent any initial momentum
     Matter.Body.setVelocity(body, { x: 0, y: 0 });
     Matter.Body.setAngularVelocity(body, 0);
-    Matter.Body.set(body, 'damping', 0.99);
+    Matter.Body.set(body, 'damping', configRef.current.damping);
 
     bodiesRef.current.set(node.id, body);
     Matter.World.add(engineRef.current.world, body);
@@ -179,22 +191,22 @@ export const useLudusPhysics = (config: Partial<LudusPhysicsConfig> = {}) => {
           Matter.Vector.sub(bodyB.position, bodyA.position)
         );
 
-        if (distance < 30) continue; // Only apply forces when nodes are reasonably far apart
+        if (distance < configRef.current.distanceThreshold) continue; // Only apply forces when nodes are reasonably far apart
 
         // Determine attraction/repulsion based on categories
         let forceMultiplier = 0;
         
         // Similar categories attract
         if (nodeA.category === nodeB.category) {
-          forceMultiplier = strength;
+          forceMultiplier = strength * configRef.current.sameCategoryAttraction;
         }
-        // Different categories have almost no repulsion
+        // Different categories have repulsion
         else {
-          forceMultiplier = -strength * 0.01;
+          forceMultiplier = -strength * configRef.current.differentCategoryRepulsion;
         }
 
-        // Apply force (inverse square law) - more noticeable
-        const force = (forceMultiplier * 1.0) / (distance * distance);
+        // Apply force (inverse relationship for stronger effects)
+        const force = forceMultiplier / distance;
         const direction = Matter.Vector.normalise(
           Matter.Vector.sub(bodyB.position, bodyA.position)
         );
@@ -258,6 +270,34 @@ export const useLudusPhysics = (config: Partial<LudusPhysicsConfig> = {}) => {
     mouseConstraintRef.current = null;
   }, []);
 
+  // Update physics configuration
+  const updateConfig = useCallback((newConfig: Partial<LudusPhysicsConfig>) => {
+    console.log('Updating physics config:', newConfig);
+    configRef.current = { ...configRef.current, ...newConfig };
+    console.log('New config state:', configRef.current);
+    
+    // Update mouse constraint stiffness if it exists
+    if (mouseConstraintRef.current) {
+      mouseConstraintRef.current.constraint.stiffness = configRef.current.mouseStiffness;
+    }
+  }, []);
+
+  // Reset physics engine
+  const reset = useCallback(() => {
+    if (engineRef.current) {
+      // Remove all bodies except walls
+      const bodiesToRemove = engineRef.current.world.bodies.filter(body => 
+        body.label && body.label !== 'wall'
+      );
+      bodiesToRemove.forEach(body => {
+        Matter.World.remove(engineRef.current!.world, body);
+      });
+      
+      // Clear our tracking
+      bodiesRef.current.clear();
+    }
+  }, []);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -272,6 +312,9 @@ export const useLudusPhysics = (config: Partial<LudusPhysicsConfig> = {}) => {
     applyMagneticForces,
     getBodyPositions,
     getNodeUnderMouse,
+    updateConfig,
+    reset,
+    configRef,
     cleanup
   };
 }; 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { BJJConcept, Category } from '../types/concepts';
 
 type SidebarProps = {
@@ -65,6 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [searchText, setSearchText] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [showDisplaySettings, setShowDisplaySettings] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Search functionality
   const searchResults = concepts.filter(concept =>
@@ -76,6 +77,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     setSelected(concept);
     setSearchText('');
     setShowSearchResults(false);
+    // Reset the input field properly
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
   };
 
   // Category management
@@ -154,6 +159,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <h3 style={{ fontSize: 16, marginBottom: 8, color: '#aaa' }}>Search</h3>
         <div style={{ position: 'relative' }}>
           <input
+            ref={searchInputRef}
             type="text"
             value={searchText}
             onChange={e => {
@@ -161,7 +167,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               setShowSearchResults(true);
             }}
             onFocus={() => setShowSearchResults(true)}
-            onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
+            onBlur={() => setShowSearchResults(false)}
             placeholder="Search concepts..."
             style={{
               width: '100%',
