@@ -86,6 +86,16 @@ export const useLudusStorage = () => {
     }));
   }, []);
 
+  const removeQuadrantPlacement = useCallback((nodeId: string) => {
+    setStorage(prev => {
+      const { [nodeId]: removed, ...remainingPlacements } = prev.quadrantPlacements;
+      return {
+        ...prev,
+        quadrantPlacements: remainingPlacements
+      };
+    });
+  }, []);
+
   const clearAllData = useCallback(() => {
     setStorage(DEFAULT_LUDUS_STORAGE);
     localStorage.removeItem(LUDUS_STORAGE_KEY);
@@ -108,6 +118,7 @@ export const useLudusStorage = () => {
     removeNode,
     updateNode,
     setQuadrantPlacement,
+    removeQuadrantPlacement,
     clearAllData,
     getNodeById,
     getNodesByQuadrant

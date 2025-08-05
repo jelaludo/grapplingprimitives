@@ -10,6 +10,8 @@ export interface LudusNode {
   quadrant?: 'trivial-noob' | 'crucial-noob' | 'trivial-master' | 'crucial-master';
   importance: number; // 1-10
   mastery: number; // 1-10
+  axis_mental_physical?: number; // 0-1 scale
+  axis_self_opponent?: number; // 0-1 scale
   // D3.js visualization properties
   cx?: number;
   cy?: number;

@@ -65,9 +65,9 @@ const PhysicsControls: React.FC<PhysicsControlsProps> = ({ config, onConfigChang
              {createSlider(
          'Magnetic Strength',
          config.magneticStrength,
-         0.01,
-         1.0,
-         0.01,
+         0.001,
+         0.2,
+         0.001,
          (value) => onConfigChange({ magneticStrength: value }),
          'Intensity'
        )}
@@ -105,9 +105,9 @@ const PhysicsControls: React.FC<PhysicsControlsProps> = ({ config, onConfigChang
              {createSlider(
          'Distance Threshold',
          config.distanceThreshold,
-         20,
-         200,
          10,
+         100,
+         5,
          (value) => onConfigChange({ distanceThreshold: value }),
          'Interaction Range'
        )}
@@ -126,21 +126,21 @@ const PhysicsControls: React.FC<PhysicsControlsProps> = ({ config, onConfigChang
          'Damping',
          config.damping,
          0.5,
-         0.99,
+         0.95,
          0.01,
          (value) => onConfigChange({ damping: value }),
          'Velocity Loss Over Time'
        )}
       
-      {createSlider(
-        'Restitution',
-        config.restitution,
-        0,
-        1,
-        0.01,
-        (value) => onConfigChange({ restitution: value }),
-        'Bounce Factor'
-      )}
+             {createSlider(
+         'Restitution',
+         config.restitution,
+         0,
+         0.5,
+         0.01,
+         (value) => onConfigChange({ restitution: value }),
+         'Bounce Factor'
+       )}
       
       {createSlider(
         'Mouse Stiffness',

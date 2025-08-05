@@ -16,16 +16,16 @@ export interface LudusPhysicsConfig {
 }
 
 const DEFAULT_CONFIG: LudusPhysicsConfig = {
-  magneticStrength: 0.1, // Much stronger magnetic force for visible clustering
-  friction: 0.7, // Less friction to allow more movement
+  magneticStrength: 0.05, // Good starting value for subtle magnetism
+  friction: 0.7, // Good surface resistance
   restitution: 0.01, // Almost no bouncing
   boundaryPadding: 20,
-  sameCategoryAttraction: 1.0, // Full attraction for same categories
-  differentCategoryRepulsion: 0.5, // Stronger repulsion for different categories
-  distanceThreshold: 100, // Larger distance for magnetic effects
-  updateRate: 50, // Faster updates for more responsive physics
-  damping: 0.95, // Less damping to allow more movement
-  mouseStiffness: 0.2 // Mouse drag responsiveness
+  sameCategoryAttraction: 1.0, // Good attraction strength for same categories
+  differentCategoryRepulsion: 0.5, // Good repulsion strength for different categories
+  distanceThreshold: 100, // Good interaction range (increased from 50)
+  updateRate: 50, // Good physics refresh speed
+  damping: 0.95, // Good velocity loss over time (increased from 0.8)
+  mouseStiffness: 0.2 // Good mouse drag responsiveness
 };
 
 export const useLudusPhysics = (config: Partial<LudusPhysicsConfig> = {}) => {
@@ -191,7 +191,12 @@ export const useLudusPhysics = (config: Partial<LudusPhysicsConfig> = {}) => {
           Matter.Vector.sub(bodyB.position, bodyA.position)
         );
 
-        if (distance < configRef.current.distanceThreshold) continue; // Only apply forces when nodes are reasonably far apart
+        if (distance > configRef.current.distanceThreshold) continue; // Only apply forces when nodes are close enough
+
+        // Debug: Log node categories when they're close
+        if (distance < 60) { // Only log when nodes are close
+          console.log(`Nodes close: ${nodeA.concept} (${nodeA.category}) vs ${nodeB.concept} (${nodeB.category}) at distance ${distance.toFixed(1)}`);
+        }
 
         // Determine attraction/repulsion based on categories
         let forceMultiplier = 0;
@@ -199,10 +204,16 @@ export const useLudusPhysics = (config: Partial<LudusPhysicsConfig> = {}) => {
         // Similar categories attract
         if (nodeA.category === nodeB.category) {
           forceMultiplier = strength * configRef.current.sameCategoryAttraction;
+          if (distance < 60) {
+            console.log(`  SAME CATEGORY: Applying attraction force ${forceMultiplier.toFixed(4)}`);
+          }
         }
         // Different categories have repulsion
         else {
           forceMultiplier = -strength * configRef.current.differentCategoryRepulsion;
+          if (distance < 60) {
+            console.log(`  DIFFERENT CATEGORY: Applying repulsion force ${forceMultiplier.toFixed(4)}`);
+          }
         }
 
         // Apply force (inverse relationship for stronger effects)
