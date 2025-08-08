@@ -1,4 +1,4 @@
-import { BJJConcept } from '../types/concepts';
+import type { BJJConcept } from '../types/concepts';
 
 export const categories = [
   {

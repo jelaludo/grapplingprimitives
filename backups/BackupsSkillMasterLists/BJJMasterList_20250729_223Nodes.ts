@@ -3,12 +3,12 @@ export const categories = [
     "name": "Grappling Primitives",
     "color": "#848a94",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
+      "bottom": "Physical",
+      "top": "Mental"
     },
     "_id": "local-1752564808495"
   },

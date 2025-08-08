@@ -9,11 +9,9 @@ export const categories = [
     "yAxis": {
       "bottom": "Self",
       "top": "Opponent"
-    },
-    "_id": "local-1752564808495"
+    }
   },
   {
-    "_id": "683334f56fd5182fa18c7832",
     "name": "Tactics",
     "color": "#8A2BE2",
     "xAxis": {
@@ -26,7 +24,6 @@ export const categories = [
     }
   },
   {
-    "_id": "683334f56fd5182fa18c7831",
     "name": "Strategy",
     "color": "#FF8C00",
     "xAxis": {
@@ -39,7 +36,6 @@ export const categories = [
     }
   },
   {
-    "_id": "683334f56fd5182fa18c7833",
     "name": "Training",
     "color": "#00CED1",
     "xAxis": {
@@ -61,11 +57,9 @@ export const categories = [
     "yAxis": {
       "bottom": "Self",
       "top": "Opponent"
-    },
-    "_id": "local-1752563198899"
+    }
   },
   {
-    "_id": "683334f56fd5182fa18c7834",
     "name": "Memes",
     "color": "#8A2BE2",
     "xAxis": {
@@ -78,7 +72,6 @@ export const categories = [
     }
   },
   {
-    "_id": "683334f56fd5182fa18c7830",
     "name": "21 Immutable Principles",
     "color": "#FFD700",
     "xAxis": {
@@ -91,7 +84,6 @@ export const categories = [
     }
   },
   {
-    "_id": "683334f56fd5182fa18c7835",
     "name": "32 Principles",
     "color": "#FFD700",
     "xAxis": {
@@ -113,11 +105,9 @@ export const categories = [
     "yAxis": {
       "bottom": "Self",
       "top": "Opponent"
-    },
-    "_id": "local-1752563284607"
+    }
   },
   {
-    "_id": "683334f56fd5182fa18c782d",
     "name": "Techniques",
     "color": "#4F8EF7",
     "xAxis": {
@@ -139,8 +129,7 @@ export const categories = [
     "yAxis": {
       "bottom": "Self",
       "top": "Opponent"
-    },
-    "_id": "local-1752567752666"
+    }
   },
   {
     "name": "Black Belt Wisdom",
@@ -152,8 +141,7 @@ export const categories = [
     "yAxis": {
       "bottom": "Self-deprecating",
       "top": "Self-aggrandizing"
-    },
-    "_id": "local-1752567752667"
+    }
   },
   {
     "name": "Competition",
@@ -165,8 +153,7 @@ export const categories = [
     "yAxis": {
       "bottom": "Self",
       "top": "Opponent"
-    },
-    "_id": "local-1752634838945"
+    }
   },
   {
     "name": "Player Types",
@@ -178,8 +165,7 @@ export const categories = [
     "yAxis": {
       "bottom": "Chill",
       "top": "Aggro"
-    },
-    "_id": "local-1752635201422"
+    }
   },
   {
     "name": "Resources",
@@ -191,8 +177,7 @@ export const categories = [
     "yAxis": {
       "bottom": "Expensive",
       "top": "Free"
-    },
-    "_id": "local-1752742949370"
+    }
   },
   {
     "name": "Noteworthy Grapplers",
@@ -204,8 +189,7 @@ export const categories = [
     "yAxis": {
       "bottom": "No Gi",
       "top": "Gi"
-    },
-    "_id": "local-1752744648882"
+    }
   },
   {
     "name": "Anatomy Awareness",
@@ -217,8 +201,7 @@ export const categories = [
     "yAxis": {
       "bottom": "Muscles",
       "top": "Bones"
-    },
-    "_id": "local-1752904997059"
+    }
   },
   {
     "name": "Why Do We Train?",
@@ -230,8 +213,7 @@ export const categories = [
     "yAxis": {
       "bottom": "Self",
       "top": "Others"
-    },
-    "_id": "local-1753017046859"
+    }
   }
 ];
 

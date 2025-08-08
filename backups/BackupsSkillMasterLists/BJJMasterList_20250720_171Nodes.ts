@@ -219,19 +219,6 @@ export const categories = [
       "top": "Bones"
     },
     "_id": "local-1752904997059"
-  },
-  {
-    "name": "Why Do We Train?",
-    "color": "#6c9aea",
-    "xAxis": {
-      "left": "Internal",
-      "right": "External"
-    },
-    "yAxis": {
-      "bottom": "Self",
-      "top": "Others"
-    },
-    "_id": "local-1753017046859"
   }
 ];
 
@@ -1752,7 +1739,7 @@ export const skillsMasterList: BJJConcept[] = [
   {
     "id": "BJJ-102",
     "concept": "Distance Management",
-    "description": "You can neither let them get away nor invade your space.  Especially crucial if striking is involved.\n\nThe tools to prevent them coming in are frames and protecting the inside space.\nThe tools to prevent them from retreating too much are hooks, clamps, entanglements, russian-tie, grips, etc.",
+    "description": "You can neither let them get away nor invade your space.  Especially crucial if striking is involved.",
     "short_description": "",
     "category": "Grappling Primitives",
     "color": "#848a94",

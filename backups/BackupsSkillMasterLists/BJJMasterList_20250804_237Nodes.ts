@@ -1,3 +1,5 @@
+import { BJJConcept } from '../types/concepts';
+
 export const categories = [
   {
     "name": "Grappling Primitives",
@@ -286,19 +288,6 @@ export const categories = [
     "_id": "local-1754312808751"
   }
 ];
-
-export interface BJJConcept {
-  id: string;
-  concept: string;
-  description: string;
-  short_description: string;
-  category: string;
-  color: string;
-  axis_self_opponent: number;
-  axis_mental_physical: number;
-  brightness: number;
-  size: number;
-}
 
 export const skillsMasterList: BJJConcept[] = [
   {

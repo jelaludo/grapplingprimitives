@@ -3,63 +3,69 @@ export const categories = [
     "name": "Grappling Primitives",
     "color": "#848a94",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
-    }
+      "bottom": "Physical",
+      "top": "Mental"
+    },
+    "_id": "local-1752564808495"
   },
   {
+    "_id": "683334f56fd5182fa18c7832",
     "name": "Tactics",
     "color": "#8A2BE2",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
+      "bottom": "Physical",
+      "top": "Mental"
     }
   },
   {
+    "_id": "683334f56fd5182fa18c7831",
     "name": "Strategy",
     "color": "#FF8C00",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
+      "bottom": "Physical",
+      "top": "Mental"
     }
   },
   {
+    "_id": "683334f56fd5182fa18c7833",
     "name": "Training",
     "color": "#00CED1",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
+      "bottom": "Physical",
+      "top": "Mental"
     }
   },
   {
     "name": "Coaching",
     "color": "#6b6d70",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
-    }
+      "bottom": "Physical",
+      "top": "Mental"
+    },
+    "_id": "local-1752563198899"
   },
   {
+    "_id": "683334f56fd5182fa18c7834",
     "name": "Memes",
     "color": "#8A2BE2",
     "xAxis": {
@@ -72,160 +78,212 @@ export const categories = [
     }
   },
   {
+    "_id": "683334f56fd5182fa18c7830",
     "name": "21 Immutable Principles",
     "color": "#FFD700",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
+      "bottom": "Physical",
+      "top": "Mental"
     }
   },
   {
+    "_id": "683334f56fd5182fa18c7835",
     "name": "32 Principles",
     "color": "#FFD700",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
+      "bottom": "Physical",
+      "top": "Mental"
     }
   },
   {
     "name": "White Belt Tips",
     "color": "#edeff2",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
-    }
+      "bottom": "Physical",
+      "top": "Mental"
+    },
+    "_id": "local-1752563284607"
   },
   {
+    "_id": "683334f56fd5182fa18c782d",
     "name": "Techniques",
     "color": "#4F8EF7",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Low %",
+      "right": "High %"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
+      "bottom": "Complex",
+      "top": "Straightforward"
     }
   },
   {
     "name": "Internal",
     "color": "#4F8EF7",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
-    }
+      "bottom": "Physical",
+      "top": "Mental"
+    },
+    "_id": "local-1752567752666"
   },
   {
     "name": "Black Belt Wisdom",
     "color": "#FF6B35",
     "xAxis": {
-      "left": "Serious",
-      "right": "Funny"
+      "left": "Funny",
+      "right": "Semi-Serious"
     },
     "yAxis": {
-      "bottom": "Self-deprecating",
-      "top": "Self-aggrandizing"
-    }
+      "bottom": "Self-aggrandizing",
+      "top": "Self-deprecating"
+    },
+    "_id": "local-1752567752667"
   },
   {
     "name": "Competition",
     "color": "#9e1010",
     "xAxis": {
-      "left": "Mental",
-      "right": "Physical"
+      "left": "Opponent",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Opponent"
-    }
+      "bottom": "Physical",
+      "top": "Mental"
+    },
+    "_id": "local-1752634838945"
   },
   {
     "name": "Player Types",
     "color": "#1b4b01",
     "xAxis": {
-      "left": "Skilled",
-      "right": "Unskilled"
+      "left": "Unkilled",
+      "right": "Skilled"
     },
     "yAxis": {
-      "bottom": "Chill",
-      "top": "Aggro"
-    }
+      "bottom": "Aggro",
+      "top": "Chill"
+    },
+    "_id": "local-1752635201422"
   },
   {
     "name": "Resources",
     "color": "#4f7e16",
     "xAxis": {
-      "left": "Long-form",
-      "right": "Short-form"
+      "left": "Free",
+      "right": "Expensive"
     },
     "yAxis": {
-      "bottom": "Expensive",
-      "top": "Free"
-    }
+      "bottom": "Short-Form",
+      "top": "Long-Form"
+    },
+    "_id": "local-1752742949370"
   },
   {
     "name": "Noteworthy Grapplers",
     "color": "#ff00d4",
     "xAxis": {
-      "left": "Old School",
-      "right": "Modern"
+      "left": "Gi",
+      "right": "No-Gi"
     },
     "yAxis": {
-      "bottom": "No Gi",
-      "top": "Gi"
-    }
+      "bottom": "Modern",
+      "top": "Old-School"
+    },
+    "_id": "local-1752744648882"
   },
   {
     "name": "Anatomy Awareness",
     "color": "#848a94",
     "xAxis": {
-      "left": "External",
-      "right": "Internal"
+      "left": "Bones",
+      "right": "Muscles"
     },
     "yAxis": {
-      "bottom": "Muscles",
-      "top": "Bones"
-    }
+      "bottom": "Internal",
+      "top": "External"
+    },
+    "_id": "local-1752904997059"
   },
   {
     "name": "Why Do We Train?",
     "color": "#6c9aea",
     "xAxis": {
-      "left": "Internal",
-      "right": "External"
+      "left": "Others",
+      "right": "Self"
     },
     "yAxis": {
-      "bottom": "Self",
-      "top": "Others"
-    }
+      "bottom": "Extrinsic",
+      "top": "Intrinsic"
+    },
+    "_id": "local-1753017046859"
   },
   {
     "name": "Do's & Don'ts",
     "color": "#b26b2a",
     "xAxis": {
-      "left": "Do",
-      "right": "Don't"
+      "left": "Trivial",
+      "right": "Serious"
     },
     "yAxis": {
-      "bottom": "Serious",
-      "top": "Trivial"
-    }
+      "bottom": "Don't",
+      "top": "Do"
+    },
+    "_id": "local-1753062937869"
+  },
+  {
+    "name": "Dojos/Clubs Types",
+    "color": "#958c09",
+    "xAxis": {
+      "left": "Low Intensity",
+      "right": "High Intensity"
+    },
+    "yAxis": {
+      "bottom": "Pure Love of the Art",
+      "top": "Pure Bu$$ine$$"
+    },
+    "_id": "local-1753420322392"
+  },
+  {
+    "name": "Physics of Grappling",
+    "color": "#888888",
+    "xAxis": {
+      "left": "Linear",
+      "right": "Rotational"
+    },
+    "yAxis": {
+      "bottom": "Force",
+      "top": "Motion"
+    },
+    "_id": "local-1754312097400"
+  },
+  {
+    "name": "Physics of  Grappling",
+    "color": "#888888",
+    "xAxis": {
+      "left": "Linear",
+      "right": "Rotational"
+    },
+    "yAxis": {
+      "bottom": "Static",
+      "top": "Motion"
+    },
+    "_id": "local-1754312808751"
   }
 ];
 
@@ -1290,7 +1348,7 @@ export const skillsMasterList: BJJConcept[] = [
   {
     "id": "BJJ-077",
     "concept": "Loading & Unloading",
-    "description": "Loading and Unloading Limbs\n\nRefers to the shifting of weight and tension through the limbs to enable or restrict movement—core to mobility, balance, and attack setups in grappling.\n\nLoading = transferring weight onto a limb.\n\nFunction: creates base, applies pressure, pins opponent.\n\nExample: posting a leg during a guard pass, weighting an elbow to trap an arm.\n\nBiomechanics: compressive force through joints; engages stabilizers and closes kinetic chains.\n\nUnloading = removing weight from a limb.\n\nFunction: frees limb for movement, redirection, or attack.\n\nExample: lifting a foot for a knee cut, freeing an arm to post or grip.\n\nBiomechanics: initiates open-chain movement; reduces friction and muscular load.\n\nTraining Implication: Elite grapplers cycle load dynamically—loading to create structure, unloading to strike or transition. Mastery lies in timing: unloading just as balance is preserved elsewhere.",
+    "description": "Loading and Unloading Limbs\n\nRefers to the shifting of weight and tension through the limbs to enable or restrict movement—core to mobility, balance, and attack setups in grappling.\n\nLoading = transferring weight onto a limb.\n\nFunction: creates base, applies pressure, pins opponent.\n\nExample: posting a leg during a guard pass, weighting an elbow to trap an arm.\n\nBiomechanics: compressive force through joints; engages stabilizers and closes kinetic chains.\n\nUnloading = removing weight from a limb.\n\nFunction: frees limb for movement, redirection, or attack.\n\nExample: lifting a foot for a knee cut, freeing an arm to post or grip.\n\nBiomechanics: initiates open-chain movement; reduces friction and muscular load.\n\nTraining Implication: Elite grapplers cycle load dynamically—loading to create structure, unloading to strike or transition. Mastery lies in timing: unloading just as balance is preserved elsewhere.\n\ne.g. : if the knee is above the heel, pointing upwards, the leg is loaded and a shin-to-shin won't be very effective.  if their knee is forward, the foot will be lighter, and shin-to-shin might be very effective.",
     "short_description": "",
     "category": "Grappling Primitives",
     "color": "#848a94",
@@ -1566,7 +1624,7 @@ export const skillsMasterList: BJJConcept[] = [
   {
     "id": "BJJ-077",
     "concept": "Loading & Unloading",
-    "description": "Loading and Unloading Limbs\n\nRefers to the shifting of weight and tension through the limbs to enable or restrict movement—core to mobility, balance, and attack setups in grappling.\n\nLoading = transferring weight onto a limb.\n\nFunction: creates base, applies pressure, pins opponent.\n\nExample: posting a leg during a guard pass, weighting an elbow to trap an arm.\n\nBiomechanics: compressive force through joints; engages stabilizers and closes kinetic chains.\n\nUnloading = removing weight from a limb.\n\nFunction: frees limb for movement, redirection, or attack.\n\nExample: lifting a foot for a knee cut, freeing an arm to post or grip.\n\nBiomechanics: initiates open-chain movement; reduces friction and muscular load.\n\nTraining Implication: Elite grapplers cycle load dynamically—loading to create structure, unloading to strike or transition. Mastery lies in timing: unloading just as balance is preserved elsewhere.",
+    "description": "Loading and Unloading Limbs\n\nRefers to the shifting of weight and tension through the limbs to enable or restrict movement—core to mobility, balance, and attack setups in grappling.\n\nLoading = transferring weight onto a limb.\n\nFunction: creates base, applies pressure, pins opponent.\n\nExample: posting a leg during a guard pass, weighting an elbow to trap an arm.\n\nBiomechanics: compressive force through joints; engages stabilizers and closes kinetic chains.\n\nUnloading = removing weight from a limb.\n\nFunction: frees limb for movement, redirection, or attack.\n\nExample: lifting a foot for a knee cut, freeing an arm to post or grip.\n\nBiomechanics: initiates open-chain movement; reduces friction and muscular load.\n\nTraining Implication: Elite grapplers cycle load dynamically—loading to create structure, unloading to strike or transition. Mastery lies in timing: unloading just as balance is preserved elsewhere.\n\ne.g. : if the knee is above the heel, pointing upwards, the leg is loaded and a shin-to-shin won't be very effective.  if their knee is forward, the foot will be lighter, and shin-to-shin might be very effective.",
     "short_description": "",
     "category": "Grappling Primitives",
     "color": "#848a94",
@@ -2724,6 +2782,420 @@ export const skillsMasterList: BJJConcept[] = [
     "color": "#b26b2a",
     "axis_self_opponent": 0.41,
     "axis_mental_physical": 0.12,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-184",
+    "concept": "Unforce Errors",
+    "description": "Unforced Errors in Tennis. Blunder in Chess.\n\nSometimes it pays to be reactive rather than proactive. \nTo let them make mistakes that you can exploit.\n\nYou set it up either through bait, frustration, or a dilemma.\n\nSay you're in a strong base, 50/50 standing as you're both in a position to go for an Osotogari outside leg sweep, if you moving first means compromising your stance, which they could use, sometimes it's best to wait for them to commit and react.\n\nIt helps to know the handful of potential most likely outcome from a given position.\n\nDon't interrupt an opponent making a mistake.\n\nThis is not a hard and fast rule, don't wait *all the time ffs.\n\nsometimes it makes sense.",
+    "short_description": "",
+    "category": "Tactics",
+    "color": "#8A2BE2",
+    "axis_self_opponent": 0.87,
+    "axis_mental_physical": 0.15,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-185",
+    "concept": "Grip θ Decay",
+    "description": "Act fast once you have a dominant grip.\n\n\"Grips Don't Getter With Time\" is how I first remember hearing it from Marcelo Garcia.\n\nNo Grip is Eternal.\n\nOpponents start to fight against them, probe the weaknesses, change angles forcing re-gripping.\n\nDon't miss the window of opportunity.\n",
+    "short_description": "",
+    "category": "Tactics",
+    "color": "#8A2BE2",
+    "axis_self_opponent": 0.22,
+    "axis_mental_physical": 0.19,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-186",
+    "concept": "Match Head Height",
+    "description": "This comes from wrestling and matching level changes, yet applicable in BJJ when passing an opponent on the floor too.  If you don't, you leave your legs accessible for all sorts of wrestling up.",
+    "short_description": "",
+    "category": "Tactics",
+    "color": "#8A2BE2",
+    "axis_self_opponent": 0.48,
+    "axis_mental_physical": 0.45,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-187",
+    "concept": "Chill Garage Bros",
+    "description": "Couple of enthusiasts watching instagram and teaching themselves while smoking weed",
+    "short_description": "",
+    "category": "Dojos/Clubs Types",
+    "color": "#958c09",
+    "axis_self_opponent": 0.25,
+    "axis_mental_physical": 0.25,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-188",
+    "concept": "Scam Cults",
+    "description": "False advertising, cultish tendencies, nickel and diming students with extra fees for everything, forbidding students to cross-train, little or no live-rolling.  \"Our techniques are too dangerous to train live\".",
+    "short_description": "",
+    "category": "Dojos/Clubs Types",
+    "color": "#958c09",
+    "axis_self_opponent": 0.98,
+    "axis_mental_physical": 0.03,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-189",
+    "concept": "Professional Hobbyist Gym",
+    "description": "Professional & Ethical.  Run as a business because coach has to pay the bills and keeps the lights on the showers running.  \n\nCatering to hobbyists rather than pro-athletes.\n\nNo abusive monetization (obscure pricing, forcing purchase of club gis, paying for grades, etc.)",
+    "short_description": "",
+    "category": "Dojos/Clubs Types",
+    "color": "#958c09",
+    "axis_self_opponent": 0.5,
+    "axis_mental_physical": 0.5,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-190",
+    "concept": "Professional Competitive Gym",
+    "description": "Run as a business and for good reasons; full of pro-athletes, trying to churn competitive players to go out and win prize money.\n\nGood Facilities, Clean Showers, Strict Time Slots.\n\nmedium to high training intensity on the regular, turned up to 11 for folks doing training camps.\n\nMuch harder than your typical hobbyist training regimen.",
+    "short_description": "",
+    "category": "Dojos/Clubs Types",
+    "color": "#958c09",
+    "axis_self_opponent": 0.8,
+    "axis_mental_physical": 0.75,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-191",
+    "concept": "Hardcore Porrada Competition",
+    "description": "Survival of the Fittest and PEDs + we'll milk you on private lessons were upper belts just beat you up lol because that's how we learned.  \n\nGrit > Flow\nHeart > Techniques\n\nMedals for the Glory of the Team!",
+    "short_description": "",
+    "category": "Dojos/Clubs Types",
+    "color": "#958c09",
+    "axis_self_opponent": 0.75,
+    "axis_mental_physical": 0.9,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-192",
+    "concept": "Mc Dojos",
+    "description": "Mc Dojos exist on a spectrum, we can imagine the key dimensions of a training environment, and that McDojos are deficient in most of them.  Not necessarily scams, just lacking.\n\nAnd obsessed with decorum and rank usually : BOW TO YOUR SENSEI!\n\nmeh.\n\nMaybe we can think of it in terms of Aristotle's Golden Mean.\nCourage is great, but too much and you have recklessness, too little and it's cowardice.\ngenerosity, wastefulness, stinginess\nambition, sloth, greed\nhumor, boringness, absurdity\ncomposure, irritabgility, apathy\netc.\n\n\nChallenging training:\nExcess: Recklessly unsafe, aggressive\nDeficiency: Unrealistic samurai roleplay\n\n\nPhysical conditioning:\nExcess: Overtraining, leading to burnout or injury\nDeficiency: Insufficient conditioning, resulting in limited progress\n\n\nTechnical instruction:\nExcess: Overemphasis on complex techniques, neglecting fundamentals\nDeficiency: Oversimplification of techniques, limiting effectiveness\n\n\nSparring intensity:\nExcess: Full-contact sparring without proper safety measures or supervision\nDeficiency: Limited or no contact sparring, preventing the development of practical skills\n\n\nTeaching methodology:\nExcess: Rigid, dogmatic instruction, stifling creativity and growth\nDeficiency: Unstructured, laissez-faire teaching, resulting in confusion and lack of direction\n\n\nRespect and discipline:\nExcess: Authoritarian, overly strict environment, discouraging open communication\nDeficiency: Disorganized, chaotic atmosphere, lacking in respect for tradition and hierarchy\n\n\nFocus on tradition and history:\nExcess: Overemphasis on historical aspects, neglecting practical application\nDeficiency: Ignoring cultural context, reducing martial arts to mere physical activity\n\nInclusivity and community:\nExcess: Overemphasis on group dynamics, neglecting individual needs and development\nDeficiency: Excessive focus on individual competition, undermining the sense of community and support\n\nBalancing self-defense and personal development:\nExcess: Sole focus on self-defense techniques, ignoring character growth and discipline\nDeficiency: Overemphasis on personal development, neglecting practical self-defense skills\n\nCompetition and performance:\nExcess: Overemphasis on winning tournaments, fostering a win-at-all-costs mentality\nDeficiency: Disregarding the value of competition, missing opportunities for growth and skill development",
+    "short_description": "",
+    "category": "Dojos/Clubs Types",
+    "color": "#958c09",
+    "axis_self_opponent": 0.75,
+    "axis_mental_physical": 0.25,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-193",
+    "concept": "Hardcore Meatheads",
+    "description": "Dirty Warehouse, fuck money, let's SMESH BRO!\n\nMight include training on concrete with broken glass, syringes and weapons for realism, because they're just Alpha like that.",
+    "short_description": "",
+    "category": "Dojos/Clubs Types",
+    "color": "#958c09",
+    "axis_self_opponent": 0.2,
+    "axis_mental_physical": 0.9,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-194",
+    "concept": "OODA Loop",
+    "description": "OODA Loop: Observe, Orient, Decide, Act.\n\nIt’s a decision making model from fighter pilot John Boyd. You constantly cycle through those steps faster than your opponent to stay ahead.\n\nIn grappling, it’s basically what we're trying to do every roll:\n\nObserve: Where are their hands? Weight? Hips?\n\nOrient: Based on their game, intent, and your game, what are your options?\n\nDecide: Pick the next sequence.\n\nAct: Go for it.\n\nThe trick is: if you loop faster than your partner, you’re two steps ahead while they’re still figuring things out.\n\nFast OODA = dominate the pace. \nSlow OODA = get smeshed.\n\n\"win battles they don't know they're fighting\"",
+    "short_description": "",
+    "category": "Tactics",
+    "color": "#8A2BE2",
+    "axis_self_opponent": 0.78,
+    "axis_mental_physical": 0.7,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-195",
+    "concept": "Standing-Clinch-Ground",
+    "description": "Another 3 step model.\nChris Haueter, Rickson Gracie.\n\nhighlights the importance of the clinch, especially as a means to control punches and kicks and avoid eating strikes while taking it to the ground.",
+    "short_description": "",
+    "category": "Strategy",
+    "color": "#FF8C00",
+    "axis_self_opponent": 0.72,
+    "axis_mental_physical": 0.74,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-196",
+    "concept": "Penetrative Step",
+    "description": "From wrestling.  \n\nIt's about closing the distance and getting deep into enemy territory, not just reaching with your arms but crowding their space with your body, stepping through them with intent and base.\n\nIn judo it might an aspect of Tsukuri for some hip throws, deep step.\n\nIt’s not enough to \"reach\", you must enter with intent, putting your whole structure into the throw or takedown. \n\nShallow step leads to half-hearted shot or throw.\nDeep penetrative step leads to their CoG being disrupted.\n",
+    "short_description": "",
+    "category": "Grappling Primitives",
+    "color": "#848a94",
+    "axis_self_opponent": 0.45,
+    "axis_mental_physical": 0.54,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-197",
+    "concept": "Hidden Jiu Jitsu",
+    "description": "https://www.hiddenjiujitsu.com/\n\nThough I love the content that Henry Akins puts out, this website is a masterclass in online sleaze tactics.\n\nObfuscation of the price\nhyperbole promises (Unstoppable, heavy like a whale, Black-Belt-In-A-Box)\nConstant appeal to authority (Rickson Magic)\nOver the top illustrations and thumbnails\nHidden! Secrets! just for you the low price of XX.99$!!!\netc.\n\n\n\nI'd love to check it out\nhaven't been able to push myself to pull the trigger yet.\n",
+    "short_description": "",
+    "category": "Resources",
+    "color": "#4f7e16",
+    "axis_self_opponent": 0.75,
+    "axis_mental_physical": 0.7,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-198",
+    "concept": "test 222 b",
+    "description": "",
+    "short_description": "",
+    "category": "Resources",
+    "color": "#4f7e16",
+    "axis_self_opponent": 0.26,
+    "axis_mental_physical": 0.78,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-199",
+    "concept": "test 223 b",
+    "description": "",
+    "short_description": "",
+    "category": "Resources",
+    "color": "#4f7e16",
+    "axis_self_opponent": 0.24,
+    "axis_mental_physical": 0.82,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-200",
+    "concept": "Overlapping Pressure",
+    "description": "Never let go of one point of pressure/compression before moving on.\n\ne.g. press on their right shoulder with your left hand (passing scenario) while twisting their right knee in the opposite direction with your right hand, creating an uncomfortable twister-like diagonal control.   Both hands are busy, but you need at least your right hand to progress, so you bring in your right knee to replace your right hand (landing a \"leg ride\" type control), and freeing your right to do something else.\n\ne.g.2.\ncontrolling a triangle entry from bottom, you're holding your shin with you hand to prevent them from posturing up, bring in the other leg to close the triangle while your hand is still holding the shin, then use your know redundant hand for someting else.\n\nnever* give back whatever space you took. \n\n*well, of course not \"never\", just a helpful heuristic.",
+    "short_description": "",
+    "category": "Grappling Primitives",
+    "color": "#848a94",
+    "axis_self_opponent": 0.44,
+    "axis_mental_physical": 0.31,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-201",
+    "concept": "Active Denial",
+    "description": "Deny whatever tool they currently need to either escape or threaten you.",
+    "short_description": "",
+    "category": "Grappling Primitives",
+    "color": "#848a94",
+    "axis_self_opponent": 0.49,
+    "axis_mental_physical": 0.09,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-202",
+    "concept": "",
+    "description": "",
+    "short_description": "",
+    "category": "Grappling Primitives",
+    "color": "#848a94",
+    "axis_self_opponent": 0.58,
+    "axis_mental_physical": 0.43,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-203",
+    "concept": "Base",
+    "description": "Base and Base of Support are related but slightly different.\n\nBase as \"Resistance to linear displacement\" might be a good physics framing.\n\nIn grappling having \"base\" is a qualitative term referring to someone's ability to maintain posture, resist being moved, and apply force effectively.\n\nIt cncludes BoS but also posture, weight distribution, and muscular tension.\n\n“Good base” = hard to sweep, hard to move, stable but dynamic.\n\nOften trained/felt more than defined.\n\nCoach: “Widen your base!”, “Find your base before attacking!”\n\nLess concerned with the shape of contact points, more with functional resistance under stress.",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.2,
+    "axis_mental_physical": 0.2,
+    "brightness": 1,
+    "size": 1,
+    "cx": 349.40000000000003,
+    "cy": 831.2,
+    "r": 6,
+    "opacity": 0.46,
+    "stroke": "#fff",
+    "strokeWidth": 3
+  },
+  {
+    "id": "BJJ-204",
+    "concept": "Friction",
+    "description": "Feet, hands, hips, cloth (gi), ground, etc. preventing slipping.  Or sweat increasing it.",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.32,
+    "axis_mental_physical": 0.26,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-205",
+    "concept": "Leverage",
+    "description": "Classical force through limbs",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.33,
+    "axis_mental_physical": 0.13,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-206",
+    "concept": "Torque",
+    "description": "https://youtu.be/ghQTSVv0j2o?si=_EZ-83YYyEL0_xgO\n\nRotational force",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.4,
+    "axis_mental_physical": 0.71,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-207",
+    "concept": "Shear",
+    "description": "Parallel oppossing forces",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.35,
+    "axis_mental_physical": 0.77,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-208",
+    "concept": "Axial Load",
+    "description": "",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.34,
+    "axis_mental_physical": 0.65,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-209",
+    "concept": "Centripetal/Centrifugal",
+    "description": "",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.9,
+    "axis_mental_physical": 0.77,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-210",
+    "concept": "Redirection",
+    "description": "",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.82,
+    "axis_mental_physical": 0.67,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-211",
+    "concept": "Acceleration",
+    "description": "",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.82,
+    "axis_mental_physical": 0.15,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-212",
+    "concept": "Impulse",
+    "description": "Force x Time",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.79,
+    "axis_mental_physical": 0.21,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-213",
+    "concept": "Momentum",
+    "description": "p = mv",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.87,
+    "axis_mental_physical": 0.28,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-214",
+    "concept": "Proximity = Stability",
+    "description": "Your limbs are handles for the opponent.\n\nThe more you extend those handles, the longer of a lever you provide the opponent with.\n\n\"Elbows in\"\n\nStability increases as your limbs remain close to your center of gravity. Extended limbs act as levers for your opponent and weaken your base.\n\n“The closer the limbs, the stronger the structure.”\n\nTurtling with elbows tight = strong defense (in a grappling scenario without soccer kicks)\n\nPosting too far = easy arm drag\n\nFraming too long = underhook bait\n\nPosting wide on top = sweep bait\n\nIn open guard butterly, Marcelo recommends to never have your feet extended further away from your hands.\n\nThe more compact you are, the harder it is to penetrate your defenses.\n\n#Distal Control\n\n",
+    "short_description": "",
+    "category": "Tactics",
+    "color": "#8A2BE2",
+    "axis_self_opponent": 0.33,
+    "axis_mental_physical": 0.68,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-215",
+    "concept": "Base of Support (BoS)",
+    "description": "In sports science, the Base of Support (BoS) refers to the area beneath a person that includes every point of contact with the supporting surface. A wider BOS generally equates to greater stability, while a smaller one BOS leads to increased mobility, or vulnerability to falling.\n\nJudo throws and sweeps can be visualized as bring the opponent's CoG outside of their BoS.\n\nCenter of Gravity\nBase of Support\n\nKuzushi brings their CoG to the tipping point\nKake (execution) makes it flip over.\n\nCrouching, widening stance, retracting limbs; all these influence the BoS.\n\nI've seen advanced studies of Rugby/American Football with the BoS concept being used for tackles and mobility to avoid tackles.",
+    "short_description": "",
+    "category": "Physics of  Grappling",
+    "color": "#888888",
+    "axis_self_opponent": 0.12,
+    "axis_mental_physical": 0.11,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-216",
+    "concept": "CoG",
+    "description": "Center of Gravity.\n\nthe theoretical point where a person’s mass is evenly distributed in all directions. \n\nIn sports science it is used for balance, movement, and power generation. A stable athlete keeps their CoG aligned over their base of support; a dynamic one learns how to shift it with control, say to throw a ball or javelin.\n\nIn Judo, CoG is the invisible point around which every battle of balance is fought. Throws should NOT be powered by brute strength, they should feel effortless and a result of having displaced the opponent's CoG outside their base, causing them to fall.\n\nMaster your own CoG, feel and manipulate your opponent's.\n\nThere are really cool Judo sports science visualizations of this.\n\nHunting for a link...\nhttps://youtu.be/SX0gzfXNWqo\nJUDO TECHNIQUES: Base of support / Center of gravity explained",
+    "short_description": "",
+    "category": "Anatomy Awareness",
+    "color": "#848a94",
+    "axis_self_opponent": 0.34,
+    "axis_mental_physical": 0.14,
+    "brightness": 1,
+    "size": 1
+  },
+  {
+    "id": "BJJ-217",
+    "concept": "Active Meditation",
+    "description": "Most of us have trouble counting 10 breaths without being distracted.   Sparring offers a relatively safe environment that requires a lot of focus when facing someone of equal or higher skills.  It requires all our focus to stay alive.  Some see this as a form of forced active meditation, where for the duration of training none of life's problems matter, only escaping this armbar, or surviving the RNC, or finally getting rid of this dangerous lapel grip.",
+    "short_description": "",
+    "category": "Why Do We Train?",
+    "color": "#6c9aea",
+    "axis_self_opponent": 0.72,
+    "axis_mental_physical": 0.72,
     "brightness": 1,
     "size": 1
   }

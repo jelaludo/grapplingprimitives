@@ -18,12 +18,12 @@
       "name": "Tactics",
       "color": "#8A2BE2",
       "xAxis": {
-        "left": "Mental",
-        "right": "Physical"
+        "left": "Opponent",
+        "right": "Self"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Opponent"
+        "bottom": "Physical",
+        "top": "Mental"
       }
     },
     {
@@ -31,12 +31,12 @@
       "name": "Strategy",
       "color": "#FF8C00",
       "xAxis": {
-        "left": "Mental",
-        "right": "Physical"
+        "left": "Opponent",
+        "right": "Self"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Opponent"
+        "bottom": "Physical",
+        "top": "Mental"
       }
     },
     {
@@ -44,24 +44,24 @@
       "name": "Training",
       "color": "#00CED1",
       "xAxis": {
-        "left": "Mental",
-        "right": "Physical"
+        "left": "Opponent",
+        "right": "Self"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Opponent"
+        "bottom": "Physical",
+        "top": "Mental"
       }
     },
     {
       "name": "Coaching",
       "color": "#6b6d70",
       "xAxis": {
-        "left": "Mental",
-        "right": "Physical"
+        "left": "Opponent",
+        "right": "Self"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Opponent"
+        "bottom": "Physical",
+        "top": "Mental"
       },
       "_id": "local-1752563198899"
     },
@@ -83,12 +83,12 @@
       "name": "21 Immutable Principles",
       "color": "#FFD700",
       "xAxis": {
-        "left": "Mental",
-        "right": "Physical"
+        "left": "Opponent",
+        "right": "Self"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Opponent"
+        "bottom": "Physical",
+        "top": "Mental"
       }
     },
     {
@@ -96,24 +96,24 @@
       "name": "32 Principles",
       "color": "#FFD700",
       "xAxis": {
-        "left": "Mental",
-        "right": "Physical"
+        "left": "Opponent",
+        "right": "Self"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Opponent"
+        "bottom": "Physical",
+        "top": "Mental"
       }
     },
     {
       "name": "White Belt Tips",
       "color": "#edeff2",
       "xAxis": {
-        "left": "Mental",
-        "right": "Physical"
+        "left": "Opponent",
+        "right": "Self"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Opponent"
+        "bottom": "Physical",
+        "top": "Mental"
       },
       "_id": "local-1752563284607"
     },
@@ -122,24 +122,24 @@
       "name": "Techniques",
       "color": "#4F8EF7",
       "xAxis": {
-        "left": "Mental",
-        "right": "Physical"
+        "left": "Low %",
+        "right": "High %"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Opponent"
+        "bottom": "Complex",
+        "top": "Straightforward"
       }
     },
     {
       "name": "Internal",
       "color": "#4F8EF7",
       "xAxis": {
-        "left": "Mental",
-        "right": "Physical"
+        "left": "Opponent",
+        "right": "Self"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Opponent"
+        "bottom": "Physical",
+        "top": "Mental"
       },
       "_id": "local-1752567752666"
     },
@@ -147,12 +147,12 @@
       "name": "Black Belt Wisdom",
       "color": "#FF6B35",
       "xAxis": {
-        "left": "Serious",
-        "right": "Funny"
+        "left": "Funny",
+        "right": "Semi-Serious"
       },
       "yAxis": {
-        "bottom": "Self-deprecating",
-        "top": "Self-aggrandizing"
+        "bottom": "Self-aggrandizing",
+        "top": "Self-deprecating"
       },
       "_id": "local-1752567752667"
     },
@@ -160,12 +160,12 @@
       "name": "Competition",
       "color": "#9e1010",
       "xAxis": {
-        "left": "Mental",
-        "right": "Physical"
+        "left": "Opponent",
+        "right": "Self"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Opponent"
+        "bottom": "Physical",
+        "top": "Mental"
       },
       "_id": "local-1752634838945"
     },
@@ -173,12 +173,12 @@
       "name": "Player Types",
       "color": "#1b4b01",
       "xAxis": {
-        "left": "Skilled",
-        "right": "Unskilled"
+        "left": "Unkilled",
+        "right": "Skilled"
       },
       "yAxis": {
-        "bottom": "Chill",
-        "top": "Aggro"
+        "bottom": "Aggro",
+        "top": "Chill"
       },
       "_id": "local-1752635201422"
     },
@@ -186,12 +186,12 @@
       "name": "Resources",
       "color": "#4f7e16",
       "xAxis": {
-        "left": "Long-form",
-        "right": "Short-form"
+        "left": "Free",
+        "right": "Expensive"
       },
       "yAxis": {
-        "bottom": "Expensive",
-        "top": "Free"
+        "bottom": "Short-Form",
+        "top": "Long-Form"
       },
       "_id": "local-1752742949370"
     },
@@ -199,12 +199,12 @@
       "name": "Noteworthy Grapplers",
       "color": "#ff00d4",
       "xAxis": {
-        "left": "Old School",
-        "right": "Modern"
+        "left": "Gi",
+        "right": "No-Gi"
       },
       "yAxis": {
-        "bottom": "No Gi",
-        "top": "Gi"
+        "bottom": "Modern",
+        "top": "Old-School"
       },
       "_id": "local-1752744648882"
     },
@@ -212,12 +212,12 @@
       "name": "Anatomy Awareness",
       "color": "#848a94",
       "xAxis": {
-        "left": "External",
-        "right": "Internal"
+        "left": "Bones",
+        "right": "Muscles"
       },
       "yAxis": {
-        "bottom": "Muscles",
-        "top": "Bones"
+        "bottom": "Internal",
+        "top": "External"
       },
       "_id": "local-1752904997059"
     },
@@ -225,12 +225,12 @@
       "name": "Why Do We Train?",
       "color": "#6c9aea",
       "xAxis": {
-        "left": "Internal",
-        "right": "External"
+        "left": "Others",
+        "right": "Self"
       },
       "yAxis": {
-        "bottom": "Self",
-        "top": "Others"
+        "bottom": "Extrinsic",
+        "top": "Intrinsic"
       },
       "_id": "local-1753017046859"
     },
@@ -238,12 +238,12 @@
       "name": "Do's & Don'ts",
       "color": "#b26b2a",
       "xAxis": {
-        "left": "Do",
-        "right": "Don't"
+        "left": "Trivial",
+        "right": "Serious"
       },
       "yAxis": {
-        "bottom": "Serious",
-        "top": "Trivial"
+        "bottom": "Don't",
+        "top": "Do"
       },
       "_id": "local-1753062937869"
     },
@@ -251,14 +251,40 @@
       "name": "Dojos/Clubs Types",
       "color": "#958c09",
       "xAxis": {
-        "left": "Pure Bu$$ine$$",
-        "right": "Pure Love of the Art"
+        "left": "Low Intensity",
+        "right": "High Intensity"
       },
       "yAxis": {
-        "bottom": "Full Intensity",
-        "top": "Low Intensity"
+        "bottom": "Pure Love of the Art",
+        "top": "Pure Bu$$ine$$"
       },
       "_id": "local-1753420322392"
+    },
+    {
+      "name": "Physics of Grappling",
+      "color": "#888888",
+      "xAxis": {
+        "left": "Linear",
+        "right": "Rotational"
+      },
+      "yAxis": {
+        "bottom": "Force",
+        "top": "Motion"
+      },
+      "_id": "local-1754312097400"
+    },
+    {
+      "name": "Physics of  Grappling",
+      "color": "#888888",
+      "xAxis": {
+        "left": "Linear",
+        "right": "Rotational"
+      },
+      "yAxis": {
+        "bottom": "Static",
+        "top": "Motion"
+      },
+      "_id": "local-1754312808751"
     }
   ],
   "skillsMasterList": [
@@ -2935,6 +2961,228 @@
       "color": "#4f7e16",
       "axis_self_opponent": 0.24,
       "axis_mental_physical": 0.82,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-200",
+      "concept": "Overlapping Pressure",
+      "description": "Never let go of one point of pressure/compression before moving on.\n\ne.g. press on their right shoulder with your left hand (passing scenario) while twisting their right knee in the opposite direction with your right hand, creating an uncomfortable twister-like diagonal control.   Both hands are busy, but you need at least your right hand to progress, so you bring in your right knee to replace your right hand (landing a \"leg ride\" type control), and freeing your right to do something else.\n\ne.g.2.\ncontrolling a triangle entry from bottom, you're holding your shin with you hand to prevent them from posturing up, bring in the other leg to close the triangle while your hand is still holding the shin, then use your know redundant hand for someting else.\n\nnever* give back whatever space you took. \n\n*well, of course not \"never\", just a helpful heuristic.",
+      "short_description": "",
+      "category": "Grappling Primitives",
+      "color": "#848a94",
+      "axis_self_opponent": 0.44,
+      "axis_mental_physical": 0.31,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-201",
+      "concept": "Active Denial",
+      "description": "Deny whatever tool they currently need to either escape or threaten you.",
+      "short_description": "",
+      "category": "Grappling Primitives",
+      "color": "#848a94",
+      "axis_self_opponent": 0.49,
+      "axis_mental_physical": 0.09,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-202",
+      "concept": "",
+      "description": "",
+      "short_description": "",
+      "category": "Grappling Primitives",
+      "color": "#848a94",
+      "axis_self_opponent": 0.58,
+      "axis_mental_physical": 0.43,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-203",
+      "concept": "Base",
+      "description": "Base and Base of Support are related but slightly different.\n\nBase as \"Resistance to linear displacement\" might be a good physics framing.\n\nIn grappling having \"base\" is a qualitative term referring to someone's ability to maintain posture, resist being moved, and apply force effectively.\n\nIt cncludes BoS but also posture, weight distribution, and muscular tension.\n\n“Good base” = hard to sweep, hard to move, stable but dynamic.\n\nOften trained/felt more than defined.\n\nCoach: “Widen your base!”, “Find your base before attacking!”\n\nLess concerned with the shape of contact points, more with functional resistance under stress.",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.2,
+      "axis_mental_physical": 0.2,
+      "brightness": 1,
+      "size": 1,
+      "cx": 349.40000000000003,
+      "cy": 831.2,
+      "r": 6,
+      "opacity": 0.46,
+      "stroke": "#fff",
+      "strokeWidth": 3
+    },
+    {
+      "id": "BJJ-204",
+      "concept": "Friction",
+      "description": "Feet, hands, hips, cloth (gi), ground, etc. preventing slipping.  Or sweat increasing it.",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.32,
+      "axis_mental_physical": 0.26,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-205",
+      "concept": "Leverage",
+      "description": "Classical force through limbs",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.33,
+      "axis_mental_physical": 0.13,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-206",
+      "concept": "Torque",
+      "description": "https://youtu.be/ghQTSVv0j2o?si=_EZ-83YYyEL0_xgO\n\nRotational force",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.4,
+      "axis_mental_physical": 0.71,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-207",
+      "concept": "Shear",
+      "description": "Parallel oppossing forces",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.35,
+      "axis_mental_physical": 0.77,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-208",
+      "concept": "Axial Load",
+      "description": "",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.34,
+      "axis_mental_physical": 0.65,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-209",
+      "concept": "Centripetal/Centrifugal",
+      "description": "",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.9,
+      "axis_mental_physical": 0.77,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-210",
+      "concept": "Redirection",
+      "description": "",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.82,
+      "axis_mental_physical": 0.67,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-211",
+      "concept": "Acceleration",
+      "description": "",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.82,
+      "axis_mental_physical": 0.15,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-212",
+      "concept": "Impulse",
+      "description": "Force x Time",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.79,
+      "axis_mental_physical": 0.21,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-213",
+      "concept": "Momentum",
+      "description": "p = mv",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.87,
+      "axis_mental_physical": 0.28,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-214",
+      "concept": "Proximity = Stability",
+      "description": "Your limbs are handles for the opponent.\n\nThe more you extend those handles, the longer of a lever you provide the opponent with.\n\n\"Elbows in\"\n\nStability increases as your limbs remain close to your center of gravity. Extended limbs act as levers for your opponent and weaken your base.\n\n“The closer the limbs, the stronger the structure.”\n\nTurtling with elbows tight = strong defense (in a grappling scenario without soccer kicks)\n\nPosting too far = easy arm drag\n\nFraming too long = underhook bait\n\nPosting wide on top = sweep bait\n\nIn open guard butterly, Marcelo recommends to never have your feet extended further away from your hands.\n\nThe more compact you are, the harder it is to penetrate your defenses.\n\n#Distal Control\n\n",
+      "short_description": "",
+      "category": "Tactics",
+      "color": "#8A2BE2",
+      "axis_self_opponent": 0.33,
+      "axis_mental_physical": 0.68,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-215",
+      "concept": "Base of Support (BoS)",
+      "description": "In sports science, the Base of Support (BoS) refers to the area beneath a person that includes every point of contact with the supporting surface. A wider BOS generally equates to greater stability, while a smaller one BOS leads to increased mobility, or vulnerability to falling.\n\nJudo throws and sweeps can be visualized as bring the opponent's CoG outside of their BoS.\n\nCenter of Gravity\nBase of Support\n\nKuzushi brings their CoG to the tipping point\nKake (execution) makes it flip over.\n\nCrouching, widening stance, retracting limbs; all these influence the BoS.\n\nI've seen advanced studies of Rugby/American Football with the BoS concept being used for tackles and mobility to avoid tackles.",
+      "short_description": "",
+      "category": "Physics of  Grappling",
+      "color": "#888888",
+      "axis_self_opponent": 0.12,
+      "axis_mental_physical": 0.11,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-216",
+      "concept": "CoG",
+      "description": "Center of Gravity.\n\nthe theoretical point where a person’s mass is evenly distributed in all directions. \n\nIn sports science it is used for balance, movement, and power generation. A stable athlete keeps their CoG aligned over their base of support; a dynamic one learns how to shift it with control, say to throw a ball or javelin.\n\nIn Judo, CoG is the invisible point around which every battle of balance is fought. Throws should NOT be powered by brute strength, they should feel effortless and a result of having displaced the opponent's CoG outside their base, causing them to fall.\n\nMaster your own CoG, feel and manipulate your opponent's.\n\nThere are really cool Judo sports science visualizations of this.\n\nHunting for a link...\nhttps://youtu.be/SX0gzfXNWqo\nJUDO TECHNIQUES: Base of support / Center of gravity explained",
+      "short_description": "",
+      "category": "Anatomy Awareness",
+      "color": "#848a94",
+      "axis_self_opponent": 0.34,
+      "axis_mental_physical": 0.14,
+      "brightness": 1,
+      "size": 1
+    },
+    {
+      "id": "BJJ-217",
+      "concept": "Active Meditation",
+      "description": "Most of us have trouble counting 10 breaths without being distracted.   Sparring offers a relatively safe environment that requires a lot of focus when facing someone of equal or higher skills.  It requires all our focus to stay alive.  Some see this as a form of forced active meditation, where for the duration of training none of life's problems matter, only escaping this armbar, or surviving the RNC, or finally getting rid of this dangerous lapel grip.",
+      "short_description": "",
+      "category": "Why Do We Train?",
+      "color": "#6c9aea",
+      "axis_self_opponent": 0.72,
+      "axis_mental_physical": 0.72,
       "brightness": 1,
       "size": 1
     }
