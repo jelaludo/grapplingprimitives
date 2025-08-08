@@ -27,6 +27,7 @@ import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 interface HeaderProps {
   onMobileMenuToggle?: () => void;
   onCreateNode?: () => void;
+  onCardsClick?: () => void;
   onHelpClick?: () => void;
   onArticlesClick?: () => void;
   onStudiesClick?: () => void;
@@ -34,7 +35,7 @@ interface HeaderProps {
   onLudusClick?: () => void;
 }
 
-const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick, onLudusClick }, ref) => {
+const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onCardsClick, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick, onLudusClick }, ref) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [actionsMenuAnchor, setActionsMenuAnchor] = useState<null | HTMLElement>(null);
@@ -130,6 +131,22 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
                 }}
               >
                 Create Node
+              </Button>
+            )}
+            {process.env.NODE_ENV === 'development' && (
+              <Button 
+                variant="outlined" 
+                size={isIdle ? 'small' : 'small'}
+                onClick={onCardsClick}
+                sx={{ 
+                  color: 'text.primary',
+                  borderColor: 'divider',
+                  '&:hover': {
+                    borderColor: 'primary.main',
+                  }
+                }}
+              >
+                Cards
               </Button>
             )}
             <Button 

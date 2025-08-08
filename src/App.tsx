@@ -9,6 +9,8 @@ import { HelpDialog } from './components/HelpDialog';
 import Articles from './components/Articles';
 import { Studies } from './components/Studies';
 import Graphs from './components/Graphs';
+import CardsView from './modules/cards/CardsView';
+import CardsSidebar from './modules/cards/CardsSidebar';
 import Ludus from './components/Ludus/Ludus';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
@@ -68,6 +70,8 @@ function App() {
   const dataSource = useDataSource(isDevelopment);
   const snackbar = useSnackbar();
   const viewManagement = useViewManagement();
+  const [cardsQuery, setCardsQuery] = useState('');
+  const [cardsSelectedCategories, setCardsSelectedCategories] = useState<string[]>([]);
   const betaAuth = useBetaAuth();
 
   // Load data when source changes
@@ -230,6 +234,7 @@ function App() {
         header={
           <Header 
             onCreateNode={handleCreateNode} 
+            onCardsClick={viewManagement.switchToCards}
             onHelpClick={() => setHelpDialogOpen(true)}
             onArticlesClick={viewManagement.switchToArticles}
             onStudiesClick={viewManagement.switchToStudies}
@@ -266,6 +271,16 @@ function App() {
               setLabelMode={setLabelMode}
               selected={selected}
               setSelected={setSelected}
+            />
+          ) : viewManagement.currentView === 'cards' ? (
+            <CardsSidebar
+              concepts={dataManagement.concepts}
+              categories={dataManagement.categories as any}
+              query={cardsQuery}
+              setQuery={setCardsQuery}
+              selectedCategories={cardsSelectedCategories}
+              toggleCategory={(name) => setCardsSelectedCategories(prev => prev.includes(name) ? prev.filter(x => x !== name) : [...prev, name])}
+              clearCategories={() => setCardsSelectedCategories([])}
             />
           ) : null
         }
@@ -308,6 +323,10 @@ function App() {
           </div>
         ) : viewManagement.currentView === 'ludus' ? (
           <Ludus onBackToMatrix={viewManagement.switchToMatrix} />
+        ) : viewManagement.currentView === 'cards' ? (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <CardsView concepts={dataManagement.concepts} selectedCategories={cardsSelectedCategories} query={cardsQuery} />
+          </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>
             <Graphs resetToken={graphsResetToken} />
