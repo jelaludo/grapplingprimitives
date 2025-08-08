@@ -2,53 +2,35 @@
 // This file is used by the production build (GitHub >> Vercel + MongoDB)
 // Last updated: 2025-07-20
 
-// Dynamic import of the latest master list
-import { categories, skillsMasterList, masterListMetadata } from './dynamicMasterList';
+// Load canonical JSON served from public/data at runtime
+import type { BJJConcept, Category } from '../types/concepts';
 
-// Export the data directly
-export const getProductionData = async () => {
+type ProductionData = {
+  categories: Category[];
+  skillsMasterList: BJJConcept[];
+};
+
+export const getProductionData = async (): Promise<ProductionData> => {
   try {
-    console.log('✅ Loading production data from dynamic master list');
-    console.log('📊 Categories count:', categories?.length || 0);
-    console.log('📊 Concepts count:', skillsMasterList?.length || 0);
-    
-    if (!categories || !skillsMasterList) {
-      throw new Error('Categories or skillsMasterList is undefined');
+    const response = await fetch('/data/BJJMasterList.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const data = (await response.json()) as Partial<ProductionData>;
+    const categories = Array.isArray(data.categories) ? (data.categories as Category[]) : [];
+    const skillsMasterList = Array.isArray(data.skillsMasterList)
+      ? (data.skillsMasterList as BJJConcept[])
+      : [];
+
+    if (categories.length === 0 || skillsMasterList.length === 0) {
+      throw new Error('Invalid or empty canonical JSON');
     }
-    
-    if (categories.length === 0) {
-      throw new Error('Categories array is empty');
-    }
-    
-    if (skillsMasterList.length === 0) {
-      throw new Error('SkillsMasterList array is empty');
-    }
-    
-    console.log('✅ Production data loaded successfully');
-    return {
-      categories,
-      skillsMasterList
-    };
+
+    return { categories, skillsMasterList };
   } catch (error) {
-    console.error('❌ Failed to load production data:', error);
-    console.error('❌ Error details:', error instanceof Error ? error.message : 'Unknown error');
-    return {
-      categories: [],
-      skillsMasterList: []
-    };
+    console.error('Failed to load canonical JSON:', error);
+    return { categories: [], skillsMasterList: [] };
   }
 };
 
 // For backward compatibility, also export the interface
-export interface BJJConcept {
-  id: string;
-  concept: string;
-  description: string;
-  short_description: string;
-  category: string;
-  color: string;
-  axis_self_opponent: number;
-  axis_mental_physical: number;
-  brightness: number;
-  size: number;
-} 
+export type { BJJConcept } from '../types/concepts';

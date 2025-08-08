@@ -58,9 +58,20 @@ node server.js
 5. **Test changes:** Refresh browser to verify persistence
 
 ### Production Deployment
-1. **Create backup:** Dev Mode → Create Backup
-2. **Deploy:** Production uses latest .ts file
-3. **Verify:** Check production build loads correctly
+Our production data is a single canonical JSON consumed by the app.
+
+1. **Create backup & push to production (Dev Mode):**
+   - Dev Mode → "Create backup & Push to Production"
+   - This writes timestamped backups (.ts + .json) to `backups/BackupsSkillMasterLists/`
+   - It also updates the canonical file at `public/data/BJJMasterList.json` (used by the app)
+   - UI-only fields (cx, cy, r, opacity, stroke, strokeWidth) are stripped from the canonical data
+2. **Validate locally before commit:**
+   - `npm run typecheck`
+   - `npm run validate:data`
+3. **Deploy:**
+   - Commit & push. The app loads `/data/BJJMasterList.json` at runtime
+4. **Verify:**
+   - Check the app loads categories and concepts as expected
 
 ## 📁 File Structure
 
@@ -80,15 +91,20 @@ bjj-skill-matrix/
 
 ## 🎯 Data Management
 
-### File Types
-- **Local (.json):** Development with MongoDB compatibility
-- **Production (.ts):** Clean TypeScript for builds
-- **Backups:** Timestamped versions with node counts
+### Canonical Source of Truth
+- One canonical file: `public/data/BJJMasterList.json`
+- Backups are stored as timestamped JSON/TS under `backups/BackupsSkillMasterLists/`
+- The app never imports versioned TS files from `src/`
 
-### Data Flow
-1. **Local Development:** JSON files with _id fields
-2. **Backup Creation:** Both .json and .ts files
-3. **Production:** Clean .ts files without _id fields
+### App Data Load
+- The app loads `/data/BJJMasterList.json` at runtime (dev and prod)
+- Type guardrails ensure expected arrays and strip unknown fields
+
+### Seeding MongoDB (optional)
+- Seed directly from the canonical JSON:
+  - `npm run seed:canonical` (upsert)
+  - `npm run seed:canonical -- --clear` (fresh reseed)
+  - Ensures unique index on `concepts.id` and `categories.name`
 
 ## 🛠️ Technical Stack
 
@@ -105,9 +121,10 @@ bjj-skill-matrix/
 
 ## 🚨 Important Notes
 
-- **Manual Saving:** Changes in local mode require manual backup creation
-- **File Compatibility:** Never mix _id fields between local and production files
-- **Development Only:** Node creation disabled in production builds
+- **Manual Saving:** In local mode, create a backup to persist edits
+- **UI Fields:** UI/physics fields are not stored in the canonical JSON; they live in UI state only
+- **Types:** Always import `BJJConcept` from `src/types/concepts.ts`; do not redeclare interfaces in data files
+- **Build Safety:** Versioned TS masterlists in `src/data` are excluded from compilation
 
 ## 🤝 Contributing
 

@@ -178,8 +178,49 @@ app.post('/api/backup', (req, res) => {
       fs.mkdirSync(backupDir, { recursive: true });
     }
     
-    // Create TypeScript backup file
-    const tsContent = `export const categories = ${JSON.stringify(categories, null, 2)};
+    // Remove UI-only fields from concepts for clean canonical data
+    const cleanedConceptsRaw = (concepts || []).map((c) => {
+      const { cx, cy, r, opacity, stroke, strokeWidth, ...rest } = c || {};
+      return rest;
+    });
+
+    // Deduplicate categories by normalized name (collapse spaces, trim)
+    const normalizeName = (name) => (name || '').replace(/\s+/g, ' ').trim();
+
+    // Normalize concept category names first
+    const cleanedConcepts = cleanedConceptsRaw.map((c) => ({
+      ...c,
+      category: normalizeName(c.category)
+    }));
+
+    // Count concepts per normalized category name
+    const conceptCounts = cleanedConcepts.reduce((acc, c) => {
+      const key = normalizeName(c.category);
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Choose one category per normalized name (prefer the one with higher concept count)
+    const byNorm = new Map();
+    (categories || []).forEach((cat) => {
+      const norm = normalizeName(cat.name);
+      const current = byNorm.get(norm);
+      const candidate = {
+        ...cat,
+        name: norm
+      };
+      const candidateCount = conceptCounts[norm] || 0;
+      if (!current) {
+        byNorm.set(norm, { cat: candidate, count: candidateCount });
+      } else if (candidateCount > current.count) {
+        byNorm.set(norm, { cat: candidate, count: candidateCount });
+      }
+    });
+
+    const dedupedCategories = Array.from(byNorm.values()).map((v) => v.cat);
+
+    // Create TypeScript backup file (kept for archival compatibility)
+    const tsContent = `export const categories = ${JSON.stringify(dedupedCategories, null, 2)};
 
 export interface BJJConcept {
   id: string;
@@ -193,8 +234,8 @@ export interface BJJConcept {
   brightness: number;
   size: number;
 }
-
-export const skillsMasterList: BJJConcept[] = ${JSON.stringify(concepts, null, 2)};
+ 
+export const skillsMasterList: BJJConcept[] = ${JSON.stringify(cleanedConcepts, null, 2)};
 `;
     
     const tsFilePath = path.join(backupDir, `${fileName}.ts`);
@@ -202,60 +243,23 @@ export const skillsMasterList: BJJConcept[] = ${JSON.stringify(concepts, null, 2
     
     // Create JSON backup file
     const jsonContent = JSON.stringify({
-      categories,
-      skillsMasterList: concepts
+      categories: dedupedCategories,
+      skillsMasterList: cleanedConcepts
     }, null, 2);
     
     const jsonFilePath = path.join(backupDir, `${fileName}.json`);
     fs.writeFileSync(jsonFilePath, jsonContent);
     
-    // Copy TS file to src/data/ for production
-    const srcDataDir = path.resolve(__dirname, 'src/data');
-    if (!fs.existsSync(srcDataDir)) {
-      fs.mkdirSync(srcDataDir, { recursive: true });
+    // Also update canonical JSON for the app
+    const publicDataDir = path.resolve(__dirname, 'public/data');
+    if (!fs.existsSync(publicDataDir)) {
+      fs.mkdirSync(publicDataDir, { recursive: true });
     }
-    
-    const srcDataFilePath = path.join(srcDataDir, `${fileName}.ts`);
-    fs.writeFileSync(srcDataFilePath, tsContent);
-    
-    // Update dynamicMasterList.ts to point to the latest file
-    const dynamicMasterListPath = path.join(srcDataDir, 'dynamicMasterList.ts');
-    const dynamicMasterListContent = `// Dynamic master list import - auto-generated
-// This file is automatically updated to import the latest master list
-// Last updated: ${now.toISOString()}
-// Source file: ${fileName}.ts
+    const canonicalJsonPath = path.join(publicDataDir, 'BJJMasterList.json');
+    fs.copyFileSync(jsonFilePath, canonicalJsonPath);
 
-// Import the latest master list data
-export { categories, skillsMasterList } from './${fileName}';
-
-// Re-export the interface for type safety
-export interface BJJConcept {
-  id: string;
-  concept: string;
-  description: string;
-  short_description: string;
-  category: string;
-  color: string;
-  axis_self_opponent: number;
-  axis_mental_physical: number;
-  brightness: number;
-  size: number;
-}
-
-// Export metadata about the current file
-export const masterListMetadata = {
-  fileName: '${fileName}.ts',
-  nodeCount: ${nodeCount},
-  date: '${dateStr}',
-  lastModified: '${now.toISOString()}'
-};
-`;
-    
-    fs.writeFileSync(dynamicMasterListPath, dynamicMasterListContent);
-    
     console.log(`Backup created: ${fileName}.ts and ${fileName}.json`);
-    console.log(`Production updated: ${fileName}.ts copied to src/data/`);
-    console.log(`Dynamic master list updated to point to: ${fileName}.ts`);
+    console.log(`Canonical JSON updated: public/data/BJJMasterList.json`);
     
     res.json({
       success: true,
@@ -265,7 +269,7 @@ export const masterListMetadata = {
       },
       nodeCount,
       timestamp: now.toISOString(),
-      productionUpdated: true
+      productionUpdated: false
     });
     
   } catch (error) {
@@ -274,6 +278,75 @@ export const masterListMetadata = {
       error: 'Failed to create backup', 
       details: error.message 
     });
+  }
+});
+
+// Validate and normalize canonical JSON (dev tool)
+app.post('/api/validate-canonical', (req, res) => {
+  try {
+    const publicDataDir = path.resolve(__dirname, 'public/data');
+    const canonicalJsonPath = path.join(publicDataDir, 'BJJMasterList.json');
+
+    if (!fs.existsSync(canonicalJsonPath)) {
+      return res.status(404).json({ error: 'Canonical JSON not found' });
+    }
+
+    const normalizeName = (name) => (name || '').replace(/\s+/g, ' ').trim();
+
+    const raw = fs.readFileSync(canonicalJsonPath, 'utf8');
+    const data = JSON.parse(raw);
+
+    const categories = Array.isArray(data.categories) ? data.categories : [];
+    const concepts = Array.isArray(data.skillsMasterList) ? data.skillsMasterList : [];
+
+    // Strip UI-only fields and normalize concept categories
+    const cleanedConcepts = concepts.map((c) => {
+      const { cx, cy, r, opacity, stroke, strokeWidth, ...rest } = c || {};
+      return { ...rest, category: normalizeName(rest.category) };
+    });
+
+    // Count concepts per normalized category
+    const conceptCounts = cleanedConcepts.reduce((acc, c) => {
+      const key = normalizeName(c.category);
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Deduplicate categories by normalized name; keep the one with more concepts
+    const byNorm = new Map();
+    categories.forEach((cat) => {
+      const norm = normalizeName(cat.name);
+      const candidate = { ...cat, name: norm };
+      const candidateCount = conceptCounts[norm] || 0;
+      const current = byNorm.get(norm);
+      if (!current || candidateCount > current.count) {
+        byNorm.set(norm, { cat: candidate, count: candidateCount });
+      }
+    });
+
+    const dedupedCategories = Array.from(byNorm.values()).map((v) => v.cat);
+
+    // Compute summary
+    const removedCategories = categories.length - dedupedCategories.length;
+    const updatedConcepts = concepts.length;
+
+    // Write back canonical file
+    const out = {
+      categories: dedupedCategories,
+      skillsMasterList: cleanedConcepts,
+    };
+    fs.writeFileSync(canonicalJsonPath, JSON.stringify(out, null, 2));
+
+    return res.json({
+      success: true,
+      removedCategories,
+      updatedConcepts,
+      categoryCounts: conceptCounts,
+      path: `public/data/BJJMasterList.json`,
+    });
+  } catch (error) {
+    console.error('Failed to validate canonical JSON:', error);
+    return res.status(500).json({ error: 'Validation failed', details: error.message });
   }
 });
 

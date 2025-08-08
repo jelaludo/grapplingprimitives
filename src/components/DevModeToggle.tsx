@@ -13,7 +13,8 @@ import {
   DialogActions,
   IconButton,
   Tabs,
-  Tab
+  Tab,
+  CircularProgress
 } from '@mui/material';
 import {
   Storage as StorageIcon,
@@ -100,6 +101,8 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [validating, setValidating] = useState(false);
+  const [validationMessage, setValidationMessage] = useState<string | null>(null);
   const [backups, setBackups] = useState<Array<{
     name: string;
     path: string;
@@ -147,6 +150,29 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
   const handleSeedFromLocal = () => {
     onSeedFromLocal?.();
     handleClose();
+  };
+
+  const handleValidateData = async () => {
+    setValidating(true);
+    setValidationMessage(null);
+    try {
+      const response = await fetch('http://localhost:3001/api/validate-canonical', {
+        method: 'POST'
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || `HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      setValidationMessage(
+        `Validated. Removed ${data.removedCategories} duplicate categories. Concepts processed: ${data.updatedConcepts}.`
+      );
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Unknown error';
+      setValidationMessage(`Validation failed: ${msg}`);
+    } finally {
+      setValidating(false);
+    }
   };
 
   const loadBackups = async () => {
@@ -323,6 +349,22 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
                 >
                   Create Backup & Push to Production
                 </Button>
+
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={handleValidateData}
+                  disabled={validating}
+                  title="Validate and normalize canonical JSON (deduplicate categories, strip UI fields)"
+                >
+                  {validating ? (<><CircularProgress size={16} sx={{ mr: 1 }} /> Validating...</>) : 'Validate Data'}
+                </Button>
+
+                {validationMessage && (
+                  <Alert severity={validationMessage.startsWith('Validation failed') ? 'error' : 'success'}>
+                    {validationMessage}
+                  </Alert>
+                )}
 
                 <Button
                   variant="outlined"
