@@ -1,17 +1,25 @@
-import React, { useRef, useEffect } from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import React, { useRef, useEffect, useMemo } from 'react';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { useRef as useReactRef } from 'react';
 
 interface BellCurveChartProps {
   width?: number;
   height?: number;
 }
 
-const BellCurveChart: React.FC<BellCurveChartProps> = ({ 
-  width = 800, 
-  height = 500 
-}) => {
+const BellCurveChart: React.FC<BellCurveChartProps> = ({ width, height }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const theme = useTheme();
+  const isSmall = useMediaQuery('(max-width:600px)');
+
+  // Measure available size and set responsive dimensions
+  const measured = useMemo(() => {
+    const w = width ?? (wrapperRef.current?.clientWidth || 800);
+    const hBase = Math.max(220, Math.min(520, Math.round((w * 0.6))));
+    const h = height ?? hBase;
+    return { w, h };
+  }, [width, height]);
 
   // Belt configurations: [mean, standardDeviation, color, alpha]
   const belts: [number, number, string, number][] = [
@@ -23,7 +31,8 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
   ];
 
   const beltNames = ['White', 'Blue', 'Purple', 'Brown', 'Black'];
-  const padding = 40; // Reduced padding for better mobile experience
+  // Responsive padding: less on small screens, more on large
+  const padding = Math.max(16, Math.min(48, Math.round((measured.w) * 0.05)));
 
   // Function to calculate normal distribution
   const normalDistribution = (x: number, mean: number, stdDev: number) => {
@@ -40,17 +49,22 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size
-    canvas.width = width;
-    canvas.height = height;
+    // Device pixel ratio for crisp rendering
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.floor(measured.w * dpr);
+    canvas.height = Math.floor(measured.h * dpr);
+    canvas.style.width = measured.w + 'px';
+    canvas.style.height = measured.h + 'px';
+    ctx.scale(dpr, dpr);
 
     // Clear canvas
     ctx.fillStyle = theme.palette.background.paper;
-    ctx.fillRect(0, 0, width, height);
+    ctx.fillRect(0, 0, measured.w, measured.h);
 
     // Find max value for scaling
     let maxY = 0;
-    for (let x = 0; x <= 200; x += 0.5) {
+    const step = measured.w < 420 ? 1.0 : 0.5;
+    for (let x = 0; x <= 200; x += step) {
       for (let belt of belts) {
         const y = normalDistribution(x, belt[0], belt[1]);
         if (y > maxY) maxY = y;
@@ -62,20 +76,22 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
     ctx.lineWidth = 0.5;
 
     // Vertical grid lines
-    for (let i = 0; i <= 10; i++) {
-      const x = padding + (i / 10) * (width - 2 * padding);
+    const vLines = isSmall ? 4 : 10;
+    for (let i = 0; i <= vLines; i++) {
+      const x = padding + (i / vLines) * (measured.w - 2 * padding);
       ctx.beginPath();
       ctx.moveTo(x, padding);
-      ctx.lineTo(x, height - padding);
+      ctx.lineTo(x, measured.h - padding);
       ctx.stroke();
     }
 
     // Horizontal grid lines
-    for (let i = 0; i <= 5; i++) {
-      const y = padding + (i / 5) * (height - 2 * padding);
+    const hLines = isSmall ? 3 : 5;
+    for (let i = 0; i <= hLines; i++) {
+      const y = padding + (i / hLines) * (measured.h - 2 * padding);
       ctx.beginPath();
       ctx.moveTo(padding, y);
-      ctx.lineTo(width - padding, y);
+      ctx.lineTo(measured.w - padding, y);
       ctx.stroke();
     }
 
@@ -85,14 +101,14 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
 
     // X-axis
     ctx.beginPath();
-    ctx.moveTo(padding, height - padding);
-    ctx.lineTo(width - padding, height - padding);
+    ctx.moveTo(padding, measured.h - padding);
+    ctx.lineTo(measured.w - padding, measured.h - padding);
     ctx.stroke();
 
     // Y-axis
     ctx.beginPath();
     ctx.moveTo(padding, padding);
-    ctx.lineTo(padding, height - padding);
+    ctx.lineTo(padding, measured.h - padding);
     ctx.stroke();
 
     // Draw distributions
@@ -101,18 +117,18 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
       
       // For black belt, draw white outline first
       if (isBlackBelt) {
-        ctx.strokeStyle = 'white';
-        ctx.fillStyle = 'white';
-        ctx.globalAlpha = alpha;
-        ctx.lineWidth = 5; // Thicker line for outline
+        // White outer outline to ensure contrast on dark themes
+        ctx.strokeStyle = '#ffffff';
+        ctx.globalAlpha = 0.9;
+        ctx.lineWidth = 5;
 
         ctx.beginPath();
         let firstPoint = true;
 
-        for (let x = 0; x <= 200; x += 0.5) {
+        for (let x = 0; x <= 200; x += step) {
           const y = normalDistribution(x, mean, stdDev);
-          const canvasX = padding + (x / 200) * (width - 2 * padding);
-          const canvasY = height - padding - (y / maxY) * (height - 2 * padding);
+          const canvasX = padding + (x / 200) * (measured.w - 2 * padding);
+          const canvasY = measured.h - padding - (y / maxY) * (measured.h - 2 * padding);
 
           if (firstPoint) {
             ctx.moveTo(canvasX, canvasY);
@@ -126,18 +142,24 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
       }
 
       // Draw the actual curve
-      ctx.strokeStyle = color;
-      ctx.fillStyle = color;
-      ctx.globalAlpha = alpha;
+      if (isBlackBelt) {
+        ctx.strokeStyle = '#000000';
+        ctx.fillStyle = 'rgba(0,0,0,0.25)';
+        ctx.globalAlpha = 1.0;
+      } else {
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.globalAlpha = alpha;
+      }
       ctx.lineWidth = 3;
 
       ctx.beginPath();
       let firstPoint = true;
 
-      for (let x = 0; x <= 200; x += 0.5) {
+      for (let x = 0; x <= 200; x += step) {
         const y = normalDistribution(x, mean, stdDev);
-        const canvasX = padding + (x / 200) * (width - 2 * padding);
-        const canvasY = height - padding - (y / maxY) * (height - 2 * padding);
+        const canvasX = padding + (x / 200) * (measured.w - 2 * padding);
+        const canvasY = measured.h - padding - (y / maxY) * (measured.h - 2 * padding);
 
         if (firstPoint) {
           ctx.moveTo(canvasX, canvasY);
@@ -150,9 +172,9 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
       ctx.stroke();
 
       // Fill under curve with lower alpha
-      ctx.globalAlpha = alpha * 0.3;
-      ctx.lineTo(width - padding, height - padding);
-      ctx.lineTo(padding, height - padding);
+      ctx.globalAlpha = isBlackBelt ? 0.2 : alpha * 0.3;
+      ctx.lineTo(measured.w - padding, measured.h - padding);
+      ctx.lineTo(padding, measured.h - padding);
       ctx.closePath();
       ctx.fill();
 
@@ -161,15 +183,15 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
 
     // Add axis labels
     ctx.fillStyle = theme.palette.text.secondary;
-    ctx.font = '14px Arial';
+    ctx.font = `${Math.round(Math.max(10, Math.min(13, measured.w * 0.016)))}px Arial`;
     ctx.textAlign = 'center';
 
     // X-axis label
-    ctx.fillText('ability 能力', width / 2, height - 15);
+    ctx.fillText('ability 能力', measured.w / 2, measured.h - 15);
 
     // Y-axis label
     ctx.save();
-    ctx.translate(20, height / 2);
+    ctx.translate(20, measured.h / 2);
     ctx.rotate(-Math.PI / 2);
     ctx.fillText('# people 人数', 0, 0);
     ctx.restore();
@@ -177,13 +199,13 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
     // X-axis tick labels - removed as requested
 
     // Add belt level annotations
-    ctx.font = '12px Arial';
+    ctx.font = `${Math.round(Math.max(10, Math.min(12, measured.w * 0.014)))}px Arial`;
     ctx.textAlign = 'center';
 
     belts.forEach(([mean, stdDev, color], index) => {
-      const canvasX = padding + (mean / 200) * (width - 2 * padding);
+      const canvasX = padding + (mean / 200) * (measured.w - 2 * padding);
       const peakY = normalDistribution(mean, mean, stdDev);
-      const canvasY = height - padding - (peakY / maxY) * (height - 2 * padding) - 20;
+      const canvasY = measured.h - padding - (peakY / maxY) * (measured.h - 2 * padding) - 20;
 
       ctx.fillStyle = color;
       ctx.fillText(beltNames[index], canvasX, canvasY);
@@ -191,10 +213,17 @@ const BellCurveChart: React.FC<BellCurveChartProps> = ({
 
     // Add overlap indication - moved outside canvas
 
-  }, [width, height, theme]);
+  }, [measured, theme, padding, isSmall]);
 
   return (
-    <Box sx={{ textAlign: 'center' }}>
+    <Box
+      ref={wrapperRef}
+      sx={{
+        textAlign: 'center',
+        width: { xs: '100vw', md: '100%' },
+        mx: { xs: 'calc(50% - 50vw)', md: 0 }
+      }}
+    >
       <canvas
         ref={canvasRef}
         style={{

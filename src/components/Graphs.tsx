@@ -8,6 +8,7 @@ import {
   useTheme
 } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useMediaQuery } from '@mui/material';
 import BellCurveChart from './BellCurveChart';
 
 interface FlowDiagramChartProps {
@@ -16,10 +17,15 @@ interface FlowDiagramChartProps {
 
 const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
   const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
+  const isXs = useMediaQuery('(max-width:400px)');
+  const markerW = isSmall ? 7 : 10;
+  const markerH = isSmall ? 5 : 7;
+  const baseFont = isSmall ? 'clamp(10px, 2.8vw, 12px)' : 'clamp(11px, 1.4vw, 14px)';
   
   return (
-    <Box sx={{ width: '100%', height: 800, position: 'relative' }}>
-      <svg width="100%" height="100%" viewBox="0 0 800 800">
+    <Box sx={{ width: '100%', height: { xs: 320, sm: 480, md: 640 }, position: 'relative' }}>
+      <svg width="100%" height="100%" viewBox="0 0 800 800" preserveAspectRatio="xMidYMid meet">
         {/* Gradient line from bottom-left to top-right */}
         <defs>
           <linearGradient id="positionGradient" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -34,15 +40,15 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
         <line 
           x1="50" y1="750" x2="750" y2="50" 
           stroke="url(#positionGradient)" 
-          strokeWidth="3"
+          strokeWidth={isSmall ? 2 : 3}
         />
         
         {/* Bidirectional arrows */}
         <defs>
           <marker 
             id="arrowhead-red" 
-            markerWidth="10" 
-            markerHeight="7" 
+            markerWidth={markerW} 
+            markerHeight={markerH} 
             refX="9" 
             refY="3.5" 
             orient="auto"
@@ -54,8 +60,8 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
           </marker>
           <marker 
             id="arrowhead-green" 
-            markerWidth="10" 
-            markerHeight="7" 
+            markerWidth={markerW} 
+            markerHeight={markerH} 
             refX="9" 
             refY="3.5" 
             orient="auto"
@@ -71,13 +77,13 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
         <line 
           x1="650" y1="700" x2="650" y2="750" 
           stroke="#ff4444" 
-          strokeWidth="2"
+          strokeWidth={isSmall ? 1.5 : 2}
           markerEnd="url(#arrowhead-red)"
         />
         <text 
           x="670" y="725" 
           fill="#ff4444" 
-          fontSize="14" 
+          style={{ fontSize: baseFont }}
           fontWeight="bold"
         >
           getting worse
@@ -87,13 +93,13 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
         <line 
           x1="150" y1="100" x2="150" y2="50" 
           stroke="#4caf50" 
-          strokeWidth="2"
+          strokeWidth={isSmall ? 1.5 : 2}
           markerEnd="url(#arrowhead-green)"
         />
         <text 
           x="170" y="75" 
           fill="#4caf50" 
-          fontSize="14" 
+          style={{ fontSize: baseFont }}
           fontWeight="bold"
         >
           getting better
@@ -135,44 +141,58 @@ const FlowDiagramChart: React.FC<FlowDiagramChartProps> = ({ data }) => {
               />
               
               {/* Step text with wrapping for long text */}
-              {item.step && item.step.length > 20 ? (
-                // For long text, split into multiple lines
-                <g>
-                  {item.step.split(' ').reduce((lines: string[], word: string, wordIndex: number) => {
-                    const currentLine = lines[lines.length - 1] || '';
-                    if ((currentLine + ' ' + word).length <= 15 && lines.length < 2) {
-                      lines[lines.length - 1] = currentLine + (currentLine ? ' ' : '') + word;
+              {(() => {
+                const show = isXs ? index % 3 === 0 : isSmall ? index % 2 === 0 : true;
+                if (!show) return null;
+                const isLong = !!item.step && item.step.length > (isSmall ? 18 : 22);
+                if (isLong) {
+                  const lines = item.step!.split(' ').reduce((acc: string[], word: string) => {
+                    const current = acc[acc.length - 1] || '';
+                    const maxLen = isSmall ? 12 : 15;
+                    if ((current + ' ' + word).trim().length <= maxLen && acc.length < 2) {
+                      acc[acc.length - 1] = (current ? current + ' ' : '') + word;
                     } else {
-                      lines.push(word);
+                      acc.push(word);
                     }
-                    return lines;
-                  }, []).map((line, lineIndex) => (
-                    <text 
-                      key={lineIndex}
-                      x={x + (textOffset > 0 ? 15 : -15)} 
-                      y={y + textOffset + (lineIndex * 14)} 
-                      fill={theme.palette.text.primary} 
-                      fontSize="12" 
-                      textAnchor={textAnchor}
-                      dominantBaseline="middle"
-                    >
-                      {line}
-                    </text>
-                  ))}
-                </g>
-              ) : (
-                // For short text, display normally
-                <text 
-                  x={x + (textOffset > 0 ? 15 : -15)} 
-                  y={y + textOffset} 
-                  fill={theme.palette.text.primary} 
-                  fontSize="13" 
-                  textAnchor={textAnchor}
-                  dominantBaseline="middle"
-                >
-                  {item.step}
-                </text>
-              )}
+                    return acc;
+                  }, ['']);
+                  return (
+                    <g>
+                      {lines.map((line, lineIndex) => (
+                        <text
+                          key={lineIndex}
+                          x={x + (textOffset > 0 ? 15 : -15)}
+                          y={y + textOffset + (lineIndex * 14)}
+                          fill={theme.palette.text.primary}
+                          fontSize={baseFont}
+                          style={{ paintOrder: 'stroke' as any }}
+                          stroke={theme.palette.background.paper}
+                          strokeWidth={isSmall ? 2 : 3}
+                          textAnchor={textAnchor}
+                          dominantBaseline="middle"
+                        >
+                          {line}
+                        </text>
+                      ))}
+                    </g>
+                  );
+                }
+                return (
+                  <text
+                    x={x + (textOffset > 0 ? 15 : -15)}
+                    y={y + textOffset}
+                    fill={theme.palette.text.primary}
+                    fontSize={baseFont}
+                    style={{ paintOrder: 'stroke' as any }}
+                    stroke={theme.palette.background.paper}
+                    strokeWidth={isSmall ? 2 : 3}
+                    textAnchor={textAnchor}
+                    dominantBaseline="middle"
+                  >
+                    {item.step}
+                  </text>
+                );
+              })()}
             </g>
           );
         })}
@@ -251,19 +271,19 @@ const graphsData: GraphData[] = [
 ];
 
 interface GraphsProps {
-  resetToOverview?: boolean;
+  // Each increment resets to landing view (three cards)
+  resetToken?: number;
 }
 
-const Graphs: React.FC<GraphsProps> = ({ resetToOverview = false }) => {
+const Graphs: React.FC<GraphsProps> = ({ resetToken = 0 }) => {
   const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const [selectedGraph, setSelectedGraph] = useState<GraphData | null>(null);
 
-  // Reset to overview when resetToOverview prop changes
+  // Reset to overview whenever reset token changes
   useEffect(() => {
-    if (resetToOverview) {
-      setSelectedGraph(null);
-    }
-  }, [resetToOverview]);
+    setSelectedGraph(null);
+  }, [resetToken]);
 
   const handleGraphClick = (graph: GraphData) => {
     setSelectedGraph(graph);
@@ -342,39 +362,23 @@ const Graphs: React.FC<GraphsProps> = ({ resetToOverview = false }) => {
           backgroundColor: 'background.paper',
           border: `1px solid ${theme.palette.divider}`,
           mb: 3,
-          width: '100%'
+          // Full-bleed on small screens to eliminate side padding
+          width: { xs: '100vw', md: '100%' },
+          mx: { xs: 'calc(50% - 50vw)', md: 0 }
         }}>
           <Box sx={{ p: { xs: 1, sm: 1, md: 2 } }}>
             {selectedGraph.type === 'line' ? (
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={selectedGraph.data}>
-                  <CartesianGrid 
-                    strokeDasharray="3 3" 
-                    stroke={theme.palette.divider}
-                  />
-                  <XAxis 
-                    dataKey="time" 
-                    stroke={theme.palette.text.secondary}
-                    tick={{ fill: theme.palette.text.secondary }}
-                  />
-                  <YAxis 
-                    stroke={theme.palette.text.secondary}
-                    tick={{ fill: theme.palette.text.secondary }}
-                    domain={[0, 100]}
-                  />
-                  <Tooltip 
-                    contentStyle={{
-                      backgroundColor: theme.palette.background.paper,
-                      border: `1px solid ${theme.palette.divider}`,
-                      color: theme.palette.text.primary
-                    }}
-                  />
-                  <Legend 
-                    wrapperStyle={{
-                      fontSize: '12px',
-                      paddingTop: '10px'
-                    }}
-                  />
+              <ResponsiveContainer width="100%" height={isSmall ? 260 : 420}>
+                <LineChart data={selectedGraph.data} margin={{ top: 8, right: 8, bottom: 16, left: 8 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
+                  <XAxis dataKey="time" stroke={theme.palette.text.secondary} tick={{ fill: theme.palette.text.secondary }} tickCount={isSmall ? 3 : 5} />
+                  <YAxis stroke={theme.palette.text.secondary} tick={{ fill: theme.palette.text.secondary }} domain={[0, 100]} tickCount={isSmall ? 3 : 5} />
+                  {!isSmall && (
+                    <Tooltip contentStyle={{ backgroundColor: theme.palette.background.paper, border: `1px solid ${theme.palette.divider}`, color: theme.palette.text.primary }} />
+                  )}
+                  {!isSmall && (
+                    <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                  )}
                   <Line 
                     type="monotone" 
                     dataKey="moarTechs" 
@@ -406,7 +410,7 @@ const Graphs: React.FC<GraphsProps> = ({ resetToOverview = false }) => {
             ) : selectedGraph.type === 'flow-diagram' ? (
               <FlowDiagramChart data={selectedGraph.data} />
             ) : (
-              <BellCurveChart width={800} height={500} />
+              <BellCurveChart />
             )}
           </Box>
         </Box>

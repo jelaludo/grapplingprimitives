@@ -59,7 +59,7 @@ function App() {
 
   const [helpDialogOpen, setHelpDialogOpen] = useState(false);
   const [showBetaLogin, setShowBetaLogin] = useState(false);
-  const [graphsResetTrigger, setGraphsResetTrigger] = useState(0);
+  const [graphsResetToken, setGraphsResetToken] = useState(0);
   
   const [isDevelopment] = useState(process.env.NODE_ENV === 'development');
   
@@ -235,7 +235,7 @@ function App() {
             onStudiesClick={viewManagement.switchToStudies}
             onGraphsClick={() => {
               viewManagement.switchToGraphs();
-              setGraphsResetTrigger(prev => prev + 1);
+              setGraphsResetToken(prev => prev + 1);
             }}
             onLudusClick={viewManagement.switchToLudus}
             onMobileMenuToggle={viewManagement.currentView !== 'matrix' ? viewManagement.switchToMatrix : undefined}
@@ -310,7 +310,7 @@ function App() {
           <Ludus onBackToMatrix={viewManagement.switchToMatrix} />
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>
-            <Graphs resetToOverview={graphsResetTrigger > 0} />
+            <Graphs resetToken={graphsResetToken} />
           </div>
         )}
       </MainLayout>

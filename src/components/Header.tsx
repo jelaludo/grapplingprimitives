@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   AppBar, 
   Toolbar, 
@@ -11,7 +11,9 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
-  Box
+  Box,
+  Slide,
+  useScrollTrigger
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
@@ -36,6 +38,29 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [actionsMenuAnchor, setActionsMenuAnchor] = useState<null | HTMLElement>(null);
+  const trigger = useScrollTrigger();
+
+  // Idle -> compact header after N ms without interaction
+  const [isIdle, setIsIdle] = useState(false);
+  const IDLE_TIMEOUT_MS = 3000;
+
+  useEffect(() => {
+    let idleTimer: number | undefined;
+    const resetIdle = () => {
+      setIsIdle(false);
+      if (idleTimer) window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => setIsIdle(true), IDLE_TIMEOUT_MS);
+    };
+    // Initial arm
+    idleTimer = window.setTimeout(() => setIsIdle(true), IDLE_TIMEOUT_MS);
+    // Activity listeners
+    const events: (keyof WindowEventMap)[] = ['mousemove', 'touchstart', 'keydown', 'wheel'];
+    events.forEach(evt => window.addEventListener(evt, resetIdle, { passive: true }));
+    return () => {
+      if (idleTimer) window.clearTimeout(idleTimer);
+      events.forEach(evt => window.removeEventListener(evt, resetIdle));
+    };
+  }, []);
 
   const handleActionsMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setActionsMenuAnchor(event.currentTarget);
@@ -46,17 +71,20 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
   };
 
   return (
-    <AppBar 
-      ref={ref}
-      position="static" 
-      sx={{ 
-        backgroundColor: 'background.paper',
-        borderBottom: 1,
-        borderColor: 'divider',
-        boxShadow: 'none',
-      }}
-    >
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
+    <Slide appear={false} direction="down" in={!trigger}>
+      <AppBar 
+        ref={ref}
+        position="static" 
+        sx={{ 
+          backgroundColor: 'background.paper',
+          borderBottom: 1,
+          borderColor: 'divider',
+          boxShadow: 'none',
+          transition: 'opacity 200ms ease, transform 200ms ease',
+          opacity: isIdle ? 0.75 : 1,
+        }}
+      >
+        <Toolbar sx={{ justifyContent: 'space-between', minHeight: isIdle ? 40 : 64, transition: 'min-height 200ms ease' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           {isMobile && onMobileMenuToggle && (
             <IconButton
@@ -76,6 +104,8 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
               fontWeight: 700,
               letterSpacing: 1,
               color: 'text.primary',
+                fontSize: isIdle ? 18 : 20,
+                transition: 'font-size 200ms ease'
             }}
           >
             Grappling Primitives
@@ -88,7 +118,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             {process.env.NODE_ENV === 'development' && (
               <Button 
                 variant="outlined" 
-                size="small"
+                  size={isIdle ? 'small' : 'small'}
                 startIcon={<AddIcon />}
                 onClick={onCreateNode}
                 sx={{ 
@@ -104,7 +134,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             )}
             <Button 
               variant="outlined" 
-              size="small"
+                size={isIdle ? 'small' : 'small'}
               onClick={onArticlesClick}
               sx={{ 
                 color: 'text.primary',
@@ -118,7 +148,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             </Button>
             <Button 
               variant="outlined" 
-              size="small"
+                size={isIdle ? 'small' : 'small'}
               onClick={onStudiesClick}
               sx={{ 
                 color: 'text.primary',
@@ -132,7 +162,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             </Button>
             <Button 
               variant="outlined" 
-              size="small"
+                size={isIdle ? 'small' : 'small'}
               onClick={onGraphsClick}
               sx={{ 
                 color: 'text.primary',
@@ -146,7 +176,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             </Button>
             <Button 
               variant="outlined" 
-              size="small"
+                size={isIdle ? 'small' : 'small'}
               startIcon={<SportsEsportsIcon />}
               onClick={onLudusClick}
               sx={{ 
@@ -161,7 +191,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             </Button>
             <Button 
               variant="outlined" 
-              size="small"
+                size={isIdle ? 'small' : 'small'}
               startIcon={<HelpIcon />}
               onClick={onHelpClick}
               sx={{ 
@@ -250,8 +280,9 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             <ListItemText>Help</ListItemText>
           </MenuItem>
         </Menu>
-      </Toolbar>
-    </AppBar>
+        </Toolbar>
+      </AppBar>
+    </Slide>
   );
 });
 

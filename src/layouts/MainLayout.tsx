@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, useTheme, useMediaQuery, Drawer } from '@mui/material';
+import React, { useMemo, useState } from 'react';
+import { Box, useTheme, useMediaQuery, Drawer, useScrollTrigger } from '@mui/material';
 import RetroMessage from '../components/RetroMessage';
 
 interface HeaderProps {
@@ -20,6 +20,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
+  const scrollTrigger = useScrollTrigger();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -46,20 +47,22 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
     </Box>
   );
 
-  // Clone header and pass the mobile menu toggle function
+  // Clone header and pass props
   const headerWithMobileMenu = React.cloneElement(header, {
     onMobileMenuToggle: handleDrawerToggle,
   });
 
+  const computedHeaderHeight = useMemo(() => (scrollTrigger ? 0 : HEADER_HEIGHT), [scrollTrigger]);
+
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Header */}
-      <Box sx={{ height: HEADER_HEIGHT, flexShrink: 0 }}>
+      <Box sx={{ height: computedHeaderHeight, transition: 'height 200ms ease', flexShrink: 0 }}>
         {headerWithMobileMenu}
       </Box>
 
       {/* Main Content Area */}
-      <Box sx={{ display: 'flex', flex: 1, minHeight: 0, height: `calc(100vh - ${HEADER_HEIGHT}px)` }}>
+      <Box sx={{ display: 'flex', flex: 1, minHeight: 0, height: `calc(100vh - ${computedHeaderHeight}px)` }}>
         {/* Desktop Sidebar - Always visible on desktop */}
         {!isMobile && sidebarContent}
 
