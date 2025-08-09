@@ -250,14 +250,14 @@ export const CentroidFastGame: React.FC = () => {
   const perfectCount = useMemo(() => roundHistory.filter(r => r.perfect).length, [roundHistory]);
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', color: 'white' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: { xs: 'flex-start', md: 'center' }, minHeight: '100vh', color: 'white', pt: { xs: 2, md: 0 } }}>
       <Box sx={{ position: 'relative', width: '100%', maxWidth: 380 }}>
         {/* Back button to restore header */}
         <IconButton onClick={() => { document.body.classList.remove('game-fullscreen'); }} sx={{ position: 'absolute', top: 0, left: 0, color: 'white' }} aria-label="close">
           <CloseIcon />
         </IconButton>
 
-        <Box sx={{ textAlign: 'center', mt: 4, mb: 1 }}>
+        <Box sx={{ textAlign: 'center', mt: { xs: 1, md: 4 }, mb: 1 }}>
           <Typography variant="h5" fontWeight={700}>Centroid (x̄, ȳ) – GRID FAST</Typography>
           <Typography variant="body2" sx={{ opacity: 0.7 }}>10 rounds – Lowest score wins</Typography>
         </Box>
