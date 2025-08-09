@@ -341,7 +341,7 @@ function App() {
           </div>
         ) : viewManagement.currentView === 'games' ? (
           <div style={{ height: '100vh', width: '100%', overflow: 'hidden', display: 'flex' }}>
-            <GamesHub />
+            <GamesHub onExit={viewManagement.switchToMatrix} />
           </div>
         ) : viewManagement.currentView === 'coach' ? (
           <div style={VIEW_CONTAINER_STYLE}>

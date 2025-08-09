@@ -1,20 +1,35 @@
 import React, { Suspense } from 'react';
-import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardActionArea, CardContent, Typography, Button } from '@mui/material';
 
 const Centroid = React.lazy(() => import('./centroid/CentroidView'));
+const Memory = React.lazy(() => import('./memory/MemoryGame'));
 
-const GamesHub: React.FC = () => {
-  const [selected, setSelected] = React.useState<'none'|'centroid'>('none');
+interface GamesHubProps { onExit?: () => void }
+
+const GamesHub: React.FC<GamesHubProps> = ({ onExit }) => {
+  const [selected, setSelected] = React.useState<'none'|'centroid'|'memory'>('none');
+
   if (selected === 'centroid') {
     return (
       <Suspense fallback={<div style={{ padding: 24 }}>Loading game…</div>}>
-        <Centroid />
+        <Centroid onClose={() => setSelected('none')} />
       </Suspense>
     );
   }
+  if (selected === 'memory') {
+    return (
+      <Suspense fallback={<div style={{ padding: 24 }}>Loading game…</div>}>
+        <Memory onClose={() => setSelected('none')} />
+      </Suspense>
+    );
+  }
+
   return (
     <Box sx={{ p: 2, m: 'auto', width: '100%', maxWidth: 900 }}>
-      <Typography variant="h5" sx={{ mb: 2 }}>Games</Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h5">Games</Typography>
+        <Button variant="outlined" size="small" onClick={onExit}>← Back to Matrix</Button>
+      </Box>
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' } }}>
         <Card>
           <CardActionArea onClick={() => setSelected('centroid')}>
@@ -25,10 +40,10 @@ const GamesHub: React.FC = () => {
           </CardActionArea>
         </Card>
         <Card>
-          <CardActionArea disabled>
+          <CardActionArea onClick={() => setSelected('memory')}>
             <CardContent>
               <Typography variant="h6">JJJ Memory Game</Typography>
-              <Typography variant="body2" sx={{ opacity: 0.7 }}>Coming soon!</Typography>
+              <Typography variant="body2" sx={{ opacity: 0.7 }}>Find matching pairs (AVIF/WEBP)</Typography>
             </CardContent>
           </CardActionArea>
         </Card>

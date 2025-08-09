@@ -148,12 +148,12 @@ const SkillCheck: React.FC = () => {
               <Typography key={c.id} variant="body2">{i + 1}. {c.name}</Typography>
             ))}
           </Stack>
-          <Box sx={{ display: { xs: 'none', md: 'block' }, height: 300, width: '100%' }}>
+          <Box sx={{ display: 'block', height: { xs: 220, md: 300 }, width: '100%' }}>
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={previewData} outerRadius="80%">
+              <RadarChart data={previewData} outerRadius={window.innerWidth < 600 ? '70%' : '80%'}>
                 <PolarGrid />
-                <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12 }} />
-                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10 }} />
+                <PolarAngleAxis dataKey="subject" tick={{ fontSize: window.innerWidth < 600 ? 10 : 12 }} />
+                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: window.innerWidth < 600 ? 8 : 10 }} />
                 <Radar name="Preview" dataKey="score" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
               </RadarChart>
             </ResponsiveContainer>
@@ -212,7 +212,7 @@ const SkillCheck: React.FC = () => {
         </Box>
 
         <Box sx={{ mb: 2 }}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(10, minmax(44px, 1fr))', gap: 1, mb: 2 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(5, 1fr)', sm: 'repeat(10, minmax(40px, 1fr))' }, gap: 1, mb: 2 }}>
             {[1,2,3,4,5,6,7,8,9,10].map(v => (
               <Button
                 key={v}
@@ -223,9 +223,9 @@ const SkillCheck: React.FC = () => {
                   fontVariantNumeric: 'tabular-nums',
                   letterSpacing: '0.05em',
                   textTransform: 'none',
-                  fontSize: { xs: 18, sm: 20 },
-                  py: { xs: 1, sm: 1.25 },
-                  minWidth: { xs: 44, sm: 52 },
+                  fontSize: { xs: 16, sm: 18, md: 20 },
+                  py: { xs: 0.75, sm: 1 },
+                  minWidth: { xs: 40, sm: 48, md: 52 },
                   color: currentAnswer === v ? containedTextColor(v) : ratingColor(v),
                   borderColor: ratingColor(v),
                   '&:hover': { borderColor: ratingColor(v), color: ratingColor(v) },
@@ -275,14 +275,14 @@ const SkillCheck: React.FC = () => {
   if (mode === 'results' && results) {
     const radar = Object.values(results.cats).map((c: any) => ({ subject: c.name, score: Math.round(c.score), fullMark: 100 }));
     return (
-      <Box sx={{ p: 2, width: '100%' }}>
+        <Box sx={{ p: 2, width: '100%' }}>
         <Typography variant="h5" sx={{ textAlign: 'center', mb: 2 }}>Overall: {Math.round(results.overall)}%</Typography>
-        <Box sx={{ height: { xs: '60vh', md: '75vh' }, width: '100%' }}>
+          <Box sx={{ height: { xs: 320, sm: 420, md: '70vh' }, width: '100%' }}>
           <ResponsiveContainer width="100%" height="100%">
-            <RadarChart data={radar} outerRadius="90%">
+            <RadarChart data={radar} outerRadius={typeof window !== 'undefined' && window.innerWidth < 600 ? '70%' : '85%'}>
               <PolarGrid />
-              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 14 }} />
-              <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 12 }} />
+              <PolarAngleAxis dataKey="subject" tick={{ fontSize: typeof window !== 'undefined' && window.innerWidth < 600 ? 10 : 14 }} />
+              <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: typeof window !== 'undefined' && window.innerWidth < 600 ? 9 : 12 }} />
               <Radar name="Score" dataKey="score" stroke="#2563eb" fill="#3b82f6" fillOpacity={0.3} strokeWidth={2} />
             </RadarChart>
           </ResponsiveContainer>
