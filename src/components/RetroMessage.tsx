@@ -2,22 +2,26 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const messages = [
   { en: "All models are wrong, some are useful", jp: "すべてのモデルは間違っているが、いくつかは役に立つ" },
+  { en: "Speak Friend, and Enter", jp: "唱えよ、友、そして入れ" },
   { en: "Flow, Pressure, Finish", jp: "流れ、圧、極め" },
   { en: "Keep Training", jp: "練習を続けろ" },
   { en: "Don't Quit", jp: "諦めるな" },
   { en: "Mindful Practice", jp: "意識しながら練習" },
+  { en: "Speak Friend, and Enter", jp: "唱えよ、友、そして入れ" },
   { en: "Switch your brain on", jp: "脳をオンにしろ" },
   { en: "Think. Practice. Repeat", jp: "思考。練習。反復。" },
   { en: "Theory is nothing without mat time", jp: "マット時間なければ理論だけは役に立たない" },
   { en: "Read less, roll more", jp: "見学よりも、動こう" },
   { en: "Daily beats Perfect", jp: "完璧より毎日" },
-  { en: "Speak Friend, and Enter", jp: "唱えよ、友、そしてはいれ" },
+  { en: "Speak Friend, and Enter", jp: "唱えよ、友、そして入れ" },
   { en: "Mat Time > Screen Time", jp: "マット時間 > スクリーン時間" },
   { en: "Keep Showing up", jp: "現れ続けろ" },
   { en: "Don't let thinking replace doing", jp: "考えることで行動を置き換えるな" },
+  { en: "Speak Friend, and Enter", jp: "唱えよ、友、そして入れ" },
   { en: "Breathe, feel, adjust", jp: "呼吸、感覚、調整" },
   { en: "Build those neuromuscular pathways", jp: "神経筋経路を構築せよ" },
   { en: "Etch Grappling Grooves in your brain", jp: "脳にグラップリングの溝を刻め" },
+  { en: "Speak Friend, and Enter", jp: "唱えよ、友、そして入れ" },
   { en: "Proof of Work on the mats", jp: "マット上でも作業証明" },
   { en: "Take care of your training partners", jp: "練習相手を大切に" }
 ];

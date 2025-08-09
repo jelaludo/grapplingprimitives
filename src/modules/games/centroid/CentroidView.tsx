@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Box } from '@mui/material';
 import CentroidFastGame from './CentroidFastGame';
 
 const CentroidView: React.FC = () => {
@@ -14,11 +15,11 @@ const CentroidView: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <div style={{ width: '100%', maxWidth: 420 }}>
+    <Box sx={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: { xs: 'flex-start', md: 'center' }, pt: { xs: 2, sm: 3, md: 0 } }}>
+      <Box sx={{ width: '100%', maxWidth: 420 }}>
         <CentroidFastGame />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

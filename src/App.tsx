@@ -12,6 +12,8 @@ import Graphs from './components/Graphs';
 import CardsView from './modules/cards/CardsView';
 import CardsSidebar from './modules/cards/CardsSidebar';
 import GamesHub from './modules/games/GamesHub';
+import CoachTools from './modules/coach/CoachTools';
+import SkillCheck from './modules/skillcheck/SkillCheck';
 import Ludus from './components/Ludus/Ludus';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
@@ -247,6 +249,8 @@ function App() {
               setGraphsResetToken(prev => prev + 1);
             }}
             onLudusClick={viewManagement.switchToLudus}
+            onCoachClick={viewManagement.switchToCoach}
+            onSkillCheckClick={viewManagement.switchToSkillCheck}
             onMobileMenuToggle={viewManagement.currentView !== 'matrix' ? viewManagement.switchToMatrix : undefined}
           />
         }
@@ -307,6 +311,10 @@ function App() {
             setSelected={setSelected}
             selectedCategories={selectedCategories}
           />
+        ) : viewManagement.currentView === 'skillcheck' ? (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <SkillCheck />
+          </div>
         ) : viewManagement.currentView === 'articles' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <div style={{ marginBottom: '20px' }}>
@@ -334,6 +342,10 @@ function App() {
         ) : viewManagement.currentView === 'games' ? (
           <div style={{ height: '100vh', width: '100%', overflow: 'hidden', display: 'flex' }}>
             <GamesHub />
+          </div>
+        ) : viewManagement.currentView === 'coach' ? (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <CoachTools />
           </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>

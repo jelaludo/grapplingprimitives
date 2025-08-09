@@ -30,9 +30,11 @@ interface HeaderProps {
   onGraphsClick?: () => void;
   onLudusClick?: () => void;
   onGamesClick?: () => void;
+  onCoachClick?: () => void;
+  onSkillCheckClick?: () => void;
 }
 
-const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onCardsClick, onMatrixClick, onTitleClick, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick, onLudusClick, onGamesClick }, ref) => {
+const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onCardsClick, onMatrixClick, onTitleClick, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick, onLudusClick, onGamesClick, onCoachClick, onSkillCheckClick }, ref) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [actionsMenuAnchor, setActionsMenuAnchor] = useState<null | HTMLElement>(null);
@@ -120,11 +122,13 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
               <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onCreateNode} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Create Node</Button>
             )}
             <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onCardsClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Cards</Button>
+            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onSkillCheckClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Skill Check</Button>
             <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onArticlesClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Articles</Button>
             <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onStudiesClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Studies</Button>
             <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onGraphsClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Graphs</Button>
             <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onLudusClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Ludus</Button>
             <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onGamesClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Games</Button>
+            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onCoachClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Coach</Button>
             <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onHelpClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Help</Button>
           </Box>
 
@@ -173,6 +177,9 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
           <MenuItem onClick={() => { onGraphsClick?.(); handleActionsMenuClose(); }}>
             <ListItemText>Graphs</ListItemText>
           </MenuItem>
+          <MenuItem onClick={() => { onSkillCheckClick?.(); handleActionsMenuClose(); }}>
+            <ListItemText>Skill Check</ListItemText>
+          </MenuItem>
           <MenuItem onClick={() => { onCardsClick?.(); handleActionsMenuClose(); }}>
             <ListItemText>Cards</ListItemText>
           </MenuItem>
@@ -181,6 +188,9 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
           </MenuItem>
           <MenuItem onClick={() => { onGamesClick?.(); handleActionsMenuClose(); }}>
             <ListItemText>Games</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={() => { onCoachClick?.(); handleActionsMenuClose(); }}>
+            <ListItemText>Coach</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => { onHelpClick?.(); handleActionsMenuClose(); }}>
             <ListItemText>Help</ListItemText>

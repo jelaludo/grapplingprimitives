@@ -29,6 +29,15 @@ html, body {
   width: 100%;
 }
 
+/* DS-Digital font for timer (local TTF in src/fonts) */
+@font-face {
+  font-family: 'DS-Digital';
+  src: url('./fonts/DS_Digital/DS-DIGI.TTF') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Game fullscreen hides the header while playing */
 body.game-fullscreen .MuiAppBar-root {
   display: none !important;
