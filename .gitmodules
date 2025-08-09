@@ -1,0 +1,3 @@
+[submodule "src/modules/games/centroid/external"]
+	path = src/modules/games/centroid/external
+	url = https://github.com/jelaludo/CentroidMatrixGuess
