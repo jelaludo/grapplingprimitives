@@ -11,6 +11,7 @@ import { Studies } from './components/Studies';
 import Graphs from './components/Graphs';
 import CardsView from './modules/cards/CardsView';
 import CardsSidebar from './modules/cards/CardsSidebar';
+import GamesHub from './modules/games/GamesHub';
 import Ludus from './components/Ludus/Ludus';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
@@ -237,6 +238,7 @@ function App() {
             onCardsClick={viewManagement.switchToCards}
             onMatrixClick={viewManagement.switchToMatrix}
             onTitleClick={viewManagement.switchToMatrix}
+            onGamesClick={viewManagement.switchToGames}
             onHelpClick={() => setHelpDialogOpen(true)}
             onArticlesClick={viewManagement.switchToArticles}
             onStudiesClick={viewManagement.switchToStudies}
@@ -328,6 +330,10 @@ function App() {
         ) : viewManagement.currentView === 'cards' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <CardsView concepts={dataManagement.concepts} selectedCategories={cardsSelectedCategories} query={cardsQuery} />
+          </div>
+        ) : viewManagement.currentView === 'games' ? (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <GamesHub />
           </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>

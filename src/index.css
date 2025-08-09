@@ -29,6 +29,11 @@ html, body {
   width: 100%;
 }
 
+/* Game fullscreen hides the header while playing */
+body.game-fullscreen .MuiAppBar-root {
+  display: none !important;
+}
+
 /* Custom transition durations for RetroMessage */
 .transition-opacity {
   transition-property: opacity;

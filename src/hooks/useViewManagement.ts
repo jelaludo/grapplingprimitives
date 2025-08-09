@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-export type View = 'matrix' | 'articles' | 'studies' | 'graphs' | 'ludus' | 'cards';
+export type View = 'matrix' | 'articles' | 'studies' | 'graphs' | 'ludus' | 'cards' | 'games';
 
 // Pre-computed constants
 const DEFAULT_VIEW: View = 'matrix';
@@ -14,6 +14,7 @@ export const useViewManagement = () => {
   const switchToGraphs = useCallback(() => setCurrentView('graphs'), []);
   const switchToLudus = useCallback(() => setCurrentView('ludus'), []);
   const switchToCards = useCallback(() => setCurrentView('cards'), []);
+  const switchToGames = useCallback(() => setCurrentView('games'), []);
 
   return {
     currentView,
@@ -23,5 +24,6 @@ export const useViewManagement = () => {
     switchToGraphs,
     switchToLudus,
     switchToCards
+    ,switchToGames
   };
 }; 

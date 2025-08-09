@@ -35,9 +35,10 @@ interface HeaderProps {
   onStudiesClick?: () => void;
   onGraphsClick?: () => void;
   onLudusClick?: () => void;
+  onGamesClick?: () => void;
 }
 
-const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onCardsClick, onMatrixClick, onTitleClick, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick, onLudusClick }, ref) => {
+const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onCardsClick, onMatrixClick, onTitleClick, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick, onLudusClick, onGamesClick }, ref) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [actionsMenuAnchor, setActionsMenuAnchor] = useState<null | HTMLElement>(null);
@@ -221,6 +222,9 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             >
               Ludus
             </Button>
+            <IconButton aria-label="games" onClick={onGamesClick} sx={{ color: 'text.primary' }}>
+              <SportsEsportsIcon fontSize="small" />
+            </IconButton>
             <Button 
               variant="outlined" 
                 size={isIdle ? 'small' : 'small'}
