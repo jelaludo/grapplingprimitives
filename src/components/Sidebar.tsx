@@ -51,10 +51,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [newCategory, setNewCategory] = useState('');
   const [newCategoryColor, setNewCategoryColor] = useState('#888888');
-  const [newCategoryXAxisLeft, setNewCategoryXAxisLeft] = useState('Mental');
-  const [newCategoryXAxisRight, setNewCategoryXAxisRight] = useState('Physical');
-  const [newCategoryYAxisBottom, setNewCategoryYAxisBottom] = useState('Self');
-  const [newCategoryYAxisTop, setNewCategoryYAxisTop] = useState('Opponent');
+  const [newCategoryXAxisLeft, setNewCategoryXAxisLeft] = useState('Opponent');
+  const [newCategoryXAxisRight, setNewCategoryXAxisRight] = useState('Self');
+  const [newCategoryYAxisBottom, setNewCategoryYAxisBottom] = useState('Physical');
+  const [newCategoryYAxisTop, setNewCategoryYAxisTop] = useState('Mental');
   const [editCategoryId, setEditCategoryId] = useState<string | null>(null);
   const [editCategoryName, setEditCategoryName] = useState('');
   const [editCategoryColor, setEditCategoryColor] = useState('#888888');
@@ -94,10 +94,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       });
       setNewCategory('');
       setNewCategoryColor('#888888');
-      setNewCategoryXAxisLeft('Mental');
-      setNewCategoryXAxisRight('Physical');
-      setNewCategoryYAxisBottom('Self');
-      setNewCategoryYAxisTop('Opponent');
+      setNewCategoryXAxisLeft('Opponent');
+      setNewCategoryXAxisRight('Self');
+      setNewCategoryYAxisBottom('Physical');
+      setNewCategoryYAxisTop('Mental');
     }
   };
 
@@ -109,10 +109,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     setEditCategoryId(cat._id || null);
     setEditCategoryName(cat.name);
     setEditCategoryColor(cat.color);
-    setEditCategoryXAxisLeft(cat.xAxis?.left || 'Mental');
-    setEditCategoryXAxisRight(cat.xAxis?.right || 'Physical');
-    setEditCategoryYAxisBottom(cat.yAxis?.bottom || 'Self');
-    setEditCategoryYAxisTop(cat.yAxis?.top || 'Opponent');
+    setEditCategoryXAxisLeft(cat.xAxis?.left || 'Opponent');
+    setEditCategoryXAxisRight(cat.xAxis?.right || 'Self');
+    setEditCategoryYAxisBottom(cat.yAxis?.bottom || 'Physical');
+    setEditCategoryYAxisTop(cat.yAxis?.top || 'Mental');
   };
 
   const handleUpdateCategory = async () => {
@@ -126,10 +126,10 @@ const Sidebar: React.FC<SidebarProps> = ({
       setEditCategoryId(null);
       setEditCategoryName('');
       setEditCategoryColor('#888888');
-      setEditCategoryXAxisLeft('Mental');
-      setEditCategoryXAxisRight('Physical');
-      setEditCategoryYAxisBottom('Self');
-      setEditCategoryYAxisTop('Opponent');
+      setEditCategoryXAxisLeft('Opponent');
+      setEditCategoryXAxisRight('Self');
+      setEditCategoryYAxisBottom('Physical');
+      setEditCategoryYAxisTop('Mental');
     }
   };
 

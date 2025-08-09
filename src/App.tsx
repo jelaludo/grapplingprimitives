@@ -235,6 +235,8 @@ function App() {
           <Header 
             onCreateNode={handleCreateNode} 
             onCardsClick={viewManagement.switchToCards}
+            onMatrixClick={viewManagement.switchToMatrix}
+            onTitleClick={viewManagement.switchToMatrix}
             onHelpClick={() => setHelpDialogOpen(true)}
             onArticlesClick={viewManagement.switchToArticles}
             onStudiesClick={viewManagement.switchToStudies}

@@ -31,10 +31,10 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
   const [customCategory, setCustomCategory] = useState('');
   const [customCategoryColor, setCustomCategoryColor] = useState('#888888');
   const [categoryMode, setCategoryMode] = useState<'select' | 'custom'>('select');
-  const [customCategoryXAxisLeft, setCustomCategoryXAxisLeft] = useState('Mental');
-  const [customCategoryXAxisRight, setCustomCategoryXAxisRight] = useState('Physical');
-  const [customCategoryYAxisBottom, setCustomCategoryYAxisBottom] = useState('Self');
-  const [customCategoryYAxisTop, setCustomCategoryYAxisTop] = useState('Opponent');
+  const [customCategoryXAxisLeft, setCustomCategoryXAxisLeft] = useState('Opponent');
+  const [customCategoryXAxisRight, setCustomCategoryXAxisRight] = useState('Self');
+  const [customCategoryYAxisBottom, setCustomCategoryYAxisBottom] = useState('Physical');
+  const [customCategoryYAxisTop, setCustomCategoryYAxisTop] = useState('Mental');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,10 +45,10 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
       setCategoryMode('select');
       setCustomCategory('');
       setCustomCategoryColor('#888888');
-      setCustomCategoryXAxisLeft('Mental');
-      setCustomCategoryXAxisRight('Physical');
-      setCustomCategoryYAxisBottom('Self');
-      setCustomCategoryYAxisTop('Opponent');
+      setCustomCategoryXAxisLeft('Opponent');
+      setCustomCategoryXAxisRight('Self');
+      setCustomCategoryYAxisBottom('Physical');
+      setCustomCategoryYAxisTop('Mental');
       setError(null);
     }
   }, [concept]);
@@ -319,7 +319,14 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
         {/* Position Coordinates */}
         <div style={{ display: 'flex', gap: 16 }}>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 4, fontSize: 14 }}>X Position (Mental ↔ Physical):</label>
+            {(() => {
+              const active = categories.find(c => c.name === edit.category);
+              const xLeft = active?.xAxis?.left ?? 'Opponent';
+              const xRight = active?.xAxis?.right ?? 'Self';
+              return (
+                <label style={{ display: 'block', marginBottom: 4, fontSize: 14 }}>X Position ({xLeft} ↔ {xRight}):</label>
+              );
+            })()}
             <input
               type="number"
               min="0"
@@ -331,7 +338,14 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
             />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 4, fontSize: 14 }}>Y Position (Self ↔ Opponent):</label>
+            {(() => {
+              const active = categories.find(c => c.name === edit.category);
+              const yBottom = active?.yAxis?.bottom ?? 'Physical';
+              const yTop = active?.yAxis?.top ?? 'Mental';
+              return (
+                <label style={{ display: 'block', marginBottom: 4, fontSize: 14 }}>Y Position ({yBottom} ↔ {yTop}):</label>
+              );
+            })()}
             <input
               type="number"
               min="0"

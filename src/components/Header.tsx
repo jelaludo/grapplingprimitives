@@ -28,6 +28,8 @@ interface HeaderProps {
   onMobileMenuToggle?: () => void;
   onCreateNode?: () => void;
   onCardsClick?: () => void;
+  onMatrixClick?: () => void;
+  onTitleClick?: () => void;
   onHelpClick?: () => void;
   onArticlesClick?: () => void;
   onStudiesClick?: () => void;
@@ -35,7 +37,7 @@ interface HeaderProps {
   onLudusClick?: () => void;
 }
 
-const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onCardsClick, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick, onLudusClick }, ref) => {
+const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuToggle, onCreateNode, onCardsClick, onMatrixClick, onTitleClick, onHelpClick, onArticlesClick, onStudiesClick, onGraphsClick, onLudusClick }, ref) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [actionsMenuAnchor, setActionsMenuAnchor] = useState<null | HTMLElement>(null);
@@ -106,8 +108,10 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
               letterSpacing: 1,
               color: 'text.primary',
                 fontSize: isIdle ? 18 : 20,
-                transition: 'font-size 200ms ease'
+                transition: 'font-size 200ms ease',
+                cursor: 'pointer',
             }}
+            onClick={onTitleClick}
           >
             Grappling Primitives
           </Typography>
@@ -116,6 +120,20 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
         <div style={{ display: 'flex', gap: 8 }}>
           {/* Desktop: Show all buttons */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+              <Button 
+                variant="outlined" 
+                size={isIdle ? 'small' : 'small'}
+                onClick={onMatrixClick}
+                sx={{ 
+                  color: 'text.primary',
+                  borderColor: 'divider',
+                  '&:hover': {
+                    borderColor: 'primary.main',
+                  }
+                }}
+              >
+                2x2
+              </Button>
             {process.env.NODE_ENV === 'development' && (
               <Button 
                 variant="outlined" 
@@ -133,22 +151,20 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
                 Create Node
               </Button>
             )}
-            {process.env.NODE_ENV === 'development' && (
-              <Button 
-                variant="outlined" 
-                size={isIdle ? 'small' : 'small'}
-                onClick={onCardsClick}
-                sx={{ 
-                  color: 'text.primary',
-                  borderColor: 'divider',
-                  '&:hover': {
-                    borderColor: 'primary.main',
-                  }
-                }}
-              >
-                Cards
-              </Button>
-            )}
+            <Button 
+              variant="outlined" 
+              size={isIdle ? 'small' : 'small'}
+              onClick={onCardsClick}
+              sx={{ 
+                color: 'text.primary',
+                borderColor: 'divider',
+                '&:hover': {
+                  borderColor: 'primary.main',
+                }
+              }}
+            >
+              Cards
+            </Button>
             <Button 
               variant="outlined" 
                 size={isIdle ? 'small' : 'small'}
@@ -193,8 +209,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             </Button>
             <Button 
               variant="outlined" 
-                size={isIdle ? 'small' : 'small'}
-              startIcon={<SportsEsportsIcon />}
+              size={isIdle ? 'small' : 'small'}
               onClick={onLudusClick}
               sx={{ 
                 color: 'text.primary',
