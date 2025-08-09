@@ -16,13 +16,7 @@ import {
   useScrollTrigger
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import AddIcon from '@mui/icons-material/Add';
-import HelpIcon from '@mui/icons-material/Help';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import ArticleIcon from '@mui/icons-material/Article';
-import SchoolIcon from '@mui/icons-material/School';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 
 interface HeaderProps {
   onMobileMenuToggle?: () => void;
@@ -121,146 +115,22 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
         <div style={{ display: 'flex', gap: 8 }}>
           {/* Desktop: Show all buttons */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
-              <Button 
-                variant="outlined" 
-                size={isIdle ? 'small' : 'small'}
-                onClick={onMatrixClick}
-                sx={{ 
-                  color: 'text.primary',
-                  borderColor: 'divider',
-                  '&:hover': {
-                    borderColor: 'primary.main',
-                  }
-                }}
-              >
-                2x2
-              </Button>
+            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onMatrixClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>2x2</Button>
             {process.env.NODE_ENV === 'development' && (
-              <Button 
-                variant="outlined" 
-                  size={isIdle ? 'small' : 'small'}
-                startIcon={<AddIcon />}
-                onClick={onCreateNode}
-                sx={{ 
-                  color: 'text.primary',
-                  borderColor: 'divider',
-                  '&:hover': {
-                    borderColor: 'primary.main',
-                  }
-                }}
-              >
-                Create Node
-              </Button>
+              <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onCreateNode} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Create Node</Button>
             )}
-            <Button 
-              variant="outlined" 
-              size={isIdle ? 'small' : 'small'}
-              onClick={onCardsClick}
-              sx={{ 
-                color: 'text.primary',
-                borderColor: 'divider',
-                '&:hover': {
-                  borderColor: 'primary.main',
-                }
-              }}
-            >
-              Cards
-            </Button>
-            <Button 
-              variant="outlined" 
-                size={isIdle ? 'small' : 'small'}
-              onClick={onArticlesClick}
-              sx={{ 
-                color: 'text.primary',
-                borderColor: 'divider',
-                '&:hover': {
-                  borderColor: 'primary.main',
-                }
-              }}
-            >
-              Articles
-            </Button>
-            <Button 
-              variant="outlined" 
-                size={isIdle ? 'small' : 'small'}
-              onClick={onStudiesClick}
-              sx={{ 
-                color: 'text.primary',
-                borderColor: 'divider',
-                '&:hover': {
-                  borderColor: 'primary.main',
-                }
-              }}
-            >
-              Studies
-            </Button>
-            <Button 
-              variant="outlined" 
-                size={isIdle ? 'small' : 'small'}
-              onClick={onGraphsClick}
-              sx={{ 
-                color: 'text.primary',
-                borderColor: 'divider',
-                '&:hover': {
-                  borderColor: 'primary.main',
-                }
-              }}
-            >
-              Graphs
-            </Button>
-            <Button 
-              variant="outlined" 
-              size={isIdle ? 'small' : 'small'}
-              onClick={onLudusClick}
-              sx={{ 
-                color: 'text.primary',
-                borderColor: 'divider',
-                '&:hover': {
-                  borderColor: 'primary.main',
-                }
-              }}
-            >
-              Ludus
-            </Button>
-            <Button 
-              variant="outlined" 
-              size={isIdle ? 'small' : 'small'}
-              onClick={onGamesClick}
-              sx={{ 
-                color: 'text.primary',
-                borderColor: 'divider',
-                '&:hover': { borderColor: 'primary.main' }
-              }}
-            >
-              Games
-            </Button>
-            <Button 
-              variant="outlined" 
-                size={isIdle ? 'small' : 'small'}
-              startIcon={<HelpIcon />}
-              onClick={onHelpClick}
-              sx={{ 
-                color: 'text.primary',
-                borderColor: 'divider',
-                '&:hover': {
-                  borderColor: 'primary.main',
-                }
-              }}
-            >
-              Help
-            </Button>
+            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onCardsClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Cards</Button>
+            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onArticlesClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Articles</Button>
+            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onStudiesClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Studies</Button>
+            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onGraphsClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Graphs</Button>
+            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onLudusClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Ludus</Button>
+            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onGamesClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Games</Button>
+            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onHelpClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Help</Button>
           </Box>
 
           {/* Mobile: Show hamburger menu + help icon */}
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1, alignItems: 'center' }}>
-            <IconButton
-              color="inherit"
-              aria-label="help"
-              onClick={onHelpClick}
-              sx={{ color: 'text.primary' }}
-            >
-              <HelpIcon />
-            </IconButton>
+            <Button variant="text" size="small" onClick={onHelpClick} sx={{ color: 'text.primary' }}>Help</Button>
             <IconButton
               color="inherit"
               aria-label="actions menu"
@@ -288,40 +158,31 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
         >
           {process.env.NODE_ENV === 'development' && (
             <MenuItem onClick={() => { onCreateNode?.(); handleActionsMenuClose(); }}>
-              <ListItemIcon>
-                <AddIcon fontSize="small" />
-              </ListItemIcon>
               <ListItemText>Create Node</ListItemText>
             </MenuItem>
           )}
+          <MenuItem onClick={() => { onMatrixClick?.(); handleActionsMenuClose(); }}>
+            <ListItemText>2x2</ListItemText>
+          </MenuItem>
           <MenuItem onClick={() => { onArticlesClick?.(); handleActionsMenuClose(); }}>
-            <ListItemIcon>
-              <ArticleIcon fontSize="small" />
-            </ListItemIcon>
             <ListItemText>Articles</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => { onStudiesClick?.(); handleActionsMenuClose(); }}>
-            <ListItemIcon>
-              <SchoolIcon fontSize="small" />
-            </ListItemIcon>
             <ListItemText>Studies</ListItemText>
           </MenuItem>
           <MenuItem onClick={() => { onGraphsClick?.(); handleActionsMenuClose(); }}>
-            <ListItemIcon>
-              <ShowChartIcon fontSize="small" />
-            </ListItemIcon>
             <ListItemText>Graphs</ListItemText>
           </MenuItem>
+          <MenuItem onClick={() => { onCardsClick?.(); handleActionsMenuClose(); }}>
+            <ListItemText>Cards</ListItemText>
+          </MenuItem>
           <MenuItem onClick={() => { onLudusClick?.(); handleActionsMenuClose(); }}>
-            <ListItemIcon>
-              <SportsEsportsIcon fontSize="small" />
-            </ListItemIcon>
             <ListItemText>Ludus</ListItemText>
           </MenuItem>
+          <MenuItem onClick={() => { onGamesClick?.(); handleActionsMenuClose(); }}>
+            <ListItemText>Games</ListItemText>
+          </MenuItem>
           <MenuItem onClick={() => { onHelpClick?.(); handleActionsMenuClose(); }}>
-            <ListItemIcon>
-              <HelpIcon fontSize="small" />
-            </ListItemIcon>
             <ListItemText>Help</ListItemText>
           </MenuItem>
         </Menu>
