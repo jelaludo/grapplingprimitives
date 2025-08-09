@@ -23,6 +23,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import SchoolIcon from '@mui/icons-material/School';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import SportsEsportsOutlinedIcon from '@mui/icons-material/SportsEsportsOutlined';
 
 interface HeaderProps {
   onMobileMenuToggle?: () => void;
@@ -222,9 +223,19 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
             >
               Ludus
             </Button>
-            <IconButton aria-label="games" onClick={onGamesClick} sx={{ color: 'text.primary' }}>
-              <SportsEsportsIcon fontSize="small" />
-            </IconButton>
+            <Button 
+              variant="outlined" 
+              size={isIdle ? 'small' : 'small'}
+              onClick={onGamesClick}
+              sx={{ 
+                color: 'text.primary',
+                borderColor: 'divider',
+                '&:hover': { borderColor: 'primary.main' }
+              }}
+              startIcon={<SportsEsportsOutlinedIcon fontSize="small" />}
+            >
+              Games
+            </Button>
             <Button 
               variant="outlined" 
                 size={isIdle ? 'small' : 'small'}
