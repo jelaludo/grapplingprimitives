@@ -53,6 +53,8 @@ export const CentroidFastGame: React.FC = () => {
   const [pointsFlash, setPointsFlash] = useState<string | null>(null);
   const [roundHistory, setRoundHistory] = useState<{ round: number; score: number; timer: number; perfect: boolean }[]>([]);
   const [recapMessage, setRecapMessage] = useState<string | null>(null);
+  const validatedRef = useRef(false);
+  const timeoutsRef = useRef<number[]>([]);
 
   const difficulty = useMemo(() => {
     if (round <= 3) return { name: 'EASY', min: 3, max: 8 };
@@ -81,12 +83,41 @@ export const CentroidFastGame: React.FC = () => {
     setPenalty(0);
     setRound(nextRound);
     setPhase('playing');
+    validatedRef.current = false;
   }, [difficulty]);
 
+  const clearAllTimeouts = () => {
+    timeoutsRef.current.forEach(id => clearTimeout(id));
+    timeoutsRef.current = [];
+  };
+
+  const schedule = (fn: () => void, ms: number) => {
+    const id = window.setTimeout(fn, ms);
+    timeoutsRef.current.push(id);
+    return id;
+  };
+
+  const hardReset = () => {
+    clearAllTimeouts();
+    setRound(0);
+    setDots([]);
+    setActual(null);
+    setGuess(null);
+    setShowResult(false);
+    setTotalScore(0);
+    setCurrentRoundScore(null);
+    setTimer(0);
+    setPenalty(0);
+    setRoundHistory([]);
+    setRecapMessage(null);
+    validatedRef.current = false;
+  };
+
   const begin = () => {
+    hardReset();
     setPhase('count');
-    setTimeout(() => setPhase('go'), 500);
-    setTimeout(() => startRound(1), 1000);
+    schedule(() => setPhase('go'), 500);
+    schedule(() => startRound(1), 1000);
   };
 
   // timer + penalty
@@ -112,26 +143,28 @@ export const CentroidFastGame: React.FC = () => {
 
   const validate = () => {
     if (!guess || !actual) return;
+    if (validatedRef.current) return; // guard double-submit
+    validatedRef.current = true;
     const optimal = nearestInt(actual);
     const dist = chebyshev(guess, optimal);
     const score = dist + penalty;
     setCurrentRoundScore(score);
     setTotalScore(s => s + score);
     const perfect = dist === 0;
-    setRoundHistory(h => [...h, { round: round + 1, score, timer, perfect }]);
+    setRoundHistory(h => [...h, { round, score, timer, perfect }]);
     setShowResult(true);
     setPhase('downtime');
     // flash points for ~1s then advance
     setPointsFlash(score === 0 ? '✨0✨' : String(score));
-    setTimeout(() => {
+    schedule(() => {
       setPointsFlash(null);
       const next = round + 1;
       if (next <= MAX_ROUNDS) {
-        setTimeout(() => startRound(next), 200); // tiny pause
+        schedule(() => startRound(next), 200); // tiny pause
       } else {
-        // compute recap message once
-        const final = totalScore + score;
+        const final = (roundHistory.reduce((s, r) => s + r.score, 0) + score);
         const msg = getRecapMessage(final);
+        setTotalScore(final);
         setRecapMessage(msg);
         setPhase('recap');
       }
@@ -298,14 +331,14 @@ export const CentroidFastGame: React.FC = () => {
             <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'rgba(0,0,0,0.55)' }} />
             <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'min(92vw, 420px)', maxHeight: '80vh', overflowY: 'auto', textAlign: 'center', bgcolor: 'background.paper', color: 'text.primary', p: 2, borderRadius: 2, boxShadow: 6 }}>
               <Box sx={{ display: 'flex', gap: 1, mb: 1, justifyContent: 'center' }}>
-                <Button variant="contained" onClick={() => { setTotalScore(0); setRound(0); setRoundHistory([]); setPhase('idle'); }}>Play Again</Button>
+                <Button variant="contained" onClick={() => { hardReset(); setPhase('idle'); }}>Play Again</Button>
                 <Button variant="outlined" onClick={() => { setPhase('idle'); document.body.classList.remove('game-fullscreen'); }}>Close</Button>
               </Box>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>{recapMessage}</Typography>
               <Typography variant="h6" sx={{ mb: 1 }}>Final Score: {totalScore} points</Typography>
               <Box sx={{ textAlign: 'left', mx: 'auto', maxWidth: 360 }}>
-                {roundHistory.map(r => (
-                  <Box key={r.round} sx={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, py: 0.3 }}>
+                {roundHistory.map((r, idx) => (
+                  <Box key={`${r.round}-${idx}`} sx={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, py: 0.3 }}>
                     <span>Round {r.round}:</span>
                     <span>{r.score} pts {r.perfect ? '✨' : ''}</span>
                   </Box>

@@ -1,12 +1,18 @@
 import React, { useMemo, useState } from 'react';
 import data from './grappling_assessment_126q.json';
 import { Box, Button, Typography, LinearProgress, Stack, Divider } from '@mui/material';
+import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 
 type QA = { id: string; text: string; level: 'basic'|'intermediate'|'advanced'; required?: boolean; categoryIndex?: number; categoryName?: string };
 
 const weights = (data as any).assessment.scoring.weights;
-const categories = (data as any).assessment.categories as Array<{ id: string; name: string; questions: QA[] }>;
+const allCategories = (data as any).assessment.categories as Array<{ id: string; name: string; questions: QA[] }>;
+// Use categories directly from JSON, but normalize the display name for the first one
+const categories = allCategories.map((c) => ({
+  ...c,
+  name: c.name === 'Takedowns & Wrestling' ? 'Takedowns' : c.name,
+}));
 
 const ratingColor = (v: number): string => {
   if (v <= 1) return '#bdbdbd';
@@ -36,21 +42,41 @@ const SkillCheck: React.FC = () => {
   const buildQuestions = (type: 'sample'|'all') => {
     const list: QA[] = [];
     categories.forEach((cat, catIdx) => {
+      const allQs = Array.isArray(cat.questions) ? cat.questions : [];
+      if (allQs.length === 0) return; // skip empty categories safely
+
       if (type === 'all') {
-        list.push(...cat.questions.map(q => ({ ...q, categoryIndex: catIdx, categoryName: cat.name })));
+        list.push(...allQs.map(q => ({ ...q, categoryIndex: catIdx, categoryName: cat.name })));
       } else {
-        const req = cat.questions.filter(q => q.required);
-        const non = cat.questions.filter(q => !q.required);
-        const shuffled = [...non].sort(() => 0.5 - Math.random());
-        const need = Math.max(0, 5 - req.length);
-        list.push(...[...req, ...shuffled.slice(0, need)].map(q => ({ ...q, categoryIndex: catIdx, categoryName: cat.name })));
+        const requiredQs = allQs.filter(q => q.required);
+        const optionalQs = allQs.filter(q => !q.required);
+        const pick = <T,>(arr: T[], n: number) => {
+          const a = [...arr];
+          for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+          }
+          return a.slice(0, n);
+        };
+        let chosen: QA[] = [];
+        const target = Math.min(5, allQs.length);
+        if (requiredQs.length >= target) {
+          chosen = pick(requiredQs, target) as QA[];
+        } else {
+          const need = target - requiredQs.length;
+          chosen = [...requiredQs, ...pick(optionalQs, need) as QA[]];
+        }
+        list.push(...chosen.map(q => ({ ...q, categoryIndex: catIdx, categoryName: cat.name })));
       }
     });
     return list;
   };
 
   const start = () => {
+    localStorage.removeItem('skillcheck_answers');
+    setAnswers({});
     const qs = buildQuestions(assessmentType);
+    if (qs.length === 0) return;
     setQuestions(qs);
     setIdx(0);
     setMode('assessment');
@@ -77,44 +103,62 @@ const SkillCheck: React.FC = () => {
     return { overall: max ? (total / max) * 100 : 0, cats: catScores };
   }, [mode, answers, questions]);
 
+  const catDone = useMemo(() => {
+    const status: boolean[] = new Array(categories.length).fill(false);
+    categories.forEach((_, catIdx) => {
+      const qs = questions.filter(q => q.categoryIndex === catIdx);
+      status[catIdx] = qs.length > 0 && qs.every(q => answers[q.id] != null);
+    });
+    return status;
+  }, [answers, questions]);
+
+  // Landing metrics and preview data
+  const shortTotal = useMemo(() => categories.length * 5, []);
+  const longTotal = useMemo(() => categories.reduce((sum, c) => sum + (Array.isArray(c.questions) ? c.questions.length : 0), 0), []);
+  const previewData = useMemo(() => (
+    categories.slice(0, 10).map(c => ({ subject: c.name, score: Math.floor(40 + Math.random() * 60), fullMark: 100 }))
+  ), []);
+
   if (mode === 'setup') {
     return (
       <Box sx={{ p: 2, maxWidth: 900, mx: 'auto' }}>
         <Typography variant="h5" sx={{ mb: 1 }}>{(data as any).assessment.title}</Typography>
         <Typography variant="body2" sx={{ mb: 3, opacity: 0.8 }}>{(data as any).assessment.description}</Typography>
 
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 3 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => { setAssessmentType('sample'); const qs = buildQuestions('sample'); setQuestions(qs); setIdx(0); setMode('assessment'); }}
-          >
-            Quick (3–5 min)
-            <Typography variant="caption" sx={{ display: 'block', opacity: 0.8 }}>5 questions / category</Typography>
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => { setAssessmentType('all'); const qs = buildQuestions('all'); setQuestions(qs); setIdx(0); setMode('assessment'); }}
-          >
-            Long (5–10 min)
-            <Typography variant="caption" sx={{ display: 'block', opacity: 0.8 }}>(all questions)</Typography>
-          </Button>
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={4} sx={{ mb: 3, alignItems: 'flex-start' }}>
+          <Box>
+            <Button variant="contained" color="primary" onClick={() => { setAssessmentType('sample'); const qs = buildQuestions('sample'); if (qs.length === 0) return; setAnswers({}); localStorage.removeItem('skillcheck_answers'); setQuestions(qs); setIdx(0); setMode('assessment'); }}>SHORT</Button>
+            <Typography variant="body2" sx={{ mt: 1, whiteSpace: 'pre-line', opacity: 0.8 }}>
+              {`5 questions per category\n(${shortTotal} total)\napprox. 3–5 min`}
+            </Typography>
+          </Box>
+          <Box>
+            <Button variant="outlined" onClick={() => { setAssessmentType('all'); const qs = buildQuestions('all'); if (qs.length === 0) return; setAnswers({}); localStorage.removeItem('skillcheck_answers'); setQuestions(qs); setIdx(0); setMode('assessment'); }}>LONG</Button>
+            <Typography variant="body2" sx={{ mt: 1, whiteSpace: 'pre-line', opacity: 0.8 }}>
+              {`10+ questions per category\n${longTotal} questions\napprox. 7–10 min`}
+            </Typography>
+          </Box>
         </Stack>
 
         <Divider sx={{ my: 2 }} />
         <Typography variant="h6" sx={{ mb: 1 }}>Assessment Categories</Typography>
-        <Typography variant="body2" sx={{ mb: 2, whiteSpace: 'pre-line' }}>
-          Takedowns
-          {'\n'}Guard Passing
-          {'\n'}Guard Retention
-          {'\n'}Closed Guard
-          {'\n'}Open Guard
-          {'\n'}Half Guard
-          {'\n'}Mount
-          {'\n'}Back Control
-          {'\n'}Leg Locks
-          {'\n'}Escapes & Defense
-        </Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, alignItems: 'start', mb: 2 }}>
+          <Stack spacing={0.5}>
+            {categories.map((c, i) => (
+              <Typography key={c.id} variant="body2">{i + 1}. {c.name}</Typography>
+            ))}
+          </Stack>
+          <Box sx={{ display: { xs: 'none', md: 'block' }, height: 300, width: '100%' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart data={previewData} outerRadius="80%">
+                <PolarGrid />
+                <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12 }} />
+                <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10 }} />
+                <Radar name="Preview" dataKey="score" stroke="#8884d8" fill="#8884d8" fillOpacity={0.3} />
+              </RadarChart>
+            </ResponsiveContainer>
+          </Box>
+        </Box>
 
         <Divider sx={{ my: 2 }} />
         <Typography variant="h6" sx={{ mb: 1 }}>How to Use This Assessment</Typography>
@@ -145,12 +189,24 @@ const SkillCheck: React.FC = () => {
               <Typography variant="body2">
                 Category {((current.categoryIndex || 0) + 1)} of {categories.length} · {current.categoryName}
               </Typography>
-              <Typography variant="body2">Question {inCatAnswered} of {inCatTotal} in this category</Typography>
+              <Typography variant="body2">Question {inCatAnswered} of {inCatTotal}</Typography>
               <LinearProgress variant="determinate" value={(answered / total) * 100} />
-              <Typography variant="caption" sx={{ textAlign: 'right' }}>{answered}/{total}</Typography>
+          <Typography variant="caption" sx={{ textAlign: 'right' }}>{answered}/{total}</Typography>
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: 0.75, mt: 0.5 }}>
+                {categories.map((cat, i) => (
+                  <Box key={cat.id} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 18 }}>
+                    {catDone[i] ? (
+                      <CheckCircleOutlineOutlinedIcon sx={{ fontSize: 16, color: 'success.main' }} />
+                    ) : (
+                      <Box sx={{ width: 12, height: 12, borderRadius: '50%', border: '1px solid', borderColor: 'divider', bgcolor: i === (current.categoryIndex || 0) ? 'primary.main' : 'transparent' }} />
+                    )}
+                  </Box>
+                ))}
+              </Box>
             </Stack>
           </Box>
-          <Box sx={{ flex: '0 0 auto' }}>
+          <Box sx={{ flex: '0 0 auto', display: 'flex', gap: 1 }}>
+            <Button onClick={() => { localStorage.removeItem('skillcheck_answers'); setAnswers({}); setIdx(0); const qs = buildQuestions(assessmentType); setQuestions(qs); setMode('assessment'); }}>Reset</Button>
             <Button onClick={() => setMode('results')}>Finish</Button>
           </Box>
         </Box>
@@ -188,10 +244,29 @@ const SkillCheck: React.FC = () => {
           </Box>
           <Typography
             variant="h6"
-            sx={{ mb: 1, minHeight: { xs: 72, sm: 84 }, lineHeight: 1.4, wordBreak: 'break-word' }}
+            sx={{ mb: 1, minHeight: { xs: '4.2em', sm: '4.2em' }, maxHeight: { xs: '4.2em', sm: '4.2em' }, overflow: 'hidden', lineHeight: 1.4, wordBreak: 'break-word' }}
           >
             {current.text}
           </Typography>
+        </Box>
+
+        {/* Numbered category list with completion status under the question; fixed position regardless of question length */}
+        <Box sx={{ mt: 2, borderTop: '1px solid', borderColor: 'divider', pt: 2 }}>
+          <Stack spacing={0.75}>
+            {categories.map((cat, i) => (
+              <Box key={cat.id} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Box component="span" sx={{ width: 20, display: 'inline-block', textAlign: 'right', opacity: 0.8 }}>{i + 1}.</Box>
+                  {cat.name}
+                </Typography>
+                {catDone[i] ? (
+                  <CheckCircleOutlineOutlinedIcon sx={{ fontSize: 18, color: 'success.main' }} />
+                ) : (
+                  <Box sx={{ width: 12, height: 12, borderRadius: '50%', border: '1px solid', borderColor: 'divider', bgcolor: i === (current.categoryIndex || 0) ? 'primary.main' : 'transparent' }} />
+                )}
+              </Box>
+            ))}
+          </Stack>
         </Box>
       </Box>
     );
@@ -200,11 +275,11 @@ const SkillCheck: React.FC = () => {
   if (mode === 'results' && results) {
     const radar = Object.values(results.cats).map((c: any) => ({ subject: c.name, score: Math.round(c.score), fullMark: 100 }));
     return (
-      <Box sx={{ p: 2, maxWidth: 1200, mx: 'auto' }}>
+      <Box sx={{ p: 2, width: '100%' }}>
         <Typography variant="h5" sx={{ textAlign: 'center', mb: 2 }}>Overall: {Math.round(results.overall)}%</Typography>
-        <Box sx={{ height: { xs: '60vh', md: '70vh' }, width: '100%' }}>
+        <Box sx={{ height: { xs: '60vh', md: '75vh' }, width: '100%' }}>
           <ResponsiveContainer width="100%" height="100%">
-            <RadarChart data={radar} outerRadius="80%">
+            <RadarChart data={radar} outerRadius="90%">
               <PolarGrid />
               <PolarAngleAxis dataKey="subject" tick={{ fontSize: 14 }} />
               <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 12 }} />
