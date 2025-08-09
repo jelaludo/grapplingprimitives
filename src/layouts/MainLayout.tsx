@@ -63,8 +63,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
 
       {/* Main Content Area */}
       <Box sx={{ display: 'flex', flex: 1, minHeight: 0, height: `calc(100vh - ${computedHeaderHeight}px)` }}>
-        {/* Desktop Sidebar - Always visible on desktop */}
-        {!isMobile && sidebarContent}
+        {/* Desktop Sidebar - Only when a sidebar is provided */}
+        {!isMobile && sidebar ? sidebarContent : null}
 
         {/* Mobile Drawer */}
         {isMobile && (

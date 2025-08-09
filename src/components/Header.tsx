@@ -23,7 +23,6 @@ import ArticleIcon from '@mui/icons-material/Article';
 import SchoolIcon from '@mui/icons-material/School';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import SportsEsportsOutlinedIcon from '@mui/icons-material/SportsEsportsOutlined';
 
 interface HeaderProps {
   onMobileMenuToggle?: () => void;
@@ -232,7 +231,6 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
                 borderColor: 'divider',
                 '&:hover': { borderColor: 'primary.main' }
               }}
-              startIcon={<SportsEsportsOutlinedIcon fontSize="small" />}
             >
               Games
             </Button>

@@ -51,6 +51,8 @@ export const CentroidFastGame: React.FC = () => {
   const [penalty, setPenalty] = useState(0);
   const [phase, setPhase] = useState<'idle'|'count'|'go'|'playing'|'downtime'|'recap'>('idle');
   const [pointsFlash, setPointsFlash] = useState<string | null>(null);
+  const [roundHistory, setRoundHistory] = useState<{ round: number; score: number; timer: number; perfect: boolean }[]>([]);
+  const [recapMessage, setRecapMessage] = useState<string | null>(null);
 
   const difficulty = useMemo(() => {
     if (round <= 3) return { name: 'EASY', min: 3, max: 8 };
@@ -115,6 +117,8 @@ export const CentroidFastGame: React.FC = () => {
     const score = dist + penalty;
     setCurrentRoundScore(score);
     setTotalScore(s => s + score);
+    const perfect = dist === 0;
+    setRoundHistory(h => [...h, { round: round + 1, score, timer, perfect }]);
     setShowResult(true);
     setPhase('downtime');
     // flash points for ~1s then advance
@@ -125,6 +129,10 @@ export const CentroidFastGame: React.FC = () => {
       if (next <= MAX_ROUNDS) {
         setTimeout(() => startRound(next), 200); // tiny pause
       } else {
+        // compute recap message once
+        const final = totalScore + score;
+        const msg = getRecapMessage(final);
+        setRecapMessage(msg);
         setPhase('recap');
       }
     }, 1000);
@@ -164,8 +172,52 @@ export const CentroidFastGame: React.FC = () => {
     );
   };
 
+  // Messages copied from original game
+  const messagesAbove25 = useMemo(() => [
+    "Nice try, but you've got more in you! Push it!",
+    "Not bad, champ—now show us your best!",
+    "Solid effort, but you're just warming up! Go harder!",
+    "That's a start, now crank it up a notch!",
+    "Pretty good, but you're capable of greatness! Dig in!",
+    "Decent move, but you've got bigger plays to make!",
+    "Not too shabby, but let's see your A-game!",
+    "You're getting there—now unleash the beast!",
+    "Good hustle, but you're not at your peak yet!",
+    "That's the spirit, now take it to the next level!"
+  ], []);
+  const messages10to25 = useMemo(() => [
+    'Amazing work! You\'ve mastered the centroid challenge!',
+    'Outstanding performance! Your spatial reasoning is top-notch!',
+    'Brilliant! You\'ve conquered the centroid matrix!',
+    'Fantastic! You\'ve aced the centroid game!',
+    'Spectacular! Your geometric intuition is incredible!'
+  ], []);
+  const messages8to9 = useMemo(() => [
+    'Single digit! Impressive!',
+    'So close to perfection—keep pushing!',
+    'Excellent intuition.'
+  ], []);
+  const messages7andBelow = useMemo(() => [
+    'Unreal! You beat the creator!','Legendary performance!','Phenomenal accuracy!'
+  ], []);
+
+  const getRecapMessage = (finalScore: number) => {
+    if (finalScore > 25) return messagesAbove25[Math.floor(Math.random() * messagesAbove25.length)];
+    if (finalScore >= 10) return messages10to25[Math.floor(Math.random() * messages10to25.length)];
+    if (finalScore >= 8) return messages8to9[Math.floor(Math.random() * messages8to9.length)];
+    return messages7andBelow[Math.floor(Math.random() * messages7andBelow.length)];
+  };
+
+  const averageScore = useMemo(() => (
+    roundHistory.length ? (roundHistory.reduce((s, r) => s + r.score, 0) / roundHistory.length).toFixed(1) : '0.0'
+  ), [roundHistory]);
+  const averageTime = useMemo(() => (
+    roundHistory.length ? (roundHistory.reduce((s, r) => s + r.timer, 0) / roundHistory.length).toFixed(1) : '0.0'
+  ), [roundHistory]);
+  const perfectCount = useMemo(() => roundHistory.filter(r => r.perfect).length, [roundHistory]);
+
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', py: 2, color: 'white' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', color: 'white' }}>
       <Box sx={{ position: 'relative', width: '100%', maxWidth: 380 }}>
         {/* Back button to restore header */}
         <IconButton onClick={() => { document.body.classList.remove('game-fullscreen'); }} sx={{ position: 'absolute', top: 0, left: 0, color: 'white' }} aria-label="close">
@@ -231,15 +283,52 @@ export const CentroidFastGame: React.FC = () => {
               else if (phase === 'playing' && guess && !showResult) validate();
             }}
           >
-            {phase === 'idle' ? 'START Game' : phase === 'playing' && guess && !showResult ? 'VALIDATE' : 'PLACE'}
+            <Box sx={{ textAlign: 'left' }}>
+              <div>{phase === 'idle' ? 'START Game' : phase === 'playing' && guess && !showResult ? 'VALIDATE' : 'PLACE'}</div>
+              <Typography variant="caption" sx={{ opacity: 0.8, lineHeight: 1 }}>
+                x̄ = (1/n) Σ xᵢ &nbsp;&nbsp; ȳ = (1/n) Σ yᵢ
+              </Typography>
+            </Box>
           </Button>
         </Box>
 
         {/* Recap */}
         {phase === 'recap' && (
-          <Box sx={{ mt: 2, textAlign: 'center' }}>
-            <Typography variant="h6">Final Score: {totalScore}</Typography>
-            <Button sx={{ mt: 1 }} variant="contained" onClick={() => { setTotalScore(0); setRound(0); setPhase('idle'); }}>Play Again</Button>
+          <Box sx={{ position: 'fixed', inset: 0, zIndex: 20 }}>
+            <Box sx={{ position: 'absolute', inset: 0, bgcolor: 'rgba(0,0,0,0.55)' }} />
+            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 'min(92vw, 420px)', maxHeight: '80vh', overflowY: 'auto', textAlign: 'center', bgcolor: 'background.paper', color: 'text.primary', p: 2, borderRadius: 2, boxShadow: 6 }}>
+              <Box sx={{ display: 'flex', gap: 1, mb: 1, justifyContent: 'center' }}>
+                <Button variant="contained" onClick={() => { setTotalScore(0); setRound(0); setRoundHistory([]); setPhase('idle'); }}>Play Again</Button>
+                <Button variant="outlined" onClick={() => { setPhase('idle'); document.body.classList.remove('game-fullscreen'); }}>Close</Button>
+              </Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>{recapMessage}</Typography>
+              <Typography variant="h6" sx={{ mb: 1 }}>Final Score: {totalScore} points</Typography>
+              <Box sx={{ textAlign: 'left', mx: 'auto', maxWidth: 360 }}>
+                {roundHistory.map(r => (
+                  <Box key={r.round} sx={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, py: 0.3 }}>
+                    <span>Round {r.round}:</span>
+                    <span>{r.score} pts {r.perfect ? '✨' : ''}</span>
+                  </Box>
+                ))}
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1, fontSize: 12, color: 'text.secondary' }}>
+                <span>Perfect rounds: <strong>{perfectCount}</strong></span>
+                <span>Average score: <strong>{averageScore}</strong></span>
+              </Box>
+              <Box sx={{ mt: 1, fontSize: 12, color: 'text.secondary' }}>Avg time per round: <strong>{averageTime}s</strong></Box>
+              {/* Histogram 0..9+ */}
+              <Box sx={{ mt: 1, height: 96, display: 'flex', alignItems: 'end', gap: 0.5, mx: 'auto', maxWidth: 360 }}>
+                {Array.from({ length: 10 }, (_, i) => {
+                  const count = roundHistory.filter(r => (i < 9 ? r.score === i : r.score >= 9)).length;
+                  return (
+                    <Box key={i} sx={{ flex: 1, display: 'flex', flexDirection: 'column-reverse', alignItems: 'center', gap: 0.25 }}>
+                      <Box sx={{ width: 8, height: count * 10, bgcolor: 'primary.main', borderRadius: 0.5 }} />
+                      <Typography variant="caption" sx={{ mt: 0.5 }}>{i === 9 ? '9+' : i}</Typography>
+                    </Box>
+                  );
+                })}
+              </Box>
+            </Box>
           </Box>
         )}
       </Box>

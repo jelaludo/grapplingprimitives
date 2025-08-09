@@ -34,6 +34,11 @@ body.game-fullscreen .MuiAppBar-root {
   display: none !important;
 }
 
+/* Remove right-side scroll bar gutter in full-screen game mode */
+body.game-fullscreen {
+  overflow: hidden;
+}
+
 /* Custom transition durations for RetroMessage */
 .transition-opacity {
   transition-property: opacity;

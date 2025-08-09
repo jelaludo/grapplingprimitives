@@ -14,8 +14,8 @@ const CentroidView: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ width: '100%', minHeight: '100%', display: 'flex', justifyContent: 'center' }}>
-      <div style={{ width: '100%', maxWidth: 380 }}>
+    <div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div style={{ width: '100%', maxWidth: 420 }}>
         <CentroidFastGame />
       </div>
     </div>

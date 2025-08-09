@@ -13,7 +13,7 @@ const GamesHub: React.FC = () => {
     );
   }
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 2, m: 'auto', width: '100%', maxWidth: 900 }}>
       <Typography variant="h5" sx={{ mb: 2 }}>Games</Typography>
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' } }}>
         <Card>

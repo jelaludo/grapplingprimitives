@@ -332,7 +332,7 @@ function App() {
             <CardsView concepts={dataManagement.concepts} selectedCategories={cardsSelectedCategories} query={cardsQuery} />
           </div>
         ) : viewManagement.currentView === 'games' ? (
-          <div style={VIEW_CONTAINER_STYLE}>
+          <div style={{ height: '100vh', width: '100%', overflow: 'hidden', display: 'flex' }}>
             <GamesHub />
           </div>
         ) : (
