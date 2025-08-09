@@ -132,7 +132,7 @@ export const CentroidFastGame: React.FC = () => {
 
   // rendering helpers
   const renderGridCells = () => {
-    const cells: JSX.Element[] = [];
+    const cells: React.ReactElement[] = [];
     for (let y = 0; y < GRID_SIZE; y++) {
       for (let x = 0; x < GRID_SIZE; x++) {
         const isDot = dots.some(d => d.x === x && d.y === y);
