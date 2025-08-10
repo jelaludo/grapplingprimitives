@@ -141,7 +141,7 @@ export const Timer: React.FC = () => {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h6" sx={{ textAlign: 'center', color: '#bbb' }}>{title}</Typography>
+      <Typography variant="h6" sx={{ textAlign: 'center', color: '#bbb', fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>{title}</Typography>
       <Box sx={{ textAlign: 'center', my: 2 }}>
         <Typography
           component="div"
@@ -163,32 +163,32 @@ export const Timer: React.FC = () => {
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap', mb: 2 }}>
-        <Box sx={{ bgcolor: '#222', p: 1, borderRadius: 1, color: '#ccc', display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ bgcolor: '#222', p: 1, borderRadius: 1, color: '#ccc', display: 'flex', alignItems: 'center', gap: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace' }}>
           <span>Duration:</span>
           <IconButton size="small" onClick={() => adjust(setRoundLen, 'm', -1)}><RemoveIcon fontSize="small" /></IconButton>
           <span>{roundLen.m.toString().padStart(2,'0')}:{roundLen.s.toString().padStart(2,'0')}</span>
           <IconButton size="small" onClick={() => adjust(setRoundLen, 'm', +1)}><AddIcon fontSize="small" /></IconButton>
         </Box>
-        <Box sx={{ bgcolor: '#222', p: 1, borderRadius: 1, color: '#ccc', display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ bgcolor: '#222', p: 1, borderRadius: 1, color: '#ccc', display: 'flex', alignItems: 'center', gap: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace' }}>
           <span>Rest:</span>
           <IconButton size="small" onClick={() => adjust(setRestLen, 's', -5)}><RemoveIcon fontSize="small" /></IconButton>
           <span>{restLen.m.toString().padStart(2,'0')}:{restLen.s.toString().padStart(2,'0')}</span>
           <IconButton size="small" onClick={() => adjust(setRestLen, 's', +5)}><AddIcon fontSize="small" /></IconButton>
         </Box>
-        <Box sx={{ bgcolor: '#222', p: 1, borderRadius: 1, color: '#ccc', display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ bgcolor: '#222', p: 1, borderRadius: 1, color: '#ccc', display: 'flex', alignItems: 'center', gap: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace' }}>
           <span>Rounds:</span>
           <IconButton size="small" onClick={() => setTotalRounds(r => Math.max(1, r - 1))}><RemoveIcon fontSize="small" /></IconButton>
           <span>{totalRounds}</span>
           <IconButton size="small" onClick={() => setTotalRounds(r => r + 1)}><AddIcon fontSize="small" /></IconButton>
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace' }}>
         {phase === 'paused' || phase === 'countdown' ? (
-          <Button variant="contained" onClick={start}>Start</Button>
+          <Button variant="contained" onClick={start} sx={{ fontFamily: 'inherit' }}>Start</Button>
         ) : (
-          <Button variant="contained" onClick={pause}>Pause</Button>
+          <Button variant="contained" onClick={pause} sx={{ fontFamily: 'inherit' }}>Pause</Button>
         )}
-        <Button variant="outlined" onClick={reset}>Reset</Button>
+        <Button variant="outlined" onClick={reset} sx={{ fontFamily: 'inherit' }}>Reset</Button>
       </Box>
     </Box>
   );

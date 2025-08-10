@@ -258,20 +258,20 @@ export const CentroidFastGame: React.FC = () => {
         </IconButton>
 
         <Box sx={{ textAlign: 'center', mt: { xs: 1, md: 4 }, mb: 1 }}>
-          <Typography variant="h5" fontWeight={700}>Centroid (x̄, ȳ) – GRID FAST</Typography>
-          <Typography variant="body2" sx={{ opacity: 0.7 }}>10 rounds – Lowest score wins</Typography>
+          <Typography variant="h5" fontWeight={700} sx={{ fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>Centroid (x̄, ȳ) – GRID FAST</Typography>
+          <Typography variant="body2" sx={{ opacity: 0.7, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>10 rounds – Lowest score wins</Typography>
         </Box>
 
         {/* Status row */}
         {phase !== 'idle' && phase !== 'recap' && (
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 1, mb: 1 }}>
-            <Typography variant="caption">R{Math.min(round, MAX_ROUNDS)}/{MAX_ROUNDS}</Typography>
+            <Typography variant="caption" sx={{ fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>R{Math.min(round, MAX_ROUNDS)}/{MAX_ROUNDS}</Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <AccessTimeIcon fontSize="small" />
               <Typography variant="caption" sx={{ fontVariantNumeric: 'tabular-nums', color: timer <= TIMER_PENALTY_THRESHOLD ? 'success.main' : 'error.main' }}>{`0:${String(timer).padStart(2, '0')}`}</Typography>
               {penalty > 0 && <Typography variant="caption" color="error.main">+{penalty}</Typography>}
             </Box>
-            <Typography variant="caption">{difficulty.name}</Typography>
+            <Typography variant="caption" sx={{ fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>{difficulty.name}</Typography>
           </Box>
         )}
 
@@ -316,9 +316,9 @@ export const CentroidFastGame: React.FC = () => {
               else if (phase === 'playing' && guess && !showResult) validate();
             }}
           >
-            <Box sx={{ textAlign: 'left' }}>
-              <div>{phase === 'idle' ? 'START Game' : phase === 'playing' && guess && !showResult ? 'VALIDATE' : 'PLACE'}</div>
-              <Typography variant="caption" sx={{ opacity: 0.8, lineHeight: 1 }}>
+            <Box sx={{ textAlign: 'left', fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace' }}>
+              <div style={{ letterSpacing: '0.06em' }}>{phase === 'idle' ? 'START Game' : phase === 'playing' && guess && !showResult ? 'VALIDATE' : 'PLACE'}</div>
+              <Typography variant="caption" sx={{ opacity: 0.8, lineHeight: 1, fontFamily: 'inherit', letterSpacing: '0.06em' }}>
                 x̄ = (1/n) Σ xᵢ &nbsp;&nbsp; ȳ = (1/n) Σ yᵢ
               </Typography>
             </Box>
@@ -335,7 +335,7 @@ export const CentroidFastGame: React.FC = () => {
                 <Button variant="outlined" onClick={() => { setPhase('idle'); document.body.classList.remove('game-fullscreen'); }}>Close</Button>
               </Box>
               <Typography variant="subtitle2" sx={{ mb: 1 }}>{recapMessage}</Typography>
-              <Typography variant="h6" sx={{ mb: 1 }}>Final Score: {totalScore} points</Typography>
+              <Typography variant="h6" sx={{ mb: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>Final Score: {totalScore} points</Typography>
               <Box sx={{ textAlign: 'left', mx: 'auto', maxWidth: 360 }}>
                 {roundHistory.map((r, idx) => (
                   <Box key={`${r.round}-${idx}`} sx={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, py: 0.3 }}>
