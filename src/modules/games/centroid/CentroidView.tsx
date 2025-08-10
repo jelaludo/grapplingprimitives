@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+// Single source of truth for Centroid game
 import CentroidFastGame from './CentroidFastGame';
 
 interface CentroidViewProps { onClose?: () => void }
