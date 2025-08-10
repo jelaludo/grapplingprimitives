@@ -58,27 +58,95 @@ const MemoryGame: React.FC<MemoryGameProps> = ({ onClose }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   // Configurable pairs count (8/12/16)
-  const [pairsCount, setPairsCount] = useState<number>(12);
+  const [pairsCount, setPairsCount] = useState<number>(8);
   const [deck, setDeck] = useState<Card[]>([]);
   const [flippedUids, setFlippedUids] = useState<string[]>([]); // at most 2
   const [matchedPairIds, setMatchedPairIds] = useState<Set<number>>(new Set());
   const [moves, setMoves] = useState<number>(0);
   const [isBusy, setIsBusy] = useState<boolean>(false);
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutsRef = useRef<number[]>([]);
   const [matchOverlay, setMatchOverlay] = useState<{ a: string; b: string } | null>(null);
   // Timer state
   const [elapsedMs, setElapsedMs] = useState<number>(0);
   const [timerRunning, setTimerRunning] = useState<boolean>(false);
   const timerRef = useRef<number | null>(null);
+  // Intro sequence
+  const [phase, setPhase] = useState<'idle'|'introReveal'|'introGather'|'introShuffle'|'introDeal'|'playing'>('idle');
+  const [introPairs, setIntroPairs] = useState<Array<{ a: string; b: string }>>([]);
+  const [introIndex, setIntroIndex] = useState<number>(0);
+  const [revealedThumbs, setRevealedThumbs] = useState<string[]>([]); // used as ordered reveal ids
+  const [dealCards, setDealCards] = useState<Array<{ id: string; left: number; top: number; width: number }>>([]);
+  const gridRef = useRef<HTMLDivElement | null>(null);
+  const [targetRects, setTargetRects] = useState<Array<{ left: number; top: number; width: number; height: number }>>([]);
+  const [imageIndexMap, setImageIndexMap] = useState<Record<string, number>>({});
+  const revealSlots = useMemo(() => {
+    const arr = [...targetRects];
+    arr.sort((a, b) => (a.top - b.top) || (a.left - b.left));
+    return arr;
+  }, [targetRects]);
+
+  const schedule = (fn: () => void, ms: number) => {
+    const id = window.setTimeout(fn, ms);
+    timeoutsRef.current.push(id);
+    return id;
+  };
+  const clearScheduled = () => {
+    timeoutsRef.current.forEach(id => window.clearTimeout(id));
+    timeoutsRef.current = [];
+  };
+
+  const beginIntroAfterRects = (cards: Card[], ip: Array<{ a: string; b: string }>, attempt = 0) => {
+    // Wait until targetRects are fully measured (count match and non-zero sizes)
+    const ready = targetRects.length >= cards.length && targetRects.every(r => r.width > 0 && r.height > 0 && Number.isFinite(r.left) && Number.isFinite(r.top));
+    if (!ready && attempt < 60) {
+      schedule(() => beginIntroAfterRects(cards, ip, attempt + 1), 16);
+      return;
+    }
+    // Start reveal sequence only when we have positions
+    setIntroIndex(0);
+    setRevealedThumbs([]);
+    setPhase('introReveal');
+    const perPairMs = 900; // as requested
+    const gapMs = 150;
+    ip.forEach((p, i) => {
+      schedule(() => {
+        setIntroIndex(i);
+        setRevealedThumbs(prev => [...prev, p.a, p.b]);
+      }, (perPairMs + gapMs) * i);
+    });
+    const totalReveal = (perPairMs + gapMs) * ip.length;
+    schedule(() => setPhase('introGather'), totalReveal);
+    schedule(() => setPhase('introShuffle'), totalReveal + 500);
+    schedule(() => {
+      const rects = targetRects.length ? [...targetRects] : [];
+      shuffleInPlace(rects);
+      const first = rects[0];
+      const originW = first ? first.width : 80;
+      const originH = first ? first.height : 120;
+      const centerLeft = Math.round(window.innerWidth / 2 - originW / 2);
+      const centerTop = Math.round(window.innerHeight * 0.35 - originH / 2);
+      setDealCards(cards.map(() => ({ id: 'x', left: centerLeft, top: centerTop, width: originW })));
+      setPhase('introDeal');
+      rects.forEach((pos, i) => {
+        schedule(() => {
+          setDealCards(prev => {
+            const next = [...prev];
+            if (next[i]) next[i] = { id: 'x', left: pos.left, top: pos.top, width: pos.width };
+            return next;
+          });
+        }, 80 * i);
+      });
+      const n = rects.length || cards.length;
+      schedule(() => setPhase('playing'), 80 * n + 800);
+    }, totalReveal + 500 + 1000);
+  };
 
   // Fullscreen-like presentation (hide header like Centroid)
   useEffect(() => {
     document.body.classList.add('game-fullscreen');
     return () => {
       document.body.classList.remove('game-fullscreen');
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
-      }
+      clearScheduled();
       if (timerRef.current) {
         window.clearInterval(timerRef.current);
       }
@@ -88,6 +156,7 @@ const MemoryGame: React.FC<MemoryGameProps> = ({ onClose }) => {
   const allIds = useMemo(() => buildAllIds(), []);
 
   const startNewGame = (overridePairs?: number) => {
+    clearScheduled();
     // Choose N pairs randomly from 1..80
     const availablePairIds = Array.from({ length: TOTAL_PAIRS }, (_, i) => i + 1);
     shuffleInPlace(availablePairIds);
@@ -115,6 +184,39 @@ const MemoryGame: React.FC<MemoryGameProps> = ({ onClose }) => {
     // Reset timer; start on first flip
     setElapsedMs(0);
     setTimerRunning(false);
+    // Build intro pairs list
+    const ip: Array<{ a: string; b: string }> = chosenPairs.map(pairId => {
+      const aNum = 2 * pairId - 1; const bNum = 2 * pairId;
+      return { a: padId(aNum), b: padId(bNum) };
+    });
+    setIntroPairs(ip);
+    setRevealedThumbs([]);
+    // Start intro only once rects are measured
+    // Map imageId -> index in deck for positioning
+    const map: Record<string, number> = {};
+    cards.forEach((c, idx) => { map[c.imageId] = idx; });
+    setImageIndexMap(map);
+    // Compute target rects after layout paints hidden grid
+    requestAnimationFrame(() => {
+      const container = gridRef.current;
+      if (!container) return;
+      const children = Array.from(container.querySelectorAll('[data-card-idx]')) as HTMLElement[];
+      const rects = children.map((el) => {
+        const r = el.getBoundingClientRect();
+        return { left: r.left, top: r.top, width: r.width, height: r.height };
+      });
+      setTargetRects(rects);
+      // Force a second measurement pass on next frame to stabilize values
+      requestAnimationFrame(() => {
+        const children2 = Array.from(container.querySelectorAll('[data-card-idx]')) as HTMLElement[];
+        const rects2 = children2.map((el) => {
+          const r = el.getBoundingClientRect();
+          return { left: r.left, top: r.top, width: r.width, height: r.height };
+        });
+        setTargetRects(rects2);
+      });
+    });
+    beginIntroAfterRects(cards, ip);
   };
 
   useEffect(() => {
@@ -123,7 +225,7 @@ const MemoryGame: React.FC<MemoryGameProps> = ({ onClose }) => {
   }, []);
 
   const handleCardClick = (card: Card) => {
-    if (isBusy) return;
+    if (isBusy || phase !== 'playing') return;
     if (matchedPairIds.has(card.pairId)) return; // already solved
     if (flippedUids.includes(card.uid)) return;  // already face up
     // Start timer on first interaction
@@ -144,10 +246,10 @@ const MemoryGame: React.FC<MemoryGameProps> = ({ onClose }) => {
 
       if (isMatch && c1 && c2) {
         // Phase 1: pause 1s with the matched pair still in-place, face-up
-        timeoutRef.current = window.setTimeout(() => {
+        schedule(() => {
           // Phase 2: bring to foreground and pause 1s
           setMatchOverlay({ a: c1.imageId, b: c2.imageId });
-          timeoutRef.current = window.setTimeout(() => {
+          schedule(() => {
             const newSet = new Set(matchedPairIds);
             newSet.add(c1.pairId);
             setMatchedPairIds(newSet);
@@ -158,7 +260,7 @@ const MemoryGame: React.FC<MemoryGameProps> = ({ onClose }) => {
         }, 1000);
       } else {
         // Not a match: brief delay then flip back
-        timeoutRef.current = window.setTimeout(() => {
+        schedule(() => {
           setFlippedUids([]);
           setIsBusy(false);
         }, 800);
@@ -266,7 +368,7 @@ const MemoryGame: React.FC<MemoryGameProps> = ({ onClose }) => {
       {allSolved && <Typography variant="caption" color="success.main" sx={{ mb: 1 }}>Completed!</Typography>}
 
       {/* Grid */}
-      <Box sx={{ flex: 1, display: 'grid', gap: { xs: 0.5, sm: 1.2 }, gridTemplateColumns: {
+      <Box ref={gridRef} sx={{ flex: 1, display: 'grid', visibility: phase === 'playing' ? 'visible' : 'hidden', gap: { xs: 0.5, sm: 1.2 }, gridTemplateColumns: {
         xs: 'repeat(4, 1fr)',
         sm: 'repeat(auto-fill, minmax(110px, 1fr))',
         md: 'repeat(auto-fill, minmax(120px, 1fr))',
@@ -278,6 +380,7 @@ const MemoryGame: React.FC<MemoryGameProps> = ({ onClose }) => {
           return (
             <Box
               key={card.uid}
+              data-card-idx
               onClick={() => handleCardClick(card)}
               sx={{
                 position: 'relative',
@@ -340,6 +443,91 @@ const MemoryGame: React.FC<MemoryGameProps> = ({ onClose }) => {
               {renderImage(matchOverlay.b)}
             </Box>
           </Box>
+        </Box>
+      )}
+
+      {/* Intro reveal overlay: show revealed cards at their grid slots */}
+      {phase === 'introReveal' && introPairs[introIndex] && (
+        <Box sx={{ position: 'fixed', inset: 0, zIndex: 1800, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.6)' }}>
+          {/* Face-up cards on grid slots in reveal order */}
+          <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+            {revealedThumbs.map((id, i) => {
+              const slot = revealSlots[i];
+              if (!slot) return null;
+              return (
+                <Box key={`${id}-${i}`} sx={{ position: 'absolute', left: slot.left, top: slot.top, width: slot.width, height: slot.height, borderRadius: 1, overflow: 'hidden', boxShadow: 3 }}>
+                  {renderImage(id)}
+                </Box>
+              );
+            })}
+          </Box>
+          <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, p: 1, zIndex: 2001,
+            '@keyframes pairReveal': {
+              '0%': { transform: 'rotateY(90deg) scale(0.9)', opacity: 0 },
+              '60%': { transform: 'rotateY(0deg) scale(1.02)', opacity: 1 },
+              '100%': { transform: 'rotateY(0deg) scale(1)', opacity: 1 }
+            }
+          }}>
+            <Box sx={{ width: { xs: '40vw', sm: 260 }, maxWidth: 340, aspectRatio: '440 / 597', borderRadius: '14px', overflow: 'hidden', boxShadow: 8, animation: 'pairReveal 600ms ease-out' }}>
+              {renderImage(introPairs[introIndex].a)}
+            </Box>
+            <Box sx={{ width: { xs: '40vw', sm: 260 }, maxWidth: 340, aspectRatio: '440 / 597', borderRadius: '14px', overflow: 'hidden', boxShadow: 8, animation: 'pairReveal 600ms ease-out' }}>
+              {renderImage(introPairs[introIndex].b)}
+            </Box>
+          </Box>
+        </Box>
+      )}
+
+      {/* Intro gather: flip revealed grid cards to backs and collapse to center */}
+      {phase === 'introGather' && (
+        <Box sx={{ position: 'fixed', inset: 0, zIndex: 1750, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.55)' }}>
+          <Box sx={{ position: 'absolute', inset: 0 }}>
+            {revealedThumbs.map((_, i) => {
+              const slot = revealSlots[i];
+              if (!slot) return null;
+              return (
+                <Box key={i} sx={{ position: 'absolute', left: slot.left, top: slot.top, width: slot.width, height: slot.height, borderRadius: 1, overflow: 'hidden',
+                  '@keyframes collapse': {
+                    '0%': { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                    '100%': { transform: `translate(${window.innerWidth/2 - (slot.left + slot.width/2)}px, ${window.innerHeight/2 - (slot.top + slot.height/2)}px) scale(0.4)`, opacity: 0.9 }
+                  }, animation: 'collapse 500ms ease forwards' }}>
+                  {renderBack()}
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
+      )}
+
+      {/* Intro shuffle overlay */}
+      {phase === 'introShuffle' && (
+        <Box sx={{ position: 'fixed', inset: 0, zIndex: 1700, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.55)' }}>
+          <Box sx={{ position: 'relative', width: 280, height: 200 }}>
+            {[0,1,2,3,4,5,6].map(i => (
+              <Box key={i} sx={{ position: 'absolute', top: 40, left: 80, width: 120, aspectRatio: '440 / 597', borderRadius: '12px', overflow: 'hidden', boxShadow: 6,
+                '@keyframes riffle2': {
+                  '0%': { transform: 'translate(-30px,0) rotate(-10deg)' },
+                  '33%': { transform: 'translate(0px,-8px) rotate(0deg)' },
+                  '66%': { transform: 'translate(30px,0) rotate(10deg)' },
+                  '100%': { transform: 'translate(-30px,0) rotate(-10deg)' }
+                },
+                animation: `riffle2 700ms cubic-bezier(0.2,0.8,0.2,1) ${i*80}ms 2`
+              }}>
+                {renderBack()}
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      )}
+
+      {/* Intro deal overlay */}
+      {phase === 'introDeal' && dealCards.length > 0 && (
+        <Box sx={{ position: 'fixed', inset: 0, zIndex: 1650, pointerEvents: 'none' }}>
+          {dealCards.map((c, i) => (
+            <Box key={i} sx={{ position: 'absolute', left: c.left, top: c.top, width: c.width, aspectRatio: '440 / 597', borderRadius: 1, overflow: 'hidden', transition: 'left 600ms ease, top 600ms ease, transform 600ms ease, width 600ms ease', transform: 'translate3d(0,0,0)', boxShadow: 3 }}>
+              {renderBack()}
+            </Box>
+          ))}
         </Box>
       )}
     </Box>
