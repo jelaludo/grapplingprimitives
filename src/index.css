@@ -22,6 +22,8 @@ code {
 html, body {
   height: 100%;
   width: 100%;
+  /* Reserve gutter to prevent lateral hops; and prefer no scroll during games */
+  scrollbar-gutter: stable both-edges;
 }
 
 #root {
@@ -38,14 +40,14 @@ html, body {
   font-display: swap;
 }
 
-/* Game fullscreen hides the header while playing */
+/* Game fullscreen hides the header while playing and disables scrolling entirely */
 body.game-fullscreen .MuiAppBar-root {
   display: none !important;
 }
 
 /* Remove right-side scroll bar gutter in full-screen game mode */
 body.game-fullscreen {
-  overflow: hidden;
+  overflow: hidden !important;
 }
 
 /* Custom transition durations for RetroMessage */
