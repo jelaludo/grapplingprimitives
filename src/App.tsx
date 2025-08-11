@@ -17,6 +17,7 @@ import CoachTools from './modules/coach/CoachTools';
 import SkillCheck from './modules/skillcheck/SkillCheck';
 import Ludus from './components/Ludus/Ludus';
 import OthersHub from './modules/others/OthersHub';
+import RetroMessage from './components/RetroMessage';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from '@mui/material/styles';
@@ -65,6 +66,7 @@ function App() {
   
 
   const [helpDialogOpen, setHelpDialogOpen] = useState(false);
+  const [allowAuthPrompt, setAllowAuthPrompt] = useState(false);
   // Open Help from Home inline "?"
   useEffect(() => {
     const open = () => setHelpDialogOpen(true);
@@ -81,6 +83,13 @@ function App() {
   const dataSource = useDataSource(isDevelopment);
   const snackbar = useSnackbar();
   const viewManagement = useViewManagement();
+
+  // Reflect current view on body dataset for conditional UI (e.g., QuickMenu)
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.dataset.view = viewManagement.currentView;
+    }
+  }, [viewManagement.currentView]);
   // Global event to navigate home from QuickHome
   useEffect(() => {
     const onGoHome = () => viewManagement.switchToHome();
@@ -133,20 +142,21 @@ function App() {
     }
   }, [dataSource.dataSource, dataSource.selectedMasterList]);
 
-  // Handle beta authentication: gate the app until auth
+  // Only show beta login after the first interaction screen dismisses
   useEffect(() => {
-    if (!betaAuth.isLoading && !betaAuth.isAuthenticated) {
+    if (allowAuthPrompt && !betaAuth.isLoading && !betaAuth.isAuthenticated) {
       setShowBetaLogin(true);
     }
-  }, [betaAuth.isAuthenticated, betaAuth.isLoading]);
+  }, [allowAuthPrompt, betaAuth.isAuthenticated, betaAuth.isLoading]);
 
   // Handle first click - show beta login if not authenticated
   const handleFirstInteraction = () => {
     if (!betaAuth.isAuthenticated) {
+      setAllowAuthPrompt(true);
       setShowBetaLogin(true);
       return;
     }
-    // If authenticated, proceed to matrix view
+    // If authenticated, proceed to home view
     viewManagement.switchToHome();
   };
 
@@ -537,6 +547,9 @@ function App() {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       />
       
+      {/* Retro Message Cover before first interaction/login */}
+      <RetroMessage onFirstInteraction={handleFirstInteraction} />
+
       {/* Beta Login Modal */}
       {showBetaLogin && (
         <BetaLogin

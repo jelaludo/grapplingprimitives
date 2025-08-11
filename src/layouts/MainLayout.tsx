@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Box, useTheme, useMediaQuery, Drawer, useScrollTrigger } from '@mui/material';
-import RetroMessage from '../components/RetroMessage';
 import QuickHome from '../components/QuickHome';
 import QuickMenu from '../components/QuickMenu';
 
@@ -123,12 +122,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
         >
           {children}
           <QuickHome onHome={() => window.dispatchEvent(new CustomEvent('gp:navigate-home'))} visible={!gameFullscreen} />
-          <QuickMenu onOpen={() => window.dispatchEvent(new CustomEvent('gp:open-menu'))} visible={!gameFullscreen} />
+          {/* Only show QuickMenu on matrix page where categories exist */}
+          {typeof window !== 'undefined' && window.document?.body?.dataset?.view === 'matrix' && (
+            <QuickMenu onOpen={() => window.dispatchEvent(new CustomEvent('gp:open-menu'))} visible={!gameFullscreen} />
+          )}
         </Box>
       </Box>
-      
-      {/* Retro Message Overlay */}
-      <RetroMessage onFirstInteraction={onFirstInteraction} />
     </Box>
   );
 };

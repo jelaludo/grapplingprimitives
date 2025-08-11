@@ -183,7 +183,6 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
       <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb: 1 }}>
         <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>Welcome</Typography>
         <Box sx={{ display:'flex', gap:1, alignItems:'center' }}>
-          <Typography variant="caption" sx={{ opacity: 0.7, mr: 1 }}>Use the top-right icon to toggle fullscreen</Typography>
           {/* Small inline help button */}
           <Box onClick={() => window.dispatchEvent(new CustomEvent('gp:open-help'))} sx={{ cursor:'pointer', width: 28, height: 28, borderRadius: '50%', bgcolor:'rgba(255,255,255,0.12)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>?</Box>
         </Box>
