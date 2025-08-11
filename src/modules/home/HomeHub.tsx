@@ -107,26 +107,75 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
     </Box>
   );
 
-  const PreviewGames: React.FC<{ onOpenCentroid: () => void; onOpenMemory: () => void }> = ({ onOpenCentroid, onOpenMemory }) => (
-    <Box sx={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap: 2, width:'100%' }}>
-      <Box
-        onClick={(e) => { e.stopPropagation(); onOpenCentroid(); }}
-        onMouseDown={(e) => e.stopPropagation()}
-        onTouchStart={(e) => e.stopPropagation()}
-        sx={{ cursor:'pointer' }}
-      >
-        <CentroidCardPreview />
+  const PreviewGames: React.FC<{ onOpenCentroid: () => void; onOpenMemory: () => void }> = ({ onOpenCentroid, onOpenMemory }) => {
+    const CentroidMini = (
+      <svg viewBox="0 0 11 11" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <pattern id="g" width="1" height="1" patternUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="1" height="1" fill="#111" />
+          </pattern>
+        </defs>
+        <rect x="0" y="0" width="11" height="11" fill="#111" stroke="#333" />
+        {/* sample dots */}
+        <rect x="2" y="2" width="1" height="1" fill="#42a5f5" />
+        <rect x="3" y="7" width="1" height="1" fill="#42a5f5" />
+        <rect x="5" y="4" width="1" height="1" fill="#42a5f5" />
+        <rect x="7" y="2" width="1" height="1" fill="#42a5f5" />
+        <rect x="8" y="8" width="1" height="1" fill="#42a5f5" />
+        <rect x="2" y="9" width="1" height="1" fill="#42a5f5" />
+        {/* guess and centroid */}
+        <rect x="4" y="5" width="1" height="1" fill="#66bb6a" />
+        <rect x="5" y="5" width="1" height="1" fill="#ef5350" />
+        {/* vectors */}
+        <line x1="1" y1="1" x2="4.5" y2="5.5" stroke="#66bb6a" strokeWidth="0.2" />
+        <line x1="9" y1="9" x2="4.5" y2="5.5" stroke="#66bb6a" strokeWidth="0.2" />
+      </svg>
+    );
+
+    const MemoryMini = (
+      <Box sx={{ width:'100%', height:'100%', display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap: 0.5 }}>
+        {Array.from({ length: 16 }).map((_, i) => (
+          <Box key={i} sx={{ bgcolor:'#111', borderRadius: 0.8, border:'1px solid rgba(255,255,255,0.1)', aspectRatio:'1 / 1.35' }} />
+        ))}
       </Box>
-      <Box
-        onClick={(e) => { e.stopPropagation(); onOpenMemory(); }}
-        onMouseDown={(e) => e.stopPropagation()}
-        onTouchStart={(e) => e.stopPropagation()}
-        sx={{ cursor:'pointer' }}
-      >
-        <MemoryCardPreview />
+    );
+
+    return (
+      <Box sx={{ width:'100%' }}>
+        <Box sx={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gridTemplateRows: '1fr 1fr',
+          gap: { xs: 1, sm: 2 },
+          width: '100%',
+          height: { xs: 260, sm: 320, md: 360 }
+        }}>
+          {/* Top-left: Centroid visual */}
+          <Box onClick={(e) => { e.stopPropagation(); onOpenCentroid(); }} onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()} sx={{ cursor:'pointer', p: 1 }}>
+            {CentroidMini}
+          </Box>
+          {/* Top-right: Centroid text */}
+          <Box sx={{ display:'flex', alignItems:'center', pl: 1 }}>
+            <Box>
+              <Typography variant="subtitle1" sx={{ fontFamily: 'inherit' }}>Centroid</Typography>
+              <Typography variant="caption" sx={{ opacity: 0.8 }}>Estimate the centroid quickly (GRID FAST)</Typography>
+            </Box>
+          </Box>
+          {/* Bottom-left: Memory text */}
+          <Box sx={{ display:'flex', alignItems:'center', justifyContent:'flex-end', pr: 1 }}>
+            <Box sx={{ textAlign:'right' }}>
+              <Typography variant="subtitle1" sx={{ fontFamily: 'inherit' }}>JJJ Memory</Typography>
+              <Typography variant="caption" sx={{ opacity: 0.8 }}>Find matching pairs</Typography>
+            </Box>
+          </Box>
+          {/* Bottom-right: Memory visual */}
+          <Box onClick={(e) => { e.stopPropagation(); onOpenMemory(); }} onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()} sx={{ cursor:'pointer', p: 1 }}>
+            {MemoryMini}
+          </Box>
+        </Box>
       </Box>
-    </Box>
-  );
+    );
+  };
 
   return (
     <Box sx={{ p: { xs: 1, md: 2 }, m: 'auto', width: '100%', height: '100vh', maxWidth: 1200, display: 'flex', flexDirection: 'column',
