@@ -15,6 +15,7 @@ interface HomeHubProps {
   goArticles: () => void;
   goStudies: () => void;
   goLudus: () => void;
+  goOthers?: () => void;
 }
 
 const HomeHub: React.FC<HomeHubProps> = (props) => {
@@ -132,9 +133,10 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
       fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
       <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb: 1 }}>
         <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>Welcome</Typography>
-        <Box sx={{ display:'flex', gap:1 }}>
-          {/* The global header has fullscreen too; duplicate here for visibility if header is hidden */}
-          <Typography variant="caption" sx={{ opacity: 0.7 }}>Use the top-right icon to toggle fullscreen</Typography>
+        <Box sx={{ display:'flex', gap:1, alignItems:'center' }}>
+          <Typography variant="caption" sx={{ opacity: 0.7, mr: 1 }}>Use the top-right icon to toggle fullscreen</Typography>
+          {/* Small inline help button */}
+          <Box onClick={() => window.dispatchEvent(new CustomEvent('gp:open-help'))} sx={{ cursor:'pointer', width: 28, height: 28, borderRadius: '50%', bgcolor:'rgba(255,255,255,0.12)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>?</Box>
         </Box>
       </Box>
       <Box sx={{ display: 'grid', gap: { xs: 1, sm: 1.5, md: 2 }, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' }, gridAutoRows: '1fr', flex: 1 }}>
@@ -143,7 +145,7 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
         <CardShell title="GAMES – Centroid – Memory" disabled preview={<PreviewGames onOpenCentroid={() => props.goGames('centroid')} onOpenMemory={() => props.goGames('memory')} />} />
         <CardShell title="Coach – Timer" onClick={() => { props.goCoach(); setTimeout(() => { if (typeof window !== 'undefined') window.location.hash = 'timer'; }, 0); }} preview={<TimerCardPreview />} />
         <CardShell title="Skill Check" onClick={props.goSkillCheck} preview={<SkillCheckCardPreview />} />
-        <CardShell title="Others" disabled preview={<PreviewCards />} />
+        <CardShell title="Others" onClick={props.goOthers} preview={<PreviewCards />} />
       </Box>
     </Box>
   );

@@ -16,6 +16,7 @@ import HomeHubMount from './modules/home/HomeHubMount';
 import CoachTools from './modules/coach/CoachTools';
 import SkillCheck from './modules/skillcheck/SkillCheck';
 import Ludus from './components/Ludus/Ludus';
+import OthersHub from './modules/others/OthersHub';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from '@mui/material/styles';
@@ -64,6 +65,12 @@ function App() {
   
 
   const [helpDialogOpen, setHelpDialogOpen] = useState(false);
+  // Open Help from Home inline "?"
+  useEffect(() => {
+    const open = () => setHelpDialogOpen(true);
+    window.addEventListener('gp:open-help', open as EventListener);
+    return () => window.removeEventListener('gp:open-help', open as EventListener);
+  }, []);
   const [showBetaLogin, setShowBetaLogin] = useState(false);
   const [graphsResetToken, setGraphsResetToken] = useState(0);
   
@@ -310,8 +317,9 @@ function App() {
                goCoach={viewManagement.switchToCoach}
                goSkillCheck={viewManagement.switchToSkillCheck}
                goArticles={viewManagement.switchToArticles}
-               goStudies={viewManagement.switchToStudies}
+                goStudies={viewManagement.switchToStudies}
                goLudus={viewManagement.switchToLudus}
+               goOthers={viewManagement.switchToOthers}
               />
            </div>
          ) : viewManagement.currentView === 'matrix' ? (
@@ -368,6 +376,8 @@ function App() {
           <div style={VIEW_CONTAINER_STYLE}>
             <CoachTools />
           </div>
+        ) : viewManagement.currentView === 'others' ? (
+          <OthersHub onBack={viewManagement.switchToHome} gotoArticles={viewManagement.switchToArticles} gotoCoach={viewManagement.switchToCoach} gotoStudies={viewManagement.switchToStudies} />
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>
             <Graphs resetToken={graphsResetToken} />

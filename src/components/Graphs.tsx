@@ -501,6 +501,53 @@ const Graphs: React.FC<GraphsProps> = ({ resetToken = 0 }) => {
               >
                 {graph.description}
               </Typography>
+
+              {/* Mini preview of the graph inside the card */}
+              <Box sx={{
+                mb: 2,
+                border: `1px solid ${theme.palette.divider}`,
+                borderRadius: 1,
+                overflow: 'hidden',
+                backgroundColor: 'background.default'
+              }}>
+                {graph.type === 'line' && (
+                  <ResponsiveContainer width="100%" height={140}>
+                    <LineChart data={graph.data} margin={{ top: 4, right: 6, bottom: 4, left: 6 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
+                      <XAxis dataKey="time" hide />
+                      <YAxis domain={[0,100]} hide />
+                      <Line type="monotone" dataKey="moarTechs" stroke="#ff9800" strokeWidth={2} dot={false} />
+                      <Line type="monotone" dataKey="principles" stroke="#9e9e9e" strokeWidth={2} strokeDasharray="6 4" dot={false} />
+                      <Line type="monotone" dataKey="health" stroke="#4caf50" strokeWidth={2} strokeDasharray="8 4" dot={false} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
+                {graph.type === 'bell-curve' && (
+                  <BellCurveChart height={140} />
+                )}
+                {graph.type === 'flow-diagram' && (
+                  <Box sx={{ width: '100%', height: 140, position: 'relative' }}>
+                    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                      <defs>
+                        <linearGradient id="miniGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#ff4444"/>
+                          <stop offset="50%" stopColor="#9e9e9e"/>
+                          <stop offset="100%" stopColor="#2e7d32"/>
+                        </linearGradient>
+                        <marker id="miniArrow" markerWidth="6" markerHeight="4" refX="4" refY="2" orient="auto">
+                          <polygon points="0 0, 5 2, 0 4" fill="#2e7d32" />
+                        </marker>
+                      </defs>
+                      <line x1="8" y1="92" x2="92" y2="8" stroke="url(#miniGradient)" strokeWidth="2" />
+                      {[10,30,50,70,90].map((p,i)=> (
+                        <circle key={i} cx={p} cy={100-p} r="2.3" fill="white" stroke="#1976d2" strokeWidth="1" />
+                      ))}
+                      <line x1="15" y1="25" x2="15" y2="10" stroke="#2e7d32" strokeWidth="1.5" markerEnd="url(#miniArrow)" />
+                      <line x1="85" y1="85" x2="85" y2="95" stroke="#ff4444" strokeWidth="1.5" />
+                    </svg>
+                  </Box>
+                )}
+              </Box>
               
               <Chip 
                 label={graph.category} 

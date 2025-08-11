@@ -11,6 +11,7 @@ interface Props {
   goArticles: () => void;
   goStudies: () => void;
   goLudus: () => void;
+  goOthers?: () => void;
 }
 
 const HomeHubMount: React.FC<Props> = (props) => {
