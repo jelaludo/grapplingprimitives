@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Box, useTheme, useMediaQuery, Drawer, useScrollTrigger } from '@mui/material';
 import RetroMessage from '../components/RetroMessage';
 import QuickHome from '../components/QuickHome';
+import QuickMenu from '../components/QuickMenu';
 
 interface HeaderProps {
   onMobileMenuToggle?: () => void;
@@ -122,6 +123,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
         >
           {children}
           <QuickHome onHome={() => window.dispatchEvent(new CustomEvent('gp:navigate-home'))} visible={!gameFullscreen} />
+          <QuickMenu onOpen={() => window.dispatchEvent(new CustomEvent('gp:open-menu'))} visible={!gameFullscreen} />
         </Box>
       </Box>
       

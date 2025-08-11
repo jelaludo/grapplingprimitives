@@ -71,6 +71,14 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
   const handleActionsMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setActionsMenuAnchor(event.currentTarget);
   };
+  // Allow QuickMenu FAB to toggle mobile menu when header is offscreen/behind content
+  React.useEffect(() => {
+    const toggle = () => {
+      if (onMobileMenuToggle) onMobileMenuToggle();
+    };
+    window.addEventListener('gp:toggle-sidebar', toggle as EventListener);
+    return () => window.removeEventListener('gp:toggle-sidebar', toggle as EventListener);
+  }, [onMobileMenuToggle]);
 
   const handleActionsMenuClose = () => {
     setActionsMenuAnchor(null);

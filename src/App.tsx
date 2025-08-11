@@ -87,6 +87,20 @@ function App() {
     window.addEventListener('gp:navigate-home', onGoHome as EventListener);
     return () => window.removeEventListener('gp:navigate-home', onGoHome as EventListener);
   }, []);
+
+  // QuickMenu trigger to open sidebar/categories in matrix
+  useEffect(() => {
+    const onOpenMenu = () => {
+      // If we're already on the matrix view and mobile sidebar is hidden under content,
+      // switch to matrix (no-op) to ensure layout, then trigger the header mobile toggle via event
+      // We'll reuse the existing header mobile toggle by dispatching a click event on a custom hook
+      // For simplicity, we toggle a custom event consumed by Header via onMobileMenuToggle prop when present
+      const evt = new CustomEvent('gp:toggle-sidebar');
+      window.dispatchEvent(evt);
+    };
+    window.addEventListener('gp:open-menu', onOpenMenu as EventListener);
+    return () => window.removeEventListener('gp:open-menu', onOpenMenu as EventListener);
+  }, []);
   const [cardsQuery, setCardsQuery] = useState('');
   const [cardsSelectedCategories, setCardsSelectedCategories] = useState<string[]>([]);
   const betaAuth = useBetaAuth();
