@@ -3,7 +3,13 @@ import { Box, Button, Card, CardActionArea, CardContent, Typography } from '@mui
 const Timer = React.lazy(() => import('./Timer'));
 
 const CoachTools: React.FC = () => {
-  const [view, setView] = useState<'hub'|'timer'>('hub');
+  const [view, setView] = useState<'hub'|'timer'>(() => {
+    // Allow direct deep-linking to timer by honoring a query/hash or default fragment
+    if (typeof window !== 'undefined') {
+      if (window.location.hash.includes('timer')) return 'timer';
+    }
+    return 'hub';
+  });
 
   if (view === 'timer') {
     return (

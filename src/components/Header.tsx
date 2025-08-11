@@ -9,14 +9,17 @@ import {
   useMediaQuery,
   Menu,
   MenuItem,
-  ListItemIcon,
   ListItemText,
   Box,
   Slide,
-  useScrollTrigger
+  useScrollTrigger,
+  Tooltip
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import { useFullscreen } from '../hooks/useFullscreen';
 
 interface HeaderProps {
   onMobileMenuToggle?: () => void;
@@ -39,6 +42,9 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [actionsMenuAnchor, setActionsMenuAnchor] = useState<null | HTMLElement>(null);
   const trigger = useScrollTrigger();
+
+  // Fullscreen controls for non-game pages too
+  const { isFullscreen, toggleFullscreen } = useFullscreen();
 
   // Idle -> compact header after N ms without interaction
   const [isIdle, setIsIdle] = useState(false);
@@ -74,17 +80,19 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
     <Slide appear={false} direction="down" in={!trigger}>
       <AppBar 
         ref={ref}
-        position="static" 
+        position="fixed" 
         sx={{ 
-          backgroundColor: 'background.paper',
+          backgroundColor: 'rgba(0,0,0,0.45)',
+          backdropFilter: 'blur(6px)',
           borderBottom: 1,
           borderColor: 'divider',
           boxShadow: 'none',
           transition: 'opacity 200ms ease, transform 200ms ease',
           opacity: isIdle ? 0.75 : 1,
+          top: 0,
         }}
       >
-        <Toolbar sx={{ justifyContent: 'space-between', minHeight: isIdle ? 40 : 64, transition: 'min-height 200ms ease' }}>
+        <Toolbar sx={{ justifyContent: 'space-between', minHeight: isIdle ? 32 : 40, transition: 'min-height 200ms ease', paddingTop: 'env(safe-area-inset-top)' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           {isMobile && onMobileMenuToggle && (
             <IconButton
@@ -104,7 +112,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
               fontWeight: 700,
               letterSpacing: 1,
               color: 'text.primary',
-                fontSize: isIdle ? 18 : 20,
+                fontSize: isIdle ? 16 : 18,
                 transition: 'font-size 200ms ease',
                 cursor: 'pointer',
             }}
@@ -115,35 +123,20 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
         </div>
         
         <div style={{ display: 'flex', gap: 8 }}>
-          {/* Desktop: Show all buttons */}
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
-            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onMatrixClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>2x2</Button>
-            {process.env.NODE_ENV === 'development' && (
-              <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onCreateNode} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Create Node</Button>
-            )}
-            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onCardsClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Cards</Button>
-            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onSkillCheckClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Skill Check</Button>
-            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onArticlesClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Articles</Button>
-            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onStudiesClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Studies</Button>
-            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onGraphsClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Graphs</Button>
-            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onLudusClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Ludus</Button>
-            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onGamesClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Games</Button>
-            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onCoachClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Coach</Button>
-            <Button variant="outlined" size={isIdle ? 'small' : 'small'} onClick={onHelpClick} sx={{ color: 'text.primary', borderColor: 'divider', '&:hover': { borderColor: 'primary.main' } }}>Help</Button>
-          </Box>
-
-          {/* Mobile: Show hamburger menu + help icon */}
-          <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1, alignItems: 'center' }}>
-            <Button variant="text" size="small" onClick={onHelpClick} sx={{ color: 'text.primary' }}>Help</Button>
-            <IconButton
-              color="inherit"
-              aria-label="actions menu"
-              onClick={handleActionsMenuOpen}
-              sx={{ color: 'text.primary' }}
-            >
-              <MoreVertIcon />
+          <Tooltip title={isFullscreen ? 'Exit Fullscreen' : 'Go Fullscreen'}>
+            <IconButton onClick={toggleFullscreen} size="small" sx={{ color: 'text.primary' }}>
+              {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
             </IconButton>
-          </Box>
+          </Tooltip>
+          {/* Always use compact overflow menu; removes mid-width clipping */}
+          <IconButton
+            color="inherit"
+            aria-label="actions menu"
+            onClick={handleActionsMenuOpen}
+            sx={{ color: 'text.primary' }}
+          >
+            <MoreVertIcon />
+          </IconButton>
         </div>
 
         {/* Actions Menu */}

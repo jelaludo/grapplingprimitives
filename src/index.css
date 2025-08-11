@@ -50,6 +50,11 @@ body.game-fullscreen {
   overflow: hidden !important;
 }
 
+/* Immersive pages (e.g., Home hub): hide header, but allow scrolling */
+body.immersive .MuiAppBar-root {
+  display: none !important;
+}
+
 /* Custom transition durations for RetroMessage */
 .transition-opacity {
   transition-property: opacity;

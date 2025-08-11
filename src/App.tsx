@@ -12,6 +12,7 @@ import Graphs from './components/Graphs';
 import CardsView from './modules/cards/CardsView';
 import CardsSidebar from './modules/cards/CardsSidebar';
 import GamesHub from './modules/games/GamesHub';
+import HomeHubMount from './modules/home/HomeHubMount';
 import CoachTools from './modules/coach/CoachTools';
 import SkillCheck from './modules/skillcheck/SkillCheck';
 import Ludus from './components/Ludus/Ludus';
@@ -73,6 +74,12 @@ function App() {
   const dataSource = useDataSource(isDevelopment);
   const snackbar = useSnackbar();
   const viewManagement = useViewManagement();
+  // Global event to navigate home from QuickHome
+  useEffect(() => {
+    const onGoHome = () => viewManagement.switchToHome();
+    window.addEventListener('gp:navigate-home', onGoHome as EventListener);
+    return () => window.removeEventListener('gp:navigate-home', onGoHome as EventListener);
+  }, []);
   const [cardsQuery, setCardsQuery] = useState('');
   const [cardsSelectedCategories, setCardsSelectedCategories] = useState<string[]>([]);
   const betaAuth = useBetaAuth();
@@ -105,13 +112,12 @@ function App() {
     }
   }, [dataSource.dataSource, dataSource.selectedMasterList]);
 
-  // Handle beta authentication
+  // Handle beta authentication: gate the app until auth
   useEffect(() => {
-    // If user is not authenticated and tries to access protected content, show login
-    if (!betaAuth.isLoading && !betaAuth.isAuthenticated && viewManagement.currentView !== 'matrix') {
+    if (!betaAuth.isLoading && !betaAuth.isAuthenticated) {
       setShowBetaLogin(true);
     }
-  }, [betaAuth.isAuthenticated, betaAuth.isLoading, viewManagement.currentView]);
+  }, [betaAuth.isAuthenticated, betaAuth.isLoading]);
 
   // Handle first click - show beta login if not authenticated
   const handleFirstInteraction = () => {
@@ -120,7 +126,7 @@ function App() {
       return;
     }
     // If authenticated, proceed to matrix view
-    viewManagement.switchToMatrix();
+    viewManagement.switchToHome();
   };
 
   // Filter concepts based on selected filters
@@ -233,6 +239,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {!showBetaLogin && betaAuth.isAuthenticated && (
       <MainLayout
         header={
           <Header 
@@ -293,7 +300,21 @@ function App() {
           ) : null
         }
       >
-        {viewManagement.currentView === 'matrix' ? (
+         {viewManagement.currentView === 'home' ? (
+           <div style={{ height: '100vh', width: '100%', overflow: 'hidden', display: 'flex' }}>
+             <HomeHubMount
+               goMatrix={viewManagement.switchToMatrix}
+               goCards={viewManagement.switchToCards}
+               goGraphs={() => { viewManagement.switchToGraphs(); setGraphsResetToken(prev => prev + 1); }}
+               goGames={(initial?: 'none' | 'centroid' | 'memory') => viewManagement.switchToGamesWithInitial(initial ?? 'none')}
+               goCoach={viewManagement.switchToCoach}
+               goSkillCheck={viewManagement.switchToSkillCheck}
+               goArticles={viewManagement.switchToArticles}
+               goStudies={viewManagement.switchToStudies}
+               goLudus={viewManagement.switchToLudus}
+              />
+           </div>
+         ) : viewManagement.currentView === 'matrix' ? (
           <ScatterPlot
             concepts={filteredConcepts}
             addConcept={addConcept}
@@ -318,7 +339,7 @@ function App() {
         ) : viewManagement.currentView === 'articles' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <div style={{ marginBottom: '20px' }}>
-              <button onClick={viewManagement.switchToMatrix} style={BACK_BUTTON_STYLE}>
+             <button onClick={viewManagement.switchToHome} style={BACK_BUTTON_STYLE}>
                 ← Back to Matrix
               </button>
             </div>
@@ -327,7 +348,7 @@ function App() {
         ) : viewManagement.currentView === 'studies' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <div style={{ marginBottom: '20px' }}>
-              <button onClick={viewManagement.switchToMatrix} style={BACK_BUTTON_STYLE}>
+             <button onClick={viewManagement.switchToHome} style={BACK_BUTTON_STYLE}>
                 ← Back to Matrix
               </button>
             </div>
@@ -339,11 +360,11 @@ function App() {
           <div style={VIEW_CONTAINER_STYLE}>
             <CardsView concepts={dataManagement.concepts} selectedCategories={cardsSelectedCategories} query={cardsQuery} />
           </div>
-        ) : viewManagement.currentView === 'games' ? (
+         ) : viewManagement.currentView === 'games' ? (
           <div style={{ height: '100vh', width: '100%', overflow: 'hidden', display: 'flex' }}>
-            <GamesHub onExit={viewManagement.switchToMatrix} />
+            <GamesHub onExit={viewManagement.switchToHome} initial={viewManagement.gamesInitial} />
           </div>
-        ) : viewManagement.currentView === 'coach' ? (
+         ) : viewManagement.currentView === 'coach' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <CoachTools />
           </div>
@@ -353,6 +374,7 @@ function App() {
           </div>
         )}
       </MainLayout>
+      )}
 
       {/* Development Mode Toggle */}
       <DevModeToggle
@@ -498,7 +520,7 @@ function App() {
             const success = await betaAuth.login(password);
             if (success) {
               setShowBetaLogin(false);
-              viewManagement.switchToMatrix();
+              viewManagement.switchToHome();
               snackbar.showMessage('Beta access granted!');
             }
             return success;

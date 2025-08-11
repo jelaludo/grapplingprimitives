@@ -1,25 +1,29 @@
 import { useState, useCallback } from 'react';
 
-export type View = 'matrix' | 'articles' | 'studies' | 'graphs' | 'ludus' | 'cards' | 'games' | 'coach' | 'skillcheck';
+export type View = 'home' | 'matrix' | 'articles' | 'studies' | 'graphs' | 'ludus' | 'cards' | 'games' | 'coach' | 'skillcheck';
 
 // Pre-computed constants
-const DEFAULT_VIEW: View = 'matrix';
+const DEFAULT_VIEW: View = 'home';
 
 export const useViewManagement = () => {
   const [currentView, setCurrentView] = useState<View>(DEFAULT_VIEW);
+  const [gamesInitial, setGamesInitial] = useState<'none' | 'centroid' | 'memory'>('none');
 
+  const switchToHome = useCallback(() => setCurrentView('home'), []);
   const switchToMatrix = useCallback(() => setCurrentView('matrix'), []);
   const switchToArticles = useCallback(() => setCurrentView('articles'), []);
   const switchToStudies = useCallback(() => setCurrentView('studies'), []);
   const switchToGraphs = useCallback(() => setCurrentView('graphs'), []);
   const switchToLudus = useCallback(() => setCurrentView('ludus'), []);
   const switchToCards = useCallback(() => setCurrentView('cards'), []);
-  const switchToGames = useCallback(() => setCurrentView('games'), []);
+  const switchToGames = useCallback(() => { setGamesInitial('none'); setCurrentView('games'); }, []);
+  const switchToGamesWithInitial = useCallback((initial: 'none' | 'centroid' | 'memory') => { setGamesInitial(initial); setCurrentView('games'); }, []);
   const switchToCoach = useCallback(() => setCurrentView('coach'), []);
   const switchToSkillCheck = useCallback(() => setCurrentView('skillcheck'), []);
 
   return {
     currentView,
+    switchToHome,
     switchToMatrix,
     switchToArticles,
     switchToStudies,
@@ -27,7 +31,9 @@ export const useViewManagement = () => {
     switchToLudus,
     switchToCards
     ,switchToGames,
+    switchToGamesWithInitial,
     switchToCoach,
-    switchToSkillCheck
+    switchToSkillCheck,
+    gamesInitial
   };
 }; 

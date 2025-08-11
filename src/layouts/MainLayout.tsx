@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Box, useTheme, useMediaQuery, Drawer, useScrollTrigger } from '@mui/material';
 import RetroMessage from '../components/RetroMessage';
+import QuickHome from '../components/QuickHome';
 
 interface HeaderProps {
   onMobileMenuToggle?: () => void;
@@ -69,13 +70,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
 
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      {/* Header */}
-      <Box sx={{ height: computedHeaderHeight, transition: 'height 200ms ease', flexShrink: 0 }}>
-        {headerWithMobileMenu}
+      {/* Header (fixed) - we overlay it; reserve no vertical space */}
+      <Box sx={{ position: 'fixed', inset: 0, pointerEvents: 'none' }}>
+        <Box sx={{ pointerEvents: 'auto' }}>
+          {headerWithMobileMenu}
+        </Box>
       </Box>
 
       {/* Main Content Area */}
-      <Box sx={{ display: 'flex', flex: 1, minHeight: 0, height: `calc(100vh - ${computedHeaderHeight}px)` }}>
+      <Box sx={{ display: 'flex', flex: 1, minHeight: 0, height: '100vh' }}>
         {/* Desktop Sidebar - Only when a sidebar is provided */}
         {!isMobile && sidebar ? sidebarContent : null}
 
@@ -113,9 +116,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
             display: 'flex',
             overflow: 'hidden',
             backgroundColor: 'background.default',
+            // Minimal top padding, but allow immersive pages to opt-out by adding body.immersive
+            pt: gameFullscreen || (typeof document !== 'undefined' && document.body.classList.contains('immersive')) ? 0 : { xs: 1, md: 2 },
           }}
         >
           {children}
+          <QuickHome onHome={() => window.dispatchEvent(new CustomEvent('gp:navigate-home'))} visible={!gameFullscreen} />
         </Box>
       </Box>
       

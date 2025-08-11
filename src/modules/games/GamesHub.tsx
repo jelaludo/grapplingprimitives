@@ -1,13 +1,17 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Box, Card, CardActionArea, CardContent, Typography, Button } from '@mui/material';
 
 const Centroid = React.lazy(() => import('./centroid/CentroidView'));
 const Memory = React.lazy(() => import('./memory/MemoryGame'));
 
-interface GamesHubProps { onExit?: () => void }
+interface GamesHubProps { onExit?: () => void; initial?: 'none' | 'centroid' | 'memory' }
 
-const GamesHub: React.FC<GamesHubProps> = ({ onExit }) => {
-  const [selected, setSelected] = React.useState<'none'|'centroid'|'memory'>('none');
+const GamesHub: React.FC<GamesHubProps> = ({ onExit, initial = 'none' }) => {
+  const [selected, setSelected] = React.useState<'none'|'centroid'|'memory'>(initial);
+
+  useEffect(() => {
+    setSelected(initial);
+  }, [initial]);
 
   const renderCentroidPreview = () => {
     // Mini sample puzzle (responsive, fills width)
