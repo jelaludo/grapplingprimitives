@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Button, IconButton, Stack, Typography, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import { useFullscreen } from '../../..//hooks/useFullscreen';
 
 // Constants
 const TOTAL_IMAGES = 160;
@@ -197,14 +200,23 @@ const MemoryGame: React.FC<MemoryGameProps> = ({ onClose }) => {
 
   const cardHeight = Math.floor(cardWidth * CARD_RATIO);
 
-  return (
-    <Box sx={{ width: '100%', height: '100vh', p: 1, display: 'flex', flexDirection: 'column' }}>
-      <IconButton onClick={() => { document.body.classList.remove('game-fullscreen'); onClose?.(); }} aria-label="close" sx={{ position: 'fixed', top: 8, left: 8, zIndex: 10, bgcolor: 'rgba(0,0,0,0.35)', color: '#fff' }}>
-        <CloseIcon />
-      </IconButton>
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
-        <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: 'DS-Digital, ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>Jiu-Jitsu Jungle Memory Game</Typography>
+  return (
+    <Box ref={containerRef} sx={{ width: '100%', height: '100vh', p: 1, display: 'flex', flexDirection: 'column' }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1, minHeight: 40 }}>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Tooltip title={isFullscreen ? 'Exit Fullscreen' : 'Go Fullscreen'}>
+            <IconButton onClick={toggleFullscreen} aria-label="fullscreen" sx={{ bgcolor: 'rgba(0,0,0,0.35)', color: '#fff', '&:hover': { bgcolor: 'rgba(0,0,0,0.5)' }, width: 32, height: 32 }}>
+              {isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+            </IconButton>
+          </Tooltip>
+          <IconButton onClick={() => { document.body.classList.remove('game-fullscreen'); onClose?.(); }} aria-label="close" sx={{ bgcolor: 'rgba(0,0,0,0.35)', color: '#fff', '&:hover': { bgcolor: 'rgba(0,0,0,0.5)' }, width: 32, height: 32 }}>
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: 'DS-Digital, ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>Jiu-Jitsu Jungle Memory Game</Typography>
+        </Stack>
         <Stack direction="row" spacing={2} alignItems="center">
           <Typography variant="caption" sx={{ fontFamily: 'DS-Digital, ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>Time: {String(Math.floor(elapsedSec/60)).padStart(2,'0')}:{String(elapsedSec%60).padStart(2,'0')}</Typography>
           <Typography variant="caption" sx={{ fontFamily: 'DS-Digital, ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>Moves: {moves}</Typography>

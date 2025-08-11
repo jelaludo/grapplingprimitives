@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, useTheme, useMediaQuery, Drawer, useScrollTrigger } from '@mui/material';
 import RetroMessage from '../components/RetroMessage';
 
@@ -52,7 +52,20 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
     onMobileMenuToggle: handleDrawerToggle,
   });
 
-  const computedHeaderHeight = useMemo(() => (scrollTrigger ? 0 : HEADER_HEIGHT), [scrollTrigger]);
+  const [gameFullscreen, setGameFullscreen] = useState<boolean>(false);
+
+  useEffect(() => {
+    const update = () => setGameFullscreen(typeof document !== 'undefined' && document.body.classList.contains('game-fullscreen'));
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  const computedHeaderHeight = useMemo(() => {
+    if (gameFullscreen) return 0;
+    return scrollTrigger ? 0 : HEADER_HEIGHT;
+  }, [gameFullscreen, scrollTrigger]);
 
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
