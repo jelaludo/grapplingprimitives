@@ -13,7 +13,7 @@ const messages = [
   { en: "Theory is nothing without mat time", jp: "マット時間なければ理論だけは役に立たない" },
   { en: "Read less, roll more", jp: "見学よりも、動こう" },
   { en: "Daily beats Perfect", jp: "完璧より毎日" },
-  { en: "Speak Friend, and Enter", jp: "唱えよ、友、そして入れ" },
+  { en: "Speak Friend, and Enter (yes LotR reference)", jp: "唱えよ、友、そして入れ" },
   { en: "Mat Time > Screen Time", jp: "マット時間 > スクリーン時間" },
   { en: "Keep Showing up", jp: "現れ続けろ" },
   { en: "Don't let thinking replace doing", jp: "考えることで行動を置き換えるな" },

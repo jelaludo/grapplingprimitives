@@ -49,6 +49,8 @@ const OthersHub: React.FC<OthersHubProps> = ({ onBack, gotoArticles, gotoCoach, 
             </CardContent>
           </CardActionArea>
         </Card>
+
+        {/* Experimental visualizations removed */}
       </Box>
     </Box>
   );

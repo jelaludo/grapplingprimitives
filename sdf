@@ -1,0 +1,516 @@
+[33mcommit 81f7a2a86f56f22c30d8632b20a03212b6468c3b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Aug 12 08:57:38 2025 +0900
+
+    brought back RetroMessages
+
+[33mcommit de5c2ce69b48700e806f59aa8fc98df39cb0e0d6[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Aug 12 08:39:45 2025 +0900
+
+    2x2 navigation back on mobile
+
+[33mcommit 0adb9d0769a4aa63d9fa728fc9a08e0327be8add[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Mon Aug 11 14:44:26 2025 +0900
+
+    landing page tweaks responsive
+
+[33mcommit 16fb83993c7d595dfb9256f9e131015adaafd67e[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Mon Aug 11 14:24:46 2025 +0900
+
+    new Cards navigation
+
+[33mcommit 298ea0fe5e0d643f779dd745e05eb411737b3ff5[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Mon Aug 11 13:57:31 2025 +0900
+
+    Better navigation
+
+[33mcommit 3b4eba6f01dffe797988755658d81e84ad1994e1[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Mon Aug 11 12:20:31 2025 +0900
+
+    Full screen mode for games
+
+[33mcommit 00e674d8274b7aeae9efaa5b4c80012e3fe6721c[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Aug 10 15:24:47 2025 +0900
+
+    Games Landing Page
+
+[33mcommit bb83635a5e7c0971616f6add6bd0e450eb9cbc15[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Aug 10 15:15:31 2025 +0900
+
+    All metroids fonts to Digi DS
+
+[33mcommit bd1f4e0328a61e97a4b1d479861f4a622c7ee549[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Aug 10 14:50:51 2025 +0900
+
+    game tweaks
+
+[33mcommit 3a62da0b244f49ad1ac4721af2ffd9cbdcb49528[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Aug 10 14:09:40 2025 +0900
+
+    Animations fix for JJJ memory
+
+[33mcommit 9968607b87074516c4548f1aeb759e3c4f49c568[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Aug 10 12:36:25 2025 +0900
+
+    memory game shuffle anim
+
+[33mcommit 5a77513b5b30d0055d19a45e706b6ef111ed2b48[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 22:06:58 2025 +0900
+
+    Memory game responsive design
+
+[33mcommit 27d8d9ad1391fc32475a11a40f013030e6dc3cb4[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 21:53:47 2025 +0900
+
+    memory game
+
+[33mcommit 2e09552699002ab1a128d0d359a74c8e18f405e4[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 18:39:57 2025 +0900
+
+    Centroid Top
+
+[33mcommit 37b0567f256c39cad325d6fa6e69b886c718281b[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 18:18:28 2025 +0900
+
+    Fixed Survey
+
+[33mcommit f1bf0c3f4c5360459df1a44e793fc8aa0077a6aa[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 17:15:43 2025 +0900
+
+    Skill Check
+
+[33mcommit 9a71c26d6c18a343a6bcfc025808353a0d54d80a[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 15:11:49 2025 +0900
+
+    Centroid Fix + removed icons
+
+[33mcommit fbd946d3644362cfcc279fcef0837bf708d816df[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 15:03:35 2025 +0900
+
+    Centroid Fixes
+
+[33mcommit b489a5cafc2deee2bc3b286ef73011fe6e5accb0[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 14:40:20 2025 +0900
+
+    Centroid Test
+
+[33mcommit 74eec4013bfdded93f1e8b3c3ce17b763ae221b9[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 14:21:40 2025 +0900
+
+    Fix TS: use React.ReactElement[] instead of JSX.Element[]
+
+[33mcommit a8788017b4f6ef013f6e93acbc2035f79d4861a4[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 14:12:35 2025 +0900
+
+    Centroid integration
+
+[33mcommit e09ce9818ee9114b860c55b5b0dec09a5e1af61e[m
+Merge: 8fd0576 31e0cc6
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 14:12:18 2025 +0900
+
+    Merge feature: centroid full integration
+
+[33mcommit 31e0cc693c61d70a8990df71625e8d63d9ac3dc5[m[33m ([m[1;32mfeature/centroid-full-integration[m[33m)[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 13:49:36 2025 +0900
+
+    Add CentroidMatrixGuess as submodule for full integration work
+
+[33mcommit 8fd0576ad7b1e3db4212c583cfe9da7618179a5b[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Aug 9 13:33:16 2025 +0900
+
+    CARDS view
+
+[33mcommit 1f222fbf7f154c145506b71d2da8ef4eea0ac07b[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Fri Aug 8 15:59:01 2025 +0900
+
+    Carousel Card View
+
+[33mcommit 12aa21ddd347608903d2c57f810f13fc9d380305[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Fri Aug 8 13:55:42 2025 +0900
+
+    graphs layout
+
+[33mcommit 5bb3d80fea90ed1f3e04cd8adb78d78aaf6414cf[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Fri Aug 8 12:37:56 2025 +0900
+
+    GPT5 json rework
+
+[33mcommit ae92a957ad1c0f1fab384b66451e4199e1ab476e[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Fri Aug 8 11:37:41 2025 +0900
+
+    Phase 1: Move versioned masterlist TS files to backups (safe dedupe)
+
+[33mcommit a1013dd9f3a987374278e950411ee1a82cccc41a[m[33m ([m[1;31morigin/LudusBranch[m[33m, [m[1;32mLudusBranch[m[33m)[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Aug 5 22:10:35 2025 +0900
+
+    Ludus Nodes Test
+
+[33mcommit 16316c15cca2a692a2d3259380e839733918d082[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Aug 5 16:15:34 2025 +0900
+
+    Physics, Restitution
+
+[33mcommit efc5d0397f48c7e1c89a4853c2c4d605fc82e30c[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Aug 5 01:46:33 2025 +0900
+
+    ludus physics tests
+
+[33mcommit be3051534ac667799dcc175b8307b05314e3748c[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Aug 5 00:32:26 2025 +0900
+
+    LudusBranch Scaffolding
+
+[33mcommit d845f963fde890c46379e061b2cfaa8932ea9792[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Mon Aug 4 23:55:20 2025 +0900
+
+    Ludus Branch Dependencies
+
+[33mcommit eec316a112c060d2d5324e4ba0949df946fe63b4[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Wed Jul 30 18:51:28 2025 +0900
+
+    Graph Tweaks + nav
+
+[33mcommit 9130bed1ce58f8f5aedf1de64ce64789a66b05cc[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Wed Jul 30 14:46:38 2025 +0900
+
+    3rd Graph
+
+[33mcommit d86c210b4c40e59b6d0a76bb96215054643221b2[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Wed Jul 30 14:10:00 2025 +0900
+
+    graph work
+
+[33mcommit 15423cef3b3da2fe4fb952f50fbd04296e17b466[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Wed Jul 30 13:17:59 2025 +0900
+
+    adding graphs w/recharts
+
+[33mcommit f2aab962443483f45d4742fb4eb4cbfaa49d4d7a[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 29 15:28:52 2025 +0900
+
+    labels + login
+
+[33mcommit 6967a1f1c423b53f2edf1ea9ff5409341ef929cc[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 29 14:46:36 2025 +0900
+
+    labels and pwd
+
+[33mcommit c8452ee89e8d4a425352eaa45cd3caa930906147[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 29 14:01:26 2025 +0900
+
+    pwd test 2
+
+[33mcommit db70e42ebb2cc066aea9b12bf055422f3615b4f9[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 29 13:21:17 2025 +0900
+
+    Vercel Serverless Limit
+
+[33mcommit 821cf6b115bdec8a1a83f8db0956bb219f07f545[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 29 13:07:54 2025 +0900
+
+    login hash troubleshoot 01
+
+[33mcommit ce3979d48a0552e4b0b8d0c71c0537e0ef44e08c[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 29 12:56:36 2025 +0900
+
+    serverless login vercel
+
+[33mcommit 869f8a1ac025ab0955d5e548f71bccd6afc0c42c[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 29 12:30:38 2025 +0900
+
+    hash fix
+
+[33mcommit 905f9b47985d4c3d7fed6296bc214805b989b056[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 29 11:34:50 2025 +0900
+
+    login ctrl
+
+[33mcommit c224a76406564af1e2dd8119b934609ceb74939a[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 29 10:48:58 2025 +0900
+
+    pwd set-up
+
+[33mcommit 41e193982fb8dd464b17e5288fdeaf6dae3ad6a6[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 27 17:54:54 2025 +0900
+
+    latest masterlist in prod
+
+[33mcommit d9f1a1daee7ba864777ad00094362a4dde7e407d[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 27 16:18:08 2025 +0900
+
+    Cormack Principles Refactored Done
+
+[33mcommit ac0a81e15876c8ebd6cab5d1a1e738beaad7bbd2[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 27 16:01:10 2025 +0900
+
+    Phase 6A refactor.  949 to 280 lines
+
+[33mcommit 6868f8a64f5c4a0b818ee6ce0be97ae3c53c3c51[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 27 15:39:52 2025 +0900
+
+    Refactor p5, sidebar
+
+[33mcommit a6c668cb1817824392e33f1f0761ee8fa63a5dd3[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 27 15:14:13 2025 +0900
+
+    mobile single touch node card opening
+
+[33mcommit 8f4279a12241f037ca6cbc3813fa6f15b35585c7[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 27 15:12:01 2025 +0900
+
+    fixed infinite terminal loop
+
+[33mcommit 8879418aee0df00997b6df61fa18fc6f1c29ccb2[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 27 13:24:54 2025 +0900
+
+    Carmack Fix1 RetroMsg
+
+[33mcommit ec23d5a886c798b2cb275e377176cb53c598a021[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sat Jul 26 18:52:45 2025 +0900
+
+    Terminal msg only on 1st load
+
+[33mcommit c197fb865a3597b394a81fb91d326e333f31f79b[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Mon Jul 21 15:43:19 2025 +0900
+
+    disabled m.modal for studies
+
+[33mcommit 71d32201ec6bc0d82454007bbbeb47a0b8cbf48b[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Mon Jul 21 15:39:05 2025 +0900
+
+    add Studies
+
+[33mcommit 707692353c108a0ba5795a75b5d7ef0a0eda5adb[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Mon Jul 21 12:08:28 2025 +0900
+
+    Adding Articles
+
+[33mcommit 29a71a2d3729e2c54c7890f2e3d661478d09bd84[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 20 23:17:05 2025 +0900
+
+    Modal Timers tweaks
+
+[33mcommit 9f763e505073c97d5ee4c98af9bbd196f1d3b273[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 20 16:50:44 2025 +0900
+
+    dynamic production list update
+
+[33mcommit bd87a4e14c55968a419af87bf805c3825d553c9f[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 20 16:25:48 2025 +0900
+
+    ts 170?
+
+[33mcommit 45ff7c3fd180b2d46d1587d39b39170cbd7a3f54[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 20 15:51:17 2025 +0900
+
+    backgroundColor: 'rgba(0, 0, 0, 0.80)'
+
+[33mcommit c2c503855c68cf570e9bea32b7f74304f861555e[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 20 14:46:16 2025 +0900
+
+    motivational msg bilingual responsive
+
+[33mcommit be02569b2384022c43b33e2993e90e4b0b1f8398[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Sun Jul 20 14:36:58 2025 +0900
+
+    motivational messages
+
+[33mcommit 329b2d12fb0e3e41d045adade9c40af75d4fb713[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Wed Jul 16 13:18:55 2025 +0900
+
+    Fix production data loading: simplify import and add debugging
+
+[33mcommit f07748f7949e62dd7dc9157584a661c5ed00f2a9[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Wed Jul 16 13:15:59 2025 +0900
+
+    pesky _id fixed
+
+[33mcommit 611fdb4cd2fb8dba5b568de3b225162b173c73df[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Wed Jul 16 12:53:29 2025 +0900
+
+    Production Seeks Latest Masterlist*.ts
+
+[33mcommit 6926c20649ea4e287914472c44a437880d4fc44d[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Wed Jul 16 12:25:24 2025 +0900
+
+    dynamic axis labels
+
+[33mcommit 16df865dc1ca242e990393ed35e87ae6983553ff[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 15 21:58:13 2025 +0900
+
+    Vercel Analytics test
+
+[33mcommit 0912bc36a5b00d412e2e656982bbaf6fac4c48d6[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 15 21:45:31 2025 +0900
+
+    labels fix, data.gitHash fix
+
+[33mcommit f4cfe3931c31cd72fdcbdb56ecbe1588d9aff792[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 15 21:13:39 2025 +0900
+
+    versioning and help dialog
+
+[33mcommit 540ab6e2814fc97c0f56bb07974cd66c5fa31b50[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 15 20:12:19 2025 +0900
+
+    Production Ready MasterList
+
+[33mcommit e45f570919c85102f55dc37ba0bde8a8bd60ea00[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 15 20:07:52 2025 +0900
+
+    dynamic .ts production loading
+
+[33mcommit 5ca5afb1e8638117751bf2693a1f2207c74e50ed[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 15 19:58:29 2025 +0900
+
+    Save .ts to production
+
+[33mcommit 7a84453365baa4f77c7036bd3c9db9846bd1e3c1[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 15 19:01:21 2025 +0900
+
+    Working Locally, not workking in production with .ts
+
+[33mcommit 7adab45f2e2dcda399b515040f7079984cfe949d[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue Jul 15 18:08:11 2025 +0900
+
+    DEV MODE, Local first
+
+[33mcommit 5582dcdc4e3a8558fc9d236562ee66faf522b75e[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Thu Jul 3 17:58:00 2025 +0900
+
+    fixed Export .json to dual format to use for local dev
+
+[33mcommit 30ae30f96d0f557a7ede9dac2f06014e8ccf2d2d[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Thu Jul 3 15:00:27 2025 +0900
+
+    thin Inter font, new cards
+
+[33mcommit d0c946d418a3284e3528c4133c2a1d6e7ebce0a9[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Thu Jul 3 14:07:40 2025 +0900
+
+    new dev local data + new view cards
+
+[33mcommit 94c3d9a40bbc6f03a2a3dff3de361756299d0d38[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Thu Jul 3 12:15:50 2025 +0900
+
+    Mobile Design, Grappling Primitives
+
+[33mcommit e8d928ab03c1c732b453f836ca0d167a13ae9355[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue May 27 12:59:15 2025 +0900
+
+    added ping to search
+
+[33mcommit 074a1d98f34d498d7b613d8c00e84a922b3f176a[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue May 27 12:55:02 2025 +0900
+
+    Search triggers note
+
+[33mcommit d8c7cb5373e28871b387d2738394a79d4f61d4d2[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue May 27 12:39:45 2025 +0900
+
+    Fixed Edits, now reflected
+
+[33mcommit cd099e3f3617c14216c7622c6c8c1d5d291aa74f[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue May 27 12:30:31 2025 +0900
+
+    Commit before _id mongo refactor
+
+[33mcommit 6cae92be32cfe702d168857fe5f336be40e4d1d1[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Tue May 27 09:50:50 2025 +0900
+
+    Categories Toggle
+
+[33mcommit f5d957cabd412658307e8ea3f6081367f9a4b2a4[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Mon May 26 19:29:28 2025 +0900
+
+    hunting a missing dot
+
+[33mcommit b42560a3f9809605df02960992a4be70737bc173[m
+Author: jelaludo <40551265+jelaludo@users.noreply.github.com>
+Date:   Mon May 26 19:11:53 2025 +0900
+
+    Adding debug log

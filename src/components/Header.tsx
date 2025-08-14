@@ -71,14 +71,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
   const handleActionsMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setActionsMenuAnchor(event.currentTarget);
   };
-  // Allow QuickMenu FAB to toggle mobile menu when header is offscreen/behind content
-  React.useEffect(() => {
-    const toggle = () => {
-      if (onMobileMenuToggle) onMobileMenuToggle();
-    };
-    window.addEventListener('gp:toggle-sidebar', toggle as EventListener);
-    return () => window.removeEventListener('gp:toggle-sidebar', toggle as EventListener);
-  }, [onMobileMenuToggle]);
+  // Removed QuickMenu integration
 
   const handleActionsMenuClose = () => {
     setActionsMenuAnchor(null);
@@ -98,6 +91,7 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
           transition: 'opacity 200ms ease, transform 200ms ease',
           opacity: isIdle ? 0.75 : 1,
           top: 0,
+          zIndex: (theme) => theme.zIndex.appBar,
         }}
       >
         <Toolbar sx={{ justifyContent: 'space-between', minHeight: isIdle ? 32 : 40, transition: 'min-height 200ms ease', paddingTop: 'env(safe-area-inset-top)' }}>
@@ -113,21 +107,33 @@ const Header = React.forwardRef<HTMLDivElement, HeaderProps>(({ onMobileMenuTogg
               <MenuIcon />
             </IconButton>
           )}
-          <Typography 
-            variant="h6" 
-            component="div"
-            sx={{ 
-              fontWeight: 700,
-              letterSpacing: 1,
-              color: 'text.primary',
-                fontSize: isIdle ? 16 : 18,
-                transition: 'font-size 200ms ease',
-                cursor: 'pointer',
-            }}
-            onClick={onTitleClick}
-          >
-            Grappling Primitives
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography 
+              variant="h6" 
+              component="div"
+              sx={{ 
+                fontWeight: 700,
+                letterSpacing: 1,
+                color: 'text.primary',
+                  fontSize: isIdle ? 16 : 18,
+                  transition: 'font-size 200ms ease',
+                  cursor: 'pointer',
+              }}
+              onClick={onTitleClick}
+            >
+              Grappling Primitives
+            </Typography>
+            {process.env.NODE_ENV === 'development' && (
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={onCreateNode}
+                sx={{ ml: 1, textTransform: 'none', color: 'text.primary', borderColor: 'divider', display: { xs: 'none', sm: 'inline-flex' } }}
+              >
+                Create Node
+              </Button>
+            )}
+          </Box>
         </div>
         
         <div style={{ display: 'flex', gap: 8 }}>

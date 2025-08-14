@@ -74,6 +74,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   );
 
   const handleSearchResultClick = (concept: BJJConcept) => {
+    // Ensure the clicked concept is visible even if its category is not currently selected
+    if (selectedCategories.length > 0 && !selectedCategories.includes(concept.category)) {
+      setSelectedCategories(prev => Array.from(new Set([...prev, concept.category])));
+    }
     setSelected(concept);
     setSearchText('');
     setShowSearchResults(false);
@@ -196,7 +200,8 @@ const Sidebar: React.FC<SidebarProps> = ({
               {searchResults.map(concept => (
                 <div
                   key={concept.id}
-                  onClick={() => handleSearchResultClick(concept)}
+                  // Use onMouseDown so selection happens before input onBlur hides the list
+                  onMouseDown={(e) => { e.preventDefault(); handleSearchResultClick(concept); }}
                   className="search-result-item"
                   style={{
                     padding: 8,

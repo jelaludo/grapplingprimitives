@@ -71,7 +71,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Header (fixed) - we overlay it; reserve no vertical space */}
-      <Box sx={{ position: 'fixed', inset: 0, pointerEvents: 'none' }}>
+      <Box sx={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: theme.zIndex.appBar }}>
         <Box sx={{ pointerEvents: 'auto' }}>
           {headerWithMobileMenu}
         </Box>
@@ -122,10 +122,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
         >
           {children}
           <QuickHome onHome={() => window.dispatchEvent(new CustomEvent('gp:navigate-home'))} visible={!gameFullscreen} />
-          {/* Only show QuickMenu on matrix page where categories exist */}
-          {typeof window !== 'undefined' && window.document?.body?.dataset?.view === 'matrix' && (
-            <QuickMenu onOpen={() => window.dispatchEvent(new CustomEvent('gp:open-menu'))} visible={!gameFullscreen} />
-          )}
+          {/* Mobile quick menu to open the categories drawer when sidebar is provided */}
+          <QuickMenu onOpen={handleDrawerToggle} visible={isMobile && Boolean(sidebar) && !gameFullscreen} />
         </Box>
       </Box>
     </Box>

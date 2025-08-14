@@ -1,0 +1,533 @@
+# BodyParts3D Anatomy Module Implementation
+
+## Overview
+Create a new module that displays BodyParts3D anatomical models with 3D interaction in development and optimized 2D screenshots in production. The module supports annotations and multiple anatomical viewpoints.
+
+## Directory Structure
+
+Create the following directory structure in your existing React project:
+
+```
+src/
+├── modules/
+│   └── anatomy/
+│       ├── components/
+│       │   ├── AnatomyViewer.jsx          # Main viewer component
+│       │   ├── ThreeDViewer.jsx           # Development 3D viewer
+│       │   ├── TwoDViewer.jsx             # Production 2D viewer
+│       │   ├── AnnotationSystem.jsx       # Annotation overlay
+│       │   └── ViewControls.jsx           # View selection controls
+│       ├── hooks/
+│       │   ├── useAnatomyModel.js         # Model loading hook
+│       │   └── useScreenshots.js          # Screenshot management
+│       ├── config/
+│       │   ├── viewpoints.js              # Camera positions config
+│       │   ├── bodyParts.js               # Available body parts
+│       │   └── annotations.js             # Annotation definitions
+│       ├── utils/
+│       │   └── screenshotGenerator.js     # Build-time screenshot tool
+│       └── assets/
+│           ├── models/                    # BodyParts3D model files
+│           └── screenshots/               # Generated 2D images
+├── scripts/
+│   └── generateScreenshots.js             # Build script
+└── public/
+    └── models/                            # Public model files
+```
+
+## Dependencies Installation
+
+Add these dependencies to your project:
+
+```bash
+# Development dependencies (3D functionality)
+npm install @react-three/fiber @react-three/drei three
+
+# Build-time dependencies for screenshot generation
+npm install --save-dev canvas jsdom three-stdlib
+
+# Optional: for better model loading
+npm install @react-three/gltfjsx
+```
+
+## Component Implementation
+
+### 1. Main AnatomyViewer Component
+
+```jsx
+// src/modules/anatomy/components/AnatomyViewer.jsx
+import { lazy, Suspense } from 'react'
+
+const ThreeDViewer = lazy(() => import('./ThreeDViewer'))
+const TwoDViewer = lazy(() => import('./TwoDViewer'))
+
+const AnatomyViewer = ({ 
+  bodyPart, 
+  view = 'anterior', 
+  showAnnotations = true,
+  onViewChange,
+  className = ''
+}) => {
+  const isDev = import.meta.env.DEV
+  
+  if (isDev) {
+    return (
+      <Suspense fallback={<div className="anatomy-loading">Loading 3D viewer...</div>}>
+        <ThreeDViewer 
+          bodyPart={bodyPart}
+          view={view}
+          showAnnotations={showAnnotations}
+          onViewChange={onViewChange}
+          className={className}
+        />
+      </Suspense>
+    )
+  }
+  
+  return (
+    <TwoDViewer 
+      bodyPart={bodyPart}
+      view={view}
+      showAnnotations={showAnnotations}
+      onViewChange={onViewChange}
+      className={className}
+    />
+  )
+}
+
+export default AnatomyViewer
+```
+
+### 2. Development 3D Viewer
+
+```jsx
+// src/modules/anatomy/components/ThreeDViewer.jsx
+import { Canvas } from '@react-three/fiber'
+import { OrbitControls, useGLTF, Environment } from '@react-three/drei'
+import { Suspense } from 'react'
+import AnnotationSystem from './AnnotationSystem'
+import ViewControls from './ViewControls'
+import { viewpoints } from '../config/viewpoints'
+
+const ModelMesh = ({ bodyPart }) => {
+  const { nodes } = useGLTF(`/models/${bodyPart}.glb`)
+  
+  return (
+    <mesh 
+      geometry={nodes.mesh?.geometry} 
+      position={[0, 0, 0]}
+    >
+      <meshStandardMaterial 
+        color="#ff6b6b" 
+        roughness={0.3}
+        metalness={0.1}
+      />
+    </mesh>
+  )
+}
+
+const ThreeDViewer = ({ 
+  bodyPart, 
+  view, 
+  showAnnotations, 
+  onViewChange, 
+  className 
+}) => {
+  const viewConfig = viewpoints[bodyPart]?.[view] || viewpoints.default[view]
+  
+  return (
+    <div className={`anatomy-3d-container ${className}`}>
+      <ViewControls 
+        currentView={view} 
+        onViewChange={onViewChange}
+        availableViews={Object.keys(viewpoints[bodyPart] || {})}
+      />
+      
+      <Canvas 
+        camera={{ 
+          position: viewConfig?.position || [0, 0, 5],
+          fov: 50
+        }}
+        style={{ height: '500px' }}
+      >
+        <ambientLight intensity={0.4} />
+        <directionalLight position={[10, 10, 5]} intensity={0.8} />
+        <pointLight position={[-10, -10, -5]} intensity={0.3} />
+        
+        <Suspense fallback={null}>
+          <ModelMesh bodyPart={bodyPart} />
+          <Environment preset="studio" />
+        </Suspense>
+        
+        {showAnnotations && (
+          <AnnotationSystem 
+            bodyPart={bodyPart} 
+            view={view} 
+          />
+        )}
+        
+        <OrbitControls 
+          target={viewConfig?.target || [0, 0, 0]}
+          enablePan={true}
+          enableZoom={true}
+          enableRotate={true}
+        />
+      </Canvas>
+    </div>
+  )
+}
+
+export default ThreeDViewer
+```
+
+### 3. Production 2D Viewer
+
+```jsx
+// src/modules/anatomy/components/TwoDViewer.jsx
+import { useState, useEffect } from 'react'
+import AnnotationSystem from './AnnotationSystem'
+import ViewControls from './ViewControls'
+import { viewpoints } from '../config/viewpoints'
+
+const TwoDViewer = ({ 
+  bodyPart, 
+  view, 
+  showAnnotations, 
+  onViewChange, 
+  className 
+}) => {
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageError, setImageError] = useState(false)
+  
+  const imageSrc = `/screenshots/${bodyPart}-${view}.webp`
+  const fallbackSrc = `/screenshots/${bodyPart}-${view}.png`
+  
+  const availableViews = Object.keys(viewpoints[bodyPart] || viewpoints.default)
+  
+  return (
+    <div className={`anatomy-2d-container ${className}`}>
+      <ViewControls 
+        currentView={view} 
+        onViewChange={onViewChange}
+        availableViews={availableViews}
+      />
+      
+      <div className="anatomy-image-container">
+        {!imageLoaded && !imageError && (
+          <div className="anatomy-loading">Loading anatomy view...</div>
+        )}
+        
+        <img 
+          src={imageError ? fallbackSrc : imageSrc}
+          alt={`${bodyPart} - ${view} view`}
+          className={`anatomy-image ${imageLoaded ? 'loaded' : ''}`}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+          style={{ 
+            maxWidth: '100%', 
+            height: 'auto',
+            display: imageLoaded ? 'block' : 'none'
+          }}
+        />
+        
+        {showAnnotations && imageLoaded && (
+          <AnnotationSystem 
+            bodyPart={bodyPart} 
+            view={view} 
+            mode="2d"
+          />
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default TwoDViewer
+```
+
+## Configuration Files
+
+### 4. Viewpoints Configuration
+
+```javascript
+// src/modules/anatomy/config/viewpoints.js
+export const viewpoints = {
+  arm: {
+    anterior: { 
+      position: [0, 0, 5], 
+      target: [0, 0, 0],
+      description: 'Front view of arm'
+    },
+    posterior: { 
+      position: [0, 0, -5], 
+      target: [0, 0, 0],
+      description: 'Back view of arm'
+    },
+    lateral: { 
+      position: [5, 0, 0], 
+      target: [0, 0, 0],
+      description: 'Side view of arm'
+    },
+    medial: { 
+      position: [-5, 0, 0], 
+      target: [0, 0, 0],
+      description: 'Inner side view of arm'
+    }
+  },
+  shoulder: {
+    anterior: { position: [0, 0, 4], target: [0, 1, 0] },
+    posterior: { position: [0, 0, -4], target: [0, 1, 0] },
+    superior: { position: [0, 4, 0], target: [0, 0, 0] }
+  },
+  default: {
+    anterior: { position: [0, 0, 5], target: [0, 0, 0] },
+    posterior: { position: [0, 0, -5], target: [0, 0, 0] },
+    lateral: { position: [5, 0, 0], target: [0, 0, 0] }
+  }
+}
+
+export const getViewpoint = (bodyPart, view) => {
+  return viewpoints[bodyPart]?.[view] || viewpoints.default[view]
+}
+```
+
+### 5. Body Parts Configuration
+
+```javascript
+// src/modules/anatomy/config/bodyParts.js
+export const bodyParts = {
+  arm: {
+    name: 'Arm',
+    modelFile: 'arm-complete.glb',
+    views: ['anterior', 'posterior', 'lateral', 'medial'],
+    defaultView: 'anterior'
+  },
+  shoulder: {
+    name: 'Shoulder Girdle',
+    modelFile: 'shoulder-girdle.glb',
+    views: ['anterior', 'posterior', 'superior'],
+    defaultView: 'anterior'
+  },
+  forearm: {
+    name: 'Forearm',
+    modelFile: 'forearm.glb',
+    views: ['anterior', 'posterior', 'lateral'],
+    defaultView: 'anterior'
+  }
+}
+
+export const getBodyPartConfig = (bodyPart) => {
+  return bodyParts[bodyPart]
+}
+```
+
+## Screenshot Generation Script
+
+### 6. Build-time Screenshot Generator
+
+```javascript
+// scripts/generateScreenshots.js
+import * as THREE from 'three'
+import { createCanvas } from 'canvas'
+import fs from 'fs'
+import path from 'path'
+import { GLTFLoader } from 'three-stdlib'
+import { viewpoints } from '../src/modules/anatomy/config/viewpoints.js'
+import { bodyParts } from '../src/modules/anatomy/config/bodyParts.js'
+
+const generateScreenshots = async () => {
+  console.log('🎬 Generating anatomy screenshots...')
+  
+  // Create output directory
+  const outputDir = './public/screenshots'
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true })
+  }
+  
+  // Setup headless Three.js
+  const width = 1024
+  const height = 1024
+  const canvas = createCanvas(width, height)
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
+  renderer.setSize(width, height)
+  renderer.setClearColor(0xf5f5f5, 1)
+  
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000)
+  
+  // Lighting setup
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
+  directionalLight.position.set(10, 10, 5)
+  scene.add(ambientLight, directionalLight)
+  
+  const loader = new GLTFLoader()
+  
+  // Generate screenshots for each body part and view
+  for (const [partKey, partConfig] of Object.entries(bodyParts)) {
+    console.log(`📸 Processing ${partConfig.name}...`)
+    
+    try {
+      // Load model
+      const modelPath = `./public/models/${partConfig.modelFile}`
+      const gltf = await loader.loadAsync(modelPath)
+      
+      scene.add(gltf.scene)
+      
+      // Generate screenshots for each view
+      const partViewpoints = viewpoints[partKey] || viewpoints.default
+      
+      for (const [viewKey, viewConfig] of Object.entries(partViewpoints)) {
+        // Position camera
+        camera.position.set(...viewConfig.position)
+        camera.lookAt(new THREE.Vector3(...viewConfig.target))
+        
+        // Render
+        renderer.render(scene, camera)
+        
+        // Save as WebP and PNG fallback
+        const basename = `${partKey}-${viewKey}`
+        const webpPath = path.join(outputDir, `${basename}.webp`)
+        const pngPath = path.join(outputDir, `${basename}.png`)
+        
+        // Convert canvas to buffer and save
+        const buffer = canvas.toBuffer('image/png')
+        fs.writeFileSync(pngPath, buffer)
+        
+        // Convert to WebP (you might need a WebP converter)
+        // For now, just copy PNG as WebP
+        fs.writeFileSync(webpPath, buffer)
+        
+        console.log(`  ✅ ${basename}`)
+      }
+      
+      scene.remove(gltf.scene)
+      
+    } catch (error) {
+      console.error(`❌ Error processing ${partKey}:`, error.message)
+    }
+  }
+  
+  console.log('🎉 Screenshot generation complete!')
+}
+
+generateScreenshots().catch(console.error)
+```
+
+## Package.json Scripts
+
+### 7. Build Scripts Integration
+
+Add these scripts to your existing `package.json`:
+
+```json
+{
+  "scripts": {
+    "dev": "vite dev",
+    "build:screenshots": "node scripts/generateScreenshots.js",
+    "build": "npm run build:screenshots && vite build",
+    "preview": "vite preview",
+    "anatomy:screenshots": "npm run build:screenshots"
+  }
+}
+```
+
+## Usage Example
+
+### 8. Integration in Your App
+
+```jsx
+// In your main app component or page
+import AnatomyViewer from './modules/anatomy/components/AnatomyViewer'
+import { useState } from 'react'
+
+const MyAnatomyPage = () => {
+  const [currentView, setCurrentView] = useState('anterior')
+  const [showAnnotations, setShowAnnotations] = useState(true)
+  
+  return (
+    <div className="anatomy-page">
+      <h1>Arm Anatomy</h1>
+      
+      <div className="controls">
+        <label>
+          <input 
+            type="checkbox" 
+            checked={showAnnotations}
+            onChange={(e) => setShowAnnotations(e.target.checked)}
+          />
+          Show Annotations
+        </label>
+      </div>
+      
+      <AnatomyViewer 
+        bodyPart="arm"
+        view={currentView}
+        showAnnotations={showAnnotations}
+        onViewChange={setCurrentView}
+        className="my-anatomy-viewer"
+      />
+    </div>
+  )
+}
+```
+
+## Environment Setup
+
+### 9. Environment Variables
+
+Add to your `.env` files:
+
+```bash
+# .env.development
+VITE_ANATOMY_MODE=3d
+
+# .env.production  
+VITE_ANATOMY_MODE=2d
+```
+
+## Styling
+
+### 10. Basic CSS Structure
+
+```css
+/* Add to your main CSS file */
+.anatomy-3d-container,
+.anatomy-2d-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.anatomy-image-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.anatomy-image {
+  transition: opacity 0.3s ease;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.anatomy-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #666;
+}
+```
+
+## Next Steps
+
+1. **Model Preparation**: Download BodyParts3D models and place them in `public/models/`
+2. **Convert Models**: Convert OBJ/STL files to GLB format using tools like Blender or online converters
+3. **Generate Screenshots**: Run `npm run build:screenshots` to create 2D images
+4. **Test Both Modes**: Verify 3D works in development and 2D works in production builds
+5. **Add Annotations**: Implement the annotation system based on your specific needs
+6. **Optimize Performance**: Add loading states, error boundaries, and progressive enhancement
+
+This modular structure allows you to develop with full 3D capabilities while deploying with optimized 2D performance.

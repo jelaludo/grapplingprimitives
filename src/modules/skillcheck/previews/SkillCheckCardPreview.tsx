@@ -52,3 +52,4 @@ const SkillCheckCardPreview: React.FC<Props> = ({ onClick }) => {
 export default SkillCheckCardPreview;
 
 
+

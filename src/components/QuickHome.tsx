@@ -8,16 +8,7 @@ interface QuickHomeProps {
 }
 
 const QuickHome: React.FC<QuickHomeProps> = ({ onHome, visible = true }) => {
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === 'h' && !e.altKey && !e.ctrlKey && !e.metaKey) {
-        e.preventDefault();
-        safeGoHome();
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, []);
+  // Removed global 'H' hotkey to avoid interfering with typing in inputs
 
   const safeGoHome = async () => {
     try {
