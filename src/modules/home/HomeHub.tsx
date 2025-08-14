@@ -19,15 +19,15 @@ interface HomeHubProps {
 }
 
 const HomeHub: React.FC<HomeHubProps> = (props) => {
-  const CardShell: React.FC<{ title: string; subtitle?: string; onClick?: () => void; preview?: React.ReactNode; disabled?: boolean }>
-    = ({ title, subtitle, onClick, preview, disabled }) => (
-    <Card sx={{ aspectRatio: '2 / 3', borderRadius: 3, overflow: 'hidden', display: 'flex' }}>
+  const CardShell: React.FC<{ title?: string; subtitle?: string; onClick?: () => void; preview?: React.ReactNode; disabled?: boolean; hideTitle?: boolean }>
+    = ({ title, subtitle, onClick, preview, disabled, hideTitle }) => (
+    <Card sx={{ aspectRatio: '1 / 1', borderRadius: 3, overflow: 'hidden', display: 'flex' }}>
       {disabled ? (
         <Box sx={{ display: 'flex', flex: 1 }}>
           <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1, flex: 1,
             fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
-            <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>{title}</Typography>
-            {subtitle && <Typography variant="body2" sx={{ opacity: 0.8, fontFamily: 'inherit' }}>{subtitle}</Typography>}
+            {!hideTitle && title && <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>{title}</Typography>}
+            {!hideTitle && subtitle && <Typography variant="body2" sx={{ opacity: 0.8, fontFamily: 'inherit' }}>{subtitle}</Typography>}
             <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {preview}
             </Box>
@@ -37,8 +37,8 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
         <CardActionArea onClick={onClick} sx={{ display: 'flex', flex: 1 }}>
           <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1, flex: 1,
             fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
-            <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>{title}</Typography>
-            {subtitle && <Typography variant="body2" sx={{ opacity: 0.8, fontFamily: 'inherit' }}>{subtitle}</Typography>}
+            {!hideTitle && title && <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>{title}</Typography>}
+            {!hideTitle && subtitle && <Typography variant="body2" sx={{ opacity: 0.8, fontFamily: 'inherit' }}>{subtitle}</Typography>}
             <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {preview}
             </Box>
@@ -107,75 +107,7 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
     </Box>
   );
 
-  const PreviewGames: React.FC<{ onOpenCentroid: () => void; onOpenMemory: () => void }> = ({ onOpenCentroid, onOpenMemory }) => {
-    const CentroidMini = (
-      <svg viewBox="0 0 11 11" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <pattern id="g" width="1" height="1" patternUnits="userSpaceOnUse">
-            <rect x="0" y="0" width="1" height="1" fill="#111" />
-          </pattern>
-        </defs>
-        <rect x="0" y="0" width="11" height="11" fill="#111" stroke="#333" />
-        {/* sample dots */}
-        <rect x="2" y="2" width="1" height="1" fill="#42a5f5" />
-        <rect x="3" y="7" width="1" height="1" fill="#42a5f5" />
-        <rect x="5" y="4" width="1" height="1" fill="#42a5f5" />
-        <rect x="7" y="2" width="1" height="1" fill="#42a5f5" />
-        <rect x="8" y="8" width="1" height="1" fill="#42a5f5" />
-        <rect x="2" y="9" width="1" height="1" fill="#42a5f5" />
-        {/* guess and centroid */}
-        <rect x="4" y="5" width="1" height="1" fill="#66bb6a" />
-        <rect x="5" y="5" width="1" height="1" fill="#ef5350" />
-        {/* vectors */}
-        <line x1="1" y1="1" x2="4.5" y2="5.5" stroke="#66bb6a" strokeWidth="0.2" />
-        <line x1="9" y1="9" x2="4.5" y2="5.5" stroke="#66bb6a" strokeWidth="0.2" />
-      </svg>
-    );
-
-    const MemoryMini = (
-      <Box sx={{ width:'100%', height:'100%', display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap: 0.5 }}>
-        {Array.from({ length: 16 }).map((_, i) => (
-          <Box key={i} sx={{ bgcolor:'#111', borderRadius: 0.8, border:'1px solid rgba(255,255,255,0.1)', aspectRatio:'1 / 1.35' }} />
-        ))}
-      </Box>
-    );
-
-    return (
-      <Box sx={{ width:'100%' }}>
-        <Box sx={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gridTemplateRows: '1fr 1fr',
-          gap: { xs: 1, sm: 2 },
-          width: '100%',
-          height: { xs: 260, sm: 320, md: 360 }
-        }}>
-          {/* Top-left: Centroid visual */}
-          <Box onClick={(e) => { e.stopPropagation(); onOpenCentroid(); }} onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()} sx={{ cursor:'pointer', p: 1 }}>
-            {CentroidMini}
-          </Box>
-          {/* Top-right: Centroid text */}
-          <Box sx={{ display:'flex', alignItems:'center', pl: 1 }}>
-            <Box>
-              <Typography variant="subtitle1" sx={{ fontFamily: 'inherit' }}>Centroid</Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>Estimate the centroid quickly (GRID FAST)</Typography>
-            </Box>
-          </Box>
-          {/* Bottom-left: Memory text */}
-          <Box sx={{ display:'flex', alignItems:'center', justifyContent:'flex-end', pr: 1 }}>
-            <Box sx={{ textAlign:'right' }}>
-              <Typography variant="subtitle1" sx={{ fontFamily: 'inherit' }}>JJJ Memory</Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>Find matching pairs</Typography>
-            </Box>
-          </Box>
-          {/* Bottom-right: Memory visual */}
-          <Box onClick={(e) => { e.stopPropagation(); onOpenMemory(); }} onMouseDown={(e) => e.stopPropagation()} onTouchStart={(e) => e.stopPropagation()} sx={{ cursor:'pointer', p: 1 }}>
-            {MemoryMini}
-          </Box>
-        </Box>
-      </Box>
-    );
-  };
+  // Separate cards for Centroid and Memory will use dedicated previews below
 
   return (
     <Box sx={{ p: { xs: 1, md: 2 }, m: 'auto', width: '100%', height: '100vh', maxWidth: 1200, display: 'flex', flexDirection: 'column',
@@ -187,12 +119,13 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
           <Box onClick={() => window.dispatchEvent(new CustomEvent('gp:open-help'))} sx={{ cursor:'pointer', width: 28, height: 28, borderRadius: '50%', bgcolor:'rgba(255,255,255,0.12)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>?</Box>
         </Box>
       </Box>
-      <Box sx={{ display: 'grid', gap: { xs: 1, sm: 1.5, md: 2 }, gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(3, 1fr)' }, gridAutoRows: '1fr', flex: 1 }}>
+      <Box sx={{ display: 'grid', gap: { xs: 1, sm: 1.5, md: 2 }, gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gridAutoRows: '1fr', flex: 1 }}>
         <CardShell title="GRAPPLING PRIMITIVES MATRIX" subtitle="Explore the concept map" onClick={props.goMatrix} preview={<PreviewMatrix />} />
         <CardShell title="BJJ Visualizations" onClick={props.goGraphs} preview={<PreviewGraphs />} />
-        <CardShell title="GAMES – Centroid – Memory" disabled preview={<PreviewGames onOpenCentroid={() => props.goGames('centroid')} onOpenMemory={() => props.goGames('memory')} />} />
-        <CardShell title="Coach – Timer" onClick={() => { props.goCoach(); setTimeout(() => { if (typeof window !== 'undefined') window.location.hash = 'timer'; }, 0); }} preview={<TimerCardPreview />} />
-        <CardShell title="Skill Check" onClick={props.goSkillCheck} preview={<SkillCheckCardPreview />} />
+        <CardShell title="Centroid" onClick={() => props.goGames('centroid')} preview={<CentroidCardPreview />} />
+        <CardShell title="JJJ Memory" onClick={() => props.goGames('memory')} preview={<MemoryCardPreview />} />
+        <CardShell hideTitle onClick={() => { props.goCoach(); setTimeout(() => { if (typeof window !== 'undefined') window.location.hash = 'timer'; }, 0); }} preview={<TimerCardPreview />} />
+        <CardShell hideTitle onClick={props.goSkillCheck} preview={<SkillCheckCardPreview />} />
         <CardShell title="Others" onClick={props.goOthers} preview={<PreviewCards />} />
       </Box>
     </Box>
