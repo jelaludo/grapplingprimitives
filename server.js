@@ -39,6 +39,48 @@ app.use('/data', express.static(path.join(__dirname, 'public/data')));
 
 // Serve backup files
 app.use('/backups', express.static(path.join(__dirname, 'backups')));
+// ===== Calendar Data (local JSON persistence for effort/sessions) =====
+const CAL_DIR = path.resolve(__dirname, 'backups/calendar');
+const ensureCalDir = () => { if (!fs.existsSync(CAL_DIR)) fs.mkdirSync(CAL_DIR, { recursive: true }); };
+
+// Save effort for a given date
+app.post('/api/calendar/effort', (req, res) => {
+  try {
+    const { dateISO, intensity } = req.body;
+    if (!dateISO || typeof intensity !== 'number' || intensity < 1 || intensity > 10) {
+      return res.status(400).json({ error: 'Invalid date or intensity' });
+    }
+    ensureCalDir();
+    const file = path.join(CAL_DIR, `${dateISO}.json`);
+    let data = { dateISO, intensity1to10: intensity, sessions: [] };
+    if (fs.existsSync(file)) {
+      const cur = JSON.parse(fs.readFileSync(file, 'utf8'));
+      data = { ...cur, intensity1to10: intensity };
+    }
+    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+    res.json({ success: true, saved: data });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to save effort' });
+  }
+});
+
+// Add session for a given date
+app.post('/api/calendar/session', (req, res) => {
+  try {
+    const { dateISO, session } = req.body;
+    if (!dateISO || !session) return res.status(400).json({ error: 'Missing data' });
+    ensureCalDir();
+    const file = path.join(CAL_DIR, `${dateISO}.json`);
+    let data = { dateISO, intensity1to10: 5, sessions: [] };
+    if (fs.existsSync(file)) data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    data.sessions = [...(data.sessions || []), session];
+    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+    res.json({ success: true, count: data.sessions.length });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to add session' });
+  }
+});
+
 
 // API endpoint to get the latest backup only
 app.get('/api/latest-backup', (req, res) => {
@@ -874,6 +916,19 @@ app.delete('/api/admin/beta-passwords/:password', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete password' });
   }
 });
+
+// In production, serve the React build and fallback to index.html
+try {
+  const buildDir = path.resolve(__dirname, 'build');
+  if (fs.existsSync(buildDir)) {
+    app.use(express.static(buildDir));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(buildDir, 'index.html'));
+    });
+  }
+} catch (err) {
+  // ignore missing build directory in dev
+}
 
 app.listen(PORT, () => {
   console.log(`Backend server running on http://localhost:${PORT}`);

@@ -13,10 +13,12 @@ import CardsView from './modules/cards/CardsView';
 import CardsSidebar from './modules/cards/CardsSidebar';
 import GamesHub from './modules/games/GamesHub';
 import HomeHubMount from './modules/home/HomeHubMount';
+import CalendarToday from './modules/calendar/CalendarToday';
 import CoachTools from './modules/coach/CoachTools';
 import SkillCheck from './modules/skillcheck/SkillCheck';
 import Ludus from './components/Ludus/Ludus';
 import OthersHub from './modules/others/OthersHub';
+import TrainingHub from './modules/training/TrainingHub';
 import RetroMessage from './components/RetroMessage';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
@@ -272,7 +274,7 @@ function App() {
       <CssBaseline />
       {!showBetaLogin && betaAuth.isAuthenticated && (
       <MainLayout
-        header={
+        header={viewManagement.currentView === 'matrix' ? (
           <Header 
             onCreateNode={handleCreateNode} 
             onCardsClick={viewManagement.switchToCards}
@@ -289,9 +291,9 @@ function App() {
             onLudusClick={viewManagement.switchToLudus}
             onCoachClick={viewManagement.switchToCoach}
             onSkillCheckClick={viewManagement.switchToSkillCheck}
-            onMobileMenuToggle={viewManagement.currentView !== 'matrix' ? viewManagement.switchToMatrix : undefined}
+            onMobileMenuToggle={undefined}
           />
-        }
+        ) : undefined}
         onFirstInteraction={handleFirstInteraction}
         sidebar={
           viewManagement.currentView === 'matrix' ? (
@@ -343,10 +345,12 @@ function App() {
                goArticles={viewManagement.switchToArticles}
                 goStudies={viewManagement.switchToStudies}
                goLudus={viewManagement.switchToLudus}
-               goOthers={viewManagement.switchToOthers}
+                goOthers={viewManagement.switchToOthers}
+                goCalendar={viewManagement.switchToCalendar}
+                goTraining={viewManagement.switchToTraining}
               />
            </div>
-         ) : viewManagement.currentView === 'matrix' ? (
+          ) : viewManagement.currentView === 'matrix' ? (
           <ScatterPlot
             concepts={filteredConcepts}
             addConcept={addConcept}
@@ -367,6 +371,10 @@ function App() {
         ) : viewManagement.currentView === 'skillcheck' ? (
           <div style={{ flex: 1, minWidth: 0, width: '100%', height: '100%', padding: '20px', overflowY: 'auto', overflowX: 'hidden' }}>
             <SkillCheck />
+          </div>
+        ) : viewManagement.currentView === 'calendar' ? (
+          <div style={{ flex: 1, minWidth: 0, width: '100%', height: '100%', padding: '12px', overflow: 'hidden' }}>
+            <CalendarToday />
           </div>
         ) : viewManagement.currentView === 'articles' ? (
           <div style={VIEW_CONTAINER_STYLE}>
@@ -402,6 +410,10 @@ function App() {
           </div>
         ) : viewManagement.currentView === 'others' ? (
           <OthersHub onBack={viewManagement.switchToHome} gotoArticles={viewManagement.switchToArticles} gotoCoach={viewManagement.switchToCoach} gotoStudies={viewManagement.switchToStudies} />
+        ) : viewManagement.currentView === 'training' ? (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <TrainingHub />
+          </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>
             <Graphs resetToken={graphsResetToken} />

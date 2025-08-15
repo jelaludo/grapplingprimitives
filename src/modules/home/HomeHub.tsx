@@ -4,6 +4,7 @@ import CentroidCardPreview from '../games/previews/CentroidCardPreview';
 import MemoryCardPreview from '../games/previews/MemoryCardPreview';
 import TimerCardPreview from '../coach/previews/TimerCardPreview';
 import SkillCheckCardPreview from '../skillcheck/previews/SkillCheckCardPreview';
+import TrainingCardPreview from '../training/TrainingCardPreview';
 
 interface HomeHubProps {
   goMatrix: () => void;
@@ -16,6 +17,8 @@ interface HomeHubProps {
   goStudies: () => void;
   goLudus: () => void;
   goOthers?: () => void;
+  goCalendar: () => void;
+  goTraining: () => void;
 }
 
 const HomeHub: React.FC<HomeHubProps> = (props) => {
@@ -124,8 +127,10 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
         <CardShell title="BJJ Visualizations" onClick={props.goGraphs} preview={<PreviewGraphs />} />
         <CardShell title="Centroid" onClick={() => props.goGames('centroid')} preview={<CentroidCardPreview />} />
         <CardShell title="JJJ Memory" onClick={() => props.goGames('memory')} preview={<MemoryCardPreview />} />
+        <CardShell title="Calendar" onClick={props.goCalendar} preview={<Box sx={{ width:'80%', height:'60%', display:'flex', alignItems:'center', justifyContent:'center', color:'#999' }}><Typography variant="h6" sx={{ fontFamily: 'inherit' }}>Calendar</Typography></Box>} />
         <CardShell hideTitle onClick={() => { props.goCoach(); setTimeout(() => { if (typeof window !== 'undefined') window.location.hash = 'timer'; }, 0); }} preview={<TimerCardPreview />} />
         <CardShell hideTitle onClick={props.goSkillCheck} preview={<SkillCheckCardPreview />} />
+        <CardShell title="Training" onClick={props.goTraining} preview={<TrainingCardPreview />} />
         <CardShell title="Others" onClick={props.goOthers} preview={<PreviewCards />} />
       </Box>
     </Box>

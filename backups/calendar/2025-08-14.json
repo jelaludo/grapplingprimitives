@@ -1,0 +1,17 @@
+{
+  "dateISO": "2025-08-14",
+  "intensity1to10": 5,
+  "sessions": [
+    {
+      "id": "1755157959245",
+      "dateISO": "2025-08-14",
+      "startedAt": "2025-08-14T07:52:39.245Z",
+      "items": [
+        {
+          "exerciseId": "ex-1755157959245",
+          "name": "Knee - Band"
+        }
+      ]
+    }
+  ]
+}

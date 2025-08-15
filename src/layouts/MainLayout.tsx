@@ -9,7 +9,7 @@ interface HeaderProps {
 
 interface MainLayoutProps {
   sidebar: React.ReactNode;
-  header: React.ReactElement<HeaderProps>;
+  header?: React.ReactElement<HeaderProps>;
   children: React.ReactNode;
   onFirstInteraction?: () => void;
 }
@@ -49,9 +49,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
   );
 
   // Clone header and pass props
-  const headerWithMobileMenu = React.cloneElement(header, {
-    onMobileMenuToggle: handleDrawerToggle,
-  });
+  const headerWithMobileMenu = header
+    ? React.cloneElement(header, {
+        onMobileMenuToggle: handleDrawerToggle,
+      })
+    : null;
 
   const [gameFullscreen, setGameFullscreen] = useState<boolean>(false);
 
@@ -70,12 +72,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
 
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      {/* Header (fixed) - we overlay it; reserve no vertical space */}
-      <Box sx={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: theme.zIndex.appBar }}>
-        <Box sx={{ pointerEvents: 'auto' }}>
-          {headerWithMobileMenu}
+      {/* Header (fixed) - only when provided by parent (matrix view) */}
+      {headerWithMobileMenu && (
+        <Box sx={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: theme.zIndex.appBar }}>
+          <Box sx={{ pointerEvents: 'auto' }}>
+            {headerWithMobileMenu}
+          </Box>
         </Box>
-      </Box>
+      )}
 
       {/* Main Content Area */}
       <Box sx={{ display: 'flex', flex: 1, minHeight: 0, height: '100vh' }}>

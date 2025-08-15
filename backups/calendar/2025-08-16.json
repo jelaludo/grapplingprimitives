@@ -1,0 +1,28 @@
+{
+  "dateISO": "2025-08-16",
+  "intensity1to10": 6,
+  "sessions": [
+    {
+      "id": "1755161946396",
+      "dateISO": "2025-08-16",
+      "startedAt": "2025-08-14T08:59:06.396Z",
+      "items": [
+        {
+          "exerciseId": "ex-1755161946396",
+          "name": "Knee - Band"
+        }
+      ]
+    },
+    {
+      "id": "1755161956942",
+      "dateISO": "2025-08-16",
+      "startedAt": "2025-08-14T08:59:16.942Z",
+      "items": [
+        {
+          "exerciseId": "ex-1755161956942",
+          "name": "kettlebell swings 20Kg"
+        }
+      ]
+    }
+  ]
+}
