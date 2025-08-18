@@ -3,11 +3,12 @@ import { Box, Card, CardActionArea, CardContent, Typography, Button } from '@mui
 
 const Centroid = React.lazy(() => import('./centroid/CentroidView'));
 const Memory = React.lazy(() => import('./memory/MemoryGame'));
+const ArmbarShearingSim = React.lazy(() => import('./armbar-shearing/ArmbarShearingSim'));
 
-interface GamesHubProps { onExit?: () => void; initial?: 'none' | 'centroid' | 'memory' }
+interface GamesHubProps { onExit?: () => void; initial?: 'none' | 'centroid' | 'memory' | 'armbar-shearing' }
 
 const GamesHub: React.FC<GamesHubProps> = ({ onExit, initial = 'none' }) => {
-  const [selected, setSelected] = React.useState<'none'|'centroid'|'memory'>(initial);
+  const [selected, setSelected] = React.useState<'none'|'centroid'|'memory'|'armbar-shearing'>(initial);
 
   useEffect(() => {
     setSelected(initial);
@@ -101,6 +102,13 @@ const GamesHub: React.FC<GamesHubProps> = ({ onExit, initial = 'none' }) => {
       </Suspense>
     );
   }
+  if (selected === 'armbar-shearing') {
+    return (
+      <Suspense fallback={<div style={{ padding: 24 }}>Loading game…</div>}>
+        <ArmbarShearingSim onExit={() => setSelected('none')} />
+      </Suspense>
+    );
+  }
 
   return (
     <Box sx={{ p: { xs: 1, md: 2 }, m: 'auto', width: '100%', maxWidth: 980,
@@ -109,7 +117,7 @@ const GamesHub: React.FC<GamesHubProps> = ({ onExit, initial = 'none' }) => {
         <Typography variant="h5" sx={{ fontFamily: 'inherit' }}>Games</Typography>
         <Button variant="outlined" size="small" sx={{ fontFamily: 'inherit', letterSpacing: 'inherit' }} onClick={onExit}>← Back to Matrix</Button>
       </Box>
-      <Box sx={{ display: 'grid', gap: { xs: 1, md: 2 }, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' } }}>
+      <Box sx={{ display: 'grid', gap: { xs: 1, md: 2 }, gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' } }}>
         <Card sx={{ aspectRatio: { xs: '1 / 1.2', md: '2 / 3' }, maxHeight: { xs: 380, md: 520 }, borderRadius: 3, overflow: 'hidden', display: 'flex' }}>
           <CardActionArea onClick={() => setSelected('centroid')} sx={{ display: 'flex', flex: 1 }}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 0.5, md: 1 }, flex: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em', p: { xs: 1, md: 2 } }}>
@@ -126,6 +134,72 @@ const GamesHub: React.FC<GamesHubProps> = ({ onExit, initial = 'none' }) => {
               <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>JJJ Memory</Typography>
               <Box sx={{ flex: 1, display: 'flex', alignItems: 'stretch', justifyContent: 'center', width: '100%' }}>
                 {renderMemoryPreview()}
+              </Box>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+        <Card sx={{ aspectRatio: { xs: '1 / 1.2', md: '2 / 3' }, maxHeight: { xs: 380, md: 520 }, borderRadius: 3, overflow: 'hidden', display: 'flex' }}>
+          <CardActionArea onClick={() => setSelected('armbar-shearing')} sx={{ display: 'flex', flex: 1 }}>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 0.5, md: 1 }, flex: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em', p: { xs: 1, md: 2 } }}>
+              <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>Armbar Shearing Sim</Typography>
+              <Box sx={{ flex: 1, display: 'flex', alignItems: 'stretch', justifyContent: 'center', width: '100%' }}>
+                <Box sx={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  bgcolor: 'rgba(255, 140, 0, 0.1)',
+                  borderRadius: 3,
+                  p: 2,
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  <Box sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'radial-gradient(circle at 30% 70%, rgba(255, 140, 0, 0.1) 0%, transparent 50%)',
+                    zIndex: 1
+                  }} />
+                  <Box sx={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
+                    <Typography variant="body2" sx={{ opacity: 0.7, fontSize: '0.75rem' }}>
+                      Interactive mechanics
+                    </Typography>
+                    <Box sx={{
+                      mt: 2,
+                      width: 60,
+                      height: 40,
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Box sx={{
+                        width: 50,
+                        height: 8,
+                        bgcolor: 'rgba(255, 140, 0, 0.3)',
+                        borderRadius: 4,
+                        position: 'relative',
+                        transform: 'rotate(-15deg)'
+                      }}>
+                        <Box sx={{
+                          position: 'absolute',
+                          right: -2,
+                          top: -1,
+                          width: 4,
+                          height: 10,
+                          bgcolor: 'rgba(255, 0, 0, 0.4)',
+                          borderRadius: 2,
+                          transform: 'rotate(15deg)'
+                        }} />
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
               </Box>
             </CardContent>
           </CardActionArea>

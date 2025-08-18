@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armbar Mechanics POC</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #gameCanvas {
+            border: 2px solid #333;
+            background: #2a2a2a;
+            cursor: crosshair;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        .meter {
+            width: 200px;
+            height: 20px;
+            background: #333;
+            border: 2px solid #555;
+            margin: 5px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .meter-fill {
+            height: 100%;
+            transition: width 0.1s;
+            border-radius: 8px;
+        }
+        .leverage { background: linear-gradient(90deg, #ff4444, #44ff44); }
+        .control { background: linear-gradient(90deg, #4444ff, #44ff44); }
+        .pressure { background: linear-gradient(90deg, #666, #ff6644); }
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <div>Leverage: <span id="leverageValue">0%</span></div>
+        <div class="meter"><div class="meter-fill leverage" id="leverageMeter"></div></div>
+        
+        <div>Control: <span id="controlValue">0%</span></div>
+        <div class="meter"><div class="meter-fill control" id="controlMeter"></div></div>
+        
+        <div>Pressure: <span id="pressureValue">0%</span></div>
+        <div class="meter"><div class="meter-fill pressure" id="pressureMeter"></div></div>
+        
+        <div style="margin-top: 15px;">
+            <div>Score: <span id="score">0</span></div>
+            <div>Time: <span id="time">0.0</span>s</div>
+            <div id="winMessage" style="color: #44ff44; font-weight: bold; display: none;">SUBMISSION!</div>
+        </div>
+    </div>
+
+    <div id="instructions">
+        Mouse: Position grip | WASD: Move fulcrum | Hold Space: Apply pressure<br>
+        <span style="color: #44ff44;">Green dot</span>: Optimal leverage point | <span style="color: #4488ff;">Blue arrow</span>: Fulcrum force | <span style="color: #ff6644;">Red arrow</span>: Applied pressure
+    </div>
+
+    <canvas id="gameCanvas" width="1200" height="800"></canvas>
+
+    <script>
+        class ArmbarGame {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                
+                // Arm geometry
+                this.shoulder = { x: 600, y: 200 };
+                this.elbow = { x: 400, y: 300 };
+                this.wrist = { x: 200, y: 400 };
+                
+                // Player controls
+                this.mouse = { x: 0, y: 0 };
+                this.fulcrum = { x: this.elbow.x, y: this.elbow.y };
+                this.gripPoint = { x: 0, y: 0 };
+                this.pressureAngle = 0;
+                
+                // Game state
+                this.armRotation = 0; // Current arm rotation
+                this.targetRotation = 0; // Where arm wants to rotate to
+                this.rotationSpeed = 0.02;
+                this.escapeAttempts = 0;
+                this.isApplyingPressure = false;
+                this.score = 0;
+                this.time = 0;
+                this.hasWon = false;
+                this.winTime = null;
+                
+                // Controls
+                this.keys = {};
+                
+                this.setupEventListeners();
+                this.gameLoop();
+            }
+            
+            setupEventListeners() {
+                // Mouse tracking
+                this.canvas.addEventListener('mousemove', (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.mouse.x = e.clientX - rect.left;
+                    this.mouse.y = e.clientY - rect.top;
+                });
+                
+                // Keyboard
+                document.addEventListener('keydown', (e) => {
+                    this.keys[e.key.toLowerCase()] = true;
+                });
+                
+                document.addEventListener('keyup', (e) => {
+                    this.keys[e.key.toLowerCase()] = false;
+                });
+            }
+            
+            update(dt) {
+                this.time += dt;
+                
+                // Update fulcrum position with WASD
+                const fulcrumSpeed = 100;
+                if (this.keys['w']) this.fulcrum.y -= fulcrumSpeed * dt;
+                if (this.keys['s']) this.fulcrum.y += fulcrumSpeed * dt;
+                if (this.keys['a']) this.fulcrum.x -= fulcrumSpeed * dt;
+                if (this.keys['d']) this.fulcrum.x += fulcrumSpeed * dt;
+                
+                // Fulcrum collision with arm segments
+                const shoulderPos = this.shoulder;
+                const elbowPos = this.getRotatedPoint(this.elbow, this.armRotation);
+                const wristPos = this.getRotatedPoint(this.wrist, this.armRotation);
+                
+                const armSegments = [
+                    { start: shoulderPos, end: elbowPos, radius: 15 },      // Upper arm
+                    { start: elbowPos, end: wristPos, radius: 15 }          // Forearm
+                ];
+                
+                // Check collision with each arm segment
+                armSegments.forEach(segment => {
+                    const closestPoint = this.projectPointOntoSegment(this.fulcrum, segment.start, segment.end);
+                    const distance = this.distance(this.fulcrum, closestPoint);
+                    const minDistance = segment.radius + 12; // Fulcrum radius
+                    
+                    if (distance < minDistance) {
+                        // Push fulcrum away from arm
+                        const pushVector = {
+                            x: this.fulcrum.x - closestPoint.x,
+                            y: this.fulcrum.y - closestPoint.y
+                        };
+                        const pushLength = Math.sqrt(pushVector.x * pushVector.x + pushVector.y * pushVector.y);
+                        if (pushLength > 0) {
+                            this.fulcrum.x = closestPoint.x + (pushVector.x / pushLength) * minDistance;
+                            this.fulcrum.y = closestPoint.y + (pushVector.y / pushLength) * minDistance;
+                        }
+                    }
+                });
+                
+                // Also prevent overlap with joints
+                const joints = [
+                    { pos: shoulderPos, radius: 20 },
+                    { pos: elbowPos, radius: 18 },
+                    { pos: wristPos, radius: 16 }
+                ];
+                
+                joints.forEach(joint => {
+                    const distance = this.distance(this.fulcrum, joint.pos);
+                    const minDistance = joint.radius + 12;
+                    
+                    if (distance < minDistance) {
+                        const pushVector = {
+                            x: this.fulcrum.x - joint.pos.x,
+                            y: this.fulcrum.y - joint.pos.y
+                        };
+                        const pushLength = Math.sqrt(pushVector.x * pushVector.x + pushVector.y * pushVector.y);
+                        if (pushLength > 0) {
+                            this.fulcrum.x = joint.pos.x + (pushVector.x / pushLength) * minDistance;
+                            this.fulcrum.y = joint.pos.y + (pushVector.y / pushLength) * minDistance;
+                        }
+                    }
+                });
+                
+                // Calculate grip point on forearm
+                this.calculateGripPoint();
+                
+                // Calculate pressure angle from mouse
+                this.pressureAngle = Math.atan2(this.mouse.y - this.gripPoint.y, this.mouse.x - this.gripPoint.x);
+                
+                // Check if applying pressure
+                this.isApplyingPressure = this.keys[' '];
+                
+                // Opponent arm movement
+                this.updateArmRotation(dt);
+                
+                // Update scores
+                this.updateMetrics();
+            }
+            
+            calculateGripPoint() {
+                // Project mouse position onto the full arm (upper arm + forearm + hand)
+                const shoulderPos = this.shoulder;
+                const elbowPos = this.getRotatedPoint(this.elbow, this.armRotation);
+                const wristPos = this.getRotatedPoint(this.wrist, this.armRotation);
+                
+                // Extend beyond wrist for hand
+                const forearmVector = { 
+                    x: wristPos.x - elbowPos.x, 
+                    y: wristPos.y - elbowPos.y 
+                };
+                const forearmLength = Math.sqrt(forearmVector.x * forearmVector.x + forearmVector.y * forearmVector.y);
+                const normalizedVector = { 
+                    x: forearmVector.x / forearmLength, 
+                    y: forearmVector.y / forearmLength 
+                };
+                const handEnd = {
+                    x: wristPos.x + normalizedVector.x * 80,
+                    y: wristPos.y + normalizedVector.y * 80
+                };
+                
+                // Check all segments and find closest point
+                const segments = [
+                    { start: shoulderPos, end: elbowPos },      // Upper arm
+                    { start: elbowPos, end: wristPos },         // Forearm  
+                    { start: wristPos, end: handEnd }           // Hand
+                ];
+                
+                let closestPoint = null;
+                let minDistance = Infinity;
+                
+                segments.forEach(segment => {
+                    const point = this.projectPointOntoSegment(this.mouse, segment.start, segment.end);
+                    const dist = this.distance(this.mouse, point);
+                    if (dist < minDistance) {
+                        minDistance = dist;
+                        closestPoint = point;
+                    }
+                });
+                
+                this.gripPoint = closestPoint;
+            }
+            
+            projectPointOntoSegment(point, segmentStart, segmentEnd) {
+                const A = segmentStart;
+                const B = segmentEnd;
+                const P = point;
+                
+                const AB = { x: B.x - A.x, y: B.y - A.y };
+                const AP = { x: P.x - A.x, y: P.y - A.y };
+                
+                const ABdotAB = AB.x * AB.x + AB.y * AB.y;
+                const APdotAB = AP.x * AB.x + AP.y * AB.y;
+                
+                let t = APdotAB / ABdotAB;
+                t = Math.max(0, Math.min(1, t));
+                
+                return {
+                    x: A.x + AB.x * t,
+                    y: A.y + AB.y * t
+                };
+            }
+            
+            updateArmRotation(dt) {
+                // Generate escape attempts
+                if (Math.random() < 0.01) {
+                    this.targetRotation = (Math.random() - 0.5) * 0.5; // ±15 degrees
+                    this.escapeAttempts++;
+                }
+                
+                // Apply rotation resistance based on control
+                const control = this.getControlLevel();
+                const resistance = control * 0.8; // High control = high resistance
+                
+                const rotationDiff = this.targetRotation - this.armRotation;
+                this.armRotation += rotationDiff * this.rotationSpeed * (1 - resistance) * dt * 60;
+            }
+            
+            getLeverageLevel() {
+                const shoulderPos = this.shoulder;
+                const elbowPos = this.getRotatedPoint(this.elbow, this.armRotation);
+                
+                // Optimal leverage point is a few pixels above elbow towards shoulder
+                const shoulderToElbow = {
+                    x: elbowPos.x - shoulderPos.x,
+                    y: elbowPos.y - shoulderPos.y
+                };
+                const armLength = Math.sqrt(shoulderToElbow.x * shoulderToElbow.x + shoulderToElbow.y * shoulderToElbow.y);
+                const normalizedVector = {
+                    x: shoulderToElbow.x / armLength,
+                    y: shoulderToElbow.y / armLength
+                };
+                
+                // Optimal point is 15 pixels up the upper arm from elbow
+                const optimalPoint = {
+                    x: rotatedElbow.x - normalizedVector.x * 15,
+                    y: rotatedElbow.y - normalizedVector.y * 15
+                };
+                
+                const distToOptimal = this.distance(this.gripPoint, optimalPoint);
+                
+                let leverage;
+                if (distToOptimal <= 8) {
+                    // Sweet spot = 100%
+                    leverage = 1.0;
+                } else {
+                    // Leverage falls off with distance from optimal point
+                    const dropoff = distToOptimal / (armLength * 0.3);
+                    leverage = Math.max(0, 1 - dropoff);
+                }
+                
+                return leverage;
+            }
+            
+            getControlLevel() {
+                // Control based on fulcrum position and force opposition
+                const elbowPos = this.getRotatedPoint(this.elbow, this.armRotation);
+                const fulcrumNearElbow = this.distance(this.fulcrum, elbowPos) < 40;
+                
+                // Calculate if pressure and fulcrum forces are opposite
+                const armVector = {
+                    x: this.getRotatedPoint(this.wrist, this.armRotation).x - elbowPos.x,
+                    y: this.getRotatedPoint(this.wrist, this.armRotation).y - elbowPos.y
+                };
+                
+                const fulcrumVector = {
+                    x: this.fulcrum.x - elbowPos.x,
+                    y: this.fulcrum.y - elbowPos.y
+                };
+                
+                // Normalize vectors
+                const armLength = Math.sqrt(armVector.x * armVector.x + armVector.y * armVector.y);
+                const fulcrumLength = Math.sqrt(fulcrumVector.x * fulcrumVector.x + fulcrumVector.y * fulcrumVector.y);
+                
+                if (armLength > 0 && fulcrumLength > 0) {
+                    const armNorm = { x: armVector.x / armLength, y: armVector.y / armLength };
+                    const fulcrumNorm = { x: fulcrumVector.x / fulcrumLength, y: fulcrumVector.y / fulcrumLength };
+                    
+                    // Check if pressure angle opposes fulcrum direction
+                    const pressureVector = { x: Math.cos(this.pressureAngle), y: Math.sin(this.pressureAngle) };
+                    const oppositionDot = -(pressureVector.x * fulcrumNorm.x + pressureVector.y * fulcrumNorm.y);
+                    const oppositionQuality = Math.max(0, oppositionDot);
+                    
+                    let control = 0;
+                    if (fulcrumNearElbow) control += 0.5;
+                    if (this.isApplyingPressure) control += 0.3 * oppositionQuality;
+                    if (oppositionQuality > 0.8) control += 0.2; // Bonus for perfect opposition
+                    
+                    return Math.min(1, control);
+                }
+                
+                return fulcrumNearElbow ? 0.3 : 0;
+            }
+            
+            getPressureLevel() {
+                if (!this.isApplyingPressure) return 0;
+                
+                const leverage = this.getLeverageLevel();
+                const control = this.getControlLevel();
+                return leverage * control;
+            }
+            
+            updateMetrics() {
+                const leverage = this.getLeverageLevel();
+                const control = this.getControlLevel();
+                const pressure = this.getPressureLevel();
+                
+                // Update UI
+                document.getElementById('leverageValue').textContent = Math.round(leverage * 100) + '%';
+                document.getElementById('controlValue').textContent = Math.round(control * 100) + '%';
+                document.getElementById('pressureValue').textContent = Math.round(pressure * 100) + '%';
+                document.getElementById('time').textContent = this.time.toFixed(1);
+                
+                document.getElementById('leverageMeter').style.width = (leverage * 100) + '%';
+                document.getElementById('controlMeter').style.width = (control * 100) + '%';
+                document.getElementById('pressureMeter').style.width = (pressure * 100) + '%';
+                
+                // Score based on sustained high pressure
+                if (pressure > 0.8) {
+                    this.score += 10;
+                } else if (pressure > 0.5) {
+                    this.score += 2;
+                }
+                // Check for WIN condition
+                if (leverage >= 1.0 && control > 0.7 && this.isApplyingPressure) {
+                    this.checkWinCondition();
+                }
+                
+                document.getElementById('score').textContent = this.score;
+            }
+            
+            getRotatedPoint(point, rotation) {
+                // Rotate point around shoulder
+                const dx = point.x - this.shoulder.x;
+                const dy = point.y - this.shoulder.y;
+                return {
+                    x: this.shoulder.x + dx * Math.cos(rotation) - dy * Math.sin(rotation),
+                    y: this.shoulder.y + dx * Math.sin(rotation) + dy * Math.cos(rotation)
+                };
+            }
+            
+            distance(a, b) {
+                return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+            }
+            
+            normalizeAngle(angle) {
+                while (angle > Math.PI) angle -= 2 * Math.PI;
+                while (angle < -Math.PI) angle += 2 * Math.PI;
+                return angle;
+            }
+            
+            draw() {
+                // Clear canvas
+                this.ctx.fillStyle = '#2a2a2a';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Get rotated arm positions
+                const rotatedElbow = this.getRotatedPoint(this.elbow, this.armRotation);
+                const rotatedWrist = this.getRotatedPoint(this.wrist, this.armRotation);
+                
+                // Draw arm bones
+                this.ctx.strokeStyle = '#888';
+                this.ctx.lineWidth = 15;
+                this.ctx.lineCap = 'round';
+                
+                // Upper arm
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.shoulder.x, this.shoulder.y);
+                this.ctx.lineTo(rotatedElbow.x, rotatedElbow.y);
+                this.ctx.stroke();
+                
+                // Forearm
+                this.ctx.beginPath();
+                this.ctx.moveTo(rotatedElbow.x, rotatedElbow.y);
+                this.ctx.lineTo(rotatedWrist.x, rotatedWrist.y);
+                this.ctx.stroke();
+                
+                // Draw extended hand area (invisible line for grip calculation)
+                const wristPos = this.getRotatedPoint(this.wrist, this.armRotation);
+                const elbowPos = this.getRotatedPoint(this.elbow, this.armRotation);
+                const forearmVector = { 
+                    x: wristPos.x - elbowPos.x, 
+                    y: wristPos.y - elbowPos.y 
+                };
+                const forearmLength = Math.sqrt(forearmVector.x * forearmVector.x + forearmVector.y * forearmVector.y);
+                const normalizedVector = { 
+                    x: forearmVector.x / forearmLength, 
+                    y: forearmVector.y / forearmLength 
+                };
+                const handEnd = {
+                    x: wristPos.x + normalizedVector.x * 80,
+                    y: wristPos.y + normalizedVector.y * 80
+                };
+                
+                // Draw hand extension (lighter line)
+                this.ctx.strokeStyle = '#555';
+                this.ctx.lineWidth = 8;
+                this.ctx.beginPath();
+                this.ctx.moveTo(wristPos.x, wristPos.y);
+                this.ctx.lineTo(handEnd.x, handEnd.y);
+                this.ctx.stroke();
+                
+                // Draw joints
+                this.drawJoint(this.shoulder.x, this.shoulder.y, '#666', 20);
+                this.drawJoint(rotatedElbow.x, rotatedElbow.y, '#666', 18);
+                this.drawJoint(rotatedWrist.x, rotatedWrist.y, '#666', 16);
+                
+                // Draw fulcrum force vector
+                const fulcrumForceVector = {
+                    x: this.fulcrum.x - rotatedElbow.x,
+                    y: this.fulcrum.y - rotatedElbow.y
+                };
+                const fulcrumForceLength = Math.sqrt(fulcrumForceVector.x * fulcrumForceVector.x + fulcrumForceVector.y * fulcrumForceVector.y);
+                
+                if (fulcrumForceLength > 0) {
+                    this.ctx.strokeStyle = '#4488ff';
+                    this.ctx.lineWidth = 4;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(rotatedElbow.x, rotatedElbow.y);
+                    
+                    // Draw fulcrum force vector (from elbow through fulcrum)
+                    const forceScale = 60;
+                    const normalizedForce = {
+                        x: fulcrumForceVector.x / fulcrumForceLength,
+                        y: fulcrumForceVector.y / fulcrumForceLength
+                    };
+                    this.ctx.lineTo(
+                        rotatedElbow.x + normalizedForce.x * forceScale,
+                        rotatedElbow.y + normalizedForce.y * forceScale
+                    );
+                    this.ctx.stroke();
+                    
+                    // Arrow head for fulcrum force
+                    const arrowEnd = {
+                        x: rotatedElbow.x + normalizedForce.x * forceScale,
+                        y: rotatedElbow.y + normalizedForce.y * forceScale
+                    };
+                    this.drawArrowHead(arrowEnd, normalizedForce, '#4488ff');
+                }
+                
+                // Draw fulcrum
+                this.drawJoint(this.fulcrum.x, this.fulcrum.y, '#4444ff', 12);
+                
+                // Draw grip point
+                this.drawJoint(this.gripPoint.x, this.gripPoint.y, '#ff4444', 8);
+                
+                // Draw pressure vector with arrow
+                if (this.isApplyingPressure) {
+                    const pressureLength = 50 * this.getPressureLevel();
+                    const pressureEnd = {
+                        x: this.gripPoint.x + Math.cos(this.pressureAngle) * pressureLength,
+                        y: this.gripPoint.y + Math.sin(this.pressureAngle) * pressureLength
+                    };
+                    
+                    this.ctx.strokeStyle = '#ff6644';
+                    this.ctx.lineWidth = 3;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.gripPoint.x, this.gripPoint.y);
+                    this.ctx.lineTo(pressureEnd.x, pressureEnd.y);
+                    this.ctx.stroke();
+                    
+                    // Arrow head for pressure
+                    if (pressureLength > 10) {
+                        const pressureDir = { x: Math.cos(this.pressureAngle), y: Math.sin(this.pressureAngle) };
+                        this.drawArrowHead(pressureEnd, pressureDir, '#ff6644');
+                    }
+                }
+                
+                // Draw optimal leverage point indicator
+                const shoulderPos = this.shoulder;
+                const shoulderToElbow = {
+                    x: rotatedElbow.x - shoulderPos.x,
+                    y: rotatedElbow.y - shoulderPos.y
+                };
+                const armLength = Math.sqrt(shoulderToElbow.x * shoulderToElbow.x + shoulderToElbow.y * shoulderToElbow.y);
+                const normalizedVector = {
+                    x: shoulderToElbow.x / armLength,
+                    y: shoulderToElbow.y / armLength
+                };
+                const optimalPoint = {
+                    x: elbowPos.x - normalizedVector.x * 15,
+                    y: elbowPos.y - normalizedVector.y * 15
+                };
+                
+                // Draw optimal leverage point
+                this.ctx.fillStyle = '#44ff44';
+                this.ctx.beginPath();
+                this.ctx.arc(optimalPoint.x, optimalPoint.y, 6, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.strokeStyle = '#88ff88';
+                this.ctx.lineWidth = 2;
+                this.ctx.stroke();
+            }
+            
+            drawArrowHead(position, direction, color) {
+                this.ctx.fillStyle = color;
+                this.ctx.strokeStyle = color;
+                this.ctx.lineWidth = 2;
+                
+                const arrowSize = 8;
+                const angle1 = Math.atan2(direction.y, direction.x) + Math.PI * 0.8;
+                const angle2 = Math.atan2(direction.y, direction.x) - Math.PI * 0.8;
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(position.x, position.y);
+                this.ctx.lineTo(
+                    position.x + Math.cos(angle1) * arrowSize,
+                    position.y + Math.sin(angle1) * arrowSize
+                );
+                this.ctx.lineTo(
+                    position.x + Math.cos(angle2) * arrowSize,
+                    position.y + Math.sin(angle2) * arrowSize
+                );
+                this.ctx.closePath();
+                this.ctx.fill();
+            }
+            
+            drawJoint(x, y, color, size) {
+                this.ctx.fillStyle = color;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                this.ctx.strokeStyle = '#fff';
+                this.ctx.lineWidth = 2;
+                this.ctx.stroke();
+            }
+            
+            gameLoop() {
+                const now = performance.now();
+                const dt = (now - (this.lastTime || now)) / 1000;
+                this.lastTime = now;
+                
+                this.update(dt);
+                this.draw();
+                
+                requestAnimationFrame(() => this.gameLoop());
+            }
+        }
+        
+        // Start the game
+        new ArmbarGame();
+    </script>
+</body>
+</html>
