@@ -46,18 +46,23 @@ const StoriesHub: React.FC<StoriesHubProps> = ({ onExit }) => {
   };
 
   const handlePageChange = (direction: 'next' | 'prev') => {
-    if (!selectedStory) return;
+    if (!selectedStory || isTransitioning) return; // Prevent rapid clicking
     
+    // Validate page bounds
+    if (direction === 'next' && currentPage >= selectedStory.pages) return;
+    if (direction === 'prev' && currentPage <= 1) return;
+    
+    // Calculate next page
+    const newPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
+    
+    // Start transition
     setIsTransitioning(true);
     
+    // Complete transition after animation
     setTimeout(() => {
-      if (direction === 'next' && currentPage < selectedStory.pages) {
-        setCurrentPage(currentPage + 1);
-      } else if (direction === 'prev' && currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
+      setCurrentPage(newPage);
       setIsTransitioning(false);
-    }, 150);
+    }, 300); // Match CSS transition duration
   };
 
   const handleKeyPress = (event: KeyboardEvent) => {
@@ -89,16 +94,36 @@ const StoriesHub: React.FC<StoriesHubProps> = ({ onExit }) => {
     return `/images/stories/${story.folder}/${fileName}`;
   };
 
+  // Check if AVIF is supported (for iPad Safari fallback)
+  const isAvifSupported = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = 1;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return false;
+    
+    try {
+      ctx.drawImage(new Image(), 0, 0);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
   if (selectedStory) {
     return (
-      <Box sx={{ 
-        width: '100%', 
-        height: '100vh', 
-        display: 'flex', 
-        flexDirection: 'column',
-        bgcolor: '#000',
-        position: 'relative'
-      }}>
+             <Box sx={{ 
+         width: '100%', 
+         height: '100vh',
+         minHeight: '100vh',
+         display: 'flex', 
+         flexDirection: 'column',
+         bgcolor: '#000',
+         position: 'relative',
+         // iPad Safari fixes
+         WebkitOverflowScrolling: 'touch',
+         '-webkit-transform': 'translateZ(0)'
+       }}>
         {/* Header */}
         <Box sx={{ 
           position: 'absolute', 
@@ -130,15 +155,19 @@ const StoriesHub: React.FC<StoriesHubProps> = ({ onExit }) => {
           </Stack>
         </Box>
 
-        {/* Page Content */}
-        <Box sx={{ 
-          flex: 1, 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          p: { xs: 1, md: 2 },
-          position: 'relative'
-        }}>
+                 {/* Page Content */}
+         <Box sx={{ 
+           flex: 1, 
+           display: 'flex', 
+           alignItems: 'center', 
+           justifyContent: 'center',
+           p: { xs: 1, md: 2 },
+           position: 'relative',
+           // iPad Safari fixes
+           WebkitOverflowScrolling: 'touch',
+           '-webkit-transform': 'translateZ(0)',
+           minHeight: 0 // Important for flex containers on iPad
+         }}>
           {/* Navigation Buttons */}
           {currentPage > 1 && (
             <IconButton
@@ -176,29 +205,47 @@ const StoriesHub: React.FC<StoriesHubProps> = ({ onExit }) => {
             </IconButton>
           )}
 
-          {/* Page Image */}
-          <Box sx={{
-            maxWidth: '100%',
-            maxHeight: '100%',
-            width: 'auto',
-            height: 'auto',
-            transition: 'opacity 0.15s ease-in-out',
-            opacity: isTransitioning ? 0.3 : 1,
-            borderRadius: 2,
-            overflow: 'hidden',
-            boxShadow: 3
-          }}>
-            <img
-              src={getPageImage(selectedStory, currentPage)}
-              alt={`${selectedStory.title} - Page ${currentPage}`}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                display: 'block'
-              }}
-            />
-          </Box>
+           {/* Page Image */}
+           <Box sx={{
+             maxWidth: '100%',
+             maxHeight: '100%',
+             width: 'auto',
+             height: 'auto',
+             transition: 'opacity 0.3s ease-in-out',
+             opacity: isTransitioning ? 0.3 : 1,
+             borderRadius: 2,
+             overflow: 'hidden',
+             boxShadow: 3,
+             // iPad Safari fixes
+             WebkitOverflowScrolling: 'touch',
+             '-webkit-transform': 'translateZ(0)'
+           }}>
+             <picture>
+               <source srcSet={getPageImage(selectedStory, currentPage)} type="image/avif" />
+               <img
+                 src={getPageImage(selectedStory, currentPage)}
+                 alt={`${selectedStory.title} - Page ${currentPage}`}
+                 style={{
+                   width: '100%',
+                   height: '100%',
+                   objectFit: 'contain',
+                   display: 'block',
+                   // iPad Safari fixes
+                   WebkitTransform: 'translateZ(0)',
+                   transform: 'translateZ(0)',
+                   backfaceVisibility: 'hidden',
+                   WebkitBackfaceVisibility: 'hidden'
+                 }}
+                 onError={(e) => {
+                   console.error('Image failed to load:', e.currentTarget.src);
+                   e.currentTarget.style.opacity = '0.5';
+                 }}
+                 onLoad={(e) => {
+                   e.currentTarget.style.opacity = '1';
+                 }}
+               />
+             </picture>
+           </Box>
         </Box>
 
         {/* Footer Navigation */}
