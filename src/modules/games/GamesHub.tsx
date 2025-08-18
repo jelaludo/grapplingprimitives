@@ -103,29 +103,27 @@ const GamesHub: React.FC<GamesHubProps> = ({ onExit, initial = 'none' }) => {
   }
 
   return (
-    <Box sx={{ p: 2, m: 'auto', width: '100%', maxWidth: 980,
+    <Box sx={{ p: { xs: 1, md: 2 }, m: 'auto', width: '100%', maxWidth: 980,
       fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: { xs: 1, md: 2 } }}>
         <Typography variant="h5" sx={{ fontFamily: 'inherit' }}>Games</Typography>
         <Button variant="outlined" size="small" sx={{ fontFamily: 'inherit', letterSpacing: 'inherit' }} onClick={onExit}>← Back to Matrix</Button>
       </Box>
-      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' } }}>
-        <Card sx={{ aspectRatio: '2 / 3', maxHeight: { xs: 420, md: 520 }, borderRadius: 3, overflow: 'hidden', display: 'flex' }}>
+      <Box sx={{ display: 'grid', gap: { xs: 1, md: 2 }, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' } }}>
+        <Card sx={{ aspectRatio: { xs: '1 / 1.2', md: '2 / 3' }, maxHeight: { xs: 380, md: 520 }, borderRadius: 3, overflow: 'hidden', display: 'flex' }}>
           <CardActionArea onClick={() => setSelected('centroid')} sx={{ display: 'flex', flex: 1 }}>
-            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1, flex: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 0.5, md: 1 }, flex: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em', p: { xs: 1, md: 2 } }}>
               <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>Centroid</Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8, fontFamily: 'inherit' }}>Intro + mock puzzle</Typography>
               <Box sx={{ flex: 1, display: 'flex', alignItems: 'stretch', justifyContent: 'center', width: '100%' }}>
                 {renderCentroidPreview()}
               </Box>
             </CardContent>
           </CardActionArea>
         </Card>
-        <Card sx={{ aspectRatio: '2 / 3', maxHeight: { xs: 420, md: 520 }, borderRadius: 3, overflow: 'hidden', display: 'flex' }}>
+        <Card sx={{ aspectRatio: { xs: '1 / 1.2', md: '2 / 3' }, maxHeight: { xs: 380, md: 520 }, borderRadius: 3, overflow: 'hidden', display: 'flex' }}>
           <CardActionArea onClick={() => setSelected('memory')} sx={{ display: 'flex', flex: 1 }}>
-            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1, flex: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 0.5, md: 1 }, flex: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em', p: { xs: 1, md: 2 } }}>
               <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>JJJ Memory</Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8, fontFamily: 'inherit' }}>4×4 board preview (pair revealed)</Typography>
               <Box sx={{ flex: 1, display: 'flex', alignItems: 'stretch', justifyContent: 'center', width: '100%' }}>
                 {renderMemoryPreview()}
               </Box>

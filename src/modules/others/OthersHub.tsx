@@ -6,9 +6,10 @@ interface OthersHubProps {
   gotoArticles: () => void;
   gotoCoach: () => void;
   gotoStudies?: () => void;
+  gotoCalendar?: () => void;
 }
 
-const OthersHub: React.FC<OthersHubProps> = ({ onBack, gotoArticles, gotoCoach, gotoStudies }) => {
+const OthersHub: React.FC<OthersHubProps> = ({ onBack, gotoArticles, gotoCoach, gotoStudies, gotoCalendar }) => {
   return (
     <Box sx={{ p: 2, m: 'auto', width: '100%', maxWidth: 980 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -46,6 +47,14 @@ const OthersHub: React.FC<OthersHubProps> = ({ onBack, gotoArticles, gotoCoach, 
             <CardContent>
               <Typography variant="h6">Other Coach Tools (WIP)</Typography>
               <Typography variant="body2" sx={{ opacity: 0.7 }}>Planner, Review Queue</Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+        <Card>
+          <CardActionArea onClick={gotoCalendar} disabled={!gotoCalendar}>
+            <CardContent>
+              <Typography variant="h6">Calendar</Typography>
+              <Typography variant="body2" sx={{ opacity: 0.7 }}>Training sessions and progress</Typography>
             </CardContent>
           </CardActionArea>
         </Card>

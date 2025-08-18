@@ -32,7 +32,6 @@ const MemoryCardPreview: React.FC<Props> = ({ onClick }) => {
         <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 1,
           fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
           <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>JJJ Memory</Typography>
-          <Typography variant="body2" sx={{ opacity: 0.7, fontFamily: 'inherit' }}>4×4 board preview (pair revealed)</Typography>
           <Box sx={{ flex: 1, display:'grid', gridTemplateColumns: `repeat(${COLS}, 1fr)`, gap: `${GAP}px`, alignItems:'stretch' }}>
             {grid}
           </Box>
@@ -43,9 +42,3 @@ const MemoryCardPreview: React.FC<Props> = ({ onClick }) => {
 };
 
 export default MemoryCardPreview;
-
-
-
-
-
-

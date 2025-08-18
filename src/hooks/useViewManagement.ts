@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-export type View = 'home' | 'others' | 'matrix' | 'articles' | 'studies' | 'graphs' | 'ludus' | 'cards' | 'games' | 'coach' | 'skillcheck' | 'calendar' | 'training';
+export type View = 'home' | 'others' | 'matrix' | 'articles' | 'studies' | 'graphs' | 'ludus' | 'cards' | 'games' | 'coach' | 'skillcheck' | 'calendar' | 'training' | 'stories';
 
 // Pre-computed constants
 const DEFAULT_VIEW: View = 'home';
@@ -23,6 +23,7 @@ export const useViewManagement = () => {
   const switchToSkillCheck = useCallback(() => setCurrentView('skillcheck'), []);
   const switchToCalendar = useCallback(() => setCurrentView('calendar'), []);
   const switchToTraining = useCallback(() => setCurrentView('training'), []);
+  const switchToStories = useCallback(() => setCurrentView('stories'), []);
 
   return {
     currentView,
@@ -40,6 +41,7 @@ export const useViewManagement = () => {
     switchToSkillCheck,
     switchToCalendar,
     switchToTraining,
+    switchToStories,
     gamesInitial
   };
 }; 

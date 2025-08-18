@@ -19,6 +19,7 @@ import SkillCheck from './modules/skillcheck/SkillCheck';
 import Ludus from './components/Ludus/Ludus';
 import OthersHub from './modules/others/OthersHub';
 import TrainingHub from './modules/training/TrainingHub';
+import StoriesHub from './modules/stories/StoriesHub';
 import RetroMessage from './components/RetroMessage';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
@@ -348,6 +349,7 @@ function App() {
                 goOthers={viewManagement.switchToOthers}
                 goCalendar={viewManagement.switchToCalendar}
                 goTraining={viewManagement.switchToTraining}
+                goStories={viewManagement.switchToStories}
               />
            </div>
           ) : viewManagement.currentView === 'matrix' ? (
@@ -409,10 +411,14 @@ function App() {
             <CoachTools />
           </div>
         ) : viewManagement.currentView === 'others' ? (
-          <OthersHub onBack={viewManagement.switchToHome} gotoArticles={viewManagement.switchToArticles} gotoCoach={viewManagement.switchToCoach} gotoStudies={viewManagement.switchToStudies} />
+          <OthersHub onBack={viewManagement.switchToHome} gotoArticles={viewManagement.switchToArticles} gotoCoach={viewManagement.switchToCoach} gotoStudies={viewManagement.switchToStudies} gotoCalendar={viewManagement.switchToCalendar} />
         ) : viewManagement.currentView === 'training' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <TrainingHub />
+          </div>
+        ) : viewManagement.currentView === 'stories' ? (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <StoriesHub onExit={viewManagement.switchToHome} />
           </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>

@@ -38,7 +38,6 @@ const CentroidCardPreview: React.FC<Props> = ({ onClick }) => {
         <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 1,
           fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
           <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>Centroid</Typography>
-          <Typography variant="body2" sx={{ opacity: 0.7, fontFamily: 'inherit' }}>Intro + mock puzzle</Typography>
           <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box sx={{ position: 'relative', width: PX, height: PX, display: 'grid', gridTemplateColumns: `repeat(${GRID}, ${CELL}px)`, gridTemplateRows: `repeat(${GRID}, ${CELL}px)`, bgcolor: '#111', borderRadius: 1, overflow: 'hidden' }}>
               {cells}
@@ -65,6 +64,8 @@ const CentroidCardPreview: React.FC<Props> = ({ onClick }) => {
 };
 
 export default CentroidCardPreview;
+
+
 
 
 
