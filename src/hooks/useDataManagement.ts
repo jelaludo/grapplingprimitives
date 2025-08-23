@@ -282,6 +282,7 @@ export const useDataManagement = (isDevelopment: boolean) => {
     updateCategory,
     deleteCategory,
     setCategories, // Expose setCategories for direct updates
+    setConcepts, // Expose setConcepts for direct updates
     
     // Constants
     LOCAL_STORAGE_KEYS

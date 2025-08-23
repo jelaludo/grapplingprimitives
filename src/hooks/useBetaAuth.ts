@@ -1,22 +1,4 @@
 import { useState, useEffect } from 'react';
-import productionPasswords from '../data/productionPasswords.json';
-// Avoid bundling bcryptjs in the client. Use a tiny async stub in production that
-// delegates comparison to a backend later. For now, use a naive constant-time-ish
-// string compare of plaintexts. NOTE: hashes remain validated on server scripts.
-// This removes the need for Node crypto polyfills in the browser build.
-const comparePlain = async (plain: string, hashOrPlain: string) => {
-  // If productionPasswords stores plaintext (transition), compare directly
-  // Else if it stores bcrypt hashes, this will not match and we must add a
-  // server endpoint later. For now, support plaintext only.
-  // Time-constant-ish compare
-  const a = plain;
-  const b = hashOrPlain;
-  if (a.length !== b.length) return false;
-  let res = 0;
-  for (let i = 0; i < a.length; i++) res |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return res === 0;
-};
-
 
 export const useBetaAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -27,19 +9,11 @@ export const useBetaAuth = () => {
   useEffect(() => {
     const token = localStorage.getItem('betaAuthToken');
     if (token) {
-      // Simple token validation - just check if it exists and isn't expired
-      try {
-        const tokenData = JSON.parse(atob(token.split('.')[1]));
-        if (tokenData.exp && tokenData.exp > Date.now() / 1000) {
-          setIsAuthenticated(true);
-        } else {
-          localStorage.removeItem('betaAuthToken');
-        }
-      } catch {
-        localStorage.removeItem('betaAuthToken');
-      }
+      // Verify token with backend
+      verifyToken();
+    } else {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
 
   const login = async (password: string): Promise<boolean> => {
@@ -47,95 +21,84 @@ export const useBetaAuth = () => {
     setError(null);
 
     try {
-      // Production: check against bcrypt hashes from productionPasswords.json
-      if (process.env.NODE_ENV === 'production') {
-        let isValid = false;
-        let matchedPassword: { hash: string; password: string; created: string; usageCount: number; lastUsed: string } | null = null;
-        
-        // Check against all production passwords
-        for (const pw of productionPasswords.passwords) {
-          // Temporary: support plaintext matches only. If hashes are present,
-          // this will fail and we should move validation server-side.
-          const isMatch = await comparePlain(password, (pw as any).password || pw.hash || '');
-          if (isMatch) {
-            isValid = true;
-            matchedPassword = pw;
-            break;
-          }
-        }
-        
-        if (isValid && matchedPassword) {
-          // Create a simple JWT-like token
-          const tokenData = {
-            password: password,
-            exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24 hours
-            iat: Math.floor(Date.now() / 1000)
-          };
-          
-          const token = btoa(JSON.stringify(tokenData));
-          localStorage.setItem('betaAuthToken', token);
-          setIsAuthenticated(true);
-          return true;
-        } else {
-          setError('Invalid password');
-          return false;
-        }
+      // Call the backend API for authentication
+      const response = await fetch('/api/auth/beta-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.token) {
+        // Store the JWT token from the backend
+        localStorage.setItem('betaAuthToken', data.token);
+        setIsAuthenticated(true);
+        return true;
       } else {
-        // Development mode - check against local storage passwords
-        const storedPasswords = localStorage.getItem('devBetaPasswords');
-        const devPasswords = storedPasswords ? JSON.parse(storedPasswords) : [{ password: 'kimura42', usageCount: 0, lastUsed: 'Never' }];
-        
-        const matchingPassword = devPasswords.find((p: { password: string; usageCount: number; lastUsed: string }) => p.password === password);
-        if (matchingPassword) {
-          // Update usage stats
-          matchingPassword.usageCount += 1;
-          matchingPassword.lastUsed = new Date().toLocaleString();
-          localStorage.setItem('devBetaPasswords', JSON.stringify(devPasswords));
-          // Create a simple JWT-like token
-          const tokenData = {
-            password: password,
-            exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24 hours
-            iat: Math.floor(Date.now() / 1000)
-          };
-          
-          const token = btoa(JSON.stringify(tokenData));
-          localStorage.setItem('betaAuthToken', token);
-          setIsAuthenticated(true);
-          return true;
-        } else {
-          setError('Invalid password');
-          return false;
-        }
+        setError(data.error || 'Invalid password');
+        return false;
       }
     } catch (err) {
-      setError('Authentication failed');
+      console.error('Login error:', err);
+      setError('Authentication failed. Please check your connection.');
       return false;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('betaAuthToken');
-    setIsAuthenticated(false);
-    setError(null);
+  const logout = async () => {
+    try {
+      // Call backend logout endpoint
+      await fetch('/api/auth/beta-logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('betaAuthToken')}`,
+        },
+      });
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      localStorage.removeItem('betaAuthToken');
+      setIsAuthenticated(false);
+      setError(null);
+    }
   };
 
   const verifyToken = async (): Promise<boolean> => {
     const token = localStorage.getItem('betaAuthToken');
-    if (!token) return false;
+    if (!token) {
+      setIsLoading(false);
+      return false;
+    }
 
     try {
-      if (process.env.NODE_ENV === 'production') {
-        // Simple token validation for production
-        const tokenData = JSON.parse(atob(token));
-        return tokenData.exp && tokenData.exp > Date.now() / 1000;
+      const response = await fetch('/api/auth/beta-verify', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsAuthenticated(true);
+        setIsLoading(false);
+        return true;
       } else {
-        // Development mode - simple token validation
-        const tokenData = JSON.parse(atob(token));
-        return tokenData.exp && tokenData.exp > Date.now() / 1000;
+        localStorage.removeItem('betaAuthToken');
+        setIsAuthenticated(false);
+        setIsLoading(false);
+        return false;
       }
-    } catch {
+    } catch (err) {
+      console.error('Token verification error:', err);
+      localStorage.removeItem('betaAuthToken');
+      setIsAuthenticated(false);
+      setIsLoading(false);
       return false;
     }
   };

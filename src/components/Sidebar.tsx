@@ -68,10 +68,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Search functionality
-  const searchResults = concepts.filter(concept =>
+  const searchResults = searchText.trim() ? concepts.filter(concept =>
     concept.concept.toLowerCase().includes(searchText.toLowerCase()) ||
     concept.short_description.toLowerCase().includes(searchText.toLowerCase())
-  );
+  ) : [];
+
+
 
   const handleSearchResultClick = (concept: BJJConcept) => {
     // Ensure the clicked concept is visible even if its category is not currently selected
@@ -162,16 +164,32 @@ const Sidebar: React.FC<SidebarProps> = ({
       <section style={{ marginBottom: 24 }}>
         <h3 style={{ fontSize: 16, marginBottom: 8, color: '#aaa' }}>Search</h3>
         <div style={{ position: 'relative' }}>
-          <input
+          <div style={{ position: 'relative' }}>
+            <input
             ref={searchInputRef}
             type="text"
             value={searchText}
             onChange={e => {
-              setSearchText(e.target.value);
-              setShowSearchResults(true);
+              const newValue = e.target.value;
+              setSearchText(newValue);
+              // Show results as we type (live search)
+              setShowSearchResults(newValue.trim().length > 0);
             }}
-            onFocus={() => setShowSearchResults(true)}
-            onBlur={() => setShowSearchResults(false)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                // Blur the input to confirm search
+                (e.currentTarget as HTMLElement).blur();
+              }
+            }}
+            onFocus={() => {
+              // Only show results if there's search text
+              setShowSearchResults(searchText.trim().length > 0);
+            }}
+            onBlur={() => {
+              // Delay hiding results to allow clicking on them
+              setTimeout(() => setShowSearchResults(false), 150);
+            }}
             placeholder="Search concepts..."
             style={{
               width: '100%',
@@ -183,6 +201,37 @@ const Sidebar: React.FC<SidebarProps> = ({
               fontSize: 14,
             }}
           />
+          {searchText && (
+            <button
+              onClick={() => {
+                setSearchText('');
+                setShowSearchResults(false);
+                if (searchInputRef.current) {
+                  searchInputRef.current.focus();
+                }
+              }}
+              style={{
+                position: 'absolute',
+                right: 8,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                color: '#666',
+                cursor: 'pointer',
+                fontSize: 16,
+                padding: 0,
+                width: 20,
+                height: 20,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              ×
+            </button>
+          )}
+        </div>
           {showSearchResults && searchResults.length > 0 && (
             <div style={{
               position: 'absolute',
@@ -197,9 +246,9 @@ const Sidebar: React.FC<SidebarProps> = ({
               overflowY: 'auto',
               zIndex: 1000,
             }}>
-              {searchResults.map(concept => (
+              {searchResults.map((concept, index) => (
                 <div
-                  key={concept.id}
+                  key={`${concept.id}-${index}`}
                   // Use onMouseDown so selection happens before input onBlur hides the list
                   onMouseDown={(e) => { e.preventDefault(); handleSearchResultClick(concept); }}
                   className="search-result-item"

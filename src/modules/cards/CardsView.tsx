@@ -1,33 +1,50 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { CardGrid } from './CardGrid';
 import CardCarousel from './CardCarousel';
 import { BJJConcept } from '../../types/concepts';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+
 
 interface CardsViewProps {
   concepts: BJJConcept[];
   selectedCategories: string[];
   query: string;
+  filteredConcepts: BJJConcept[];
+  hasSearch: boolean;
+  resultCount: number;
 }
 
-export const CardsView: React.FC<CardsViewProps> = ({ concepts, selectedCategories, query }) => {
-  const filteredForView = useMemo(() => {
-    const list = selectedCategories.length === 0
-      ? concepts
-      : concepts.filter(c => selectedCategories.includes(c.category));
-    const q = (query || '').trim().toLowerCase();
-    if (!q) return list;
-    return list.filter(c =>
-      c.concept.toLowerCase().includes(q) ||
-      c.short_description.toLowerCase().includes(q) ||
-      c.description.toLowerCase().includes(q)
-    );
-  }, [concepts, selectedCategories, query]);
+export const CardsView: React.FC<CardsViewProps> = ({ 
+  concepts, 
+  selectedCategories, 
+  query, 
+  filteredConcepts, 
+  hasSearch, 
+  resultCount 
+}) => {
+  // Debug logging
+  console.log('CardsView props:', {
+    query,
+    hasSearch,
+    resultCount,
+    filteredConceptsLength: filteredConcepts.length
+  });
 
   return (
     <Box sx={{ p: 2 }}>
-      <CardCarousel concepts={filteredForView} />
-      <CardGrid concepts={concepts} selectedCategories={selectedCategories} query={query} />
+      {hasSearch ? (
+        <>
+          <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
+            Search results: {resultCount} concept{resultCount !== 1 ? 's' : ''}
+          </Typography>
+          <CardCarousel concepts={filteredConcepts} />
+          <CardGrid concepts={filteredConcepts} selectedCategories={selectedCategories} />
+        </>
+      ) : (
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2, textAlign: 'center' }}>
+          Type to search concepts...
+        </Typography>
+      )}
     </Box>
   );
 };

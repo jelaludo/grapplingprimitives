@@ -32,7 +32,8 @@ import {
   useDataSource, 
   useSnackbar, 
   useViewManagement,
-  useBetaAuth
+  useBetaAuth,
+  useUnifiedSearch
 } from './hooks';
 import { BJJConcept, Category } from './types/concepts';
 
@@ -113,8 +114,12 @@ function App() {
     window.addEventListener('gp:open-menu', onOpenMenu as EventListener);
     return () => window.removeEventListener('gp:open-menu', onOpenMenu as EventListener);
   }, []);
-  const [cardsQuery, setCardsQuery] = useState('');
-  const [cardsSelectedCategories, setCardsSelectedCategories] = useState<string[]>([]);
+  // Use unified search for Cards view
+  const cardsUnifiedSearch = useUnifiedSearch({
+    concepts: dataManagement.concepts,
+    initialQuery: '',
+    initialCategories: []
+  });
   const betaAuth = useBetaAuth();
 
   // Load data when source changes
@@ -325,11 +330,11 @@ function App() {
             <CardsSidebar
               concepts={dataManagement.concepts}
               categories={dataManagement.categories as any}
-              query={cardsQuery}
-              setQuery={setCardsQuery}
-              selectedCategories={cardsSelectedCategories}
-              toggleCategory={(name) => setCardsSelectedCategories(prev => prev.includes(name) ? prev.filter(x => x !== name) : [...prev, name])}
-              clearCategories={() => setCardsSelectedCategories([])}
+              query={cardsUnifiedSearch.query}
+              setQuery={cardsUnifiedSearch.setQuery}
+              selectedCategories={cardsUnifiedSearch.selectedCategories}
+              toggleCategory={cardsUnifiedSearch.toggleCategory}
+              clearCategories={cardsUnifiedSearch.clearCategories}
             />
           ) : null
         }
@@ -400,7 +405,14 @@ function App() {
           <Ludus onBackToMatrix={viewManagement.switchToMatrix} />
         ) : viewManagement.currentView === 'cards' ? (
           <div style={VIEW_CONTAINER_STYLE}>
-            <CardsView concepts={dataManagement.concepts} selectedCategories={cardsSelectedCategories} query={cardsQuery} />
+                          <CardsView 
+                concepts={dataManagement.concepts} 
+                selectedCategories={cardsUnifiedSearch.selectedCategories} 
+                query={cardsUnifiedSearch.query}
+                filteredConcepts={cardsUnifiedSearch.filteredConcepts}
+                hasSearch={cardsUnifiedSearch.hasSearch}
+                resultCount={cardsUnifiedSearch.resultCount}
+              />
           </div>
          ) : viewManagement.currentView === 'games' ? (
           <div style={{ height: '100vh', width: '100%', overflow: 'hidden', display: 'flex' }}>
@@ -436,6 +448,11 @@ function App() {
         masterLists={dataManagement.masterLists}
         selectedMasterList={dataSource.selectedMasterList}
         setSelectedMasterList={dataSource.updateSelectedMasterList}
+        concepts={dataManagement.concepts}
+        onUpdateConcepts={(updatedConcepts) => {
+          // Update the concepts in data management
+          dataManagement.setConcepts(updatedConcepts);
+        }}
         onConvertToMongo={async () => {
     try {
       const response = await fetch('http://localhost:3001/api/save-mongo-ready', {

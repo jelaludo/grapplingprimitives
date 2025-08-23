@@ -44,6 +44,8 @@ interface DevModeToggleProps {
   onSeedFromLocal?: () => void;
   onCreateBackup?: () => void;
   onRestoreFromBackup?: (backupFile: string) => void;
+  concepts?: any[];
+  onUpdateConcepts?: (concepts: any[]) => void;
 }
 
 // Pre-computed styles
@@ -97,7 +99,9 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
   onConvertToMongo,
   onSeedFromLocal,
   onCreateBackup,
-  onRestoreFromBackup
+  onRestoreFromBackup,
+  concepts = [],
+  onUpdateConcepts,
 }) => {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
@@ -455,7 +459,11 @@ export const DevModeToggle: React.FC<DevModeToggleProps> = ({
 
           {/* Beta Admin Tab */}
           {activeTab === 1 && (
-            <BetaDashboard onClose={handleClose} />
+            <BetaDashboard 
+              onClose={handleClose} 
+              concepts={concepts}
+              onUpdateConcepts={onUpdateConcepts}
+            />
           )}
         </DialogContent>
 

@@ -38,6 +38,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:clean": "set DISABLE_ESLINT_PLUGIN=true && set ESLINT_NO_DEV_ERRORS=true && react-scripts start",
+    "start:no-eslint": "set DISABLE_ESLINT_PLUGIN=true && set ESLINT_NO_DEV_ERRORS=true && set GENERATE_SOURCEMAP=false && react-scripts start",
+    "start:windows": "powershell -Command \"$env:DISABLE_ESLINT_PLUGIN='true'; $env:ESLINT_NO_DEV_ERRORS='true'; npm start\"",
     "prebuild": "node scripts/generateVersionInfo.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -56,7 +59,9 @@
     "update:latest": "node scripts/updateToLatestBackup.js",
     "seed:canonical": "node scripts/seedFromCanonicalJson.js",
     "typecheck": "tsc --noEmit",
-    "validate:data": "node scripts/validateCanonicalJson.js"
+    "validate:data": "node scripts/validateCanonicalJson.js",
+    "clear-cache": "powershell -Command \"Remove-Item -Path 'node_modules\\.cache' -Recurse -Force -ErrorAction SilentlyContinue\"",
+    "dev": "npm run clear-cache && npm run start:clean"
   },
   "eslintConfig": {
     "extends": [

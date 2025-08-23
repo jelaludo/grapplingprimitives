@@ -15,9 +15,13 @@ import {
   DialogContent,
   DialogActions,
   Chip,
-  Alert
+  Alert,
+  Tabs,
+  Tab
 } from '@mui/material';
-import { Delete as DeleteIcon, Add as AddIcon, Visibility as VisibilityIcon } from '@mui/icons-material';
+import { Delete as DeleteIcon, Add as AddIcon, Visibility as VisibilityIcon, BugReport as BugReportIcon } from '@mui/icons-material';
+// import { DuplicateDetector } from './DuplicateDetector';
+import { BJJConcept } from '../../types/concepts';
 
 interface BetaPassword {
   password: string;
@@ -27,9 +31,11 @@ interface BetaPassword {
 
 interface BetaDashboardProps {
   onClose: () => void;
+  concepts?: BJJConcept[];
+  onUpdateConcepts?: (concepts: BJJConcept[]) => void;
 }
 
-export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
+export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose, concepts = [], onUpdateConcepts }) => {
   const [passwords, setPasswords] = useState<BetaPassword[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +43,7 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
   const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     loadPasswords();
@@ -155,93 +162,120 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
   }
 
   return (
-    <Box sx={{ p: 3, maxWidth: 600 }}>
+    <Box sx={{ p: 3, maxWidth: 1200 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h5" component="h2">
-          Beta Password Management
+          Beta Dashboard
         </Typography>
         <Chip label="DEV ONLY" color="warning" size="small" />
       </Box>
 
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
+      <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} sx={{ mb: 3 }}>
+        <Tab label="Passwords" icon={<VisibilityIcon />} />
+        <Tab label="Duplicate Detector" icon={<BugReportIcon />} />
+      </Tabs>
+
+      {activeTab === 0 && (
+        <>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Typography variant="h6">
+              Beta Password Management
+            </Typography>
+          </Box>
+
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="h6">
+              Active Passwords ({passwords.length})
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              {process.env.NODE_ENV === 'development' && (
+                <Button
+                  variant="outlined"
+                  onClick={() => setShowExportDialog(true)}
+                  size="small"
+                >
+                  Export to Production
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => setShowAddDialog(true)}
+                size="small"
+              >
+                Add Password
+              </Button>
+            </Box>
+          </Box>
+
+          <List>
+            {passwords.map((passwordObj, index) => (
+              <ListItem
+                key={index}
+                sx={{
+                  border: '1px solid #333',
+                  borderRadius: 1,
+                  mb: 1,
+                  backgroundColor: '#1a1a1a'
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="body1" sx={{ fontFamily: 'monospace' }}>
+                        {showPassword ? passwordObj.password : '•'.repeat(passwordObj.password.length)}
+                      </Typography>
+                      <IconButton
+                        size="small"
+                        onClick={() => setShowPassword(!showPassword)}
+                        sx={{ color: '#888' }}
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                    </Box>
+                  }
+                  secondary={
+                    <Typography variant="caption" color="text.secondary">
+                      Password #{index + 1} • Used {passwordObj.usageCount} times • Last: {passwordObj.lastUsed}
+                    </Typography>
+                  }
+                />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    onClick={() => handleDeletePassword(passwordObj.password)}
+                    sx={{ color: '#f44336' }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
+
+          {passwords.length === 0 && (
+            <Box sx={{ textAlign: 'center', py: 4, color: '#888' }}>
+              <Typography>No beta passwords configured</Typography>
+            </Box>
+          )}
+        </>
       )}
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h6">
-          Active Passwords ({passwords.length})
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          {process.env.NODE_ENV === 'development' && (
-            <Button
-              variant="outlined"
-              onClick={() => setShowExportDialog(true)}
-              size="small"
-            >
-              Export to Production
-            </Button>
-          )}
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setShowAddDialog(true)}
-            size="small"
-          >
-            Add Password
-          </Button>
-        </Box>
-      </Box>
-
-      <List>
-        {passwords.map((passwordObj, index) => (
-          <ListItem
-            key={index}
-            sx={{
-              border: '1px solid #333',
-              borderRadius: 1,
-              mb: 1,
-              backgroundColor: '#1a1a1a'
-            }}
-          >
-            <ListItemText
-              primary={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography variant="body1" sx={{ fontFamily: 'monospace' }}>
-                    {showPassword ? passwordObj.password : '•'.repeat(passwordObj.password.length)}
-                  </Typography>
-                  <IconButton
-                    size="small"
-                    onClick={() => setShowPassword(!showPassword)}
-                    sx={{ color: '#888' }}
-                  >
-                    <VisibilityIcon />
-                  </IconButton>
-                </Box>
-              }
-              secondary={
-                <Typography variant="caption" color="text.secondary">
-                  Password #{index + 1} • Used {passwordObj.usageCount} times • Last: {passwordObj.lastUsed}
-                </Typography>
-              }
-            />
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                onClick={() => handleDeletePassword(passwordObj.password)}
-                sx={{ color: '#f44336' }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
-
-      {passwords.length === 0 && (
-        <Box sx={{ textAlign: 'center', py: 4, color: '#888' }}>
-          <Typography>No beta passwords configured</Typography>
+      {activeTab === 1 && (
+        <Box sx={{ p: 3 }}>
+          <Typography variant="h6">Duplicate Detector</Typography>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            Tool temporarily disabled due to import issues.
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Found {concepts.length} total concepts in your data.
+          </Typography>
         </Box>
       )}
 
@@ -302,4 +336,4 @@ export const BetaDashboard: React.FC<BetaDashboardProps> = ({ onClose }) => {
       </Box>
     </Box>
   );
-}; 
+};

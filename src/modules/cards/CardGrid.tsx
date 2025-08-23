@@ -10,26 +10,34 @@ import CardDetailDialog from './CardDetailDialog';
 interface CardGridProps {
   concepts: BJJConcept[];
   selectedCategories: string[];
-  query?: string;
 }
 
-export const CardGrid: React.FC<CardGridProps> = ({ concepts, selectedCategories, query }) => {
-  const cards = useCardsState(concepts);
+export const CardGrid: React.FC<CardGridProps> = ({ concepts, selectedCategories }) => {
+  // Don't use useCardsState for filtering since concepts are already filtered
   const [studyMode, setStudyMode] = useState(false);
   const [openConcept, setOpenConcept] = useState<BJJConcept | null>(null);
+  const [staged, setStaged] = useState<string[]>([]);
+  const [ratings, setRatings] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cardRatings');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
 
-  const filtered = useMemo(() => {
-    const list = (selectedCategories.length === 0)
-      ? concepts
-      : concepts.filter(c => selectedCategories.includes(c.category));
-    const q = (query || '').trim().toLowerCase();
-    if (!q) return list;
-    return list.filter(c =>
-      c.concept.toLowerCase().includes(q) ||
-      c.short_description.toLowerCase().includes(q) ||
-      c.description.toLowerCase().includes(q)
-    );
-  }, [concepts, selectedCategories, query]);
+  // Use the pre-filtered concepts directly
+  const filtered = concepts;
+
+  const toggleStage = (id: string) => {
+    setStaged(prev => (prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]));
+  };
+
+  const setConceptRating = (id: string, rating: number) => {
+    const newRatings = { ...ratings, [id]: rating };
+    setRatings(newRatings);
+    localStorage.setItem('cardRatings', JSON.stringify(newRatings));
+  };
 
   return (
     <Box sx={{ p: 2, width: '100%', overflow: 'auto' }}>
@@ -43,7 +51,7 @@ export const CardGrid: React.FC<CardGridProps> = ({ concepts, selectedCategories
         <StudyMode
           concepts={filtered}
           onExit={() => setStudyMode(false)}
-          onRate={cards.setConceptRating}
+          onRate={setConceptRating}
         />
       ) : (
         <>
@@ -61,11 +69,11 @@ export const CardGrid: React.FC<CardGridProps> = ({ concepts, selectedCategories
           >
             {filtered.map(c => (
               <Box key={c.id}>
-                <CardFlip compact concept={c} onStage={cards.toggleStage} onOpen={setOpenConcept} />
+                <CardFlip compact concept={c} onStage={toggleStage} onOpen={setOpenConcept} />
               </Box>
             ))}
           </Box>
-          <CardStage concepts={concepts} stagedIds={cards.staged} onToggleStage={cards.toggleStage} />
+          <CardStage concepts={concepts} stagedIds={staged} onToggleStage={toggleStage} />
           <CardDetailDialog open={Boolean(openConcept)} concept={openConcept} onClose={() => setOpenConcept(null)} />
         </>
       )}
