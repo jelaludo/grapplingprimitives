@@ -5,12 +5,5 @@ module.exports = {
   ],
   rules: {
     // Disable rules that might cause issues
-  },
-  // Completely disable caching to prevent permission issues
-  cache: false,
-  cacheLocation: null,
-  // Disable file watching to prevent file system issues
-  useEslintrc: false,
-  // Set cache strategy to none
-  cacheStrategy: 'none'
+  }
 };

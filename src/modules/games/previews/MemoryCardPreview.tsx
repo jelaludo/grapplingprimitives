@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 
-interface Props { onClick?: () => void }
+interface Props {}
 
-const MemoryCardPreview: React.FC<Props> = ({ onClick }) => {
+const MemoryCardPreview: React.FC<Props> = () => {
   const COLS = 4, ROWS = 4, GAP = 6;
   const BACK_URL = '/images/memory/Memory_JJJ_Back_440x.webp';
   const frontSrc = (id: string, ext: 'avif'|'webp') => `/images/memory/${ext}/${id}.${ext}`;
@@ -28,15 +28,13 @@ const MemoryCardPreview: React.FC<Props> = ({ onClick }) => {
 
   return (
     <Card sx={{ height: 1, borderRadius: 2, overflow: 'hidden' }}>
-      <CardActionArea onClick={onClick} sx={{ height: '100%' }}>
-        <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 1,
-          fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
+      <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 1,
+        fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
           <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>JJJ Memory</Typography>
           <Box sx={{ flex: 1, display:'grid', gridTemplateColumns: `repeat(${COLS}, 1fr)`, gap: `${GAP}px`, alignItems:'stretch' }}>
             {grid}
           </Box>
         </CardContent>
-      </CardActionArea>
     </Card>
   );
 };

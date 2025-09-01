@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 
-interface Props { onClick?: () => void }
+interface Props {}
 
-const CentroidCardPreview: React.FC<Props> = ({ onClick }) => {
+const CentroidCardPreview: React.FC<Props> = () => {
   const GRID = 11;
   const CELL = 14;
   const PX = GRID * CELL;
@@ -34,9 +34,8 @@ const CentroidCardPreview: React.FC<Props> = ({ onClick }) => {
 
   return (
     <Card sx={{ height: 1, borderRadius: 2, overflow: 'hidden' }}>
-      <CardActionArea onClick={onClick} sx={{ height: '100%' }}>
-        <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 1,
-          fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
+      <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 1,
+        fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
           <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>Centroid</Typography>
           <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box sx={{ position: 'relative', width: PX, height: PX, display: 'grid', gridTemplateColumns: `repeat(${GRID}, ${CELL}px)`, gridTemplateRows: `repeat(${GRID}, ${CELL}px)`, bgcolor: '#111', borderRadius: 1, overflow: 'hidden' }}>
@@ -58,7 +57,6 @@ const CentroidCardPreview: React.FC<Props> = ({ onClick }) => {
             <Typography variant="caption" sx={{ display: 'block' }} color="error.light">Red = your guess</Typography>
           </Box>
         </CardContent>
-      </CardActionArea>
     </Card>
   );
 };

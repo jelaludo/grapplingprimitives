@@ -20,6 +20,7 @@ import Ludus from './components/Ludus/Ludus';
 import OthersHub from './modules/others/OthersHub';
 import TrainingHub from './modules/training/TrainingHub';
 import StoriesHub from './modules/stories/StoriesHub';
+import BeltDropout from './modules/beltdropout/BeltDropout';
 import RetroMessage from './components/RetroMessage';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
@@ -355,6 +356,7 @@ function App() {
                 goCalendar={viewManagement.switchToCalendar}
                 goTraining={viewManagement.switchToTraining}
                 goStories={viewManagement.switchToStories}
+                goBeltDropout={viewManagement.switchToBeltDropout}
               />
            </div>
           ) : viewManagement.currentView === 'matrix' ? (
@@ -425,12 +427,14 @@ function App() {
         ) : viewManagement.currentView === 'others' ? (
           <OthersHub onBack={viewManagement.switchToHome} gotoArticles={viewManagement.switchToArticles} gotoCoach={viewManagement.switchToCoach} gotoStudies={viewManagement.switchToStudies} gotoCalendar={viewManagement.switchToCalendar} />
         ) : viewManagement.currentView === 'training' ? (
-          <div style={VIEW_CONTAINER_STYLE}>
-            <TrainingHub />
-          </div>
+          <TrainingHub />
         ) : viewManagement.currentView === 'stories' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <StoriesHub onExit={viewManagement.switchToHome} />
+          </div>
+        ) : viewManagement.currentView === 'beltdropout' ? (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <BeltDropout onBack={viewManagement.switchToHome} />
           </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>

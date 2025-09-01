@@ -15,6 +15,7 @@ interface Props {
   goCalendar: () => void;
   goTraining: () => void;
   goStories: () => void;
+  goBeltDropout: () => void;
 }
 
 const HomeHubMount: React.FC<Props> = (props) => {

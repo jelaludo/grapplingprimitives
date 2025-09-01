@@ -6,6 +6,7 @@ import TimerCardPreview from '../coach/previews/TimerCardPreview';
 import SkillCheckCardPreview from '../skillcheck/previews/SkillCheckCardPreview';
 import TrainingCardPreview from '../training/TrainingCardPreview';
 import StoriesCardPreview from '../stories/StoriesCardPreview';
+import BeltDropoutCardPreview from '../beltdropout/BeltDropoutCardPreview';
 
 interface HomeHubProps {
   goMatrix: () => void;
@@ -21,6 +22,7 @@ interface HomeHubProps {
   goCalendar: () => void;
   goTraining: () => void;
   goStories: () => void;
+  goBeltDropout: () => void;
 }
 
 const HomeHub: React.FC<HomeHubProps> = (props) => {
@@ -125,7 +127,7 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
         </Box>
       </Box>
       <Box sx={{ display: 'grid', gap: { xs: 1, sm: 1.5, md: 2 }, gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gridAutoRows: '1fr', flex: 1 }}>
-        <CardShell title="GRAPPLING PRIMITIVES MATRIX" subtitle="Explore the concept map" onClick={props.goMatrix} preview={<PreviewMatrix />} />
+        <CardShell title="GRAPPLING PRIMITIVES" subtitle="Concepts Mapping" onClick={props.goMatrix} preview={<PreviewMatrix />} />
         <CardShell title="BJJ Visualizations" onClick={props.goGraphs} preview={<PreviewGraphs />} />
         <CardShell title="Centroid" onClick={() => props.goGames('centroid')} preview={<CentroidCardPreview />} />
         <CardShell title="JJJ Memory" onClick={() => props.goGames('memory')} preview={<MemoryCardPreview />} />
@@ -133,6 +135,7 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
         <CardShell hideTitle onClick={() => { props.goCoach(); setTimeout(() => { if (typeof window !== 'undefined') window.location.hash = 'timer'; }, 0); }} preview={<TimerCardPreview />} />
         <CardShell hideTitle onClick={props.goSkillCheck} preview={<SkillCheckCardPreview />} />
         <CardShell title="Training" onClick={props.goTraining} preview={<TrainingCardPreview />} />
+        <CardShell title="Belt Dropout" onClick={props.goBeltDropout} preview={<BeltDropoutCardPreview />} />
         <CardShell title="Others" onClick={props.goOthers} preview={<PreviewCards />} />
       </Box>
     </Box>
