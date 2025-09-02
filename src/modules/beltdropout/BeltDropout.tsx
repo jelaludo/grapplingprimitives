@@ -1329,7 +1329,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
         minHeight: '48px'
       }}>
         <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
-          BJJ Dropout Visualization - Cohort Progression
+          BJJ Dropout
         </Typography>
         {onBack && (
           <Button 
@@ -1347,164 +1347,59 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
         )}
       </Box>
 
-      {/* Controls */}
-      <Paper sx={{ 
-        m: 1, 
-        p: 2, 
-        bgcolor: 'rgba(255,255,255,0.05)', 
-        color: 'white',
-        border: '1px solid rgba(255,255,255,0.1)'
+      {/* Essential Controls - Single Line */}
+      <Box sx={{ 
+        p: 1, 
+        display: 'flex', 
+        gap: 1, 
+        alignItems: 'center', 
+        flexWrap: 'wrap',
+        borderBottom: '1px solid rgba(255,255,255,0.1)',
+        bgcolor: 'rgba(255,255,255,0.02)'
       }}>
-        {/* Animation Controls */}
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
-          {/* Mode toggle: Single vs Rolling */}
-          <Button 
-            size="small"
-            variant={rollingMode ? 'contained' : 'outlined'} 
-            onClick={() => setRollingMode(v => !v)} 
-            sx={{ 
-              bgcolor: rollingMode ? '#2196f3' : 'transparent',
-              color: 'white', 
-              borderColor: 'white',
-              '&:hover': { borderColor: 'white', bgcolor: rollingMode ? '#1976d2' : 'rgba(255,255,255,0.1)' }
-            }}
-          >
-            {rollingMode ? 'Mode: Rolling Cohorts' : 'Mode: Single Cohort'}
-          </Button>
+        <Button 
+          size="small"
+          variant={rollingMode ? 'contained' : 'outlined'} 
+          onClick={() => setRollingMode(v => !v)} 
+          sx={{ 
+            bgcolor: rollingMode ? '#2196f3' : 'transparent',
+            color: 'white', 
+            borderColor: 'white',
+            '&:hover': { borderColor: 'white', bgcolor: rollingMode ? '#1976d2' : 'rgba(255,255,255,0.1)' }
+          }}
+        >
+          {rollingMode ? 'Rolling' : 'Single'}
+        </Button>
 
-          {/* Start / Stop */}
-          <Button 
-            size="small"
-            variant="contained" 
-            onClick={isRunning ? stopAnimation : startAnimation}
-            sx={{ 
-              bgcolor: isRunning ? '#f44336' : '#4caf50',
-              '&:hover': { bgcolor: isRunning ? '#d32f2f' : '#45a049' }
-            }}
-          >
-            {isRunning ? 'Stop' : 'Start'}
-          </Button>
-          <Button 
-            size="small"
-            variant="outlined" 
-            onClick={resetAnimation} 
-            sx={{ 
-              color: 'white', 
-              borderColor: 'white',
-              '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' }
-            }}
-          >
-            Reset
-          </Button>
-          <Typography variant="body2" sx={{ color: 'white', ml: 2 }}>
-            Current Year: {currentStage + 1}/10
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'white', ml: 2 }}>
-            Mode: {rollingMode ? 'Rolling Cohorts' : 'Single Cohort'}
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'white', ml: 2 }}>
-            Debug: {isRunning ? 'Running' : 'Stopped'} | Stage: {currentStage} | Points: {dataPoints.length}
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'white', ml: 2 }}>
-            Next: {currentStage < 9 ? `Year ${currentStage + 2}` : 'Complete - Click to restart'}
-          </Typography>
-        </Box>
-        
-        {/* Animation Controls */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {/* Animation Duration */}
-          <Box>
-            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
-              Animation Duration: {animationDuration}ms
-            </Typography>
-            <Slider
-              value={animationDuration}
-              onChange={(_, value) => setAnimationDuration(value as number)}
-              min={500}
-              max={3000}
-              step={100}
-              sx={{ 
-                color: '#4caf50',
-                '& .MuiSlider-thumb': { bgcolor: '#4caf50' },
-                '& .MuiSlider-track': { bgcolor: '#4caf50' },
-                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
-              }}
-            />
-          </Box>
-          
-          {/* Stage Delay */}
-          <Box>
-            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
-              Year Delay: {stageDelay}ms
-            </Typography>
-            <Slider
-              value={stageDelay}
-              onChange={(_, value) => setStageDelay(value as number)}
-              min={200}
-              max={2000}
-              step={100}
-              sx={{ 
-                color: '#ff9800',
-                '& .MuiSlider-thumb': { bgcolor: '#ff9800' },
-                '& .MuiSlider-track': { bgcolor: '#ff9800' },
-                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
-              }}
-            />
-          </Box>
-          
-          {/* Easing Type */}
-          <Box>
-            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
-              Easing: {easingType}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              {(['linear', 'easeInOut', 'easeOut'] as const).map((type) => (
-          <Button 
-                  key={type}
-            size="small"
-                  variant={easingType === type ? 'contained' : 'outlined'}
-                  onClick={() => setEasingType(type)}
-            sx={{ 
-                    bgcolor: easingType === type ? '#ff9800' : 'transparent',
-              color: 'white', 
-              borderColor: 'white',
-                    '&:hover': { 
-                      borderColor: 'white', 
-                      bgcolor: easingType === type ? '#f57c00' : 'rgba(255,255,255,0.1)' 
-                    }
-            }}
-          >
-                  {type}
-          </Button>
-              ))}
-            </Box>
-        </Box>
-        
-          {/* Spacing */}
-          <Box>
-            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
-              Vertical Spacing: {spacing}px
-              </Typography>
-              <Slider
-              value={spacing}
-              onChange={(_, value) => setSpacing(value as number)}
-              min={40}
-              max={120}
-              step={10}
-                sx={{ 
-                color: '#9c27b0',
-                '& .MuiSlider-thumb': { bgcolor: '#9c27b0' },
-                '& .MuiSlider-track': { bgcolor: '#9c27b0' },
-                  '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
-                }}
-              />
-            </Box>
-        </Box>
-        
-        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
-          10-Year Cohort Progression: 100 white belts → Year 2: 40 white, 10 blue, 50 dropout → Year 10: 1 white, 2 blue, 3 purple, 6 brown, 5 black, 80 total dropout
+        <Button 
+          size="small"
+          variant="contained" 
+          onClick={isRunning ? stopAnimation : startAnimation}
+          sx={{ 
+            bgcolor: isRunning ? '#f44336' : '#4caf50',
+            '&:hover': { bgcolor: isRunning ? '#d32f2f' : '#45a049' }
+          }}
+        >
+          {isRunning ? 'Stop' : 'Start'}
+        </Button>
+
+        <Button 
+          size="small"
+          variant="outlined" 
+          onClick={resetAnimation} 
+          sx={{ 
+            color: 'white', 
+            borderColor: 'white',
+            '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' }
+          }}
+        >
+          Reset
+        </Button>
+
+        <Typography variant="body2" sx={{ color: 'white', ml: 'auto' }}>
+          Year {currentStage + 1}/10
         </Typography>
-      </Paper>
+      </Box>
 
       {/* Canvas Container */}
       <Box 
@@ -1554,6 +1449,123 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
           </Box>
         )}
       </Box>
+
+      {/* Detailed Controls at Bottom */}
+      <Paper sx={{ 
+        m: 1, 
+        p: 2, 
+        bgcolor: 'rgba(255,255,255,0.05)', 
+        color: 'white',
+        border: '1px solid rgba(255,255,255,0.1)'
+      }}>
+        {/* Debug Info */}
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
+          <Typography variant="body2" sx={{ color: 'white' }}>
+            Mode: {rollingMode ? 'Rolling Cohorts' : 'Single Cohort'}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'white' }}>
+            Debug: {isRunning ? 'Running' : 'Stopped'} | Stage: {currentStage} | Points: {dataPoints.length}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'white' }}>
+            Next: {currentStage < 9 ? `Year ${currentStage + 2}` : 'Complete - Click to restart'}
+          </Typography>
+        </Box>
+
+        {/* Animation Controls */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {/* Animation Duration */}
+          <Box>
+            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
+              Animation Duration: {animationDuration}ms
+            </Typography>
+            <Slider
+              value={animationDuration}
+              onChange={(_, value) => setAnimationDuration(value as number)}
+              min={500}
+              max={3000}
+              step={100}
+              sx={{ 
+                color: '#4caf50',
+                '& .MuiSlider-thumb': { bgcolor: '#4caf50' },
+                '& .MuiSlider-track': { bgcolor: '#4caf50' },
+                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
+              }}
+            />
+          </Box>
+          
+          {/* Stage Delay */}
+          <Box>
+            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
+              Year Delay: {stageDelay}ms
+            </Typography>
+            <Slider
+              value={stageDelay}
+              onChange={(_, value) => setStageDelay(value as number)}
+              min={200}
+              max={2000}
+              step={100}
+              sx={{ 
+                color: '#ff9800',
+                '& .MuiSlider-thumb': { bgcolor: '#ff9800' },
+                '& .MuiSlider-track': { bgcolor: '#ff9800' },
+                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
+              }}
+            />
+          </Box>
+          
+          {/* Easing Type */}
+          <Box>
+            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
+              Easing: {easingType}
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              {(['linear', 'easeInOut', 'easeOut'] as const).map((type) => (
+                <Button 
+                  key={type}
+                  size="small"
+                  variant={easingType === type ? 'contained' : 'outlined'}
+                  onClick={() => setEasingType(type)}
+                  sx={{ 
+                    bgcolor: easingType === type ? '#ff9800' : 'transparent',
+                    color: 'white', 
+                    borderColor: 'white',
+                    '&:hover': { 
+                      borderColor: 'white', 
+                      bgcolor: easingType === type ? '#f57c00' : 'rgba(255,255,255,0.1)' 
+                    }
+                  }}
+                >
+                  {type}
+                </Button>
+              ))}
+            </Box>
+          </Box>
+          
+          {/* Spacing */}
+          <Box>
+            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
+              Vertical Spacing: {spacing}px
+            </Typography>
+            <Slider
+              value={spacing}
+              onChange={(_, value) => setSpacing(value as number)}
+              min={40}
+              max={120}
+              step={10}
+              sx={{ 
+                color: '#9c27b0',
+                '& .MuiSlider-thumb': { bgcolor: '#9c27b0' },
+                '& .MuiSlider-track': { bgcolor: '#9c27b0' },
+                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
+              }}
+            />
+          </Box>
+        </Box>
+        
+        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
+          10-Year Cohort Progression: 100 white belts → Year 2: 40 white, 10 blue, 50 dropout → Year 10: 1 white, 2 blue, 3 purple, 6 brown, 5 black, 80 total dropout
+        </Typography>
+      </Paper>
     </Box>
   );
 };
