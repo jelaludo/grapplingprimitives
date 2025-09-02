@@ -117,15 +117,22 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
   // Separate cards for Centroid and Memory will use dedicated previews below
 
   return (
-    <Box sx={{ p: { xs: 1, md: 2 }, m: 'auto', width: '100%', minHeight: '100vh', maxWidth: 1200, display: 'flex', flexDirection: 'column',
-      fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em', overflowY: 'auto' }}>
-      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb: 1 }}>
-        <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>Welcome</Typography>
-        <Box sx={{ display:'flex', gap:1, alignItems:'center' }}>
-          {/* Small inline help button */}
-          <Box onClick={() => window.dispatchEvent(new CustomEvent('gp:open-help'))} sx={{ cursor:'pointer', width: 28, height: 28, borderRadius: '50%', bgcolor:'rgba(255,255,255,0.12)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>?</Box>
-        </Box>
-      </Box>
+    <Box sx={{ 
+      p: { xs: 1, md: 2 }, 
+      m: 'auto', 
+      width: '100%', 
+      minHeight: '100vh', 
+      maxWidth: 1200, 
+      display: 'flex', 
+      flexDirection: 'column',
+      fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', 
+      letterSpacing: '0.06em', 
+      overflowY: 'auto',
+      WebkitOverflowScrolling: 'touch',
+      overscrollBehavior: 'contain',
+      position: 'relative'
+    }}>
+
       <Box sx={{ display: 'grid', gap: { xs: 1, sm: 1.5, md: 2 }, gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gridAutoRows: '1fr', flex: 1, pb: { xs: 4, md: 2 } }}>
         <CardShell title="GRAPPLING PRIMITIVES" subtitle="Concepts Mapping" onClick={props.goMatrix} preview={<PreviewMatrix />} />
         <CardShell title="BJJ Visualizations" onClick={props.goGraphs} preview={<PreviewGraphs />} />
@@ -134,9 +141,45 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
         <CardShell hideTitle onClick={props.goStories} preview={<StoriesCardPreview />} />
         <CardShell hideTitle onClick={() => { props.goCoach(); setTimeout(() => { if (typeof window !== 'undefined') window.location.hash = 'timer'; }, 0); }} preview={<TimerCardPreview />} />
         <CardShell hideTitle onClick={props.goSkillCheck} preview={<SkillCheckCardPreview />} />
-        <CardShell title="Training" onClick={props.goTraining} preview={<TrainingCardPreview />} />
         <CardShell title="Belt Dropout" onClick={props.goBeltDropout} preview={<BeltDropoutCardPreview />} />
+        <CardShell title="Training" onClick={props.goTraining} preview={<TrainingCardPreview />} />
         <CardShell title="Others" onClick={props.goOthers} preview={<PreviewCards />} />
+      </Box>
+      
+      {/* Help button at bottom right */}
+      <Box sx={{ 
+        position: 'fixed', 
+        bottom: { xs: 20, md: 30 }, 
+        right: { xs: 20, md: 30 }, 
+        zIndex: 1000 
+      }}>
+        <Box 
+          onClick={() => {
+            alert("Jelaludo's attempt at a BJJ OS, pouring decades of notes into one app with multiple modules, work in progress, ossss");
+          }} 
+          sx={{ 
+            cursor: 'pointer', 
+            width: 40, 
+            height: 40, 
+            borderRadius: '50%', 
+            bgcolor: 'rgba(255,255,255,0.15)', 
+            color: '#fff', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            fontWeight: 700,
+            fontSize: '1.2rem',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            '&:hover': {
+              bgcolor: 'rgba(255,255,255,0.25)',
+              transform: 'scale(1.1)'
+            },
+            transition: 'all 0.2s ease'
+          }}
+        >
+          ?
+        </Box>
       </Box>
     </Box>
   );
