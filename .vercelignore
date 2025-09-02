@@ -2,7 +2,6 @@
 backups/
 mongo-ready/
 miscjela/
-scripts/
 temp/
 *.md
 *.txt
@@ -15,3 +14,34 @@ test-*.js
 debug-*.js
 seed*.ts
 seed*.js
+
+# Exclude specific script files that shouldn't be serverless functions
+# But keep scripts/ directory available for build process
+scripts/generate-beta-passwords.js
+scripts/generate-jwt-secret.js
+scripts/seed*.js
+scripts/seed*.ts
+scripts/convert*.js
+scripts/convert*.ts
+scripts/update*.js
+scripts/update*.ts
+scripts/export*.js
+scripts/export*.ts
+scripts/fix*.js
+scripts/fix*.ts
+scripts/create*.js
+scripts/create*.ts
+scripts/validate*.js
+scripts/validate*.ts
+scripts/reorder*.js
+scripts/reorder*.ts
+scripts/migrate*.js
+scripts/migrate*.ts
+scripts/clean*.js
+scripts/clean*.js
+scripts/extract*.js
+scripts/extract*.ts
+scripts/find*.js
+scripts/find*.ts
+scripts/verify*.js
+scripts/verify*.ts
