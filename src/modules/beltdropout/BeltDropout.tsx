@@ -46,6 +46,8 @@ interface DataPoint {
   size: number;
   dropoutReason?: string;
   isInDropoutBucket: boolean;
+  cohortId: number;           // which cohort this dot belongs to (1..N)
+  cohortStartStage: number;   // global stage when this cohort started (0-based)
 }
 
 interface Category {
@@ -84,6 +86,9 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
   const [easingType, setEasingType] = useState<'linear' | 'easeInOut' | 'easeOut'>('easeInOut');
   const [spacing, setSpacing] = useState(80);
   const [stageDelay, setStageDelay] = useState(800);
+  const [rollingMode, setRollingMode] = useState(false);
+  const cohortCountRef = useRef(0);
+  const nextIdRef = useRef(0);
   
   // CRITICAL: Flag to prevent interference during position updates
   const [isUpdatingPositions, setIsUpdatingPositions] = useState(false);
@@ -204,7 +209,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     return baseReason;
   };
 
-  // Generate initial cohort of 100 white dots (clustered near the left)
+  // Generate a cohort of 100 white dots (clustered near the left)
   const generateInitialCohort = () => {
     console.log(`🚨 GENERATE INITIAL COHORT CALLED - This should only happen once!`);
     console.log(`📊 Current dataPoints before reset:`, dataPoints.length);
@@ -249,7 +254,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       const startY = 50 + Math.floor(i / 10) * 8; // Staggered vertical positions
       
       const dataPoint: DataPoint = {
-        id: i,
+        id: nextIdRef.current++,
         category: 'white',
         startX,
         startY,
@@ -259,7 +264,9 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
         currentY: startY,
         color: '#CCCCCC',
         size: 4,
-        isInDropoutBucket: false
+        isInDropoutBucket: false,
+        cohortId: cohortCountRef.current + 1,
+        cohortStartStage: 0
       };
       newDataPoints.push(dataPoint);
     }
@@ -270,6 +277,43 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     setDataPoints(newDataPoints);
     console.log(`🔧 SETTING CURRENT STAGE TO: 0 (in generateInitialCohort)`);
     setCurrentStage(0);
+    cohortCountRef.current = 1;
+  };
+
+  // Append a new cohort without resetting state (used in rolling mode)
+  const appendCohort = (startStage: number): DataPoint[] => {
+    const added: DataPoint[] = [];
+    for (let i = 0; i < 100; i++) {
+      const u = Math.random() + Math.random() + Math.random() - 1.5;
+      const centerX = containerSize.width * 0.12;
+      const spread = containerSize.width * 0.08;
+      let startX = centerX + u * spread;
+      if (startX < 10) startX = 10;
+      if (startX > containerSize.width - 10) startX = containerSize.width - 10;
+      const startY = 50 + Math.floor(i / 10) * 8;
+      added.push({
+        id: nextIdRef.current++,
+        category: 'white',
+        startX,
+        startY,
+        targetX: startX,
+        targetY: startY,
+        currentX: startX,
+        currentY: startY,
+        color: '#CCCCCC',
+        size: 4,
+        isInDropoutBucket: false,
+        cohortId: cohortCountRef.current + 1,
+        cohortStartStage: startStage
+      });
+    }
+    const combined = [...currentDataPointsRef.current, ...added];
+    // Update ref immediately so downstream logic in this tick sees the new cohort
+    currentDataPointsRef.current = combined;
+    setDataPoints(combined);
+    cohortCountRef.current += 1;
+    console.log(`➕ Appended cohort. Total cohorts: ${cohortCountRef.current}`);
+    return combined;
   };
 
   // Progress to next stage
@@ -283,6 +327,12 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     
     const nextStage = currentStage + 1;
     console.log(`🔄 Progressing from stage ${currentStage} to stage ${nextStage}`);
+    
+    // Rolling cohorts: at the start of Year 2..10 for the first cohort, append a new cohort
+    let dataForStage = currentDataPointsRef.current;
+    if (rollingMode && nextStage >= 1 && cohortCountRef.current < 10) {
+      dataForStage = appendCohort(nextStage);
+    }
     
     // CRITICAL: Get the CURRENT dataPoints state from ref, not the stale closure variable
     setCurrentStage(nextStage);
@@ -300,8 +350,8 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       // Previously we returned here, which could stall auto-advance. Now we just log and continue.
     }
     
-    // Call animateStage with the current dataPoints from ref
-    animateStage(nextStage, currentDataPoints);
+    // Call animateStage with the data that includes any just-appended cohort
+    animateStage(nextStage, dataForStage);
   };
 
   // Animate specific stage
@@ -370,131 +420,149 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       console.log(`📊 Position Analysis AFTER restoration: ${restoredDotsAtTop} dots at top, ${restoredDotsAtRidgelines} dots at ridgelines`);
     }
     
-    // Calculate how many people need to move to each category
-    const whiteToKeep = yearData.white;
-    const blueToKeep = yearData.blue;
-    const purpleToKeep = yearData.purple;
-    const brownToKeep = yearData.brown;
-    const blackToKeep = yearData.black;
-    const totalToDrop = yearData.dropped;
-    
-    // Get current counts by category (excluding those already in dropout bucket)
-    const currentWhite = updatedPoints.filter(p => p.category === 'white' && !p.isInDropoutBucket);
-    const currentBlue = updatedPoints.filter(p => p.category === 'blue' && !p.isInDropoutBucket);
-    const currentPurple = updatedPoints.filter(p => p.category === 'purple' && !p.isInDropoutBucket);
-    const currentBrown = updatedPoints.filter(p => p.category === 'brown' && !p.isInDropoutBucket);
-    const currentBlack = updatedPoints.filter(p => p.category === 'black' && !p.isInDropoutBucket);
-    
-    console.log(`📊 Current counts: W${currentWhite.length} B${currentBlue.length} P${currentPurple.length} Br${currentBrown.length} Bl${currentBlack.length}`);
-    console.log(`🎯 Target counts: W${whiteToKeep} B${blueToKeep} P${purpleToKeep} Br${brownToKeep} Bl${blackToKeep}`);
-    
-    // Calculate how many need to progress from each category
-    // This is the difference between what we want and what we currently have
-    const whiteToBlue = Math.max(0, blueToKeep - currentBlue.length);
-    const blueToPurple = Math.max(0, purpleToKeep - currentPurple.length);
-    const purpleToBrown = Math.max(0, brownToKeep - currentBrown.length);
-    const brownToBlack = Math.max(0, blackToKeep - currentBlack.length);
-    
-    console.log(`🔄 Progression needed: W→B:${whiteToBlue} B→P:${blueToPurple} P→Br:${purpleToBrown} Br→Bl:${brownToBlack}`);
-    
-    // Randomly select people to progress (but don't exceed what's available)
-    const whiteToProgress = Math.min(whiteToBlue, currentWhite.length);
-    const blueToProgress = Math.min(blueToPurple, currentBlue.length);
-    const purpleToProgress = Math.min(purpleToBrown, currentPurple.length);
-    const brownToProgress = Math.min(brownToBlack, currentBrown.length);
-    
-    console.log(`✅ Actual progression: W→B:${whiteToProgress} B→P:${blueToProgress} P→Br:${purpleToProgress} Br→Bl:${brownToProgress}`);
-    
-    // Select specific people to progress
-    const whiteProgressIndices = new Set<number>();
-    const blueProgressIndices = new Set<number>();
-    const purpleProgressIndices = new Set<number>();
-    const brownProgressIndices = new Set<number>();
-    
-    // Randomly select white belts to progress to blue
-    while (whiteProgressIndices.size < whiteToProgress) {
-      const randomIndex = Math.floor(Math.random() * currentWhite.length);
-      whiteProgressIndices.add(currentWhite[randomIndex].id);
+    // Per-cohort decision sets (for rolling mode)
+    let whiteProgressIndices = new Set<number>();
+    let blueProgressIndices = new Set<number>();
+    let purpleProgressIndices = new Set<number>();
+    let brownProgressIndices = new Set<number>();
+    let whiteDropIndices = new Set<number>();
+    let blueDropIndices = new Set<number>();
+    let purpleDropIndices = new Set<number>();
+    let brownDropIndices = new Set<number>();
+    let keeperWhite: DataPoint[] = [];
+    let keeperBlue: DataPoint[] = [];
+    let keeperPurple: DataPoint[] = [];
+    let keeperBrown: DataPoint[] = [];
+    let keeperBlack: DataPoint[] = [];
+
+    if (rollingMode) {
+      // Process each active cohort independently based on cohort-relative year
+      const activeCohortIds = Array.from(new Set(updatedPoints.filter(p => p.cohortStartStage <= stage).map(p => p.cohortId))).sort((a, b) => a - b);
+      console.log(`📚 Rolling mode: processing cohorts`, activeCohortIds);
+      activeCohortIds.forEach(cohortId => {
+        const cohortPoints = updatedPoints.filter(p => p.cohortId === cohortId && !p.isInDropoutBucket);
+        const cohortStart = cohortPoints.length > 0 ? cohortPoints[0].cohortStartStage : stage;
+        const relYear = Math.max(0, Math.min(9, stage - cohortStart));
+        const relPrev = Math.max(0, relYear - 1);
+        const target = yearProgression[relYear];
+        const prev = yearProgression[relPrev];
+        // Current counts for this cohort
+        const cWhite = cohortPoints.filter(p => p.category === 'white');
+        const cBlue = cohortPoints.filter(p => p.category === 'blue');
+        const cPurple = cohortPoints.filter(p => p.category === 'purple');
+        const cBrown = cohortPoints.filter(p => p.category === 'brown');
+        const cBlack = cohortPoints.filter(p => p.category === 'black');
+        // How many to keep at each belt this year for this cohort
+        const keepW = target.white;
+        const keepB = target.blue;
+        const keepP = target.purple;
+        const keepBr = target.brown;
+        const keepBl = target.black;
+        // Progress needed relative to current distribution
+        const wToB = Math.max(0, keepB - cBlue.length);
+        const bToP = Math.max(0, keepP - cPurple.length);
+        const pToBr = Math.max(0, keepBr - cBrown.length);
+        const brToBl = Math.max(0, keepBl - cBlack.length);
+        const wProg = Math.min(wToB, cWhite.length);
+        const bProg = Math.min(bToP, cBlue.length);
+        const pProg = Math.min(pToBr, cPurple.length);
+        const brProg = Math.min(brToBl, cBrown.length);
+        // Random selection helpers
+        const pick = (arr: DataPoint[], n: number) => {
+          const set = new Set<number>();
+          if (arr.length === 0 || n <= 0) return set;
+          while (set.size < Math.min(n, arr.length)) {
+            set.add(arr[Math.floor(Math.random() * arr.length)].id);
+          }
+          return set;
+        };
+        const wProgSet = pick(cWhite, wProg);
+        const bProgSet = pick(cBlue, bProg);
+        const pProgSet = pick(cPurple, pProg);
+        const brProgSet = pick(cBrown, brProg);
+        wProgSet.forEach(id => whiteProgressIndices.add(id));
+        bProgSet.forEach(id => blueProgressIndices.add(id));
+        pProgSet.forEach(id => purpleProgressIndices.add(id));
+        brProgSet.forEach(id => brownProgressIndices.add(id));
+        // Droppers are from remaining after progression to reach target keeps
+        const remWhite = cWhite.filter(p => !wProgSet.has(p.id));
+        const remBlue = cBlue.filter(p => !bProgSet.has(p.id));
+        const remPurple = cPurple.filter(p => !pProgSet.has(p.id));
+        const remBrown = cBrown.filter(p => !brProgSet.has(p.id));
+        const dropW = Math.max(0, remWhite.length - (keepW - (cWhite.length - remWhite.length))); // keepW minus progressed kept from white
+        const dropB = Math.max(0, remBlue.length - (keepB - bProg));
+        const dropP = Math.max(0, remPurple.length - (keepP - pProg));
+        const dropBr = Math.max(0, remBrown.length - (keepBr - brProg));
+        pick(remWhite, dropW).forEach(id => whiteDropIndices.add(id));
+        pick(remBlue, dropB).forEach(id => blueDropIndices.add(id));
+        pick(remPurple, dropP).forEach(id => purpleDropIndices.add(id));
+        pick(remBrown, dropBr).forEach(id => brownDropIndices.add(id));
+        // Keepers are those not progressing or dropping
+        keeperWhite = keeperWhite.concat(remWhite.filter(p => !whiteDropIndices.has(p.id)));
+        keeperBlue = keeperBlue.concat(remBlue.filter(p => !blueDropIndices.has(p.id)));
+        keeperPurple = keeperPurple.concat(remPurple.filter(p => !purpleDropIndices.has(p.id)));
+        keeperBrown = keeperBrown.concat(remBrown.filter(p => !brownDropIndices.has(p.id)));
+        keeperBlack = keeperBlack.concat(cBlack);
+      });
+    } else {
+      // Single cohort logic (previous global computation)
+      const currentWhite = updatedPoints.filter(p => p.category === 'white' && !p.isInDropoutBucket);
+      const currentBlue = updatedPoints.filter(p => p.category === 'blue' && !p.isInDropoutBucket);
+      const currentPurple = updatedPoints.filter(p => p.category === 'purple' && !p.isInDropoutBucket);
+      const currentBrown = updatedPoints.filter(p => p.category === 'brown' && !p.isInDropoutBucket);
+      const currentBlack = updatedPoints.filter(p => p.category === 'black' && !p.isInDropoutBucket);
+      const whiteToKeep = yearData.white;
+      const blueToKeep = yearData.blue;
+      const purpleToKeep = yearData.purple;
+      const brownToKeep = yearData.brown;
+      const blackToKeep = yearData.black;
+      const whiteToBlue = Math.max(0, blueToKeep - currentBlue.length);
+      const blueToPurple = Math.max(0, purpleToKeep - currentPurple.length);
+      const purpleToBrown = Math.max(0, brownToKeep - currentBrown.length);
+      const brownToBlack = Math.max(0, blackToKeep - currentBlack.length);
+      const whiteToProgress = Math.min(whiteToBlue, currentWhite.length);
+      const blueToProgress = Math.min(blueToPurple, currentBlue.length);
+      const purpleToProgress = Math.min(purpleToBrown, currentPurple.length);
+      const brownToProgress = Math.min(brownToBlack, currentBrown.length);
+      // Select specific people to progress
+      const pickIds = (arr: DataPoint[], n: number) => {
+        const set = new Set<number>();
+        while (set.size < Math.min(n, arr.length)) set.add(arr[Math.floor(Math.random() * arr.length)].id);
+        return set;
+      };
+      const currentWhiteArr = currentWhite;
+      const currentBlueArr = currentBlue;
+      const currentPurpleArr = currentPurple;
+      const currentBrownArr = currentBrown;
+      whiteProgressIndices = pickIds(currentWhiteArr, whiteToProgress);
+      blueProgressIndices = pickIds(currentBlueArr, blueToProgress);
+      purpleProgressIndices = pickIds(currentPurpleArr, purpleToProgress);
+      brownProgressIndices = pickIds(currentBrownArr, brownToProgress);
+      const remainingWhite = currentWhiteArr.filter(p => !whiteProgressIndices.has(p.id));
+      const remainingBlue = currentBlueArr.filter(p => !blueProgressIndices.has(p.id));
+      const remainingPurple = currentPurpleArr.filter(p => !purpleProgressIndices.has(p.id));
+      const remainingBrown = currentBrownArr.filter(p => !brownProgressIndices.has(p.id));
+      const whiteToDrop = Math.max(0, remainingWhite.length - (whiteToKeep - (currentWhiteArr.length - remainingWhite.length)));
+      const blueToDrop = Math.max(0, remainingBlue.length - (blueToKeep - (currentBlueArr.length - remainingBlue.length)));
+      const purpleToDrop = Math.max(0, remainingPurple.length - (purpleToKeep - (currentPurpleArr.length - remainingPurple.length)));
+      const brownToDrop = Math.max(0, remainingBrown.length - (brownToKeep - (currentBrownArr.length - remainingBrown.length)));
+      const pickDrop = (arr: DataPoint[], n: number) => {
+        const set = new Set<number>();
+        while (set.size < Math.min(n, arr.length)) set.add(arr[Math.floor(Math.random() * arr.length)].id);
+        return set;
+      };
+      whiteDropIndices = pickDrop(remainingWhite, whiteToDrop);
+      blueDropIndices = pickDrop(remainingBlue, blueToDrop);
+      purpleDropIndices = pickDrop(remainingPurple, purpleToDrop);
+      brownDropIndices = pickDrop(remainingBrown, brownToDrop);
+      keeperWhite = remainingWhite.filter(p => !whiteDropIndices.has(p.id));
+      keeperBlue = remainingBlue.filter(p => !blueDropIndices.has(p.id));
+      keeperPurple = remainingPurple.filter(p => !purpleDropIndices.has(p.id));
+      keeperBrown = remainingBrown.filter(p => !brownDropIndices.has(p.id));
+      keeperBlack = currentBlack;
     }
     
-    // Randomly select blue belts to progress to purple
-    while (blueProgressIndices.size < blueToProgress) {
-      const randomIndex = Math.floor(Math.random() * currentBlue.length);
-      blueProgressIndices.add(currentBlue[randomIndex].id);
-    }
-    
-    // Randomly select purple belts to progress to brown
-    while (purpleProgressIndices.size < purpleToProgress) {
-      const randomIndex = Math.floor(Math.random() * currentPurple.length);
-      purpleProgressIndices.add(currentPurple[randomIndex].id);
-    }
-    
-    // Randomly select brown belts to progress to black
-    while (brownProgressIndices.size < brownToProgress) {
-      const randomIndex = Math.floor(Math.random() * currentBrown.length);
-      brownProgressIndices.add(currentBrown[randomIndex].id);
-    }
-    
-    // Calculate how many need to drop out from each category
-    // This is the difference between what we have and what we want to keep
-    const whiteToDrop = Math.max(0, currentWhite.length - whiteToKeep - whiteToProgress);
-    const blueToDrop = Math.max(0, currentBlue.length - blueToKeep - blueToProgress);
-    const purpleToDrop = Math.max(0, currentPurple.length - purpleToKeep - purpleToProgress);
-    const brownToDrop = Math.max(0, currentBrown.length - brownToKeep - brownToProgress);
-    
-    // Randomly select people to drop out
-    const whiteDropIndices = new Set<number>();
-    const blueDropIndices = new Set<number>();
-    const purpleDropIndices = new Set<number>();
-    const brownDropIndices = new Set<number>();
-    
-    // Select white belts to drop out (from those not progressing)
-    const remainingWhite = currentWhite.filter(p => !whiteProgressIndices.has(p.id));
-    while (whiteDropIndices.size < whiteToDrop) {
-      const randomIndex = Math.floor(Math.random() * remainingWhite.length);
-      whiteDropIndices.add(remainingWhite[randomIndex].id);
-    }
-    
-    // Select blue belts to drop out (from those not progressing)
-    const remainingBlue = currentBlue.filter(p => !blueProgressIndices.has(p.id));
-    while (blueDropIndices.size < blueToDrop) {
-      const randomIndex = Math.floor(Math.random() * remainingBlue.length);
-      blueDropIndices.add(remainingBlue[randomIndex].id);
-    }
-    
-    // Select purple belts to drop out (from those not progressing)
-    const remainingPurple = currentPurple.filter(p => !purpleProgressIndices.has(p.id));
-    while (purpleDropIndices.size < purpleToDrop) {
-      const randomIndex = Math.floor(Math.random() * remainingPurple.length);
-      purpleDropIndices.add(remainingPurple[randomIndex].id);
-    }
-    
-    // Select brown belts to drop out (from those not progressing)
-    const remainingBrown = currentBrown.filter(p => !brownProgressIndices.has(p.id));
-    while (brownDropIndices.size < brownToDrop) {
-      const randomIndex = Math.floor(Math.random() * remainingBrown.length);
-      brownDropIndices.add(remainingBrown[randomIndex].id);
-    }
-    
-    // CRITICAL FIX: Helper function to get target position on ridgeline for a category
-    const targetOnRidgeline = (catIdx: number) => {
-      const cat = categories[catIdx];
-      const x = cat.mean * containerSize.width + (Math.random() - 0.5) * cat.stdDev * containerSize.width;
-      const normalizedX = (x - cat.mean * containerSize.width) / (cat.stdDev * containerSize.width);
-      const bellCurveHeight = 25 * Math.exp(-(normalizedX * normalizedX) / 2);
-      const y = 100 + cat.verticalOffset * spacing + bellCurveHeight;
-      return { x, y };
-    };
-    
-    // CRITICAL FIX: Determine keeper pools (those not progressing or dropping)
-    const keeperWhite = currentWhite.filter(p => !whiteProgressIndices.has(p.id) && !whiteDropIndices.has(p.id));
-    const keeperBlue = currentBlue.filter(p => !blueProgressIndices.has(p.id) && !blueDropIndices.has(p.id));
-    const keeperPurple = currentPurple.filter(p => !purpleProgressIndices.has(p.id) && !purpleDropIndices.has(p.id));
-    const keeperBrown = currentBrown.filter(p => !brownProgressIndices.has(p.id) && !brownDropIndices.has(p.id));
-    const keeperBlack = currentBlack; // Black keepers always keep
-    
-    // CRITICAL FIX: Build a set of dots that MUST move this stage
-    // This includes progressors, droppers, AND keepers (to their ridgelines)
+    // Build sets and proceed as before
     const keeperIds = new Set<number>([
       ...keeperWhite.map(p => p.id),
       ...keeperBlue.map(p => p.id),
@@ -511,7 +579,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     
     console.log(`🎯 Dots that need to move: ${dotsToMove.size} total`);
     console.log(`📤 Moving dots: (${dotsToMove.size}) [progressors: ${whiteProgressIndices.size + blueProgressIndices.size + purpleProgressIndices.size + brownProgressIndices.size}, droppers: ${whiteDropIndices.size + blueDropIndices.size + purpleDropIndices.size + brownDropIndices.size}, keepers: ${keeperIds.size}]`);
-    console.log(`📍 Keepers moving to ridgelines: ${keeperIds.size} [W:${keeperWhite.length} B:${keeperBlue.length} P:${keeperPurple.length} Br:${keeperBrown.length} Bl:${keeperBlack.length}]`);
+    console.log(`📍 Keepers moving to ridgelines: ${keeperIds.size}`);
     
     // CRITICAL FIX: Update ALL dots to start from their current positions
     // This ensures continuity between stages - no dots reset to original positions
@@ -750,6 +818,8 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     setIsRunning(false);
     setCurrentStage(0);
     setAnimationProgress(0);
+    cohortCountRef.current = 0;
+    nextIdRef.current = 0;
   };
 
   // Handle mouse move for hover detection
@@ -1227,6 +1297,16 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     console.trace(`🔍 CurrentStage changed to ${currentStage} - Stack trace:`);
   }, [currentStage, isRunning]);
 
+  // CRITICAL FIX: Helper function to get target position on ridgeline for a category
+  const targetOnRidgeline = (catIdx: number) => {
+    const cat = categories[catIdx];
+    const x = cat.mean * containerSize.width + (Math.random() - 0.5) * cat.stdDev * containerSize.width;
+    const normalizedX = (x - cat.mean * containerSize.width) / (cat.stdDev * containerSize.width);
+    const bellCurveHeight = 25 * Math.exp(-(normalizedX * normalizedX) / 2);
+    const y = 100 + cat.verticalOffset * spacing + bellCurveHeight;
+    return { x, y };
+  };
+
   return (
     <Box sx={{ 
       height: '100vh', 
@@ -1277,6 +1357,22 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       }}>
         {/* Animation Controls */}
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
+          {/* Mode toggle: Single vs Rolling */}
+          <Button 
+            size="small"
+            variant={rollingMode ? 'contained' : 'outlined'} 
+            onClick={() => setRollingMode(v => !v)} 
+            sx={{ 
+              bgcolor: rollingMode ? '#2196f3' : 'transparent',
+              color: 'white', 
+              borderColor: 'white',
+              '&:hover': { borderColor: 'white', bgcolor: rollingMode ? '#1976d2' : 'rgba(255,255,255,0.1)' }
+            }}
+          >
+            {rollingMode ? 'Mode: Rolling Cohorts' : 'Mode: Single Cohort'}
+          </Button>
+
+          {/* Start / Stop */}
           <Button 
             size="small"
             variant="contained" 
@@ -1286,7 +1382,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               '&:hover': { bgcolor: isRunning ? '#d32f2f' : '#45a049' }
             }}
           >
-                            {isRunning ? 'Stop' : (dataPoints.length === 0 ? 'Start Cohort' : (currentStage < 9 ? 'Continue' : 'Complete'))}
+            {isRunning ? 'Stop' : 'Start'}
           </Button>
           <Button 
             size="small"
@@ -1304,7 +1400,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
             Current Year: {currentStage + 1}/10
           </Typography>
           <Typography variant="body2" sx={{ color: 'white', ml: 2 }}>
-            Mode: {dataPoints.length === 0 ? 'Initial Start' : 'Continuation'}
+            Mode: {rollingMode ? 'Rolling Cohorts' : 'Single Cohort'}
           </Typography>
           <Typography variant="body2" sx={{ color: 'white', ml: 2 }}>
             Debug: {isRunning ? 'Running' : 'Stopped'} | Stage: {currentStage} | Points: {dataPoints.length}
