@@ -136,3 +136,32 @@ bjj-skill-matrix/
 ## 📄 License
 
 MIT License - see LICENSE file for details
+
+
+## 🔐 Beta Authentication Setup
+
+### Generate Password Hashes
+```bash
+# Generate bcrypt hash for your beta password
+node scripts/generate-beta-passwords.js
+
+# Generate JWT secret
+node scripts/generate-jwt-secret.js
+```
+
+### Vercel Environment Variables
+Set these in Vercel dashboard > Project Settings > Environment Variables:
+
+1. **BETA_PASSWORD_HASHES**: Comma-separated bcrypt hashes (no spaces)
+2. **JWT_SECRET**: Secure random string for JWT signing
+
+### Deploy to Vercel
+1. Install Vercel CLI: `npm i -g vercel`
+2. Deploy: `vercel --prod`
+3. The app will be available at your Vercel URL
+
+### Testing Beta Access
+- Visit your deployed app
+- Click "Beta Access" button
+- Enter the password you used to generate the hash
+- You'll get a JWT token stored in localStoragepehrhaph
