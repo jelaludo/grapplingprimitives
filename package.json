@@ -42,7 +42,7 @@
     "start:no-eslint": "set DISABLE_ESLINT_PLUGIN=true && set ESLINT_NO_DEV_ERRORS=true && set GENERATE_SOURCEMAP=false && react-scripts start",
     "start:windows": "powershell -Command \"$env:DISABLE_ESLINT_PLUGIN='true'; $env:ESLINT_NO_DEV_ERRORS='true'; npm start\"",
     "prebuild": "node scripts/generateVersionInfo.js",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "seed:concepts": "ts-node scripts/seedConcepts.ts",
