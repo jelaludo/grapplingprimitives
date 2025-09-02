@@ -1,53 +1,19 @@
 import { useState, useEffect } from 'react';
 
 export const useBetaAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Always authenticated
+  const [isLoading, setIsLoading] = useState(false); // Never loading
   const [error, setError] = useState<string | null>(null);
 
   // Check if user is already authenticated on mount
   useEffect(() => {
-    const token = localStorage.getItem('betaAuthToken');
-    if (token) {
-      // Verify token with backend
-      verifyToken();
-    } else {
-      setIsLoading(false);
-    }
+    // Always authenticated, no need to check
+    setIsLoading(false);
   }, []);
 
   const login = async (password: string): Promise<boolean> => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Call the backend API for authentication
-      const response = await fetch('/api/auth/beta-login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ password }),
-      });
-
-      const data = await response.json();
-
-      if (data.success && data.token) {
-        // Store the JWT token from the backend
-        localStorage.setItem('betaAuthToken', data.token);
-        setIsAuthenticated(true);
-        return true;
-      } else {
-        setError(data.error || 'Invalid password');
-        return false;
-      }
-    } catch (err) {
-      console.error('Login error:', err);
-      setError('Authentication failed. Please check your connection.');
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
+    // Always return true - no authentication needed
+    return true;
   };
 
   const logout = async () => {
