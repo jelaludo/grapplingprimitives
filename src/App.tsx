@@ -50,10 +50,11 @@ const BACK_BUTTON_STYLE = {
 } as const;
 
 const VIEW_CONTAINER_STYLE = {
-  padding: '20px',
+  padding: '0px',
   height: '100vh',
-  overflowY: 'auto' as const,
-  overflowX: 'hidden' as const
+  width: '100%',
+  overflow: 'hidden' as const,
+  backgroundColor: '#1a1a1a'
 } as const;
 
 function App() {
