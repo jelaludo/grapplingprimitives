@@ -204,7 +204,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     return baseReason;
   };
 
-  // Generate initial cohort of 100 white dots in bell curve shape
+  // Generate initial cohort of 100 white dots (clustered near the left)
   const generateInitialCohort = () => {
     console.log(`🚨 GENERATE INITIAL COHORT CALLED - This should only happen once!`);
     console.log(`📊 Current dataPoints before reset:`, dataPoints.length);
@@ -235,14 +235,17 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     
     const newDataPoints: DataPoint[] = [];
     
-    // Create bell curve distribution for white dots
+    // Create clustered distribution for white dots (further left, narrower)
     for (let i = 0; i < 100; i++) {
       // Use Gaussian distribution to create natural bell curve stacking
       const u = Math.random() + Math.random() + Math.random() - 1.5; // Approximate normal distribution
-      const centerX = 50 + (containerSize.width * 0.3); // Center of white belt area
-      const spread = containerSize.width * 0.2; // Width of white belt area
+      const centerX = containerSize.width * 0.12; // Further left
+      const spread = containerSize.width * 0.08; // Narrower cluster
       
-      const startX = centerX + u * spread;
+      let startX = centerX + u * spread;
+      // Clamp inside canvas
+      if (startX < 10) startX = 10;
+      if (startX > containerSize.width - 10) startX = containerSize.width - 10;
       const startY = 50 + Math.floor(i / 10) * 8; // Staggered vertical positions
       
       const dataPoint: DataPoint = {
@@ -995,6 +998,16 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     // Purple belt: medium (70px), overlaps with blue right edge (0.55), narrow spread (0.08)
     // Brown belt: lower (60px), overlaps with purple right edge (0.70), narrow spread (0.08)
     // Black belt: shortest (50px), right side only (0.85), narrow spread (0.06)
+
+    // Define horizontal windows (as ratios) for where each curve is drawn
+    const curveWindows = [
+      { start: 0.00, end: 0.32, invert: true,  ampScale: 1.08 }, // White: extend to ~32%, slightly higher peak
+      { start: 0.18, end: 0.55, invert: true,  ampScale: 1.0 },  // Blue: inverted
+      { start: 0.40, end: 0.72, invert: true,  ampScale: 1.0 },  // Purple: inverted
+      { start: 0.62, end: 0.88, invert: true,  ampScale: 1.0 },  // Brown: inverted
+      { start: 0.78, end: 0.98, invert: true,  ampScale: 1.0 }   // Black: inverted
+    ] as const;
+
     categories.forEach((category, index) => {
       const baseY = 100 + index * spacing;
       
@@ -1003,10 +1016,16 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       ctx.setLineDash([5, 5]);
       ctx.beginPath();
       
+      // Windowed drawing range for this category
+      const win = curveWindows[index] ?? { start: 0.0, end: 1.0, invert: false, ampScale: 1.0 };
+      const xStart = Math.round(win.start * cssW);
+      const xEnd = Math.round(win.end * cssW);
+      const width = Math.max(1, xEnd - xStart);
+      
       // Draw bell curve with proper Gaussian shape - FIXED VISUAL IMPACT
-      ctx.beginPath();
-      for (let x = 0; x < cssW; x += 2) {
-        // Primary Gaussian lobe
+      let firstPoint = true;
+      for (let x = xStart; x <= xEnd; x += 2) {
+        // Primary Gaussian lobe, centered by category mean/stdDev
         const nx1 = (x - category.mean * cssW) / (category.stdDev * cssW);
         let bellCurveHeight = (category.amp ?? 60) * Math.exp(-(nx1 * nx1) / 2);
         
@@ -1016,10 +1035,17 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
           bellCurveHeight += category.amp2 * Math.exp(-(nx2 * nx2) / 2);
         }
         
-        const curveY = Math.round(baseY + bellCurveHeight) + 0.5; // Pixel-snap Y coordinates
+        // Edge taper so the curve smoothly reaches 0 at the window boundaries
+        const t = (x - xStart) / width; // 0..1 within window
+        const taper = Math.sin(Math.PI * Math.min(1, Math.max(0, t))); // 0 at edges, 1 at center
         
-        if (x === 0) {
+        // Apply per-belt adjustments
+        const height = (win.invert ? -1 : 1) * bellCurveHeight * (win.ampScale ?? 1) * taper;
+        const curveY = Math.round(baseY + height) + 0.5; // Pixel-snap Y coordinates
+        
+        if (firstPoint) {
           ctx.moveTo(x, curveY);
+          firstPoint = false;
         } else {
           ctx.lineTo(x, curveY);
         }
