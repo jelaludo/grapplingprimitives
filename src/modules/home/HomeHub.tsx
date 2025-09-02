@@ -117,8 +117,8 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
   // Separate cards for Centroid and Memory will use dedicated previews below
 
   return (
-    <Box sx={{ p: { xs: 1, md: 2 }, m: 'auto', width: '100%', height: '100vh', maxWidth: 1200, display: 'flex', flexDirection: 'column',
-      fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em' }}>
+    <Box sx={{ p: { xs: 1, md: 2 }, m: 'auto', width: '100%', minHeight: '100vh', maxWidth: 1200, display: 'flex', flexDirection: 'column',
+      fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em', overflowY: 'auto' }}>
       <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb: 1 }}>
         <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>Welcome</Typography>
         <Box sx={{ display:'flex', gap:1, alignItems:'center' }}>
@@ -126,7 +126,7 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
           <Box onClick={() => window.dispatchEvent(new CustomEvent('gp:open-help'))} sx={{ cursor:'pointer', width: 28, height: 28, borderRadius: '50%', bgcolor:'rgba(255,255,255,0.12)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>?</Box>
         </Box>
       </Box>
-      <Box sx={{ display: 'grid', gap: { xs: 1, sm: 1.5, md: 2 }, gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gridAutoRows: '1fr', flex: 1 }}>
+      <Box sx={{ display: 'grid', gap: { xs: 1, sm: 1.5, md: 2 }, gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gridAutoRows: '1fr', flex: 1, pb: { xs: 4, md: 2 } }}>
         <CardShell title="GRAPPLING PRIMITIVES" subtitle="Concepts Mapping" onClick={props.goMatrix} preview={<PreviewMatrix />} />
         <CardShell title="BJJ Visualizations" onClick={props.goGraphs} preview={<PreviewGraphs />} />
         <CardShell title="Centroid" onClick={() => props.goGames('centroid')} preview={<CentroidCardPreview />} />
