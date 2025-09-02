@@ -53,8 +53,13 @@ interface Category {
   color: string;
   count: number;
   dropoutRate: number;
-  mean: number;
-  stdDev: number;
+  mean: number;     // 0..1 across width
+  stdDev: number;   // 0..1 of width
+  amp?: number;     // pixels, fixed visual amplitude
+  // optional second lobe to create skewed shapes
+  mean2?: number;
+  stdDev2?: number;
+  amp2?: number;
   verticalOffset: number;
   dropoutReasons: string[];
 }
@@ -86,15 +91,16 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
   // CRITICAL: Ref to store current dataPoints for progressToNextStage
   const currentDataPointsRef = useRef<DataPoint[]>([]);
 
-  // Category definitions with dropout reasons
+  // Category definitions with dropout reasons - PROPER OVERLAPPING BELL CURVES
   const categories: Category[] = [
     { 
       name: 'White', 
       color: '#CCCCCC', 
       count: 100, 
       dropoutRate: 0.5, 
-      mean: 0.2, 
-      stdDev: 0.15, 
+      mean: 0.20, 
+      stdDev: 0.08, 
+      amp: 100, // Tallest curve, left side only
       verticalOffset: 0,
       dropoutReasons: ['Injury', 'Confusion', 'Intimidation', 'Scheduling', 'Cost', 'Ego', 'Lack of mentorship', 'Family', 'Work']
     },
@@ -103,8 +109,9 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       color: '#0066CC', 
       count: 0, 
       dropoutRate: 0.4, 
-      mean: 0.4, 
-      stdDev: 0.12, 
+      mean: 0.35, 
+      stdDev: 0.08, 
+      amp: 80,  // High curve, overlaps with white right edge
       verticalOffset: 1,
       dropoutReasons: ['Plateau', 'Burnout', 'Ego', 'Lack of mentorship', 'Injury', 'Scheduling', 'Family', 'Work', 'Cost']
     },
@@ -113,8 +120,9 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       color: '#660099', 
       count: 0, 
       dropoutRate: 0.3, 
-      mean: 0.6, 
-      stdDev: 0.1, 
+      mean: 0.55, 
+      stdDev: 0.08, 
+      amp: 70,  // Medium curve, overlaps with blue right edge
       verticalOffset: 2,
       dropoutReasons: ['Burnout', 'Injuries', 'Family', 'Work', 'Ego', 'Diminishing returns', 'Plateau', 'Cost']
     },
@@ -123,8 +131,9 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       color: '#663300', 
       count: 0, 
       dropoutRate: 0.2, 
-      mean: 0.8, 
+      mean: 0.70, 
       stdDev: 0.08, 
+      amp: 60,  // Lower curve, overlaps with purple right edge
       verticalOffset: 3,
       dropoutReasons: ['Burnout', 'Injuries', 'Family', 'Work', 'Ego', 'Diminishing returns', 'Plateau', 'Cost']
     },
@@ -133,8 +142,9 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       color: '#000000', 
       count: 0, 
       dropoutRate: 0.0, 
-      mean: 0.9, 
-      stdDev: 0.05, 
+      mean: 0.85, 
+      stdDev: 0.06, 
+      amp: 50,  // Shortest curve, right side only
       verticalOffset: 4,
       dropoutReasons: []
     }
@@ -283,10 +293,8 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     const dotsAtRidgelines = currentDataPoints.filter(p => p.currentY >= 100 && p.currentY < 400).length;
     
     if (dotsAtTop > dotsAtRidgelines && nextStage > 1) {
-      console.error(`🚨 CRITICAL: Positions are wrong before animateStage!`);
-      console.error(`   ${dotsAtTop} dots at top, ${dotsAtRidgelines} dots at ridgelines`);
-      console.error(`   This confirms the stale closure issue`);
-      return;
+      console.error(`🚨 Heuristic: many dots appear near top before animateStage (${dotsAtTop} vs ${dotsAtRidgelines}). Proceeding anyway to avoid stalls.`);
+      // Previously we returned here, which could stall auto-advance. Now we just log and continue.
     }
     
     // Call animateStage with the current dataPoints from ref
@@ -482,8 +490,8 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     const keeperBrown = currentBrown.filter(p => !brownProgressIndices.has(p.id) && !brownDropIndices.has(p.id));
     const keeperBlack = currentBlack; // Black keepers always keep
     
-    // CRITICAL FIX: Build a set of ALL dots that MUST move this stage
-    // This includes progressors, droppers, AND keepers (to ridgeline)
+    // CRITICAL FIX: Build a set of dots that MUST move this stage
+    // This includes progressors, droppers, AND keepers (to their ridgelines)
     const keeperIds = new Set<number>([
       ...keeperWhite.map(p => p.id),
       ...keeperBlue.map(p => p.id),
@@ -493,13 +501,14 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     ]);
     
     const dotsToMove = new Set<number>([
-      ...Array.from(keeperIds),
+      ...Array.from(keeperIds), // Keepers need to move to ridgelines
       ...whiteDropIndices, ...blueDropIndices, ...purpleDropIndices, ...brownDropIndices,
       ...whiteProgressIndices, ...blueProgressIndices, ...purpleProgressIndices, ...brownProgressIndices
     ]);
     
     console.log(`🎯 Dots that need to move: ${dotsToMove.size} total`);
     console.log(`📤 Moving dots: (${dotsToMove.size}) [progressors: ${whiteProgressIndices.size + blueProgressIndices.size + purpleProgressIndices.size + brownProgressIndices.size}, droppers: ${whiteDropIndices.size + blueDropIndices.size + purpleDropIndices.size + brownDropIndices.size}, keepers: ${keeperIds.size}]`);
+    console.log(`📍 Keepers moving to ridgelines: ${keeperIds.size} [W:${keeperWhite.length} B:${keeperBlue.length} P:${keeperPurple.length} Br:${keeperBrown.length} Bl:${keeperBlack.length}]`);
     
     // CRITICAL FIX: Update ALL dots to start from their current positions
     // This ensures continuity between stages - no dots reset to original positions
@@ -510,6 +519,15 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
         startX: point.currentX, // Always start from current position
         startY: point.currentY   // Always start from current position
       };
+      
+      // If a point is already in the dropout bucket, pin it in place for this stage
+      if (updatedPoint.isInDropoutBucket) {
+        return {
+          ...updatedPoint,
+          targetX: updatedPoint.currentX,
+          targetY: updatedPoint.currentY
+        };
+      }
       
       // Log the position update for debugging
       if (point.startX !== updatedPoint.startX || point.startY !== updatedPoint.startY) {
@@ -525,8 +543,20 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       if (whiteDropIndices.has(point.id) || blueDropIndices.has(point.id) || 
           purpleDropIndices.has(point.id) || brownDropIndices.has(point.id)) {
         
-        // Find a good position in the dropout bucket (avoid overlapping)
-        const bucketX = Math.random() * containerSize.width;
+        // CRITICAL: Position dropout dots by their skill level when they dropped out
+        // Left = low skill, Right = high skill (matches the ridgeline progression)
+        let skillLevel: number;
+        if (whiteDropIndices.has(point.id)) {
+          skillLevel = 0.1 + Math.random() * 0.2; // Left side - low skill white belts
+        } else if (blueDropIndices.has(point.id)) {
+          skillLevel = 0.3 + Math.random() * 0.2; // Left-center - blue belt skill
+        } else if (purpleDropIndices.has(point.id)) {
+          skillLevel = 0.5 + Math.random() * 0.2; // Center - purple belt skill
+        } else {
+          skillLevel = 0.7 + Math.random() * 0.2; // Right-center - brown belt skill
+        }
+        
+        const bucketX = skillLevel * containerSize.width;
         const bucketY = containerSize.height - 60 - Math.random() * 80; // Spread across bucket height
         
         console.log(`💥 Point ${point.id} dropping out to bucket at (${bucketX}, ${bucketY})`);
@@ -617,11 +647,11 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
         };
       }
       
-      // CRITICAL FIX: Keeper moves onto current category ridgeline this year
+      // CRITICAL FIX: Keeper gets positioned on their category's ridgeline
       if (keeperIds.has(point.id)) {
         const categoryIndex = ['white', 'blue', 'purple', 'brown', 'black'].indexOf(point.category);
         const { x, y } = targetOnRidgeline(categoryIndex);
-        console.log(`📍 Keeper ${point.id} (${point.category}) moving to ridgeline at (${x}, ${y})`);
+        console.log(`📍 Keeper ${point.id} (${point.category}) positioning on ridgeline at (${x}, ${y})`);
         return {
           ...updatedPoint,
           targetX: x,
@@ -656,40 +686,21 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     setDataPoints(updatedPoints);
     
     // CRITICAL: Check if setDataPoints actually worked
-    setTimeout(() => {
+                setTimeout(() => {
       console.log(`⏰ After setDataPoints delay - checking if positions were preserved`);
       console.log(`📍 Current dataPoints state:`, dataPoints.slice(0, 3).map(p => ({id: p.id, startX: p.startX, startY: p.startY, currentX: p.currentX, currentY: p.currentY})));
       
-      // CRITICAL: Compare what we set vs what we got
+      // CRITICAL: Compare what we set vs what we got (log only)
       console.log(`🔍 COMPARISON - What we set vs what we got:`);
       console.log(`   What we set:`, positionsRef.current.slice(0, 3).map(p => ({id: p.id, startX: p.startX, startY: p.startY, currentX: p.currentX, currentY: p.currentY})));
       console.log(`   What we got:`, dataPoints.slice(0, 3).map(p => ({id: p.id, startX: p.startX, startY: p.startY, currentX: p.currentX, currentY: p.currentY})));
       
-      // Check if positions were reset
+      // Heuristic diagnostics (no blocking)
       const dotsAtTop = dataPoints.filter(p => p.currentY < 100).length;
       const dotsAtRidgelines = dataPoints.filter(p => p.currentY >= 100 && p.currentY < 400).length;
       console.log(`📊 Position check after setDataPoints: ${dotsAtTop} at top, ${dotsAtRidgelines} at ridgelines`);
       
-      // CRITICAL: Check if ref positions are preserved
-      const refDotsAtTop = positionsRef.current.filter(p => p.currentY < 100).length;
-      const refDotsAtRidgelines = positionsRef.current.filter(p => p.currentY >= 100 && p.currentY < 400).length;
-      console.log(`📊 Ref position check: ${refDotsAtTop} at top, ${refDotsAtRidgelines} at ridgelines`);
-      
-      if (dotsAtTop > dotsAtRidgelines && currentStage > 0) {
-        console.error(`🚨 CRITICAL: setDataPoints failed - positions were reset!`);
-        console.error(`   This suggests a deeper state management issue`);
-        console.error(`   React is not preserving the state we set`);
-        
-        // CRITICAL: Try to restore from ref if state was reset
-        if (refDotsAtRidgelines > refDotsAtTop) {
-          console.log(`🔄 Attempting to restore positions from ref...`);
-          setDataPoints(positionsRef.current);
-          return; // Don't start animation yet, let the restore complete
-        }
-        
-        return; // Don't start animation if positions are wrong
-      }
-      
+      // Always proceed to animation to avoid getting stuck between years
       console.log(`⏰ Starting animation after position update delay`);
       setIsRunning(true);
       setAnimationProgress(0);
@@ -708,7 +719,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       console.log(`🔧 SETTING CURRENT STAGE TO: 0 (fresh start)`);
       setCurrentStage(0);
       generateInitialCohort();
-    } else {
+              } else {
       // If we already have data points, just continue from current state
       console.log('▶️ Continuing from existing state - no reset');
       console.log(`📍 Current stage: ${currentStage}, dataPoints: ${dataPoints.length}`);
@@ -718,11 +729,9 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
         console.log(`🔄 Continuing animation - progressing to next stage`);
         progressToNextStage();
       } else {
-        console.log(`🏁 All stages complete - restarting from beginning`);
-        setIsRunning(true);
-        console.log(`🔧 SETTING CURRENT STAGE TO: 0 (restart)`);
-        setCurrentStage(0);
-        generateInitialCohort();
+        console.log(`🏁 All stages complete - staying on final state`);
+        // CRITICAL: Don't restart automatically, stay on year 10 until reset
+        setIsRunning(false);
       }
     }
   };
@@ -895,7 +904,9 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
             console.log(`⏰ Auto-progressing to next stage after ${stageDelay}ms delay`);
             progressToNextStage();
           } else {
-            console.log(`🏁 All stages complete - no more auto-progression`);
+            console.log(`🏁 All stages complete - staying on final state until reset`);
+            // CRITICAL: Stop at year 10, wait for user reset
+            setIsRunning(false);
           }
         }, stageDelay);
       }
@@ -977,7 +988,13 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       ctx.fillText(category.name, 20, y + 5);
     });
     
-    // Draw density curves (ridgeline plot) - EXACTLY as in reference image
+    // Draw density curves (ridgeline plot) - PROPER OVERLAPPING BELL CURVES
+    // Each belt has a fixed amplitude and position, creating overlapping, staggered curves
+    // White belt: tallest (100px), left side only (0.20), narrow spread (0.08)
+    // Blue belt: high (80px), overlaps with white right edge (0.35), narrow spread (0.08)
+    // Purple belt: medium (70px), overlaps with blue right edge (0.55), narrow spread (0.08)
+    // Brown belt: lower (60px), overlaps with purple right edge (0.70), narrow spread (0.08)
+    // Black belt: shortest (50px), right side only (0.85), narrow spread (0.06)
     categories.forEach((category, index) => {
       const baseY = 100 + index * spacing;
       
@@ -986,11 +1003,19 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       ctx.setLineDash([5, 5]);
       ctx.beginPath();
       
-      // Draw bell curve with proper Gaussian shape
+      // Draw bell curve with proper Gaussian shape - FIXED VISUAL IMPACT
       ctx.beginPath();
       for (let x = 0; x < cssW; x += 2) {
-        const normalizedX = (x - category.mean * cssW) / (category.stdDev * cssW);
-        const bellCurveHeight = 25 * Math.exp(-(normalizedX * normalizedX) / 2);
+        // Primary Gaussian lobe
+        const nx1 = (x - category.mean * cssW) / (category.stdDev * cssW);
+        let bellCurveHeight = (category.amp ?? 60) * Math.exp(-(nx1 * nx1) / 2);
+        
+        // Optional second lobe for skewed distributions (e.g., blue belt)
+        if (category.mean2 && category.stdDev2 && category.amp2) {
+          const nx2 = (x - category.mean2 * cssW) / (category.stdDev2 * cssW);
+          bellCurveHeight += category.amp2 * Math.exp(-(nx2 * nx2) / 2);
+        }
+        
         const curveY = Math.round(baseY + bellCurveHeight) + 0.5; // Pixel-snap Y coordinates
         
         if (x === 0) {
@@ -1015,10 +1040,10 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       ctx.stroke();
     });
     
-    // Draw dropout bucket - FULL WIDTH of screen as in reference image
-    ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
-    ctx.strokeStyle = '#FF0000';
-    ctx.lineWidth = 2;
+    // Draw dropout bucket - SUBTLE STYLING
+    ctx.fillStyle = 'rgba(100, 100, 100, 0.2)';
+    ctx.strokeStyle = '#666666';
+    ctx.lineWidth = 1;
     ctx.beginPath();
     // CRITICAL: Pixel-snap coordinates to prevent antialiasing artifacts
     const bucketY = Math.round(cssH - 120);
@@ -1030,12 +1055,17 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     // Count total dropout dots
     const totalDropout = dataPoints.filter(p => p.isInDropoutBucket).length;
     
-    ctx.fillStyle = '#FF0000';
+    ctx.fillStyle = '#666666';
     ctx.font = '16px Arial';
     ctx.textAlign = 'center';
     ctx.fillText('DROPOUT BUCKET', cssW / 2, cssH - 85);
     ctx.fillText(`Year ${currentStage + 1}/10`, cssW / 2, cssH - 65);
     ctx.fillText(`Total Dropouts: ${totalDropout}`, cssW / 2, cssH - 45);
+    
+    // CRITICAL: Show skill level progression in dropout bucket
+    ctx.font = '12px Arial';
+    ctx.fillText('Low Skill ←', 50, cssH - 30);
+    ctx.fillText('→ High Skill', cssW - 50, cssH - 30);
     
     // Draw baseline - thick black horizontal line as in reference
     ctx.strokeStyle = '#000000';
@@ -1048,7 +1078,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     ctx.stroke();
     
     // Draw progress indicator
-    if (isRunning) {
+      if (isRunning) {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
       ctx.fillRect(10, 10, 200 * animationProgress, 20);
       ctx.strokeStyle = 'white';
@@ -1230,7 +1260,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               '&:hover': { bgcolor: isRunning ? '#d32f2f' : '#45a049' }
             }}
           >
-            {isRunning ? 'Stop' : (dataPoints.length === 0 ? 'Start Cohort' : 'Continue')}
+                            {isRunning ? 'Stop' : (dataPoints.length === 0 ? 'Start Cohort' : (currentStage < 9 ? 'Continue' : 'Complete'))}
           </Button>
           <Button 
             size="small"
@@ -1307,46 +1337,46 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
               {(['linear', 'easeInOut', 'easeOut'] as const).map((type) => (
-                <Button
+          <Button 
                   key={type}
-                  size="small"
+            size="small"
                   variant={easingType === type ? 'contained' : 'outlined'}
                   onClick={() => setEasingType(type)}
-                  sx={{ 
+            sx={{ 
                     bgcolor: easingType === type ? '#ff9800' : 'transparent',
-                    color: 'white',
-                    borderColor: 'white',
+              color: 'white', 
+              borderColor: 'white',
                     '&:hover': { 
                       borderColor: 'white', 
                       bgcolor: easingType === type ? '#f57c00' : 'rgba(255,255,255,0.1)' 
                     }
-                  }}
-                >
+            }}
+          >
                   {type}
-                </Button>
+          </Button>
               ))}
             </Box>
-          </Box>
-          
+        </Box>
+        
           {/* Spacing */}
           <Box>
             <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
               Vertical Spacing: {spacing}px
-            </Typography>
-            <Slider
+              </Typography>
+              <Slider
               value={spacing}
               onChange={(_, value) => setSpacing(value as number)}
               min={40}
               max={120}
               step={10}
-              sx={{ 
+                sx={{ 
                 color: '#9c27b0',
                 '& .MuiSlider-thumb': { bgcolor: '#9c27b0' },
                 '& .MuiSlider-track': { bgcolor: '#9c27b0' },
-                '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
-              }}
-            />
-          </Box>
+                  '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
+                }}
+              />
+            </Box>
         </Box>
         
         <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
