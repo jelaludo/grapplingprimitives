@@ -1,0 +1,17 @@
+# Exclude non-API directories from being treated as serverless functions
+backups/
+mongo-ready/
+miscjela/
+scripts/
+temp/
+*.md
+*.txt
+*.bat
+*.ps1
+stty
+sdf
+server.js
+test-*.js
+debug-*.js
+seed*.ts
+seed*.js
