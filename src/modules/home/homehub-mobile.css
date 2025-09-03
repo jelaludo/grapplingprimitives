@@ -34,8 +34,8 @@
   --bp-desktop: 1024px;
   
   /* Mobile Grid Settings */
-  --mobile-grid-gap: clamp(0.5rem, 2vw, 1rem);
-  --mobile-card-aspect-ratio: 1.2; /* Slightly taller on mobile for better touch */
+  --mobile-grid-gap: clamp(0.125rem, 1vw, 0.5rem); /* Much tighter gaps for compact layout */
+  --mobile-card-aspect-ratio: 0.6; /* Even shorter cards for tighter vertical spacing */
 }
 
 /* Mobile-specific utility classes */
@@ -63,49 +63,51 @@
   min-height: 100vh;
   /* DEBUG: Visual indicator that container is scrollable */
   border: 2px solid red;
-  /* CRITICAL: Remove conflicting padding that might interfere */
-  padding: 1rem;
+  /* CRITICAL: Absolute minimal padding for ultra-compact layout */
+  padding: 0.125rem !important;
 }
 
 /* Mobile grid layout */
 .homehub-mobile .mobile-grid {
-  display: grid;
-  gap: 1rem;
-  /* CRITICAL: Simple single column on mobile to avoid conflicts */
-  grid-template-columns: 1fr;
-  /* CRITICAL: Ensure grid has enough height to scroll */
-  min-height: calc(100vh + 300px);
+  display: grid !important;
+  gap: 0.125rem !important; /* Force extremely tight gaps */
+  /* CRITICAL: Force 3 columns on mobile to fit iPhone screen */
+  grid-template-columns: repeat(3, 1fr) !important;
+  /* CRITICAL: Remove excessive height that causes spacing */
+  min-height: auto !important;
   width: 100%;
-  /* CRITICAL: Simple padding */
-  padding-bottom: 6rem;
+  /* CRITICAL: Remove bottom padding that adds space */
+  padding-bottom: 0 !important;
 }
 
 /* CRITICAL: Ensure cards fit properly */
 .homehub-mobile .mobile-card {
-  width: 100%;
-  min-height: 120px;
-  border-radius: 0.75rem;
+  width: 100% !important;
+  min-height: 60px !important; /* Use min-height for flexibility */
+  max-height: 80px !important; /* Cap maximum height */
+  border-radius: 0.25rem !important; /* Even smaller radius */
   overflow: hidden;
 }
 
 /* Mobile card styling */
 .homehub-mobile .mobile-card {
-  aspect-ratio: var(--mobile-card-aspect-ratio);
-  border-radius: 0.75rem;
+  border-radius: 0.25rem !important; /* Even smaller radius */
   overflow: hidden;
-  display: flex;
-  min-height: 120px; /* Ensure minimum height for touch */
+  display: flex !important;
+  flex-direction: column !important; /* Stack content vertically */
 }
 
 /* Mobile card content */
 .homehub-mobile .mobile-card-content {
   display: flex;
   flex-direction: column;
-  gap: var(--mobile-spacing-small);
+  gap: 0.125rem !important; /* Very tight gap for compact cards */
   flex: 1;
-  padding: var(--mobile-spacing-small);
+  padding: 0.25rem !important; /* Consistent padding */
   font-family: inherit;
   letter-spacing: inherit;
+  justify-content: center !important; /* Center content vertically */
+  align-items: center !important; /* Center content horizontally */
 }
 
 /* Mobile card titles */
@@ -184,7 +186,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60px; /* Ensure previews are visible */
+  min-height: 40px !important; /* Smaller minimum for compact cards */
+  max-height: 60px !important; /* Cap maximum height */
+  overflow: hidden !important; /* Prevent content overflow */
 }
 
 /* Simple responsive breakpoints */
@@ -233,8 +237,87 @@
   }
 }
 
+/* CRITICAL: iPhone-specific optimizations for very small screens */
+@media (max-width: 428px) { /* iPhone 12/13/14 Pro Max width */
+  .homehub-mobile .mobile-grid {
+    gap: 0.125rem; /* Extremely tight gap for iPhone */
+  }
+  
+  .homehub-mobile .mobile-container {
+    padding: 0.125rem; /* Extremely minimal padding for iPhone */
+  }
+  
+  .homehub-mobile .mobile-card {
+    min-height: 50px; /* Very small for iPhone */
+  }
+}
+
+/* CRITICAL: Ultra-compact layout for very narrow screens */
+@media (max-width: 375px) { /* iPhone SE, iPhone 12/13/14 mini */
+  .homehub-mobile .mobile-grid {
+    gap: 0.0625rem; /* Ultra-tight gap */
+  }
+  
+  .homehub-mobile .mobile-container {
+    padding: 0.0625rem; /* Ultra-minimal padding */
+  }
+  
+  .homehub-mobile .mobile-card {
+    min-height: 45px; /* Ultra-compact for small screens */
+  }
+}
+
 /* CRITICAL: Override any body overflow restrictions when HomeHub is active */
 body.immersive {
   overflow-y: auto !important;
   overflow-x: hidden !important;
+}
+
+/* CRITICAL: Force grid layout to work and override any conflicting styles */
+.homehub-mobile .mobile-grid > * {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  min-height: 60px !important; /* Flexible height */
+}
+
+/* CRITICAL: Force grid columns to work on all screen sizes */
+.homehub-mobile .mobile-grid {
+  grid-template-columns: repeat(3, 1fr) !important;
+  grid-auto-rows: minmax(60px, auto) !important; /* Flexible row heights */
+  grid-auto-flow: row !important;
+}
+
+/* CRITICAL: Ensure no flexbox conflicts with grid */
+.homehub-mobile .mobile-grid {
+  flex: none !important;
+  flex-direction: unset !important;
+  flex-wrap: unset !important;
+}
+
+/* CRITICAL: Force cards to be exactly the right size */
+.homehub-mobile .mobile-card {
+  flex: none !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* CRITICAL: Handle card content scaling properly */
+.homehub-mobile .mobile-card img,
+.homehub-mobile .mobile-card svg,
+.homehub-mobile .mobile-card canvas {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* CRITICAL: Ensure text content doesn't overflow */
+.homehub-mobile .mobile-card * {
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
