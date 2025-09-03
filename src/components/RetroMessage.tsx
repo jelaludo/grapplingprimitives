@@ -42,13 +42,14 @@ const OVERLAY_STYLE = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  pointerEvents: 'none' as const,
+  pointerEvents: 'auto' as const, // CRITICAL: Capture all clicks to prevent them from reaching modules
   fontFamily: 'monospace',
   fontSize: '1.1rem', // Smaller font
+  cursor: 'pointer', // Show pointer cursor to indicate clickable
 };
 
 const CONTAINER_STYLE = {
-  pointerEvents: 'none' as const,
+  pointerEvents: 'auto' as const, // CRITICAL: Allow container to receive clicks
   width: '600px',
   height: '200px',
   padding: '20px',
@@ -122,33 +123,66 @@ const RetroMessage: React.FC<RetroMessageProps> = ({ onFirstInteraction }) => {
     // Start typing immediately
     typeNextChar();
 
-    // Event listeners
-    const hide = () => {
-      if (!hasInteracted && onFirstInteraction) {
-        onFirstInteraction();
-        setHasInteracted(true);
+    // Keep keyboard and scroll events for accessibility
+    const handleKeyOrScroll = (e: Event) => {
+      if (e.type === 'keydown' || e.type === 'scroll' || e.type === 'wheel') {
+        if (!hasInteracted && onFirstInteraction) {
+          onFirstInteraction();
+          setHasInteracted(true);
+        }
+        setVisible(false);
       }
-      setVisible(false);
     };
-    const events = ['mousedown', 'keydown', 'touchstart', 'scroll', 'wheel'];
-    events.forEach(event => window.addEventListener(event, hide, { once: true }));
+    
+    const events = ['keydown', 'scroll', 'wheel'];
+    events.forEach(event => window.addEventListener(event, handleKeyOrScroll, { once: true }));
 
     return () => {
       clearInterval(cursorTimer);
       if (timer.current) clearTimeout(timer.current);
-      events.forEach(event => window.removeEventListener(event, hide));
+      events.forEach(event => window.removeEventListener(event, handleKeyOrScroll));
     };
   }, [visible, msgIndex]);
 
   if (!visible) return null;
 
   return (
-    <div style={OVERLAY_STYLE}>
+    <div 
+      style={OVERLAY_STYLE}
+      onClick={(e) => {
+        // CRITICAL: Prevent clicks from reaching underlying modules
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Handle the click to dismiss the overlay
+        if (!hasInteracted && onFirstInteraction) {
+          onFirstInteraction();
+          setHasInteracted(true);
+        }
+        setVisible(false);
+      }}
+      onTouchStart={(e) => {
+        // CRITICAL: Prevent touch events from reaching underlying modules
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
       <div style={CONTAINER_STYLE}>
         <div style={PROMPT_STYLE}>{PROMPT}</div>
         <div style={MESSAGE_STYLE}>
           {text}
           {cursor && <span style={{ color: '#0f0' }}>|</span>}
+        </div>
+        {/* Mobile-friendly click hint */}
+        <div style={{ 
+          position: 'absolute', 
+          bottom: '10px', 
+          right: '20px', 
+          fontSize: '0.8rem', 
+          color: 'rgba(255,255,255,0.6)',
+          fontStyle: 'italic'
+        }}>
+          Click anywhere to continue
         </div>
       </div>
     </div>

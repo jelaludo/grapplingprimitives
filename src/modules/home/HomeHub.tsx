@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/material';
+import './homehub-mobile.css';
 import CentroidCardPreview from '../games/previews/CentroidCardPreview';
 import MemoryCardPreview from '../games/previews/MemoryCardPreview';
 import TimerCardPreview from '../coach/previews/TimerCardPreview';
@@ -117,23 +118,24 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
   // Separate cards for Centroid and Memory will use dedicated previews below
 
   return (
-    <Box sx={{ 
-      p: { xs: 1, md: 2 }, 
-      m: 'auto', 
-      width: '100%', 
-      minHeight: '100vh', 
-      maxWidth: 1200, 
-      display: 'flex', 
-      flexDirection: 'column',
-      fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', 
-      letterSpacing: '0.06em', 
-      overflowY: 'auto',
-      WebkitOverflowScrolling: 'touch',
-      overscrollBehavior: 'contain',
-      position: 'relative'
-    }}>
+    <Box 
+      className="homehub-mobile mobile-container"
+      sx={{ 
+        m: 'auto', 
+        width: '100%', 
+        maxWidth: { xs: '100%', lg: 1200 }, 
+        display: 'flex', 
+        flexDirection: 'column',
+        fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', 
+        letterSpacing: '0.06em', 
+        position: 'relative'
+      }}
+    >
 
-      <Box sx={{ display: 'grid', gap: { xs: 1, sm: 1.5, md: 2 }, gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }, gridAutoRows: '1fr', flex: 1, pb: { xs: 4, md: 2 } }}>
+      <Box className="mobile-grid" sx={{ 
+        display: 'grid', 
+        flex: 1
+      }}>
         <CardShell title="GRAPPLING PRIMITIVES" subtitle="Concepts Mapping" onClick={props.goMatrix} preview={<PreviewMatrix />} />
         <CardShell title="BJJ Visualizations" onClick={props.goGraphs} preview={<PreviewGraphs />} />
         <CardShell title="Centroid" onClick={() => props.goGames('centroid')} preview={<CentroidCardPreview />} />
@@ -145,41 +147,60 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
         <CardShell title="Training" onClick={props.goTraining} preview={<TrainingCardPreview />} />
         <CardShell title="Others" onClick={props.goOthers} preview={<PreviewCards />} />
       </Box>
+
+      {/* Mobile scroll indicator */}
+      <Box 
+        className="mobile-only"
+        sx={{ 
+          textAlign: 'center', 
+          py: 2, 
+          color: 'rgba(255,255,255,0.6)',
+          fontSize: 'var(--mobile-font-size-small)'
+        }}
+      >
+        ↓ Scroll to see all modules ↓
+      </Box>
+
+      {/* Mobile scroll to top button */}
+      <Box 
+        className="mobile-only mobile-scroll-top"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        sx={{ 
+          position: 'fixed',
+          bottom: { xs: 'calc(env(safe-area-inset-bottom) + 5rem)', md: '5rem' },
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 999,
+          width: 'var(--touch-target)',
+          height: 'var(--touch-target)',
+          borderRadius: '50%',
+          backgroundColor: 'rgba(255,255,255,0.2)',
+          color: '#fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255,255,255,0.3)',
+          fontSize: 'var(--mobile-font-size-large)',
+          transition: 'all 0.2s ease',
+          '&:hover': {
+            backgroundColor: 'rgba(255,255,255,0.3)',
+            transform: 'translateX(-50%) scale(1.1)'
+          }
+        }}
+      >
+        ↑
+      </Box>
       
       {/* Help button at bottom right */}
-      <Box sx={{ 
-        position: 'fixed', 
-        bottom: { xs: 20, md: 30 }, 
-        right: { xs: 20, md: 30 }, 
-        zIndex: 1000 
-      }}>
-        <Box 
-          onClick={() => {
-            alert("Jelaludo's attempt at a BJJ OS, pouring decades of notes into one app with multiple modules, work in progress, ossss");
-          }} 
-          sx={{ 
-            cursor: 'pointer', 
-            width: 40, 
-            height: 40, 
-            borderRadius: '50%', 
-            bgcolor: 'rgba(255,255,255,0.15)', 
-            color: '#fff', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            fontWeight: 700,
-            fontSize: '1.2rem',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            '&:hover': {
-              bgcolor: 'rgba(255,255,255,0.25)',
-              transform: 'scale(1.1)'
-            },
-            transition: 'all 0.2s ease'
-          }}
-        >
-          ?
-        </Box>
+      <Box 
+        className="mobile-help-button"
+        onClick={() => {
+          alert("Jelaludo's attempt at a BJJ OS, pouring decades of notes into one app with multiple modules, work in progress, ossss");
+        }}
+      >
+        ?
       </Box>
     </Box>
   );

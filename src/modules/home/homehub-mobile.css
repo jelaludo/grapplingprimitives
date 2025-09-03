@@ -1,0 +1,316 @@
+/* HomeHub Module - Mobile-First Design Tokens */
+/* This file contains mobile-specific CSS variables and utilities */
+
+.homehub-mobile {
+  /* Mobile Viewport & Safe Areas */
+  --mobile-safe-top: env(safe-area-inset-top, 0px);
+  --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --mobile-viewport-height: 100dvh; /* Dynamic viewport height for mobile */
+  --mobile-viewport-height-fallback: 100vh; /* Fallback for older browsers */
+  
+  /* Touch Targets & Spacing */
+  --touch-target: 2.75rem; /* 44px minimum for touch */
+  --touch-target-small: 2.25rem; /* 36px for secondary actions */
+  --mobile-spacing: clamp(0.5rem, 2vw, 1rem);
+  --mobile-spacing-small: clamp(0.25rem, 1vw, 0.5rem);
+  --mobile-spacing-large: clamp(1rem, 3vw, 1.5rem);
+  
+  /* Mobile Typography */
+  --mobile-font-size-small: clamp(0.75rem, 2.5vw, 0.875rem);
+  --mobile-font-size-base: clamp(0.875rem, 3vw, 1rem);
+  --mobile-font-size-large: clamp(1rem, 3.5vw, 1.125rem);
+  --mobile-font-size-xl: clamp(1.125rem, 4vw, 1.25rem);
+  
+  /* Mobile Colors & Contrast */
+  --mobile-bg-primary: #1a1a1a;
+  --mobile-bg-secondary: rgba(255, 255, 255, 0.05);
+  --mobile-border: rgba(255, 255, 255, 0.1);
+  --mobile-text-primary: #ffffff;
+  --mobile-text-secondary: rgba(255, 255, 255, 0.7);
+  
+  /* Mobile Breakpoints */
+  --bp-mobile: 480px;
+  --bp-tablet: 768px;
+  --bp-desktop: 1024px;
+  
+  /* Mobile Grid Settings */
+  --mobile-grid-gap: clamp(0.5rem, 2vw, 1rem);
+  --mobile-card-aspect-ratio: 1.2; /* Slightly taller on mobile for better touch */
+}
+
+/* Mobile-specific utility classes */
+.homehub-mobile .mobile-only {
+  display: block;
+}
+
+.homehub-mobile .desktop-only {
+  display: none;
+}
+
+/* Mobile container with proper scrolling */
+.homehub-mobile .mobile-container {
+  height: var(--mobile-viewport-height);
+  height: var(--mobile-viewport-height-fallback); /* Fallback */
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  overscroll-behavior: contain;
+  padding: var(--mobile-spacing);
+  padding-top: calc(var(--mobile-safe-top) + var(--mobile-spacing));
+  padding-bottom: calc(var(--mobile-safe-bottom) + var(--mobile-spacing));
+  /* CRITICAL: Ensure proper scrolling behavior */
+  scroll-behavior: smooth;
+  /* Prevent any horizontal movement */
+  max-width: 100vw;
+}
+
+/* Mobile grid layout */
+.homehub-mobile .mobile-grid {
+  display: grid;
+  gap: var(--mobile-grid-gap);
+  /* CRITICAL: Responsive columns that prevent horizontal overflow */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-auto-rows: 1fr;
+  padding-bottom: calc(var(--mobile-safe-bottom) + 5rem); /* Space for help button */
+  /* Prevent horizontal overflow */
+  overflow-x: hidden;
+  width: 100%;
+  /* Mobile-first: ensure single column on very narrow screens */
+  min-width: 0;
+}
+
+/* CRITICAL: Force single column on very narrow screens to prevent horizontal scroll */
+@media (max-width: 599px) {
+  .homehub-mobile .mobile-grid {
+    grid-template-columns: 1fr; /* Single column on mobile */
+    gap: var(--mobile-spacing-small);
+  }
+  
+  .homehub-mobile .mobile-card {
+    /* Ensure cards fit perfectly on mobile */
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* Mobile card styling */
+.homehub-mobile .mobile-card {
+  aspect-ratio: var(--mobile-card-aspect-ratio);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  display: flex;
+  min-height: 120px; /* Ensure minimum height for touch */
+}
+
+/* Mobile card content */
+.homehub-mobile .mobile-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mobile-spacing-small);
+  flex: 1;
+  padding: var(--mobile-spacing-small);
+  font-family: inherit;
+  letter-spacing: inherit;
+}
+
+/* Mobile card titles */
+.homehub-mobile .mobile-card-title {
+  font-size: var(--mobile-font-size-base);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* Mobile card subtitles */
+.homehub-mobile .mobile-card-subtitle {
+  font-size: var(--mobile-font-size-small);
+  opacity: 0.8;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* Mobile help button */
+.homehub-mobile .mobile-help-button {
+  position: fixed;
+  bottom: calc(var(--mobile-safe-bottom) + var(--mobile-spacing));
+  right: var(--mobile-spacing);
+  z-index: 1000;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--mobile-font-size-large);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.homehub-mobile .mobile-help-button:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1);
+}
+
+/* Mobile scroll to top button */
+.homehub-mobile .mobile-scroll-top {
+  position: fixed;
+  bottom: calc(var(--mobile-safe-bottom) + 5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: var(--mobile-font-size-large);
+  transition: all 0.2s ease;
+}
+
+.homehub-mobile .mobile-scroll-top:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(-50%) scale(1.1);
+}
+
+/* Mobile preview containers */
+.homehub-mobile .mobile-preview-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px; /* Ensure previews are visible */
+}
+
+/* Responsive breakpoints */
+@media (min-width: 480px) {
+  .homehub-mobile .mobile-grid {
+    /* Auto-fit with minimum card width ensures no horizontal overflow */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--mobile-spacing);
+  }
+}
+
+@media (min-width: 768px) {
+  .homehub-mobile .mobile-only {
+    display: none;
+  }
+  
+  .homehub-mobile .desktop-only {
+    display: block;
+  }
+  
+  .homehub-mobile .mobile-grid {
+    /* Auto-fit ensures optimal column count based on available space */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--mobile-spacing-large);
+  }
+  
+  .homehub-mobile .mobile-container {
+    height: 100vh; /* Use regular viewport height on larger devices */
+    padding: 2rem;
+  }
+  
+  .homehub-mobile .mobile-card {
+    aspect-ratio: 1; /* Square cards on larger devices */
+  }
+}
+
+@media (min-width: 1024px) {
+  .homehub-mobile .mobile-grid {
+    /* Auto-fit with larger minimum for desktop */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .homehub-mobile .mobile-container {
+    padding: 2rem;
+  }
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .homehub-mobile .mobile-container {
+    /* iOS Safari specific scrolling improvements */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    /* Fix for iOS Safari viewport issues */
+    height: -webkit-fill-available;
+    min-height: -webkit-fill-available;
+    /* CRITICAL: Prevent horizontal scroll on iOS */
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  .homehub-mobile .mobile-grid {
+    /* Prevent iOS Safari from cutting off grid items */
+    min-height: calc(100vh - 2rem);
+    /* Ensure proper grid rendering on iOS */
+    grid-template-rows: repeat(auto-fit, minmax(120px, 1fr));
+    /* CRITICAL: Force single column on iOS mobile to prevent horizontal scroll */
+    grid-template-columns: 1fr;
+    /* Prevent iOS Safari from creating horizontal overflow */
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* iOS momentum scrolling */
+  .homehub-mobile .mobile-container {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    /* Prevent iOS Safari from bouncing */
+    overscroll-behavior: contain;
+    /* Fix for iOS Safari bottom safe area */
+    padding-bottom: calc(env(safe-area-inset-bottom) + 6rem);
+  }
+}
+
+/* Additional mobile scrolling improvements */
+@media (max-width: 767px) {
+  .homehub-mobile .mobile-container {
+    /* Ensure smooth scrolling on all mobile devices */
+    scroll-behavior: smooth;
+    /* CRITICAL: Prevent horizontal scroll completely */
+    overflow-x: hidden;
+    /* Better touch scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Ensure proper height calculation */
+    height: 100dvh;
+    height: 100vh; /* Fallback */
+    /* Prevent any horizontal movement */
+    max-width: 100vw;
+    width: 100%;
+  }
+  
+  .homehub-mobile .mobile-grid {
+    /* Ensure all cards are visible */
+    grid-auto-rows: minmax(120px, auto);
+    /* Add bottom padding for help button */
+    padding-bottom: 6rem;
+    /* CRITICAL: Prevent horizontal overflow */
+    overflow-x: hidden;
+    /* Ensure grid respects container width */
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .homehub-mobile .mobile-card {
+    /* Ensure cards don't exceed container width */
+    max-width: 100%;
+    width: 100%;
+    /* Prevent card overflow */
+    overflow: hidden;
+  }
+}
