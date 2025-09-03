@@ -71,7 +71,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
   }, [gameFullscreen, scrollTrigger]);
 
   return (
-    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Header (fixed) - only when provided by parent (matrix view) */}
       {headerWithMobileMenu && (
         <Box sx={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: theme.zIndex.appBar }}>
@@ -118,7 +118,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ sidebar, header, children, onFi
             minHeight: 0,
             height: '100%',
             display: 'flex',
-            overflow: 'hidden',
             backgroundColor: 'background.default',
             // Minimal top padding, but allow immersive pages to opt-out by adding body.immersive
             pt: gameFullscreen || (typeof document !== 'undefined' && document.body.classList.contains('immersive')) ? 0 : { xs: 1, md: 2 },

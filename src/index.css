@@ -22,8 +22,8 @@ code {
 html, body {
   height: 100%;
   width: 100%;
-  /* Reserve gutter to prevent lateral hops; and prefer no scroll during games */
-  scrollbar-gutter: stable both-edges;
+  /* CRITICAL: Reserve gutter to prevent layout shifts when scrollbar appears */
+  scrollbar-gutter: stable;
 }
 
 #root {
@@ -45,9 +45,10 @@ body.game-fullscreen .MuiAppBar-root {
   display: none !important;
 }
 
-/* Remove right-side scroll bar gutter in full-screen game mode */
+/* CRITICAL FIX: Allow vertical scroll, hide only horizontal to fix mouse wheel scrolling */
 body.game-fullscreen {
-  overflow: hidden !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
 }
 
 /* Immersive pages (e.g., Home hub): hide header, but allow scrolling */

@@ -27,6 +27,37 @@ interface HomeHubProps {
 }
 
 const HomeHub: React.FC<HomeHubProps> = (props) => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [isScrollable, setIsScrollable] = React.useState(false);
+  
+  // Check if container is scrollable after mount
+  React.useEffect(() => {
+    if (containerRef.current) {
+      const checkScrollable = () => {
+        const container = containerRef.current;
+        if (container) {
+          const canScroll = container.scrollHeight > container.clientHeight;
+          setIsScrollable(canScroll);
+          console.log('Container scrollable check:', {
+            scrollHeight: container.scrollHeight,
+            clientHeight: container.clientHeight,
+            canScroll,
+            overflowY: getComputedStyle(container).overflowY,
+            height: getComputedStyle(container).height,
+            maxHeight: getComputedStyle(container).maxHeight
+          });
+        }
+      };
+      
+      // Check immediately
+      checkScrollable();
+      
+      // Check after a short delay to ensure content is rendered
+      const timer = setTimeout(checkScrollable, 100);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+  
   const CardShell: React.FC<{ title?: string; subtitle?: string; onClick?: () => void; preview?: React.ReactNode; disabled?: boolean; hideTitle?: boolean }>
     = ({ title, subtitle, onClick, preview, disabled, hideTitle }) => (
     <Card sx={{ aspectRatio: '1 / 1', borderRadius: 3, overflow: 'hidden', display: 'flex' }}>
@@ -119,6 +150,7 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
 
   return (
     <Box 
+      ref={containerRef}
       className="homehub-mobile mobile-container"
       sx={{ 
         m: 'auto', 
@@ -132,10 +164,7 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
       }}
     >
 
-      <Box className="mobile-grid" sx={{ 
-        display: 'grid', 
-        flex: 1
-      }}>
+      <Box className="mobile-grid">
         <CardShell title="GRAPPLING PRIMITIVES" subtitle="Concepts Mapping" onClick={props.goMatrix} preview={<PreviewMatrix />} />
         <CardShell title="BJJ Visualizations" onClick={props.goGraphs} preview={<PreviewGraphs />} />
         <CardShell title="Centroid" onClick={() => props.goGames('centroid')} preview={<CentroidCardPreview />} />
@@ -161,37 +190,55 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
         ↓ Scroll to see all modules ↓
       </Box>
 
-      {/* Mobile scroll to top button */}
-      <Box 
-        className="mobile-only mobile-scroll-top"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        sx={{ 
-          position: 'fixed',
-          bottom: { xs: 'calc(env(safe-area-inset-bottom) + 5rem)', md: '5rem' },
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 999,
-          width: 'var(--touch-target)',
-          height: 'var(--touch-target)',
-          borderRadius: '50%',
-          backgroundColor: 'rgba(255,255,255,0.2)',
-          color: '#fff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255,255,255,0.3)',
-          fontSize: 'var(--mobile-font-size-large)',
-          transition: 'all 0.2s ease',
-          '&:hover': {
-            backgroundColor: 'rgba(255,255,255,0.3)',
-            transform: 'translateX(-50%) scale(1.1)'
-          }
-        }}
-      >
-        ↑
-      </Box>
+      {/* Mobile scroll to top button - only show when scrollable */}
+      {isScrollable && (
+        <Box 
+          className="mobile-only mobile-scroll-top"
+          onClick={() => {
+            // CRITICAL: Scroll the container, not the window
+            console.log('Scroll button clicked, containerRef:', containerRef.current);
+            console.log('Container scrollTop:', containerRef.current?.scrollTop);
+            console.log('Container scrollHeight:', containerRef.current?.scrollHeight);
+            console.log('Container clientHeight:', containerRef.current?.clientHeight);
+            
+            if (containerRef.current) {
+              containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+              console.log('Scrolling to top...');
+            } else {
+              console.error('Container ref not found!');
+            }
+          }}
+          sx={{ 
+            position: 'fixed',
+            bottom: { xs: 'calc(env(safe-area-inset-bottom) + 5rem)', md: '5rem' },
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 'var(--touch-target)',
+            height: 'var(--touch-target)',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            color: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.3)',
+            fontSize: 'var(--mobile-font-size-large)',
+            transition: 'all 0.2s ease',
+            /* CRITICAL: Ensure button is clickable */
+            pointerEvents: 'auto',
+            /* CRITICAL: Ensure button is above other content */
+            zIndex: 1001,
+            '&:hover': {
+              backgroundColor: 'rgba(255,255,255,0.3)',
+              transform: 'translateX(-50%) scale(1.1)'
+            }
+          }}
+        >
+          ↑
+        </Box>
+      )}
       
       {/* Help button at bottom right */}
       <Box 
