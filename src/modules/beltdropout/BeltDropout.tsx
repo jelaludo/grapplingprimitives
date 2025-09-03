@@ -1270,8 +1270,8 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     ctx.lineWidth = 1;
     ctx.beginPath();
     // CRITICAL: Pixel-snap coordinates to prevent antialiasing artifacts
-    const bucketY = Math.round(cssH - 120);
-    const bucketHeight = Math.round(100);
+    const bucketY = Math.round(cssH - 80); // Reduced from 120 to 80
+    const bucketHeight = Math.round(60); // Reduced from 100 to 60
     ctx.rect(0, bucketY, cssW, bucketHeight);
     ctx.fill();
     ctx.stroke();
@@ -1282,21 +1282,21 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     ctx.fillStyle = '#666666';
     ctx.font = '16px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('DROPOUT BUCKET', cssW / 2, cssH - 85);
-    ctx.fillText(`Year ${currentStage + 1}/10`, cssW / 2, cssH - 65);
-    ctx.fillText(`Total Dropouts: ${totalDropout}`, cssW / 2, cssH - 45);
+    ctx.fillText('DROPOUT BUCKET', cssW / 2, cssH - 65); // Adjusted from -85
+    ctx.fillText(`Year ${currentStage + 1}/10`, cssW / 2, cssH - 45); // Adjusted from -65
+    ctx.fillText(`Total Dropouts: ${totalDropout}`, cssW / 2, cssH - 25); // Adjusted from -45
     
     // CRITICAL: Show skill level progression in dropout bucket
     ctx.font = '12px Arial';
-    ctx.fillText('Low Skill ←', 50, cssH - 30);
-    ctx.fillText('→ High Skill', cssW - 50, cssH - 30);
+    ctx.fillText('Low Skill ←', 50, cssH - 15); // Adjusted from -30
+    ctx.fillText('→ High Skill', cssW - 50, cssH - 15); // Adjusted from -30
     
     // Draw baseline - thick black horizontal line as in reference
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 3;
     ctx.beginPath();
     // CRITICAL: Pixel-snap vertical coordinates to prevent antialiasing artifacts
-    const baselineY = Math.round(cssH - 20) + 0.5;
+    const baselineY = Math.round(cssH - 10) + 0.5; // Adjusted from -20 since bucket is thinner
     ctx.moveTo(0, baselineY);
     ctx.lineTo(cssW, baselineY);
     ctx.stroke();
@@ -1496,7 +1496,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
             fontSize: { xs: 'var(--mobile-font-size-xl)', md: 'inherit' }
           }}
         >
-          BJJ Dropout
+          BJJ Dropout : 10 years
         </Typography>
         {onBack && (
           <Button 
@@ -1704,12 +1704,13 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
           </Typography>
         </Box>
 
-        {/* Animation Controls - COMPACT VERSION */}
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: { xs: 1, md: 2 } 
-        }}>
+        {/* Animation Controls - COMPACT VERSION - Only visible in development */}
+        {process.env.NODE_ENV === 'development' && (
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: { xs: 1, md: 2 } 
+          }}>
           {/* Animation Duration */}
           <Box>
             <Typography 
@@ -1846,6 +1847,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
             />
           </Box>
         </Box>
+        )}
         
         <Typography 
           variant="body2" 
