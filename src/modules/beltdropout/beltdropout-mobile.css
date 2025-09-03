@@ -33,9 +33,9 @@
   --bp-tablet: 768px;
   --bp-desktop: 1024px;
   
-  /* Mobile Canvas Settings */
-  --mobile-canvas-height: calc(100dvh - 12rem); /* Account for controls */
-  --mobile-canvas-height-fallback: calc(100vh - 12rem);
+  /* Mobile Canvas Settings - CRITICAL FIX */
+  --mobile-canvas-height: calc(100dvh - 20rem); /* Increased space for controls */
+  --mobile-canvas-height-fallback: calc(100vh - 20rem);
 }
 
 /* Mobile-specific utility classes */
@@ -54,18 +54,21 @@
   padding: var(--mobile-spacing-small) var(--mobile-spacing);
 }
 
-/* Mobile canvas container */
+/* Mobile canvas container - CRITICAL FIX */
 .beltdropout-mobile .mobile-canvas-container {
-  height: var(--mobile-canvas-height);
-  height: var(--mobile-canvas-height-fallback); /* Fallback */
+  height: var(--mobile-canvas-height) !important;
+  height: var(--mobile-canvas-height-fallback) !important; /* Fallback */
   width: 100%;
   overflow: hidden;
+  flex: 1;
+  min-height: 300px; /* Ensure minimum canvas height */
 }
 
-/* Mobile controls layout */
+/* Mobile controls layout - COMPACT VERSION */
 .beltdropout-mobile .mobile-controls {
-  padding: var(--mobile-spacing);
+  padding: var(--mobile-spacing-small);
   gap: var(--mobile-spacing-small);
+  flex-wrap: wrap;
 }
 
 /* Mobile header adjustments */
@@ -73,11 +76,33 @@
   padding-top: calc(var(--mobile-safe-top) + var(--mobile-spacing-small));
   padding-bottom: var(--mobile-spacing-small);
   min-height: calc(var(--touch-target) + var(--mobile-safe-top));
+  flex-shrink: 0;
 }
 
-/* Mobile footer adjustments */
+/* Mobile footer adjustments - COMPACT VERSION */
 .beltdropout-mobile .mobile-footer {
+  padding: var(--mobile-spacing-small);
   padding-bottom: calc(var(--mobile-safe-bottom) + var(--mobile-spacing-small));
+  flex-shrink: 0;
+  max-height: 40vh; /* Limit footer height on mobile */
+  overflow-y: auto;
+}
+
+/* Mobile settings panel - COMPACT VERSION */
+.beltdropout-mobile .mobile-settings-compact {
+  font-size: var(--mobile-font-size-small);
+  padding: var(--mobile-spacing-small);
+}
+
+.beltdropout-mobile .mobile-settings-compact .MuiSlider-root {
+  margin: 0.5rem 0;
+}
+
+.beltdropout-mobile .mobile-settings-compact .MuiButton-root {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  min-height: 2rem;
+  min-width: 2rem;
 }
 
 /* Responsive breakpoints */
@@ -91,6 +116,11 @@
   }
   
   .beltdropout-mobile .mobile-canvas-container {
-    height: calc(100vh - 8rem); /* Desktop canvas height */
+    height: calc(100vh - 8rem) !important; /* Desktop canvas height */
+  }
+  
+  .beltdropout-mobile .mobile-footer {
+    max-height: none;
+    padding: 1rem;
   }
 }

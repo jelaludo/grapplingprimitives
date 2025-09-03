@@ -1521,13 +1521,14 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       <Box 
         className="mobile-controls"
         sx={{ 
-          p: { xs: 2, md: 1 }, 
+          p: { xs: 1, md: 1 }, 
           display: 'flex', 
-          gap: { xs: 2, md: 1 }, 
+          gap: { xs: 1, md: 1 }, 
           alignItems: 'center', 
           flexWrap: 'wrap',
           borderBottom: '1px solid rgba(255,255,255,0.1)',
-          bgcolor: 'rgba(255,255,255,0.02)'
+          bgcolor: 'rgba(255,255,255,0.02)',
+          flexShrink: 0
         }}
       >
         <Button 
@@ -1653,24 +1654,26 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
         )}
       </Box>
 
-      {/* Detailed Controls at Bottom */}
+      {/* Detailed Controls at Bottom - COMPACT VERSION */}
       <Paper 
-        className="mobile-footer"
+        className="mobile-footer mobile-settings-compact"
         sx={{ 
-          m: { xs: 2, md: 1 }, 
-          p: { xs: 3, md: 2 }, 
+          m: { xs: 1, md: 1 }, 
+          p: { xs: 1, md: 2 }, 
           bgcolor: 'rgba(255,255,255,0.05)', 
           color: 'white',
-          border: '1px solid rgba(255,255,255,0.1)'
+          border: '1px solid rgba(255,255,255,0.1)',
+          flexShrink: 0
         }}
       >
-        {/* Debug Info */}
+        {/* Debug Info - COMPACT VERSION */}
         <Box sx={{ 
           display: 'flex', 
-          gap: { xs: 3, md: 2 }, 
+          gap: { xs: 1, md: 2 }, 
           alignItems: 'center', 
-          mb: { xs: 3, md: 2 }, 
-          flexWrap: 'wrap' 
+          mb: { xs: 1, md: 2 }, 
+          flexWrap: 'wrap',
+          fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
         }}>
           <Typography 
             variant="body2" 
@@ -1679,7 +1682,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
             }}
           >
-            Mode: {rollingMode ? 'Rolling Cohorts' : 'Single Cohort'}
+            {rollingMode ? 'Rolling' : 'Single'}
           </Typography>
           <Typography 
             variant="body2" 
@@ -1688,7 +1691,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
             }}
           >
-            Debug: {isRunning ? 'Running' : 'Stopped'} | Stage: {currentStage} | Points: {dataPoints.length}
+            {isRunning ? 'Running' : 'Stopped'} | {currentStage} | {dataPoints.length}
           </Typography>
           <Typography 
             variant="body2" 
@@ -1697,15 +1700,15 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
             }}
           >
-            Next: {currentStage < 9 ? `Year ${currentStage + 2}` : 'Complete - Click to restart'}
+            Next: {currentStage < 9 ? `Y${currentStage + 2}` : 'Complete'}
           </Typography>
         </Box>
 
-        {/* Animation Controls */}
+        {/* Animation Controls - COMPACT VERSION */}
         <Box sx={{ 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: { xs: 3, md: 2 } 
+          gap: { xs: 1, md: 2 } 
         }}>
           {/* Animation Duration */}
           <Box>
@@ -1713,11 +1716,11 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               variant="body2" 
               sx={{ 
                 color: 'white', 
-                mb: { xs: 2, md: 1 },
-                fontSize: { xs: 'var(--mobile-font-size-base)', md: 'inherit' }
+                mb: { xs: 0.5, md: 1 },
+                fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
               }}
             >
-              Animation Duration: {animationDuration}ms
+              Duration: {animationDuration}ms
             </Typography>
             <Slider
               value={animationDuration}
@@ -1725,12 +1728,13 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               min={500}
               max={3000}
               step={100}
+              size="small"
               sx={{ 
                 color: '#4caf50',
                 '& .MuiSlider-thumb': { 
                   bgcolor: '#4caf50',
-                  width: { xs: 'var(--touch-target)', md: 'auto' },
-                  height: { xs: 'var(--touch-target)', md: 'auto' }
+                  width: { xs: '1.5rem', md: 'auto' },
+                  height: { xs: '1.5rem', md: 'auto' }
                 },
                 '& .MuiSlider-track': { bgcolor: '#4caf50' },
                 '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
@@ -1744,11 +1748,11 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               variant="body2" 
               sx={{ 
                 color: 'white', 
-                mb: { xs: 2, md: 1 },
-                fontSize: { xs: 'var(--mobile-font-size-base)', md: 'inherit' }
+                mb: { xs: 0.5, md: 1 },
+                fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
               }}
             >
-              Year Delay: {stageDelay}ms
+              Delay: {stageDelay}ms
             </Typography>
             <Slider
               value={stageDelay}
@@ -1756,12 +1760,13 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               min={200}
               max={2000}
               step={100}
+              size="small"
               sx={{ 
                 color: '#ff9800',
                 '& .MuiSlider-thumb': { 
                   bgcolor: '#ff9800',
-                  width: { xs: 'var(--touch-target)', md: 'auto' },
-                  height: { xs: 'var(--touch-target)', md: 'auto' }
+                  width: { xs: '1.5rem', md: 'auto' },
+                  height: { xs: '1.5rem', md: 'auto' }
                 },
                 '& .MuiSlider-track': { bgcolor: '#ff9800' },
                 '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
@@ -1775,13 +1780,13 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               variant="body2" 
               sx={{ 
                 color: 'white', 
-                mb: { xs: 2, md: 1 },
-                fontSize: { xs: 'var(--mobile-font-size-base)', md: 'inherit' }
+                mb: { xs: 0.5, md: 1 },
+                fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
               }}
             >
               Easing: {easingType}
             </Typography>
-            <Box sx={{ display: 'flex', gap: { xs: 2, md: 1 } }}>
+            <Box sx={{ display: 'flex', gap: { xs: 1, md: 1 } }}>
               {(['linear', 'easeInOut', 'easeOut'] as const).map((type) => (
                 <Button 
                   key={type}
@@ -1793,15 +1798,17 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
                     bgcolor: easingType === type ? '#ff9800' : 'transparent',
                     color: 'white', 
                     borderColor: 'white',
-                    minHeight: { xs: 'var(--touch-target)', md: 'auto' },
-                    minWidth: { xs: 'var(--touch-target)', md: 'auto' },
+                    minHeight: { xs: '2rem', md: 'auto' },
+                    minWidth: { xs: '2rem', md: 'auto' },
+                    fontSize: { xs: '0.7rem', md: 'inherit' },
+                    padding: { xs: '0.25rem 0.5rem', md: 'inherit' },
                     '&:hover': { 
                       borderColor: 'white', 
                       bgcolor: easingType === type ? '#f57c00' : 'rgba(255,255,255,0.1)' 
                     }
                   }}
                 >
-                  {type}
+                  {type === 'easeInOut' ? 'EIO' : type === 'easeOut' ? 'EO' : 'L'}
                 </Button>
               ))}
             </Box>
@@ -1813,11 +1820,11 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               variant="body2" 
               sx={{ 
                 color: 'white', 
-                mb: { xs: 2, md: 1 },
-                fontSize: { xs: 'var(--mobile-font-size-base)', md: 'inherit' }
+                mb: { xs: 0.5, md: 1 },
+                fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
               }}
             >
-              Vertical Spacing: {spacing}px
+              Spacing: {spacing}px
             </Typography>
             <Slider
               value={spacing}
@@ -1825,12 +1832,13 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               min={40}
               max={120}
               step={10}
+              size="small"
               sx={{ 
                 color: '#9c27b0',
                 '& .MuiSlider-thumb': { 
                   bgcolor: '#9c27b0',
-                  width: { xs: 'var(--touch-target)', md: 'auto' },
-                  height: { xs: 'var(--touch-target)', md: 'auto' }
+                  width: { xs: '1.5rem', md: 'auto' },
+                  height: { xs: '1.5rem', md: 'auto' }
                 },
                 '& .MuiSlider-track': { bgcolor: '#9c27b0' },
                 '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
@@ -1843,17 +1851,17 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
           variant="body2" 
           sx={{ 
             color: 'rgba(255,255,255,0.7)', 
-            mt: { xs: 3, md: 2 },
+            mt: { xs: 1, md: 2 },
             fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
           }}
         >
-          10-Year Cohort Progression: 100 white belts → Year 2: 40 white, 10 blue, 50 dropout → Year 10: 1 white, 2 blue, 3 purple, 6 brown, 5 black, 80 total dropout
+          100 white → Y2: 40W 10B 50D → Y10: 1W 2B 3P 6Br 5Bl 80D
         </Typography>
 
-        {/* Mobile Performance Info */}
+        {/* Mobile Performance Info - COMPACT VERSION */}
         <Box sx={{ 
-          mt: { xs: 2, md: 1 },
-          p: { xs: 2, md: 1 },
+          mt: { xs: 1, md: 1 },
+          p: { xs: 1, md: 1 },
           bgcolor: 'rgba(0,255,0,0.1)',
           borderRadius: 1,
           border: '1px solid rgba(0,255,0,0.3)'
@@ -1865,10 +1873,10 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
             }}
           >
-            📱 Mobile Mode: {containerSize.performanceMode === 'low' ? 'Performance Optimized' : 'High Quality'} | 
-            FPS: {containerSize.maxFPS} | 
-            DPR: {containerSize.dpr} | 
-            Scale: {gestureState.currentScale.toFixed(2)}x
+            📱 {containerSize.performanceMode === 'low' ? 'Perf' : 'HQ'} | 
+            {containerSize.maxFPS}fps | 
+            DPR{containerSize.dpr} | 
+            {gestureState.currentScale.toFixed(1)}x
           </Typography>
         </Box>
       </Paper>

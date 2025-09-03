@@ -166,8 +166,9 @@ function App() {
       setShowBetaLogin(true);
       return;
     }
-    // If authenticated, proceed to home view
-    viewManagement.switchToHome();
+    // If authenticated, just dismiss the overlay - don't auto-navigate
+    // User should click on a specific module to navigate
+    console.log('First interaction: User authenticated, overlay dismissed');
   };
 
   // Filter concepts based on selected filters
