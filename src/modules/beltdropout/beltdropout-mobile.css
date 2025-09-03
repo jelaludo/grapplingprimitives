@@ -1,0 +1,96 @@
+/* BJJ Dropout Module - Mobile-First Design Tokens */
+/* This file contains mobile-specific CSS variables and utilities */
+
+.beltdropout-mobile {
+  /* Mobile Viewport & Safe Areas */
+  --mobile-safe-top: env(safe-area-inset-top, 0px);
+  --mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --mobile-viewport-height: 100dvh; /* Dynamic viewport height for mobile */
+  --mobile-viewport-height-fallback: 100vh; /* Fallback for older browsers */
+  
+  /* Touch Targets & Spacing */
+  --touch-target: 2.75rem; /* 44px minimum for touch */
+  --touch-target-small: 2.25rem; /* 36px for secondary actions */
+  --mobile-spacing: clamp(0.5rem, 2vw, 1rem);
+  --mobile-spacing-small: clamp(0.25rem, 1vw, 0.5rem);
+  --mobile-spacing-large: clamp(1rem, 3vw, 1.5rem);
+  
+  /* Mobile Typography */
+  --mobile-font-size-small: clamp(0.75rem, 2.5vw, 0.875rem);
+  --mobile-font-size-base: clamp(0.875rem, 3vw, 1rem);
+  --mobile-font-size-large: clamp(1rem, 3.5vw, 1.125rem);
+  --mobile-font-size-xl: clamp(1.125rem, 4vw, 1.25rem);
+  
+  /* Mobile Colors & Contrast */
+  --mobile-bg-primary: #1a1a1a;
+  --mobile-bg-secondary: rgba(255, 255, 255, 0.05);
+  --mobile-border: rgba(255, 255, 255, 0.1);
+  --mobile-text-primary: #ffffff;
+  --mobile-text-secondary: rgba(255, 255, 255, 0.7);
+  
+  /* Mobile Breakpoints */
+  --bp-mobile: 480px;
+  --bp-tablet: 768px;
+  --bp-desktop: 1024px;
+  
+  /* Mobile Canvas Settings */
+  --mobile-canvas-height: calc(100dvh - 12rem); /* Account for controls */
+  --mobile-canvas-height-fallback: calc(100vh - 12rem);
+}
+
+/* Mobile-specific utility classes */
+.beltdropout-mobile .mobile-only {
+  display: block;
+}
+
+.beltdropout-mobile .desktop-only {
+  display: none;
+}
+
+/* Mobile touch-friendly button overrides */
+.beltdropout-mobile .mobile-touch-button {
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
+  padding: var(--mobile-spacing-small) var(--mobile-spacing);
+}
+
+/* Mobile canvas container */
+.beltdropout-mobile .mobile-canvas-container {
+  height: var(--mobile-canvas-height);
+  height: var(--mobile-canvas-height-fallback); /* Fallback */
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Mobile controls layout */
+.beltdropout-mobile .mobile-controls {
+  padding: var(--mobile-spacing);
+  gap: var(--mobile-spacing-small);
+}
+
+/* Mobile header adjustments */
+.beltdropout-mobile .mobile-header {
+  padding-top: calc(var(--mobile-safe-top) + var(--mobile-spacing-small));
+  padding-bottom: var(--mobile-spacing-small);
+  min-height: calc(var(--touch-target) + var(--mobile-safe-top));
+}
+
+/* Mobile footer adjustments */
+.beltdropout-mobile .mobile-footer {
+  padding-bottom: calc(var(--mobile-safe-bottom) + var(--mobile-spacing-small));
+}
+
+/* Responsive breakpoints */
+@media (min-width: 768px) {
+  .beltdropout-mobile .mobile-only {
+    display: none;
+  }
+  
+  .beltdropout-mobile .desktop-only {
+    display: block;
+  }
+  
+  .beltdropout-mobile .mobile-canvas-container {
+    height: calc(100vh - 8rem); /* Desktop canvas height */
+  }
+}

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box, Typography, Button, Paper, Slider, Tooltip } from '@mui/material';
+import './beltdropout-mobile.css';
 
 /**
  * GUTTER DISPLAY ERROR FIXES:
@@ -66,6 +67,14 @@ interface Category {
   dropoutReasons: string[];
 }
 
+interface ContainerSize {
+  width: number;
+  height: number;
+  dpr?: number;
+  performanceMode?: 'low' | 'high';
+  maxFPS?: number;
+}
+
 const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -75,7 +84,13 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
   const positionsRef = useRef<DataPoint[]>([]);
   
   const [isRunning, setIsRunning] = useState(false);
-  const [containerSize, setContainerSize] = useState({ width: 800, height: 600 });
+  const [containerSize, setContainerSize] = useState<ContainerSize>({ 
+    width: 800, 
+    height: 600,
+    dpr: 1,
+    performanceMode: 'high',
+    maxFPS: 60
+  });
   const [dataPoints, setDataPoints] = useState<DataPoint[]>([]);
   const [currentStage, setCurrentStage] = useState(0);
   const [hoveredPoint, setHoveredPoint] = useState<DataPoint | null>(null);
@@ -169,12 +184,25 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     { year: 10, white: 1, blue: 2, purple: 3, brown: 6, black: 5, dropped: 1 }
   ];
 
-  // Responsive canvas sizing
+  // Responsive canvas sizing with mobile optimization
   useEffect(() => {
     const updateSize = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        setContainerSize({ width: rect.width, height: rect.height });
+        const isMobile = window.innerWidth < 768;
+        
+        // Mobile-optimized canvas sizing
+        const mobileConfig = {
+          dpr: isMobile ? 1 : window.devicePixelRatio,
+          performanceMode: isMobile ? 'low' as const : 'high' as const,
+          maxFPS: isMobile ? 30 : 60
+        };
+        
+        setContainerSize({ 
+          width: rect.width, 
+          height: rect.height,
+          ...mobileConfig
+        });
       }
     };
 
@@ -188,6 +216,106 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     linear: (t: number) => t,
     easeInOut: (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
     easeOut: (t: number) => 1 - Math.pow(1 - t, 3)
+  };
+
+  // Touch event handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (rect) {
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        handleTouchInteraction(x, y);
+      }
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (rect) {
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        handleTouchInteraction(x, y);
+      }
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    setHoveredPoint(null);
+  };
+
+  // Unified touch/mouse interaction handler
+  const handleTouchInteraction = (x: number, y: number) => {
+    if (!dataPoints.length) return;
+    
+    // Find closest point within touch radius
+    const touchRadius = 20; // Touch-friendly radius
+    let closestPoint: DataPoint | null = null;
+    let closestDistance = Infinity;
+    
+    dataPoints.forEach(point => {
+      const distance = Math.sqrt(
+        Math.pow(point.currentX - x, 2) + Math.pow(point.currentY - y, 2)
+      );
+      if (distance < touchRadius && distance < closestDistance) {
+        closestDistance = distance;
+        closestPoint = point;
+      }
+    });
+    
+    setHoveredPoint(closestPoint);
+  };
+
+  // Mobile gesture support
+  const [gestureState, setGestureState] = useState({
+    isPinching: false,
+    startDistance: 0,
+    currentDistance: 0,
+    startScale: 1,
+    currentScale: 1
+  });
+
+  const handlePinchGesture = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      
+      const distance = Math.sqrt(
+        Math.pow(touch1.clientX - touch2.clientX, 2) + 
+        Math.pow(touch1.clientY - touch2.clientY, 2)
+      );
+      
+      if (!gestureState.isPinching) {
+        setGestureState(prev => ({
+          ...prev,
+          isPinching: true,
+          startDistance: distance,
+          startScale: prev.currentScale
+        }));
+      } else {
+        const scale = distance / gestureState.startDistance;
+        const newScale = Math.max(0.5, Math.min(2.0, gestureState.startScale * scale));
+        
+        setGestureState(prev => ({
+          ...prev,
+          currentDistance: distance,
+          currentScale: newScale
+        }));
+        
+        // Apply scale to canvas if needed
+        console.log(`📱 Pinch gesture: scale ${newScale.toFixed(2)}`);
+      }
+    } else {
+      setGestureState(prev => ({ ...prev, isPinching: false }));
+    }
   };
 
   // Get random dropout reason with injury sub-reasons
@@ -1273,6 +1401,20 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     }
   }); // REMOVED dependency array to prevent interference
 
+  // Mobile performance optimization
+  useEffect(() => {
+    if (containerSize.performanceMode === 'low') {
+      // Reduce animation frame rate on mobile
+      const targetFPS = containerSize.maxFPS || 30;
+      const frameInterval = 1000 / targetFPS;
+      
+      if (animationRef.current) {
+        // Adjust existing animation timing
+        console.log(`📱 Mobile mode: FPS limited to ${targetFPS}`);
+      }
+    }
+  }, [containerSize.performanceMode, containerSize.maxFPS]);
+
   // Monitor currentStage changes for debugging
   useEffect(() => {
     console.log(`🎭 CurrentStage changed to: ${currentStage}`);
@@ -1307,28 +1449,53 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
     return { x, y };
   };
 
+  // Mobile-optimized canvas rendering
+  const getMobileCanvasConfig = () => {
+    const isMobile = containerSize.performanceMode === 'low';
+    return {
+      dpr: containerSize.dpr || 1,
+      maxFPS: containerSize.maxFPS || 60,
+      renderQuality: isMobile ? 'low' : 'high',
+      enableShadows: !isMobile,
+      enableAntialiasing: !isMobile
+    };
+  };
+
   return (
-    <Box sx={{ 
-      height: '100vh', 
-      display: 'flex', 
-      flexDirection: 'column',
-      bgcolor: '#1a1a1a',
-      color: 'white',
-      overflow: 'hidden',
-      '&::-webkit-scrollbar': { display: 'none' },
-      msOverflowStyle: 'none',
-      scrollbarWidth: 'none'
-    }}>
-      {/* Header */}
-      <Box sx={{ 
-        p: 1, 
+    <Box 
+      className="beltdropout-mobile"
+      sx={{ 
+        height: { xs: '100dvh', md: '100vh' },
         display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'space-between',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        minHeight: '48px'
-      }}>
-        <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
+        flexDirection: 'column',
+        bgcolor: '#1a1a1a',
+        color: 'white',
+        overflow: 'hidden',
+        '&::-webkit-scrollbar': { display: 'none' },
+        msOverflowStyle: 'none',
+        scrollbarWidth: 'none'
+      }}
+    >
+      {/* Header */}
+      <Box 
+        className="mobile-header"
+        sx={{ 
+          p: { xs: 2, md: 1 }, 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'space-between',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          minHeight: { xs: 'var(--touch-target)', md: '48px' }
+        }}
+      >
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            color: 'white', 
+            fontWeight: 'bold',
+            fontSize: { xs: 'var(--mobile-font-size-xl)', md: 'inherit' }
+          }}
+        >
           BJJ Dropout
         </Typography>
         {onBack && (
@@ -1336,9 +1503,12 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
             size="small"
             variant="outlined" 
             onClick={onBack} 
+            className="mobile-touch-button"
             sx={{ 
               color: 'white', 
               borderColor: 'white',
+              minHeight: { xs: 'var(--touch-target)', md: 'auto' },
+              minWidth: { xs: 'var(--touch-target)', md: 'auto' },
               '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' }
             }}
           >
@@ -1348,23 +1518,29 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       </Box>
 
       {/* Essential Controls - Single Line */}
-      <Box sx={{ 
-        p: 1, 
-        display: 'flex', 
-        gap: 1, 
-        alignItems: 'center', 
-        flexWrap: 'wrap',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        bgcolor: 'rgba(255,255,255,0.02)'
-      }}>
+      <Box 
+        className="mobile-controls"
+        sx={{ 
+          p: { xs: 2, md: 1 }, 
+          display: 'flex', 
+          gap: { xs: 2, md: 1 }, 
+          alignItems: 'center', 
+          flexWrap: 'wrap',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          bgcolor: 'rgba(255,255,255,0.02)'
+        }}
+      >
         <Button 
           size="small"
           variant={rollingMode ? 'contained' : 'outlined'} 
           onClick={() => setRollingMode(v => !v)} 
+          className="mobile-touch-button"
           sx={{ 
             bgcolor: rollingMode ? '#2196f3' : 'transparent',
             color: 'white', 
             borderColor: 'white',
+            minHeight: { xs: 'var(--touch-target)', md: 'auto' },
+            minWidth: { xs: 'var(--touch-target)', md: 'auto' },
             '&:hover': { borderColor: 'white', bgcolor: rollingMode ? '#1976d2' : 'rgba(255,255,255,0.1)' }
           }}
         >
@@ -1375,8 +1551,11 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
           size="small"
           variant="contained" 
           onClick={isRunning ? stopAnimation : startAnimation}
+          className="mobile-touch-button"
           sx={{ 
             bgcolor: isRunning ? '#f44336' : '#4caf50',
+            minHeight: { xs: 'var(--touch-target)', md: 'auto' },
+            minWidth: { xs: 'var(--touch-target)', md: 'auto' },
             '&:hover': { bgcolor: isRunning ? '#d32f2f' : '#45a049' }
           }}
         >
@@ -1387,16 +1566,26 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
           size="small"
           variant="outlined" 
           onClick={resetAnimation} 
+          className="mobile-touch-button"
           sx={{ 
             color: 'white', 
             borderColor: 'white',
+            minHeight: { xs: 'var(--touch-target)', md: 'auto' },
+            minWidth: { xs: 'var(--touch-target)', md: 'auto' },
             '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' }
           }}
         >
           Reset
         </Button>
 
-        <Typography variant="body2" sx={{ color: 'white', ml: 'auto' }}>
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            color: 'white', 
+            ml: 'auto',
+            fontSize: { xs: 'var(--mobile-font-size-base)', md: 'inherit' }
+          }}
+        >
           Year {currentStage + 1}/10
         </Typography>
       </Box>
@@ -1404,6 +1593,7 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       {/* Canvas Container */}
       <Box 
         ref={containerRef}
+        className="mobile-canvas-container"
         sx={{ 
           flex: 1, 
           position: 'relative',
@@ -1417,6 +1607,18 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
         <canvas
           ref={canvasRef}
           onMouseMove={handleMouseMove}
+          onTouchStart={(e) => {
+            handleTouchStart(e);
+            handlePinchGesture(e);
+          }}
+          onTouchMove={(e) => {
+            handleTouchMove(e);
+            handlePinchGesture(e);
+          }}
+          onTouchEnd={(e) => {
+            handleTouchEnd(e);
+            handlePinchGesture(e);
+          }}
           style={{ 
             display: 'block',
             width: '100%',
@@ -1424,7 +1626,8 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
             backgroundColor: 'transparent',
             background: 'transparent',
             overflow: 'hidden',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            touchAction: 'none' /* Prevent default touch behaviors */
           }}
         />
         
@@ -1451,31 +1654,69 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
       </Box>
 
       {/* Detailed Controls at Bottom */}
-      <Paper sx={{ 
-        m: 1, 
-        p: 2, 
-        bgcolor: 'rgba(255,255,255,0.05)', 
-        color: 'white',
-        border: '1px solid rgba(255,255,255,0.1)'
-      }}>
+      <Paper 
+        className="mobile-footer"
+        sx={{ 
+          m: { xs: 2, md: 1 }, 
+          p: { xs: 3, md: 2 }, 
+          bgcolor: 'rgba(255,255,255,0.05)', 
+          color: 'white',
+          border: '1px solid rgba(255,255,255,0.1)'
+        }}
+      >
         {/* Debug Info */}
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
-          <Typography variant="body2" sx={{ color: 'white' }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: { xs: 3, md: 2 }, 
+          alignItems: 'center', 
+          mb: { xs: 3, md: 2 }, 
+          flexWrap: 'wrap' 
+        }}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: 'white',
+              fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
+            }}
+          >
             Mode: {rollingMode ? 'Rolling Cohorts' : 'Single Cohort'}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'white' }}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: 'white',
+              fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
+            }}
+          >
             Debug: {isRunning ? 'Running' : 'Stopped'} | Stage: {currentStage} | Points: {dataPoints.length}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'white' }}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: 'white',
+              fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
+            }}
+          >
             Next: {currentStage < 9 ? `Year ${currentStage + 2}` : 'Complete - Click to restart'}
           </Typography>
         </Box>
 
         {/* Animation Controls */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: { xs: 3, md: 2 } 
+        }}>
           {/* Animation Duration */}
           <Box>
-            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'white', 
+                mb: { xs: 2, md: 1 },
+                fontSize: { xs: 'var(--mobile-font-size-base)', md: 'inherit' }
+              }}
+            >
               Animation Duration: {animationDuration}ms
             </Typography>
             <Slider
@@ -1486,7 +1727,11 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               step={100}
               sx={{ 
                 color: '#4caf50',
-                '& .MuiSlider-thumb': { bgcolor: '#4caf50' },
+                '& .MuiSlider-thumb': { 
+                  bgcolor: '#4caf50',
+                  width: { xs: 'var(--touch-target)', md: 'auto' },
+                  height: { xs: 'var(--touch-target)', md: 'auto' }
+                },
                 '& .MuiSlider-track': { bgcolor: '#4caf50' },
                 '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
               }}
@@ -1495,7 +1740,14 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
           
           {/* Stage Delay */}
           <Box>
-            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'white', 
+                mb: { xs: 2, md: 1 },
+                fontSize: { xs: 'var(--mobile-font-size-base)', md: 'inherit' }
+              }}
+            >
               Year Delay: {stageDelay}ms
             </Typography>
             <Slider
@@ -1506,7 +1758,11 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               step={100}
               sx={{ 
                 color: '#ff9800',
-                '& .MuiSlider-thumb': { bgcolor: '#ff9800' },
+                '& .MuiSlider-thumb': { 
+                  bgcolor: '#ff9800',
+                  width: { xs: 'var(--touch-target)', md: 'auto' },
+                  height: { xs: 'var(--touch-target)', md: 'auto' }
+                },
                 '& .MuiSlider-track': { bgcolor: '#ff9800' },
                 '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
               }}
@@ -1515,20 +1771,30 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
           
           {/* Easing Type */}
           <Box>
-            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'white', 
+                mb: { xs: 2, md: 1 },
+                fontSize: { xs: 'var(--mobile-font-size-base)', md: 'inherit' }
+              }}
+            >
               Easing: {easingType}
             </Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
+            <Box sx={{ display: 'flex', gap: { xs: 2, md: 1 } }}>
               {(['linear', 'easeInOut', 'easeOut'] as const).map((type) => (
                 <Button 
                   key={type}
                   size="small"
                   variant={easingType === type ? 'contained' : 'outlined'}
                   onClick={() => setEasingType(type)}
+                  className="mobile-touch-button"
                   sx={{ 
                     bgcolor: easingType === type ? '#ff9800' : 'transparent',
                     color: 'white', 
                     borderColor: 'white',
+                    minHeight: { xs: 'var(--touch-target)', md: 'auto' },
+                    minWidth: { xs: 'var(--touch-target)', md: 'auto' },
                     '&:hover': { 
                       borderColor: 'white', 
                       bgcolor: easingType === type ? '#f57c00' : 'rgba(255,255,255,0.1)' 
@@ -1543,7 +1809,14 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
           
           {/* Spacing */}
           <Box>
-            <Typography variant="body2" sx={{ color: 'white', mb: 1 }}>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'white', 
+                mb: { xs: 2, md: 1 },
+                fontSize: { xs: 'var(--mobile-font-size-base)', md: 'inherit' }
+              }}
+            >
               Vertical Spacing: {spacing}px
             </Typography>
             <Slider
@@ -1554,7 +1827,11 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
               step={10}
               sx={{ 
                 color: '#9c27b0',
-                '& .MuiSlider-thumb': { bgcolor: '#9c27b0' },
+                '& .MuiSlider-thumb': { 
+                  bgcolor: '#9c27b0',
+                  width: { xs: 'var(--touch-target)', md: 'auto' },
+                  height: { xs: 'var(--touch-target)', md: 'auto' }
+                },
                 '& .MuiSlider-track': { bgcolor: '#9c27b0' },
                 '& .MuiSlider-rail': { bgcolor: 'rgba(255,255,255,0.2)' }
               }}
@@ -1562,9 +1839,38 @@ const BeltDropout: React.FC<BeltDropoutProps> = ({ onBack }) => {
           </Box>
         </Box>
         
-        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            color: 'rgba(255,255,255,0.7)', 
+            mt: { xs: 3, md: 2 },
+            fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
+          }}
+        >
           10-Year Cohort Progression: 100 white belts → Year 2: 40 white, 10 blue, 50 dropout → Year 10: 1 white, 2 blue, 3 purple, 6 brown, 5 black, 80 total dropout
         </Typography>
+
+        {/* Mobile Performance Info */}
+        <Box sx={{ 
+          mt: { xs: 2, md: 1 },
+          p: { xs: 2, md: 1 },
+          bgcolor: 'rgba(0,255,0,0.1)',
+          borderRadius: 1,
+          border: '1px solid rgba(0,255,0,0.3)'
+        }}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: 'rgba(255,255,255,0.9)',
+              fontSize: { xs: 'var(--mobile-font-size-small)', md: 'inherit' }
+            }}
+          >
+            📱 Mobile Mode: {containerSize.performanceMode === 'low' ? 'Performance Optimized' : 'High Quality'} | 
+            FPS: {containerSize.maxFPS} | 
+            DPR: {containerSize.dpr} | 
+            Scale: {gestureState.currentScale.toFixed(2)}x
+          </Typography>
+        </Box>
       </Paper>
     </Box>
   );
