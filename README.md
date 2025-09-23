@@ -164,4 +164,4 @@ Set these in Vercel dashboard > Project Settings > Environment Variables:
 - Visit your deployed app
 - Click "Beta Access" button
 - Enter the password you used to generate the hash
-- You'll get a JWT token stored in localStoragepehrhaph
+- You'll get a JWT token stored in localStorage

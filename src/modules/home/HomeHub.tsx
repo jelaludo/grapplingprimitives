@@ -24,6 +24,7 @@ interface HomeHubProps {
   goTraining: () => void;
   goStories: () => void;
   goBeltDropout: () => void;
+  goWeightClass: () => void;
 }
 
 const HomeHub: React.FC<HomeHubProps> = (props) => {
@@ -174,6 +175,10 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
         <CardShell hideTitle onClick={props.goSkillCheck} preview={<SkillCheckCardPreview />} />
         <CardShell title="Belt Dropout" onClick={props.goBeltDropout} preview={<BeltDropoutCardPreview />} />
         <CardShell title="Training" onClick={props.goTraining} preview={<TrainingCardPreview />} />
+        <CardShell title="Weight & Gi Size" onClick={props.goWeightClass} preview={<Box sx={{ width:'80%', textAlign:'center', color:'#90caf9'}}>
+          <Typography variant="h4" sx={{ fontFamily:'inherit' }}>⚖️</Typography>
+          <Typography variant="body2" sx={{ opacity:0.8 }}>IBJJF + Gi</Typography>
+        </Box>} />
         <CardShell title="Others" onClick={props.goOthers} preview={<PreviewCards />} />
       </Box>
 

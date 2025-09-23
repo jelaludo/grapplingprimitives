@@ -21,6 +21,7 @@ import OthersHub from './modules/others/OthersHub';
 import TrainingHub from './modules/training/TrainingHub';
 import StoriesHub from './modules/stories/StoriesHub';
 import BeltDropout from './modules/beltdropout/BeltDropout';
+import BJJWeightClassTool from './modules/weight_class/bjj-weight-class-tool';
 import RetroMessage from './components/RetroMessage';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
@@ -359,6 +360,7 @@ function App() {
                 goTraining={viewManagement.switchToTraining}
                 goStories={viewManagement.switchToStories}
                 goBeltDropout={viewManagement.switchToBeltDropout}
+                goWeightClass={viewManagement.switchToWeight}
               />
            </div>
           ) : viewManagement.currentView === 'matrix' ? (
@@ -437,6 +439,10 @@ function App() {
         ) : viewManagement.currentView === 'beltdropout' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <BeltDropout onBack={viewManagement.switchToHome} />
+          </div>
+        ) : viewManagement.currentView === 'weight' ? (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <BJJWeightClassTool />
           </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>
