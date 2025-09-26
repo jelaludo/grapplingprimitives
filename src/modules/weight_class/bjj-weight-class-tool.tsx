@@ -9,7 +9,6 @@ const BJJWeightClassTool = () => {
   const [height, setHeight] = useState(175);
   const [gender, setGender] = useState('male');
   const [ageCategory, setAgeCategory] = useState('adult');
-  const [birthYear, setBirthYear] = useState(new Date().getFullYear() - 30);
   const [units, setUnits] = useState('lbs'); // 'lbs' or 'kg'
   const [heightUnits, setHeightUnits] = useState('cm'); // 'cm' or 'ft'
   
@@ -101,9 +100,8 @@ const BJJWeightClassTool = () => {
     }
   };
 
-  // Gi sizing matrices (cm/kg). We'll convert user input units as needed.
-  // Men (A sizes) – approximate consolidated ranges
-  const giSizesMen = {
+  // Gi sizing matrix based on Tatami chart
+  const giSizes = {
     'A0': { heightMin: 147, heightMax: 154, weightMin: 43, weightMax: 49 },
     'A1': { heightMin: 157, heightMax: 165, weightMin: 49, weightMax: 63 },
     'A2': { heightMin: 165, heightMax: 175, weightMin: 63, weightMax: 77 },
@@ -115,26 +113,7 @@ const BJJWeightClassTool = () => {
     'A4': { heightMin: 183, heightMax: 193, weightMin: 90, weightMax: 113 },
     'A5': { heightMin: 183, heightMax: 193, weightMin: 102, weightMax: 124 },
     'A6': { heightMin: 187, heightMax: 198, weightMin: 113, weightMax: 136 }
-  } as const;
-
-  // Women (F sizes) – combined from GoldBJJ/Bravo charts
-  const giSizesWomen = {
-    'F0': { heightMin: 142, heightMax: 149, weightMin: 43, weightMax: 52 },
-    'F1': { heightMin: 149, heightMax: 157, weightMin: 50, weightMax: 57 },
-    'F2': { heightMin: 160, heightMax: 167, weightMin: 55, weightMax: 61 },
-    'F3': { heightMin: 165, heightMax: 173, weightMin: 59, weightMax: 72 },
-    'F4': { heightMin: 178, heightMax: 183, weightMin: 72, weightMax: 84 },
-    'F5': { heightMin: 183, heightMax: 190, weightMin: 84, weightMax: 95 }
-  } as const;
-
-  // Kids (C sizes) – based on Fuji kids chart (approx cm/kg)
-  const giSizesKids = {
-    'C00': { heightMin: 114, heightMax: 122, weightMin: 18, weightMax: 23 },
-    'C0':  { heightMin: 122, heightMax: 130, weightMin: 23, weightMax: 27 },
-    'C1':  { heightMin: 130, heightMax: 137, weightMin: 30, weightMax: 36 },
-    'C2':  { heightMin: 137, heightMax: 145, weightMin: 36, weightMax: 43 },
-    'C3':  { heightMin: 145, heightMax: 152, weightMin: 43, weightMax: 50 }
-  } as const;
+  };
 
   // Convert units
   const convertWeight = (value, fromUnit) => {
@@ -156,40 +135,6 @@ const BJJWeightClassTool = () => {
     return heightUnits === 'cm' ? height : convertHeight(height, 'ft');
   };
 
-  // Age helpers
-  const currentYear = new Date().getFullYear();
-  const ageYears = currentYear - birthYear;
-
-  const mapAgeCategory = (age: number): string => {
-    if (age <= 4) return 'Mighty Mite I';
-    if (age === 5) return 'Mighty Mite II';
-    if (age === 6) return 'Mighty Mite III';
-    if (age === 7) return 'Pee Wee I';
-    if (age === 8) return 'Pee Wee II';
-    if (age === 9) return 'Pee Wee III';
-    if (age === 10) return 'Junior I';
-    if (age === 11) return 'Junior II';
-    if (age === 12) return 'Junior III';
-    if (age === 13) return 'Teen I';
-    if (age === 14) return 'Teen II';
-    if (age === 15) return 'Teen III';
-    if (age === 16) return 'Juvenile I';
-    if (age === 17) return 'Juvenile II';
-    if (age >= 18 && age <= 29) return 'Adult';
-    if (age >= 30 && age <= 35) return 'Masters 1';
-    if (age >= 36 && age <= 40) return 'Masters 2';
-    if (age >= 41 && age <= 45) return 'Masters 3';
-    if (age >= 46 && age <= 50) return 'Masters 4';
-    if (age >= 51 && age <= 55) return 'Masters 5';
-    if (age >= 56 && age <= 60) return 'Masters 6';
-    return 'Masters 7+';
-  };
-
-  // Keep original binary category for weight tables
-  useEffect(() => {
-    setAgeCategory(ageYears < 18 ? 'juvenile' : 'adult');
-  }, [ageYears]);
-
   // Find weight class
   const findWeightClass = (type) => {
     const weightInLbs = getWeightInLbs();
@@ -203,77 +148,52 @@ const BJJWeightClassTool = () => {
   const findGiSizes = () => {
     const heightInCm = getHeightInCm();
     const weightInKg = units === 'kg' ? weight : convertWeight(weight, 'lbs');
-
-    // Choose matrix by demographic
-    const isKid = (ageYears <= 11);
-    const matrix = isKid ? giSizesKids : (gender === 'female' ? giSizesWomen : giSizesMen);
     
-    const scoredSizes: Array<{ size: string; perfect: boolean; score: number }> = [];
+    const possibleSizes: Array<{ size: string; perfect: boolean }> = [];
     
-    Object.entries(matrix).forEach(([size, range]) => {
+    Object.entries(giSizes).forEach(([size, range]) => {
       const heightFits = heightInCm >= range.heightMin && heightInCm <= range.heightMax;
       const weightFits = weightInKg >= range.weightMin && weightInKg <= range.weightMax;
-
-      // Distance to range edges (0 if inside)
-      const heightSpan = range.heightMax - range.heightMin;
-      const weightSpan = range.weightMax - range.weightMin;
-      const heightDelta = heightFits
-        ? 0
-        : heightInCm < range.heightMin
-          ? (range.heightMin - heightInCm)
-          : (heightInCm - range.heightMax);
-      const weightDelta = weightFits
-        ? 0
-        : weightInKg < range.weightMin
-          ? (range.weightMin - weightInKg)
-          : (weightInKg - range.weightMax);
-
-      // Normalize by span to balance units, then sum
-      const score = (heightDelta / heightSpan) + (weightDelta / weightSpan);
-
-      if (heightFits || weightFits) {
-        scoredSizes.push({ size, perfect: heightFits && weightFits, score });
+      
+      if (heightFits && weightFits) {
+        possibleSizes.push({ size, perfect: true });
+      } else if (heightFits || weightFits) {
+        possibleSizes.push({ size, perfect: false });
       }
     });
 
-    if (scoredSizes.length === 0) return [] as Array<{ size: string; perfect: boolean; recommended?: boolean }>;
-
-    // Find the best (lowest score)
-    const best = scoredSizes.reduce((min, s) => s.score < min.score ? s : min, scoredSizes[0]);
-
-    // Sort: perfect first, then by score ascending
-    const sorted = scoredSizes.sort((a, b) => {
+    return possibleSizes.sort((a, b) => {
       if (a.perfect && !b.perfect) return -1;
       if (!a.perfect && b.perfect) return 1;
-      return a.score - b.score;
+      return a.size.localeCompare(b.size);
     });
-
-    // Map to output, mark recommended flag
-    return sorted.map(s => ({ size: s.size, perfect: s.perfect, recommended: s.size === best.size }));
   };
 
   const giClass = findWeightClass('gi');
   const nogiClass = findWeightClass('nogi');
-  const displayedAgeCategory = mapAgeCategory(ageYears);
   const possibleGiSizes = findGiSizes();
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', padding: 12, background: 'linear-gradient(135deg, #e3f2fd, #ede7f6)', minHeight: '100%', boxSizing: 'border-box' }}>
+    <div style={{ maxWidth: 1000, margin: '0 auto', padding: 16, background: 'linear-gradient(135deg, #e3f2fd, #ede7f6)', minHeight: '100%', boxSizing: 'border-box' }}>
       <div style={{ background: '#ffffff', borderRadius: 16, boxShadow: '0 10px 30px rgba(0,0,0,0.12)', overflow: 'hidden', fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.04em' }}>
-        <div style={{ background: 'linear-gradient(90deg, #1e88e5, #5e35b1)', color: '#fff', padding: 14 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 22, fontWeight: 800 }}>
+        <div style={{ background: 'linear-gradient(90deg, #1e88e5, #5e35b1)', color: '#fff', padding: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 28, fontWeight: 800 }}>
             <MonitorWeightIcon sx={{ fontSize: 28 }} />
             BJJ Weight Class & Gi Size Calculator
           </div>
+          <div style={{ opacity: 0.85, marginTop: 6, fontSize: 14 }}>Find your IBJJF division and recommended gi sizes</div>
         </div>
 
-        <div style={{ padding: 14, display: 'grid', gridTemplateColumns: '1fr', gap: 14 }}>
+        <div style={{ padding: 20, display: 'grid', gridTemplateColumns: '1fr', gap: 24 }}>
           {/* Input Section */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {/* Header removed per request */}
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#263238', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <PersonIcon sx={{ fontSize: 20 }} />
+              Your Information
+            </h2>
             
             {/* Gender & Age */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#546e7a', marginBottom: 8 }}>Gender</label>
                 <div style={{ display: 'flex', background: '#eceff1', padding: 4, borderRadius: 10, gap: 6 }}>
@@ -282,17 +202,16 @@ const BJJWeightClassTool = () => {
                 </div>
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#546e7a', marginBottom: 8 }}>Birth Year</label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <input type="range" min={new Date().getFullYear() - 70} max={new Date().getFullYear()} step={1} value={birthYear} onChange={(e)=> setBirthYear(parseInt(e.target.value, 10))} style={{ flex: 1 }} />
-                  <div aria-label="birth-year-value" style={{ minWidth: 84, padding: '6px 10px', textAlign: 'center', fontWeight: 900, color:'#0d47a1', background:'#e3f2fd', borderRadius: 8, border: '1px solid #90caf9' }}>{String(birthYear)}</div>
+                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#546e7a', marginBottom: 8 }}>Age Category</label>
+                <div style={{ display: 'flex', background: '#eceff1', padding: 4, borderRadius: 10, gap: 6 }}>
+                  <button onClick={() => setAgeCategory('juvenile')} style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: 'none', cursor: 'pointer', background: ageCategory === 'juvenile' ? '#43a047' : 'transparent', color: ageCategory === 'juvenile' ? '#fff' : '#455a64', fontWeight: 700 }}>Juvenile {ageCategory==='juvenile'?'✓':''}</button>
+                  <button onClick={() => setAgeCategory('adult')} style={{ flex: 1, padding: '8px 10px', borderRadius: 8, border: 'none', cursor: 'pointer', background: ageCategory === 'adult' ? '#8e24aa' : 'transparent', color: ageCategory === 'adult' ? '#fff' : '#455a64', fontWeight: 700 }}>Adult/Masters {ageCategory==='adult'?'✓':''}</button>
                 </div>
-                <div style={{ marginTop: 4, fontSize: 12, color: '#455a64' }}>Age Category: <span style={{ fontWeight: 800 }}>{mapAgeCategory(new Date().getFullYear() - birthYear)}</span></div>
               </div>
             </div>
 
             {/* Weight */}
-            <div style={{ marginTop: 4 }}>
+            <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                 <label style={{ fontSize: 14, fontWeight: 600, color: '#455a64' }}>Weight</label>
                 <div style={{ display: 'flex', background: '#eceff1', padding: 2, borderRadius: 8, gap: 6 }}>
@@ -301,9 +220,9 @@ const BJJWeightClassTool = () => {
                 </div>
               </div>
               <div>
-                <input type="range" min={units === 'lbs' ? 33 : 15} max={units === 'lbs' ? 300 : 136} step={units === 'lbs' ? 1 : 0.5} value={weight} onChange={(e) => setWeight(parseFloat(e.target.value))} style={{ width: '100%' }} />
+                <input type="range" min={units === 'lbs' ? 100 : 45} max={units === 'lbs' ? 300 : 136} step={units === 'lbs' ? 1 : 0.5} value={weight} onChange={(e) => setWeight(parseFloat(e.target.value))} style={{ width: '100%' }} />
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop: 6, color:'#607d8b', fontSize: 12 }}>
-                  <span>{units === 'lbs' ? '33 lbs' : '15 kg'}</span>
+                  <span>{units === 'lbs' ? '100 lbs' : '45 kg'}</span>
                   <span style={{ fontSize: 20, color:'#263238', fontWeight: 800 }}>{weight} {units} ✓</span>
                   <span>{units === 'lbs' ? '300 lbs' : '136 kg'}</span>
                 </div>
@@ -311,7 +230,7 @@ const BJJWeightClassTool = () => {
             </div>
 
             {/* Height */}
-            <div style={{ marginTop: 4 }}>
+            <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                 <label style={{ fontSize: 14, fontWeight: 600, color: '#455a64' }}>Height (for gi sizing)</label>
                 <div style={{ display: 'flex', background: '#eceff1', padding: 2, borderRadius: 8, gap: 6 }}>
@@ -320,9 +239,9 @@ const BJJWeightClassTool = () => {
                 </div>
               </div>
               <div>
-                <input type="range" min={heightUnits === 'cm' ? 100 : 3.3} max={heightUnits === 'cm' ? 210 : 6.9} step={heightUnits === 'cm' ? 1 : 0.1} value={height} onChange={(e) => setHeight(parseFloat(e.target.value))} style={{ width: '100%' }} />
+                <input type="range" min={heightUnits === 'cm' ? 140 : 4.6} max={heightUnits === 'cm' ? 210 : 6.9} step={heightUnits === 'cm' ? 1 : 0.1} value={height} onChange={(e) => setHeight(parseFloat(e.target.value))} style={{ width: '100%' }} />
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop: 6, color:'#607d8b', fontSize: 12 }}>
-                  <span>{heightUnits === 'cm' ? '100 cm' : '3.3 ft'}</span>
+                  <span>{heightUnits === 'cm' ? '140 cm' : '4.6 ft'}</span>
                   <span style={{ fontSize: 20, color:'#263238', fontWeight: 800 }}>{height} {heightUnits} ✓</span>
                   <span>{heightUnits === 'cm' ? '210 cm' : '6.9 ft'}</span>
                 </div>
@@ -330,18 +249,15 @@ const BJJWeightClassTool = () => {
             </div>
           </div>
 
-          {/* Results Section (title removed per request) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {/* Results Section */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#263238', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <InfoIcon sx={{ fontSize: 20 }} />
+              Your Classifications
+            </h2>
 
             {/* Weight Classes */}
-            {/* Summary Row */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
-              <div style={{ background:'#e3f2fd', borderRadius: 10, padding: 10, textAlign:'center', fontWeight:800, color:'#0d47a1' }}>{giClass.name}</div>
-              <div style={{ background:'#fff3e0', borderRadius: 10, padding: 10, textAlign:'center', fontWeight:800, color:'#e65100' }}>{displayedAgeCategory}</div>
-              <div style={{ background:'#f3e5f5', borderRadius: 10, padding: 10, textAlign:'center', fontWeight:800, color:'#4a148c' }}>{nogiClass.name}</div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div style={{ background: '#e3f2fd', borderRadius: 12, padding: 16, borderLeft: '4px solid #1e88e5' }}>
                 <div style={{ fontWeight: 700, color: '#1565c0', marginBottom: 6 }}>Gi Division</div>
                 <div style={{ fontSize: 22, fontWeight: 900, color: '#0d47a1' }}>{giClass.name}</div>
@@ -365,23 +281,8 @@ const BJJWeightClassTool = () => {
               {possibleGiSizes.length > 0 ? (
                 <div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {possibleGiSizes.map(({ size, perfect, recommended }) => (
-                      <span
-                        key={size}
-                        title={recommended ? 'Recommended size' : undefined}
-                        style={{
-                          padding: '6px 10px',
-                          borderRadius: 20,
-                          fontSize: 14,
-                          fontWeight: 800,
-                          background: perfect ? '#2e7d32' : '#a5d6a7',
-                          color: perfect ? '#fff' : '#1b5e20',
-                          boxShadow: recommended ? '0 0 0 2px #1b5e20, 0 6px 14px rgba(27,94,32,0.35)' : (perfect ? '0 2px 8px rgba(46,125,50,0.35)' : 'none'),
-                          border: recommended ? '2px solid #1b5e20' : (perfect ? 'none' : '1px solid #81c784')
-                        }}
-                      >
-                        {size}
-                      </span>
+                    {possibleGiSizes.map(({ size, perfect }) => (
+                      <span key={size} style={{ padding: '6px 10px', borderRadius: 20, fontSize: 14, fontWeight: 800, background: perfect ? '#2e7d32' : '#a5d6a7', color: perfect ? '#fff' : '#1b5e20', boxShadow: perfect ? '0 2px 8px rgba(46,125,50,0.35)' : 'none', border: perfect ? 'none' : '1px solid #81c784' }}>{size}</span>
                     ))}
                   </div>
                   <div style={{ marginTop: 12, fontSize: 12, color: '#2e7d32' }}>

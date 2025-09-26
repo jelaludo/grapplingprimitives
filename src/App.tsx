@@ -22,6 +22,7 @@ import TrainingHub from './modules/training/TrainingHub';
 import StoriesHub from './modules/stories/StoriesHub';
 import BeltDropout from './modules/beltdropout/BeltDropout';
 import BJJWeightClassTool from './modules/weight_class/bjj-weight-class-tool';
+import BreathingApp from './modules/Breathing/breathing-cycles';
 import RetroMessage from './components/RetroMessage';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
@@ -279,6 +280,9 @@ function App() {
     }
   };
 
+  // Debug logging
+  console.log('Current view:', viewManagement.currentView);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -431,7 +435,9 @@ function App() {
         ) : viewManagement.currentView === 'others' ? (
           <OthersHub onBack={viewManagement.switchToHome} gotoArticles={viewManagement.switchToArticles} gotoCoach={viewManagement.switchToCoach} gotoStudies={viewManagement.switchToStudies} gotoCalendar={viewManagement.switchToCalendar} />
         ) : viewManagement.currentView === 'training' ? (
-          <TrainingHub />
+          <div style={VIEW_CONTAINER_STYLE}>
+            <BreathingApp />
+          </div>
         ) : viewManagement.currentView === 'stories' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <StoriesHub onExit={viewManagement.switchToHome} />
@@ -443,6 +449,19 @@ function App() {
         ) : viewManagement.currentView === 'weight' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <BJJWeightClassTool />
+          </div>
+        ) : viewManagement.currentView === 'breathing' ? (
+          (() => {
+            console.log('Rendering breathing view');
+            return (
+              <div style={VIEW_CONTAINER_STYLE}>
+                <BreathingApp />
+              </div>
+            );
+          })()
+        ) : viewManagement.currentView === 'screhab' ? (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <TrainingHub />
           </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>

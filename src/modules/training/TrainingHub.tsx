@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { SatisfactionPicker } from './components/SatisfactionPicker';
 import { HexGrid } from './components/HexGrid';
 import { defaultFavorites, exampleDayRecord } from './data';
 import { DayRecord, Favorite, Unit } from './types';
+import { useViewManagement } from '../../hooks';
 
 const TrainingHub: React.FC = () => {
+  const viewManagement = useViewManagement();
+  
   // State for today's record
   const [todayRecord, setTodayRecord] = useState<DayRecord>({
     date: new Date().toISOString().split('T')[0],
@@ -76,7 +79,66 @@ const TrainingHub: React.FC = () => {
       {/* Header */}
       <Box sx={{ textAlign: 'center', mb: 4 }}>
         <Typography variant="h3" gutterBottom sx={{ color: 'white', fontWeight: 'bold' }}>
-          S&C & Rehab Training Hub
+          Training Hub
+        </Typography>
+        <Typography variant="body1" sx={{ color: 'grey.400', mb: 3 }}>
+          Choose your training focus
+        </Typography>
+        
+        {/* Training Module Navigation */}
+        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mb: 4, flexWrap: 'wrap' }}>
+          <Button
+            variant="outlined"
+            size="large"
+            onClick={() => {
+              console.log('S&C button clicked, switching to screhab view');
+              viewManagement.switchToScRehab();
+            }}
+            sx={{
+              borderColor: 'primary.main',
+              color: 'primary.main',
+              px: 4,
+              py: 2,
+              borderRadius: 2,
+              textTransform: 'none',
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              '&:hover': {
+                borderColor: 'primary.dark',
+                bgcolor: 'primary.dark',
+                color: 'white',
+              }
+            }}
+          >
+            💪 S&C & Rehab
+          </Button>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => {
+              console.log('Breathing button clicked, switching to breathing view');
+              viewManagement.switchToBreathing();
+            }}
+            sx={{
+              bgcolor: 'primary.main',
+              color: 'white',
+              px: 4,
+              py: 2,
+              borderRadius: 2,
+              textTransform: 'none',
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              '&:hover': {
+                bgcolor: 'primary.dark',
+              }
+            }}
+          >
+            🫁 Breathing Cycles
+          </Button>
+        </Box>
+        
+        <Typography variant="h4" gutterBottom sx={{ color: 'white', fontWeight: 'bold' }}>
+          S&C & Rehab Training
         </Typography>
         <Typography variant="body1" sx={{ color: 'grey.400' }}>
           Ultra-clean daily tracker for strength & rehab

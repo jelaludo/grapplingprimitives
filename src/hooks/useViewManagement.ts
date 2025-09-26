@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-export type View = 'home' | 'others' | 'matrix' | 'articles' | 'studies' | 'graphs' | 'ludus' | 'cards' | 'games' | 'coach' | 'skillcheck' | 'calendar' | 'training' | 'stories' | 'beltdropout' | 'weight';
+export type View = 'home' | 'others' | 'matrix' | 'articles' | 'studies' | 'graphs' | 'ludus' | 'cards' | 'games' | 'coach' | 'skillcheck' | 'calendar' | 'training' | 'stories' | 'beltdropout' | 'weight' | 'breathing' | 'screhab';
 
 // Pre-computed constants
 const DEFAULT_VIEW: View = 'home';
@@ -26,6 +26,14 @@ export const useViewManagement = () => {
   const switchToStories = useCallback(() => setCurrentView('stories'), []);
   const switchToBeltDropout = useCallback(() => setCurrentView('beltdropout'), []);
   const switchToWeight = useCallback(() => setCurrentView('weight'), []);
+  const switchToBreathing = useCallback(() => {
+    console.log('switchToBreathing called, setting view to breathing');
+    setCurrentView('breathing');
+  }, []);
+  const switchToScRehab = useCallback(() => {
+    console.log('switchToScRehab called, setting view to screhab');
+    setCurrentView('screhab');
+  }, []);
 
   return {
     currentView,
@@ -46,6 +54,8 @@ export const useViewManagement = () => {
     switchToStories,
     switchToBeltDropout,
     switchToWeight,
+    switchToBreathing,
+    switchToScRehab,
     gamesInitial
   };
 }; 

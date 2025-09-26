@@ -22,7 +22,7 @@
     "form-data": "^4.0.0",
     "framer-motion": "^12.23.12",
     "jsonwebtoken": "^9.0.2",
-    "lucide-react": "^0.539.0",
+    "lucide-react": "^0.544.0",
     "matter-js": "^0.20.0",
     "mongodb": "^6.16.0",
     "multer": "^1.4.5-lts.1",
