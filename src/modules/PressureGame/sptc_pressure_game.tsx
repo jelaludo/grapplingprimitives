@@ -498,7 +498,7 @@ const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
                 Dot must be in RED Zone by the end of the timer
               </p>
               <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>
-                Use WASD to guide the dot. (*or D-PAD on mobile)
+                Use WASD keys or touch D-PAD to guide the dot
               </p>
             </div>
 
@@ -724,6 +724,108 @@ const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
                   ></div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile D-PAD Controls */}
+      {gameState === 'playing' && (
+        <div style={{ position: 'absolute', bottom: '2rem', right: '2rem', userSelect: 'none' }}>
+          <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', borderRadius: '0.5rem', padding: '1rem' }}>
+            <div style={{ color: 'white', fontSize: '0.75rem', marginBottom: '0.5rem', textAlign: 'center' }}>Touch Controls</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', width: '10rem' }}>
+              <div></div>
+              <button
+                onTouchStart={() => handleDPadPress('w', true)}
+                onTouchEnd={() => handleDPadPress('w', false)}
+                onMouseDown={() => handleDPadPress('w', true)}
+                onMouseUp={() => handleDPadPress('w', false)}
+                onMouseLeave={() => handleDPadPress('w', false)}
+                style={{
+                  width: '3rem',
+                  height: '3rem',
+                  backgroundColor: displayGauges.w > 0 ? '#3b82f6' : '#374151',
+                  border: '2px solid #60a5fa',
+                  borderRadius: '0.5rem',
+                  color: 'white',
+                  fontSize: '1.25rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  touchAction: 'none',
+                  WebkitTapHighlightColor: 'transparent'
+                }}
+              >
+                W
+              </button>
+              <div></div>
+              
+              <button
+                onTouchStart={() => handleDPadPress('a', true)}
+                onTouchEnd={() => handleDPadPress('a', false)}
+                onMouseDown={() => handleDPadPress('a', true)}
+                onMouseUp={() => handleDPadPress('a', false)}
+                onMouseLeave={() => handleDPadPress('a', false)}
+                style={{
+                  width: '3rem',
+                  height: '3rem',
+                  backgroundColor: displayGauges.a > 0 ? '#3b82f6' : '#374151',
+                  border: '2px solid #60a5fa',
+                  borderRadius: '0.5rem',
+                  color: 'white',
+                  fontSize: '1.25rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  touchAction: 'none',
+                  WebkitTapHighlightColor: 'transparent'
+                }}
+              >
+                A
+              </button>
+              <button
+                onTouchStart={() => handleDPadPress('s', true)}
+                onTouchEnd={() => handleDPadPress('s', false)}
+                onMouseDown={() => handleDPadPress('s', true)}
+                onMouseUp={() => handleDPadPress('s', false)}
+                onMouseLeave={() => handleDPadPress('s', false)}
+                style={{
+                  width: '3rem',
+                  height: '3rem',
+                  backgroundColor: displayGauges.s > 0 ? '#3b82f6' : '#374151',
+                  border: '2px solid #60a5fa',
+                  borderRadius: '0.5rem',
+                  color: 'white',
+                  fontSize: '1.25rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  touchAction: 'none',
+                  WebkitTapHighlightColor: 'transparent'
+                }}
+              >
+                S
+              </button>
+              <button
+                onTouchStart={() => handleDPadPress('d', true)}
+                onTouchEnd={() => handleDPadPress('d', false)}
+                onMouseDown={() => handleDPadPress('d', true)}
+                onMouseUp={() => handleDPadPress('d', false)}
+                onMouseLeave={() => handleDPadPress('d', false)}
+                style={{
+                  width: '3rem',
+                  height: '3rem',
+                  backgroundColor: displayGauges.d > 0 ? '#3b82f6' : '#374151',
+                  border: '2px solid #60a5fa',
+                  borderRadius: '0.5rem',
+                  color: 'white',
+                  fontSize: '1.25rem',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  touchAction: 'none',
+                  WebkitTapHighlightColor: 'transparent'
+                }}
+              >
+                D
+              </button>
             </div>
           </div>
         </div>
