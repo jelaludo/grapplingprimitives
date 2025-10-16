@@ -5,7 +5,7 @@ interface Props {
   goMatrix: () => void;
   goCards: () => void;
   goGraphs: () => void;
-  goGames: (initial?: 'none' | 'centroid' | 'memory') => void;
+  goGames: (initial?: 'none' | 'centroid' | 'memory' | 'pressure-game') => void;
   goCoach: () => void;
   goSkillCheck: () => void;
   goArticles: () => void;
@@ -17,6 +17,7 @@ interface Props {
   goStories: () => void;
   goBeltDropout: () => void;
   goWeightClass: () => void;
+  goTrainingTools: () => void;
 }
 
 const HomeHubMount: React.FC<Props> = (props) => {

@@ -23,6 +23,7 @@ import StoriesHub from './modules/stories/StoriesHub';
 import BeltDropout from './modules/beltdropout/BeltDropout';
 import BJJWeightClassTool from './modules/weight_class/bjj-weight-class-tool';
 import BreathingApp from './modules/Breathing/breathing-cycles';
+import TrainingToolsHub from './modules/trainingtools/TrainingToolsHub';
 import RetroMessage from './components/RetroMessage';
 import BetaLogin from './components/BetaLogin';
 import { Analytics } from '@vercel/analytics/react';
@@ -353,7 +354,7 @@ function App() {
                goMatrix={viewManagement.switchToMatrix}
                goCards={viewManagement.switchToCards}
                goGraphs={() => { viewManagement.switchToGraphs(); setGraphsResetToken(prev => prev + 1); }}
-               goGames={(initial?: 'none' | 'centroid' | 'memory') => viewManagement.switchToGamesWithInitial(initial ?? 'none')}
+               goGames={(initial?: 'none' | 'centroid' | 'memory' | 'pressure-game') => viewManagement.switchToGamesWithInitial(initial ?? 'none')}
                goCoach={viewManagement.switchToCoach}
                goSkillCheck={viewManagement.switchToSkillCheck}
                goArticles={viewManagement.switchToArticles}
@@ -365,6 +366,7 @@ function App() {
                 goStories={viewManagement.switchToStories}
                 goBeltDropout={viewManagement.switchToBeltDropout}
                 goWeightClass={viewManagement.switchToWeight}
+                goTrainingTools={viewManagement.switchToTrainingTools}
               />
            </div>
           ) : viewManagement.currentView === 'matrix' ? (
@@ -462,6 +464,10 @@ function App() {
         ) : viewManagement.currentView === 'screhab' ? (
           <div style={VIEW_CONTAINER_STYLE}>
             <TrainingHub />
+          </div>
+        ) : viewManagement.currentView === 'trainingtools' ? (
+          <div style={VIEW_CONTAINER_STYLE}>
+            <TrainingToolsHub onBack={viewManagement.switchToHome} />
           </div>
         ) : (
           <div style={VIEW_CONTAINER_STYLE}>

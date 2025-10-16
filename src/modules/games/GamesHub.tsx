@@ -1,14 +1,16 @@
 import React, { Suspense, useEffect } from 'react';
 import { Box, Card, CardActionArea, CardContent, Typography, Button } from '@mui/material';
+import PressureGameCardPreview from './previews/PressureGameCardPreview';
 
 const Centroid = React.lazy(() => import('./centroid/CentroidView'));
 const Memory = React.lazy(() => import('./memory/MemoryGame'));
 const ArmbarShearingSim = React.lazy(() => import('./armbar-shearing/ArmbarShearingSim'));
+const PressureGame = React.lazy(() => import('../PressureGame/sptc_pressure_game'));
 
-interface GamesHubProps { onExit?: () => void; initial?: 'none' | 'centroid' | 'memory' | 'armbar-shearing' }
+interface GamesHubProps { onExit?: () => void; initial?: 'none' | 'centroid' | 'memory' | 'armbar-shearing' | 'pressure-game' }
 
 const GamesHub: React.FC<GamesHubProps> = ({ onExit, initial = 'none' }) => {
-  const [selected, setSelected] = React.useState<'none'|'centroid'|'memory'|'armbar-shearing'>(initial);
+  const [selected, setSelected] = React.useState<'none'|'centroid'|'memory'|'armbar-shearing'|'pressure-game'>(initial);
 
   useEffect(() => {
     setSelected(initial);
@@ -109,6 +111,13 @@ const GamesHub: React.FC<GamesHubProps> = ({ onExit, initial = 'none' }) => {
       </Suspense>
     );
   }
+  if (selected === 'pressure-game') {
+    return (
+      <Suspense fallback={<div style={{ padding: 24 }}>Loading game…</div>}>
+        <PressureGame onExit={() => setSelected('none')} />
+      </Suspense>
+    );
+  }
 
   return (
     <Box sx={{ p: { xs: 1, md: 2 }, m: 'auto', width: '100%', maxWidth: 980,
@@ -200,6 +209,16 @@ const GamesHub: React.FC<GamesHubProps> = ({ onExit, initial = 'none' }) => {
                     </Box>
                   </Box>
                 </Box>
+              </Box>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+        <Card sx={{ aspectRatio: { xs: '1 / 1.2', md: '2 / 3' }, maxHeight: { xs: 380, md: 520 }, borderRadius: 3, overflow: 'hidden', display: 'flex' }}>
+          <CardActionArea onClick={() => setSelected('pressure-game')} sx={{ display: 'flex', flex: 1 }}>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 0.5, md: 1 }, flex: 1, fontFamily: '"DS-Digital", ui-monospace, Menlo, Consolas, monospace', letterSpacing: '0.06em', p: { xs: 1, md: 2 } }}>
+              <Typography variant="h6" sx={{ fontFamily: 'inherit' }}>Pressure & Timing</Typography>
+              <Box sx={{ flex: 1, display: 'flex', alignItems: 'stretch', justifyContent: 'center', width: '100%' }}>
+                <PressureGameCardPreview />
               </Box>
             </CardContent>
           </CardActionArea>

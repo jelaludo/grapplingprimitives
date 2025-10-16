@@ -3,17 +3,16 @@ import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/materia
 import './homehub-mobile.css';
 import CentroidCardPreview from '../games/previews/CentroidCardPreview';
 import MemoryCardPreview from '../games/previews/MemoryCardPreview';
-import TimerCardPreview from '../coach/previews/TimerCardPreview';
 import SkillCheckCardPreview from '../skillcheck/previews/SkillCheckCardPreview';
-import TrainingCardPreview from '../training/TrainingCardPreview';
 import StoriesCardPreview from '../stories/StoriesCardPreview';
 import BeltDropoutCardPreview from '../beltdropout/BeltDropoutCardPreview';
+import PressureGameHomePreview from '../games/previews/PressureGameHomePreview';
 
 interface HomeHubProps {
   goMatrix: () => void;
   goCards: () => void;
   goGraphs: () => void;
-  goGames: (initial?: 'none' | 'centroid' | 'memory') => void;
+  goGames: (initial?: 'none' | 'centroid' | 'memory' | 'pressure-game') => void;
   goCoach: () => void;
   goSkillCheck: () => void;
   goArticles: () => void;
@@ -25,6 +24,7 @@ interface HomeHubProps {
   goStories: () => void;
   goBeltDropout: () => void;
   goWeightClass: () => void;
+  goTrainingTools: () => void;
 }
 
 const HomeHub: React.FC<HomeHubProps> = (props) => {
@@ -171,10 +171,13 @@ const HomeHub: React.FC<HomeHubProps> = (props) => {
         <CardShell title="Centroid" onClick={() => props.goGames('centroid')} preview={<CentroidCardPreview />} />
         <CardShell title="JJJ Memory" onClick={() => props.goGames('memory')} preview={<MemoryCardPreview />} />
         <CardShell hideTitle onClick={props.goStories} preview={<StoriesCardPreview />} />
-        <CardShell hideTitle onClick={() => { props.goCoach(); setTimeout(() => { if (typeof window !== 'undefined') window.location.hash = 'timer'; }, 0); }} preview={<TimerCardPreview />} />
+        <CardShell hideTitle onClick={() => props.goGames('pressure-game')} preview={<PressureGameHomePreview />} />
         <CardShell hideTitle onClick={props.goSkillCheck} preview={<SkillCheckCardPreview />} />
         <CardShell title="Belt Dropout" onClick={props.goBeltDropout} preview={<BeltDropoutCardPreview />} />
-        <CardShell title="Training" onClick={props.goTraining} preview={<TrainingCardPreview />} />
+        <CardShell title="Training Tools" onClick={props.goTrainingTools} preview={<Box sx={{ width:'80%', textAlign:'center', color:'#66bb6a'}}>
+          <Typography variant="h4" sx={{ fontFamily:'inherit' }}>⏱️</Typography>
+          <Typography variant="body2" sx={{ opacity:0.8, mt: 1 }}>Timer & Breathing</Typography>
+        </Box>} />
         <CardShell title="Weight & Gi Size" onClick={props.goWeightClass} preview={<Box sx={{ width:'80%', textAlign:'center', color:'#90caf9'}}>
           <Typography variant="h4" sx={{ fontFamily:'inherit' }}>⚖️</Typography>
           <Typography variant="body2" sx={{ opacity:0.8 }}>IBJJF + Gi</Typography>

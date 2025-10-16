@@ -1,13 +1,13 @@
 import { useState, useCallback } from 'react';
 
-export type View = 'home' | 'others' | 'matrix' | 'articles' | 'studies' | 'graphs' | 'ludus' | 'cards' | 'games' | 'coach' | 'skillcheck' | 'calendar' | 'training' | 'stories' | 'beltdropout' | 'weight' | 'breathing' | 'screhab';
+export type View = 'home' | 'others' | 'matrix' | 'articles' | 'studies' | 'graphs' | 'ludus' | 'cards' | 'games' | 'coach' | 'skillcheck' | 'calendar' | 'training' | 'stories' | 'beltdropout' | 'weight' | 'breathing' | 'screhab' | 'trainingtools';
 
 // Pre-computed constants
 const DEFAULT_VIEW: View = 'home';
 
 export const useViewManagement = () => {
   const [currentView, setCurrentView] = useState<View>(DEFAULT_VIEW);
-  const [gamesInitial, setGamesInitial] = useState<'none' | 'centroid' | 'memory'>('none');
+  const [gamesInitial, setGamesInitial] = useState<'none' | 'centroid' | 'memory' | 'pressure-game'>('none');
 
   const switchToHome = useCallback(() => setCurrentView('home'), []);
   const switchToOthers = useCallback(() => setCurrentView('others'), []);
@@ -18,7 +18,7 @@ export const useViewManagement = () => {
   const switchToLudus = useCallback(() => setCurrentView('ludus'), []);
   const switchToCards = useCallback(() => setCurrentView('cards'), []);
   const switchToGames = useCallback(() => { setGamesInitial('none'); setCurrentView('games'); }, []);
-  const switchToGamesWithInitial = useCallback((initial: 'none' | 'centroid' | 'memory') => { setGamesInitial(initial); setCurrentView('games'); }, []);
+  const switchToGamesWithInitial = useCallback((initial: 'none' | 'centroid' | 'memory' | 'pressure-game') => { setGamesInitial(initial); setCurrentView('games'); }, []);
   const switchToCoach = useCallback(() => setCurrentView('coach'), []);
   const switchToSkillCheck = useCallback(() => setCurrentView('skillcheck'), []);
   const switchToCalendar = useCallback(() => setCurrentView('calendar'), []);
@@ -34,6 +34,7 @@ export const useViewManagement = () => {
     console.log('switchToScRehab called, setting view to screhab');
     setCurrentView('screhab');
   }, []);
+  const switchToTrainingTools = useCallback(() => setCurrentView('trainingtools'), []);
 
   return {
     currentView,
@@ -56,6 +57,7 @@ export const useViewManagement = () => {
     switchToWeight,
     switchToBreathing,
     switchToScRehab,
+    switchToTrainingTools,
     gamesInitial
   };
 }; 
