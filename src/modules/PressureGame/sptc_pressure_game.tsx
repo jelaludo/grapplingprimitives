@@ -1,7 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { getRandomBelt, calculateRequiredRoll, BELT_STATS } from './combatData';
+import { getCombatOutcome, type CombatResult, type Technique } from './combatScenarios';
+import { getRandomImageForBelt, getImagePaths, type AdultBelt } from './imageMapping';
 
 interface SPTCGameProps {
   onExit?: () => void;
+}
+
+interface CombatMatchup {
+  playerBelt: AdultBelt;
+  opponentBelt: AdultBelt;
+  playerImage: string;
+  opponentImage: string;
+  requiredRoll: number | 'Auto';
 }
 
 const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
@@ -11,6 +22,16 @@ const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
   const [timeLeft, setTimeLeft] = useState(5);
   const gameRef = useRef<any>(null);
   const [showSettings, setShowSettings] = useState(false);
+  // Mobile detection
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= 768;
+  });
+  
+  // Combat system state
+  const [combatMatchup, setCombatMatchup] = useState<CombatMatchup | null>(null);
+  const [nextMatchup, setNextMatchup] = useState<CombatMatchup | null>(null);
+  const [combatOutcome, setCombatOutcome] = useState<{ result: CombatResult; technique: Technique } | null>(null);
   
   // Custom settings
   const [noiseFrequency, setNoiseFrequency] = useState(0.020);
@@ -21,6 +42,34 @@ const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
   const [maxCanvasTilt, setMaxCanvasTilt] = useState(0);
   const [difficulty, setDifficulty] = useState(5);
   const [displayGauges, setDisplayGauges] = useState({ w: 0, a: 0, s: 0, d: 0 });
+
+  // Listen for resize to toggle mobile layout
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Initialize combat matchup only when entering menu without an existing matchup,
+  // and preserve it through the play to show the same creatures on results.
+  useEffect(() => {
+    if (gameState === 'menu' && !combatMatchup) {
+      const playerBelt = getRandomBelt();
+      const opponentBelt = getRandomBelt();
+      const playerImage = getRandomImageForBelt(playerBelt);
+      const opponentImage = getRandomImageForBelt(opponentBelt);
+      const requiredRoll = calculateRequiredRoll(playerBelt, opponentBelt);
+      setCombatMatchup({
+        playerBelt,
+        opponentBelt,
+        playerImage,
+        opponentImage,
+        requiredRoll
+      });
+    }
+  }, [gameState, combatMatchup]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -384,6 +433,27 @@ const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
         const value = this.getHeatmapValue(this.dot.x, this.dot.y);
         const finalScore = Math.max(1, Math.round(value * 20)); // Scale 1-20 instead of 0-100
         setScore(finalScore);
+        
+        // Calculate combat outcome
+        if (combatMatchup) {
+          const outcome = getCombatOutcome(finalScore, combatMatchup.requiredRoll, 'pressure');
+          setCombatOutcome(outcome);
+
+          // Precompute next matchup for preview on results screen
+          const nmPlayer = getRandomBelt();
+          const nmOpp = getRandomBelt();
+          const nmPlayerImg = getRandomImageForBelt(nmPlayer);
+          const nmOppImg = getRandomImageForBelt(nmOpp);
+          const nmReq = calculateRequiredRoll(nmPlayer, nmOpp);
+          setNextMatchup({
+            playerBelt: nmPlayer,
+            opponentBelt: nmOpp,
+            playerImage: nmPlayerImg,
+            opponentImage: nmOppImg,
+            requiredRoll: nmReq
+          });
+        }
+        
         setTimeout(() => setGameState('finished'), 500);
       }
 
@@ -475,6 +545,29 @@ const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
     setTimeLeft(timeDuration);
     setDisplayGauges({ w: 0, a: 0, s: 0, d: 0 });
     setShowSettings(false);
+    setCombatOutcome(null);
+    // If starting from finished (retry/new match), prefer the precomputed next matchup
+    // If starting from menu, keep the current matchup to avoid off-by-one creatures.
+    if (gameState !== 'menu') {
+      if (nextMatchup) {
+        setCombatMatchup(nextMatchup);
+        setNextMatchup(null);
+      } else {
+      const playerBelt = getRandomBelt();
+      const opponentBelt = getRandomBelt();
+      const playerImage = getRandomImageForBelt(playerBelt);
+      const opponentImage = getRandomImageForBelt(opponentBelt);
+      const requiredRoll = calculateRequiredRoll(playerBelt, opponentBelt);
+      setCombatMatchup({
+        playerBelt,
+        opponentBelt,
+        playerImage,
+        opponentImage,
+        requiredRoll
+      });
+      }
+    }
+    
     setGameState('playing');
   };
 
@@ -488,12 +581,77 @@ const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
     <div style={{ position: 'relative', width: '100%', height: '100vh', backgroundColor: '#000', overflow: 'hidden' }}>
       <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' }} />
       
-      {gameState === 'menu' && (
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
-          <div style={{ textAlign: 'center', padding: '2rem', maxWidth: '42rem', margin: '2rem 0', position: 'relative', zIndex: 10 }}>
-            <h1 style={{ fontSize: '3rem', fontWeight: 'bold', color: 'white', marginBottom: '2rem' }}>Timing & Pressure Challenge</h1>
+      {gameState === 'menu' && combatMatchup && (
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)', overflowY: 'auto' }}>
+          <div style={{ textAlign: 'center', padding: isMobile ? '1rem 1rem 2rem' : '2rem', maxWidth: '42rem', margin: isMobile ? '1rem 0 2rem' : '2rem 0', position: 'relative', zIndex: 10, width: '100%' }}>
+            <h1 style={{ fontSize: isMobile ? 'clamp(1.5rem, 6vw, 2.25rem)' : '3rem', fontWeight: 'bold', color: 'white', marginBottom: isMobile ? '1rem' : '2rem' }}>Timing & Pressure Challenge</h1>
             
-            <div style={{ backgroundColor: 'rgba(17, 24, 39, 0.9)', padding: '1.5rem', borderRadius: '0.5rem', marginBottom: '2rem' }}>
+            {/* Combat Matchup Display */}
+            <div style={{ backgroundColor: 'rgba(17, 24, 39, 0.95)', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '0.5rem', marginBottom: isMobile ? '1rem' : '2rem' }}>
+              <h2 style={{ color: '#fbbf24', fontSize: isMobile ? '1rem' : '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>⚔️ COMBAT SCENARIO</h2>
+              
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: isMobile ? '1rem' : '2rem', marginBottom: '1rem', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
+                {/* Player */}
+                <div style={{ textAlign: 'center' }}>
+                  <picture>
+                    <source srcSet={getImagePaths(combatMatchup.playerImage).avif} type="image/avif" />
+                    <source srcSet={getImagePaths(combatMatchup.playerImage).webp} type="image/webp" />
+                    <img 
+                      src={getImagePaths(combatMatchup.playerImage).webp} 
+                      alt="Player" 
+                      style={{ width: isMobile ? '90px' : '120px', height: isMobile ? '120px' : '160px', borderRadius: '0.5rem', border: '3px solid #60a5fa', objectFit: 'cover' }}
+                    />
+                  </picture>
+                  <div style={{ marginTop: '0.5rem', color: 'white', fontWeight: 'bold' }}>
+                    {BELT_STATS[combatMatchup.playerBelt].emoji} YOU
+                  </div>
+                  <div style={{ color: BELT_STATS[combatMatchup.playerBelt].color, fontSize: isMobile ? '0.8rem' : '0.875rem' }}>
+                    {BELT_STATS[combatMatchup.playerBelt].name}
+                  </div>
+                  <div style={{ color: '#9ca3af', fontSize: isMobile ? '0.7rem' : '0.75rem' }}>
+                    +{BELT_STATS[combatMatchup.playerBelt].attackModifier} Attack
+                  </div>
+                </div>
+                
+                {/* VS */}
+                <div style={{ color: '#fbbf24', fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: 'bold' }}>VS</div>
+                
+                {/* Opponent */}
+                <div style={{ textAlign: 'center' }}>
+                  <picture>
+                    <source srcSet={getImagePaths(combatMatchup.opponentImage).avif} type="image/avif" />
+                    <source srcSet={getImagePaths(combatMatchup.opponentImage).webp} type="image/webp" />
+                    <img 
+                      src={getImagePaths(combatMatchup.opponentImage).webp} 
+                      alt="Opponent" 
+                      style={{ width: isMobile ? '90px' : '120px', height: isMobile ? '120px' : '160px', borderRadius: '0.5rem', border: '3px solid #ef4444', objectFit: 'cover' }}
+                    />
+                  </picture>
+                  <div style={{ marginTop: '0.5rem', color: 'white', fontWeight: 'bold' }}>
+                    {BELT_STATS[combatMatchup.opponentBelt].emoji} OPPONENT
+                  </div>
+                  <div style={{ color: BELT_STATS[combatMatchup.opponentBelt].color, fontSize: isMobile ? '0.8rem' : '0.875rem' }}>
+                    {BELT_STATS[combatMatchup.opponentBelt].name}
+                  </div>
+                  <div style={{ color: '#9ca3af', fontSize: isMobile ? '0.7rem' : '0.75rem' }}>
+                    DC {BELT_STATS[combatMatchup.opponentBelt].dc}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Required Roll */}
+              <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: isMobile ? '0.75rem' : '1rem', borderRadius: '0.5rem', marginTop: '1rem' }}>
+                <div style={{ color: '#fbbf24', fontSize: '0.875rem', marginBottom: '0.25rem' }}>YOU NEED</div>
+                <div style={{ color: 'white', fontSize: isMobile ? '1.125rem' : '1.5rem', fontWeight: 'bold' }}>
+                  {combatMatchup.requiredRoll === 'Auto' ? '🎯 AUTO SUCCESS' : `${combatMatchup.requiredRoll}+ on d20`}
+                </div>
+                <div style={{ color: '#9ca3af', fontSize: isMobile ? '0.7rem' : '0.75rem', marginTop: '0.25rem' }}>
+                  {combatMatchup.requiredRoll === 'Auto' ? 'Guaranteed Victory!' : `Approx. ${Math.round(((21 - (combatMatchup.requiredRoll as number)) / 20) * 100)}% success chance`}
+                </div>
+              </div>
+            </div>
+            
+            <div style={{ backgroundColor: 'rgba(17, 24, 39, 0.9)', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '0.5rem', marginBottom: isMobile ? '1rem' : '2rem' }}>
               <p style={{ color: '#d1d5db', marginBottom: '0.5rem' }}>
                 Dot must be in RED Zone by the end of the timer
               </p>
@@ -503,9 +661,9 @@ const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
             </div>
 
             {showSettings && (
-              <div style={{ backgroundColor: 'rgba(17, 24, 39, 0.95)', padding: '1.5rem', borderRadius: '0.5rem', textAlign: 'left', maxHeight: '24rem', overflowY: 'auto' }}>
+              <div style={{ backgroundColor: 'rgba(17, 24, 39, 0.95)', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '0.5rem', textAlign: 'left', maxHeight: isMobile ? 'calc(100vh - 10rem)' : '24rem', overflowY: 'auto' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white' }}>Settings</h3>
+                  <h3 style={{ fontSize: isMobile ? '1.1rem' : '1.25rem', fontWeight: 'bold', color: 'white' }}>Settings</h3>
                   <button 
                     onClick={() => setShowSettings(false)}
                     style={{ color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.5rem' }}
@@ -674,6 +832,39 @@ const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
         </div>
       )}
 
+      {/* Playing thumbnails - top corners */}
+      {gameState === 'playing' && combatMatchup && (
+        <>
+          {/* Player thumbnail (top-left) */}
+          <div style={{ position: 'absolute', top: isMobile ? '0.5rem' : '1rem', left: isMobile ? '0.5rem' : '1rem', zIndex: 5, textAlign: 'center' }}>
+            <picture>
+              <source srcSet={getImagePaths(combatMatchup.playerImage).avif} type="image/avif" />
+              <source srcSet={getImagePaths(combatMatchup.playerImage).webp} type="image/webp" />
+              <img
+                src={getImagePaths(combatMatchup.playerImage).webp}
+                alt="You"
+                style={{ width: isMobile ? '64px' : '80px', height: isMobile ? '86px' : '108px', borderRadius: '0.4rem', border: '3px solid #60a5fa', objectFit: 'cover', boxShadow: '0 6px 18px rgba(0,0,0,0.5)' }}
+              />
+            </picture>
+            <div style={{ color: '#a7f3d0', fontSize: '0.7rem', marginTop: '0.25rem' }}>YOU</div>
+          </div>
+
+          {/* Opponent thumbnail (top-right) */}
+          <div style={{ position: 'absolute', top: isMobile ? '0.5rem' : '1rem', right: isMobile ? '0.5rem' : '1rem', zIndex: 5, textAlign: 'center' }}>
+            <picture>
+              <source srcSet={getImagePaths(combatMatchup.opponentImage).avif} type="image/avif" />
+              <source srcSet={getImagePaths(combatMatchup.opponentImage).webp} type="image/webp" />
+              <img
+                src={getImagePaths(combatMatchup.opponentImage).webp}
+                alt="Opponent"
+                style={{ width: isMobile ? '64px' : '80px', height: isMobile ? '86px' : '108px', borderRadius: '0.4rem', border: '3px solid #ef4444', objectFit: 'cover', boxShadow: '0 6px 18px rgba(0,0,0,0.5)' }}
+              />
+            </picture>
+            <div style={{ color: '#fecaca', fontSize: '0.7rem', marginTop: '0.25rem' }}>OPPONENT</div>
+          </div>
+        </>
+      )}
+
       {gameState === 'playing' && (
         <button
           onClick={() => { setGameState('menu'); setShowSettings(true); }}
@@ -831,57 +1022,144 @@ const SPTCGame: React.FC<SPTCGameProps> = ({ onExit }) => {
         </div>
       )}
 
-      {gameState === 'finished' && (
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.9)' }}>
-          <div style={{ textAlign: 'center' }}>
-            <h2 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: 'white', marginBottom: '1rem' }}>Pressure Score</h2>
+      {gameState === 'finished' && combatMatchup && combatOutcome && (
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.95)', overflowY: 'auto', padding: '2rem 1rem' }}>
+          <div style={{ textAlign: 'center', maxWidth: '42rem', width: '100%' }}>
+            {/* Score Display */}
+            <h2 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#fbbf24', marginBottom: '0.5rem' }}>ROLL RESULT</h2>
             <div style={{ 
-              fontSize: '6rem', 
+              fontSize: '5rem', 
               fontWeight: 'bold', 
-              marginBottom: '2rem',
+              marginBottom: '1rem',
               color: score >= 16 ? '#f87171' : score >= 10 ? '#facc15' : '#60a5fa'
             }}>
               {score}
             </div>
-            <div style={{ fontSize: '1.5rem', color: '#d1d5db', marginBottom: '2rem' }}>
-              {score >= 18 && '🔥 Critical Success!'}
-              {score >= 15 && score < 18 && '✨ Excellent Roll!'}
-              {score >= 10 && score < 15 && '👍 Good Roll!'}
-              {score < 10 && '💭 Better Luck Next Time!'}
+            
+            {/* Combat Matchup Summary */}
+            <div style={{ backgroundColor: 'rgba(17, 24, 39, 0.8)', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', fontSize: '0.875rem' }}>
+                <span style={{ color: 'white' }}>
+                  {BELT_STATS[combatMatchup.playerBelt].emoji} {BELT_STATS[combatMatchup.playerBelt].name}
+                </span>
+                <span style={{ color: '#9ca3af' }}>vs</span>
+                <span style={{ color: 'white' }}>
+                  {BELT_STATS[combatMatchup.opponentBelt].emoji} {BELT_STATS[combatMatchup.opponentBelt].name}
+                </span>
+              </div>
+              <div style={{ color: '#9ca3af', fontSize: '0.75rem', marginTop: '0.5rem' }}>
+                Required: {combatMatchup.requiredRoll === 'Auto' ? 'Auto Success' : `${combatMatchup.requiredRoll}+`} | Rolled: {score}
+              </div>
             </div>
-            <button
-              onClick={startNewGame}
-              style={{ 
-                backgroundColor: '#2563eb', 
-                color: 'white', 
-                fontWeight: 'bold', 
-                padding: '1rem 3rem', 
-                borderRadius: '0.5rem', 
-                fontSize: '1.25rem',
-                border: 'none',
-                cursor: 'pointer',
-                marginBottom: '1rem',
-                transition: 'background-color 0.2s'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#1d4ed8'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
-            >
-              Retry
-            </button>
-            <button
-              onClick={() => setGameState('menu')}
-              style={{ 
-                display: 'block', 
-                margin: '1rem auto 0', 
-                color: '#9ca3af', 
-                background: 'none', 
-                border: 'none', 
-                cursor: 'pointer',
-                fontSize: '1rem'
-              }}
-            >
-              Back to Menu
-            </button>
+            
+            {/* Combat Outcome with integrated images */}
+            <div style={{ 
+              display: 'grid',
+              gridTemplateColumns: '120px 1fr 120px',
+              alignItems: 'center',
+              gap: '1rem',
+              backgroundColor: combatOutcome.result === 'success' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)', 
+              border: `2px solid ${combatOutcome.result === 'success' ? '#10b981' : '#ef4444'}`,
+              padding: '1rem',
+              borderRadius: '0.75rem',
+              marginBottom: '1.5rem'
+            }}>
+              {/* LEFT: YOU */}
+              <div style={{ textAlign: 'center' }}>
+                <picture>
+                  <source srcSet={getImagePaths(combatMatchup.playerImage).avif} type="image/avif" />
+                  <source srcSet={getImagePaths(combatMatchup.playerImage).webp} type="image/webp" />
+                  <img 
+                    src={getImagePaths(combatMatchup.playerImage).webp} 
+                    alt="Player" 
+                    style={{ width: '100%', height: '133px', borderRadius: '0.5rem', border: `3px solid ${combatOutcome.result === 'success' ? '#10b981' : '#ef4444'}`, objectFit: 'cover', opacity: combatOutcome.result === 'success' ? 1 : 0.5 }}
+                  />
+                </picture>
+                <div style={{ color: 'white', fontSize: '0.75rem', marginTop: '0.25rem' }}>YOU</div>
+              </div>
+
+              {/* CENTER: Outcome + Technique */}
+              <div>
+                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: combatOutcome.result === 'success' ? '#10b981' : '#ef4444', marginBottom: '0.5rem', textAlign: 'center' }}>
+                  {combatOutcome.result === 'success' ? '✅ SUCCESS!' : '❌ FAILED!'}
+                </div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white', marginBottom: '0.25rem', textAlign: 'center' }}>
+                  📌 {combatOutcome.technique.name}
+                </div>
+                <div style={{ fontSize: '1rem', color: '#d1d5db', fontStyle: 'italic', textAlign: 'center' }}>
+                  {combatOutcome.technique.description}
+                </div>
+              </div>
+
+              {/* RIGHT: OPPONENT */}
+              <div style={{ textAlign: 'center' }}>
+                <picture>
+                  <source srcSet={getImagePaths(combatMatchup.opponentImage).avif} type="image/avif" />
+                  <source srcSet={getImagePaths(combatMatchup.opponentImage).webp} type="image/webp" />
+                  <img 
+                    src={getImagePaths(combatMatchup.opponentImage).webp} 
+                    alt="Opponent" 
+                    style={{ width: '100%', height: '133px', borderRadius: '0.5rem', border: `3px solid ${combatOutcome.result === 'success' ? '#ef4444' : '#10b981'}`, objectFit: 'cover', opacity: combatOutcome.result === 'success' ? 0.5 : 1 }}
+                  />
+                </picture>
+                <div style={{ color: 'white', fontSize: '0.75rem', marginTop: '0.25rem' }}>OPPONENT</div>
+              </div>
+            </div>
+            
+            {/* Next Match Preview + Action Buttons */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center' }}>
+              {nextMatchup && (
+                <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr 100px', alignItems: 'center', gap: '1rem', width: '100%', maxWidth: '28rem', marginBottom: '0.25rem' }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <picture>
+                      <source srcSet={getImagePaths(nextMatchup.playerImage).avif} type="image/avif" />
+                      <source srcSet={getImagePaths(nextMatchup.playerImage).webp} type="image/webp" />
+                      <img src={getImagePaths(nextMatchup.playerImage).webp} alt="Next Player" style={{ width: '100%', height: '120px', borderRadius: '0.5rem', border: '2px solid #60a5fa', objectFit: 'cover' }} />
+                    </picture>
+                  </div>
+                  <div style={{ textAlign: 'center', color: '#9ca3af', fontSize: '0.9rem' }}>
+                    Next Matchup · {BELT_STATS[nextMatchup.playerBelt].emoji} vs {BELT_STATS[nextMatchup.opponentBelt].emoji} · {nextMatchup.requiredRoll === 'Auto' ? 'Auto Success' : `${nextMatchup.requiredRoll}+`}
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <picture>
+                      <source srcSet={getImagePaths(nextMatchup.opponentImage).avif} type="image/avif" />
+                      <source srcSet={getImagePaths(nextMatchup.opponentImage).webp} type="image/webp" />
+                      <img src={getImagePaths(nextMatchup.opponentImage).webp} alt="Next Opponent" style={{ width: '100%', height: '120px', borderRadius: '0.5rem', border: '2px solid #ef4444', objectFit: 'cover' }} />
+                    </picture>
+                  </div>
+                </div>
+              )}
+              <button
+                onClick={startNewGame}
+                style={{ 
+                  backgroundColor: '#2563eb', 
+                  color: 'white', 
+                  fontWeight: 'bold', 
+                  padding: '1rem 3rem', 
+                  borderRadius: '0.5rem', 
+                  fontSize: '1.25rem',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#1d4ed8'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
+              >
+                New Match
+              </button>
+              <button
+                onClick={() => { setGameState('menu'); setCombatOutcome(null); }}
+                style={{ 
+                  color: '#9ca3af', 
+                  background: 'none', 
+                  border: 'none', 
+                  cursor: 'pointer',
+                  fontSize: '1rem'
+                }}
+              >
+                Back to Menu
+              </button>
+            </div>
           </div>
         </div>
       )}
