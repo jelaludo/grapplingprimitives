@@ -1,7 +1,15 @@
 import { notFound } from "next/navigation";
 import { MODULES } from "@/data/modules";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ConceptMatrix } from "@/components/modules/concept-matrix/concept-matrix";
+import { GamesHub } from "@/components/modules/games/games-hub";
+import { TimerTool } from "@/components/modules/timer/timer-tool";
 
 interface ModulePageProps {
   params: Promise<{ slug: string }>;
@@ -42,6 +50,35 @@ export default async function ModulePage({ params }: ModulePageProps) {
               <div className="w-full" style={{ height: "600px" }}>
                 <ConceptMatrix />
               </div>
+            </CardContent>
+          </Card>
+        </div>
+      ) : module.slug === "games" ? (
+        <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Games Hub</CardTitle>
+              <CardDescription>
+                Interactive games including memory, centroid, and pressure scenarios.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <GamesHub />
+            </CardContent>
+          </Card>
+        </div>
+      ) : module.slug === "coach-tools" ? (
+        <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Coach Timer</CardTitle>
+              <CardDescription>
+                Simple round timer with rest periods and auditory beeps, built
+                for grappling sessions.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TimerTool />
             </CardContent>
           </Card>
         </div>
