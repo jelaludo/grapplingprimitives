@@ -18,12 +18,56 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "src"
+    "src/app",
+    "src/components/ui",
+    "src/components/layout",
+    "src/components/modules",
+    "src/data/modules.ts",
+    "src/data/concepts.ts",
+    "src/lib",
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "src/data/BJJMasterList_*.ts"
+    "src/data/BJJMasterList_*.ts",
+    "src/components/Graphs.tsx",
+    "src/components/ScatterPlot.tsx",
+    "src/components/Articles.tsx",
+    "src/components/Studies.tsx",
+    "src/components/Header.tsx",
+    "src/components/Sidebar.tsx",
+    "src/components/DevModeToggle.tsx",
+    "src/components/HelpDialog.tsx",
+    "src/components/BetaLogin.tsx",
+    "src/components/RetroMessage.tsx",
+    "src/components/QuickHome.tsx",
+    "src/components/QuickMenu.tsx",
+    "src/components/BellCurveChart.tsx",
+    "src/components/DrillGrid.tsx",
+    "src/components/HexagonDrill.tsx",
+    "src/components/Ludus",
+    "src/components/admin",
+    "src/components/modals",
+    "src/modules",
+    "src/App.tsx",
+    "src/index.tsx",
+    "src/layouts/MainLayout.tsx",
+    "node_modules"
   ]
 }
