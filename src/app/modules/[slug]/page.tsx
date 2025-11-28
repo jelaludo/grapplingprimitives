@@ -9,7 +9,12 @@ import {
 } from "@/components/ui/card";
 import { ConceptMatrix } from "@/components/modules/concept-matrix/concept-matrix";
 import { GamesHub } from "@/components/modules/games/games-hub";
-import { TimerTool } from "@/components/modules/timer/timer-tool";
+import { CoachToolsHub } from "@/components/modules/coach-tools/coach-tools-hub";
+import { CardsView } from "@/components/modules/cards/cards-view";
+import { BreathingCycles } from "@/components/modules/breathing/breathing-cycles";
+import { SkillCheck } from "@/components/modules/skill-check/skill-check";
+import { WeightClassTool } from "@/components/modules/weight-class/weight-class-tool";
+import { BeltDropout } from "@/components/modules/belt-dropout/belt-dropout";
 
 interface ModulePageProps {
   params: Promise<{ slug: string }>;
@@ -71,16 +76,65 @@ export default async function ModulePage({ params }: ModulePageProps) {
         <div className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Coach Timer</CardTitle>
+              <CardTitle>Coach Tools</CardTitle>
               <CardDescription>
-                Simple round timer with rest periods and auditory beeps, built
-                for grappling sessions.
+                Essential tools for planning classes, managing training sessions, and tracking progress.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <TimerTool />
+              <CoachToolsHub />
             </CardContent>
           </Card>
+        </div>
+      ) : module.slug === "cards" ? (
+        <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Flash Cards</CardTitle>
+              <CardDescription>
+                Study and review techniques with interactive flash cards. Search, filter, and stage concepts for focused study sessions.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CardsView />
+            </CardContent>
+          </Card>
+        </div>
+      ) : module.slug === "breathing" ? (
+        <div className="space-y-4">
+          <Card className="bg-gradient-to-br from-indigo-900 via-purple-600 to-blue-500 border-0 overflow-hidden">
+            <CardHeader className="bg-black/20">
+              <CardTitle className="text-white">Breathing Cycles</CardTitle>
+              <CardDescription className="text-white/80">
+                Practice breathing techniques for grappling. Choose from Vagus Nerve, Box Breathing, or Calf Raises.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="bg-black/10">
+              <BreathingCycles />
+            </CardContent>
+          </Card>
+        </div>
+      ) : module.slug === "skill-check" ? (
+        <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Skill Assessment</CardTitle>
+              <CardDescription>
+                Assess your grappling knowledge with interactive quizzes. Choose between a short or complete assessment.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <SkillCheck />
+            </CardContent>
+          </Card>
+        </div>
+      ) : module.slug === "weight-class" ? (
+        <div className="space-y-4">
+          <WeightClassTool />
+        </div>
+      ) : module.slug === "belt-dropout" ? (
+        <div className="space-y-4">
+          <BeltDropout />
         </div>
       ) : (
         <Card>

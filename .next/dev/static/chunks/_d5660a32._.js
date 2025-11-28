@@ -360,9 +360,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$swc$2f$helpers$2f$esm$2f$_type_of$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@swc/helpers/esm/_type_of.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modules$2f$module$2d$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/modules/module-card.tsx [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/utils.ts [app-client] (ecmascript)");
 "use client";
-;
 ;
 ;
 ;
@@ -370,38 +368,17 @@ function ModuleCarousel(param) {
     var _this = this;
     var modules = param.modules;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "relative",
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "overflow-x-auto scrollbar-hide pb-4 -mx-4 sm:mx-0",
-            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "flex gap-4 px-4 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-                children: modules.map(function(module) {
-                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex-shrink-0 w-[280px] sm:w-auto"),
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modules$2f$module$2d$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ModuleCard"], {
-                            module: module,
-                            variant: "carousel"
-                        }, void 0, false, {
-                            fileName: "[project]/src/components/modules/module-carousel.tsx",
-                            lineNumber: 23,
-                            columnNumber: 15
-                        }, _this)
-                    }, module.id, false, {
-                        fileName: "[project]/src/components/modules/module-carousel.tsx",
-                        lineNumber: 17,
-                        columnNumber: 13
-                    }, _this);
-                })
-            }, void 0, false, {
+        className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4",
+        children: modules.map(function(module) {
+            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$modules$2f$module$2d$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ModuleCard"], {
+                module: module,
+                variant: "carousel"
+            }, module.id, false, {
                 fileName: "[project]/src/components/modules/module-carousel.tsx",
                 lineNumber: 15,
                 columnNumber: 9
-            }, this)
-        }, void 0, false, {
-            fileName: "[project]/src/components/modules/module-carousel.tsx",
-            lineNumber: 14,
-            columnNumber: 7
-        }, this)
+            }, _this);
+        })
     }, void 0, false, {
         fileName: "[project]/src/components/modules/module-carousel.tsx",
         lineNumber: 13,

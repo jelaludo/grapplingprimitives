@@ -218,8 +218,15 @@ export const TimerTool: React.FC = () => {
     }));
 
   return (
-    <div className="w-full space-y-4 font-mono tracking-wider">
-      <div className="text-center text-text-muted text-sm">{title}</div>
+    <div className="w-full space-y-6">
+      <div className="space-y-2 text-center">
+        <div className="text-sm text-text-muted font-medium">{title}</div>
+        {phase === "paused" && (
+          <p className="text-xs text-text-subtle max-w-md mx-auto">
+            Configure round duration, rest period, and number of rounds below. Settings are saved automatically.
+          </p>
+        )}
+      </div>
 
       <div className="flex justify-center my-2">
         <div
@@ -229,83 +236,91 @@ export const TimerTool: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-2 mb-2 text-xs sm:text-sm">
-        <div className="flex items-center gap-1 rounded-md bg-bg-raised px-2 py-1 text-text-muted">
-          <span>Duration</span>
+      <div className="flex flex-wrap justify-center gap-3 text-sm">
+        <div className="flex items-center gap-2 rounded-lg bg-bg-raised border border-border-subtle px-3 py-2">
+          <span className="text-text-muted text-xs font-medium">Duration</span>
           <button
             type="button"
-            className="p-1 rounded hover:bg-white/10"
+            className="p-1.5 rounded-md hover:bg-bg transition-colors"
             onClick={() => adjust(setRoundLen, "m", -1)}
+            aria-label="Decrease duration"
           >
-            <Minus className="w-3 h-3" />
+            <Minus className="w-4 h-4" />
           </button>
-          <span className="font-semibold">
+          <span className="font-mono tabular-nums font-semibold text-text-primary min-w-[3.5rem] text-center">
             {roundLen.m.toString().padStart(2, "0")}:
             {roundLen.s.toString().padStart(2, "0")}
           </span>
           <button
             type="button"
-            className="p-1 rounded hover:bg-white/10"
+            className="p-1.5 rounded-md hover:bg-bg transition-colors"
             onClick={() => adjust(setRoundLen, "m", +1)}
+            aria-label="Increase duration"
           >
-            <Plus className="w-3 h-3" />
+            <Plus className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="flex items-center gap-1 rounded-md bg-bg-raised px-2 py-1 text-text-muted">
-          <span>Rest</span>
+        <div className="flex items-center gap-2 rounded-lg bg-bg-raised border border-border-subtle px-3 py-2">
+          <span className="text-text-muted text-xs font-medium">Rest</span>
           <button
             type="button"
-            className="p-1 rounded hover:bg-white/10"
+            className="p-1.5 rounded-md hover:bg-bg transition-colors"
             onClick={() => adjust(setRestLen, "s", -5)}
+            aria-label="Decrease rest"
           >
-            <Minus className="w-3 h-3" />
+            <Minus className="w-4 h-4" />
           </button>
-          <span className="font-semibold">
+          <span className="font-mono tabular-nums font-semibold text-text-primary min-w-[3.5rem] text-center">
             {restLen.m.toString().padStart(2, "0")}:
             {restLen.s.toString().padStart(2, "0")}
           </span>
           <button
             type="button"
-            className="p-1 rounded hover:bg-white/10"
+            className="p-1.5 rounded-md hover:bg-bg transition-colors"
             onClick={() => adjust(setRestLen, "s", +5)}
+            aria-label="Increase rest"
           >
-            <Plus className="w-3 h-3" />
+            <Plus className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="flex items-center gap-1 rounded-md bg-bg-raised px-2 py-1 text-text-muted">
-          <span>Rounds</span>
+        <div className="flex items-center gap-2 rounded-lg bg-bg-raised border border-border-subtle px-3 py-2">
+          <span className="text-text-muted text-xs font-medium">Rounds</span>
           <button
             type="button"
-            className="p-1 rounded hover:bg-white/10"
+            className="p-1.5 rounded-md hover:bg-bg transition-colors"
             onClick={() =>
               setTotalRounds((r) => Math.max(1, Math.min(99, r - 1)))
             }
+            aria-label="Decrease rounds"
           >
-            <Minus className="w-3 h-3" />
+            <Minus className="w-4 h-4" />
           </button>
-          <span className="font-semibold">{totalRounds}</span>
+          <span className="font-mono tabular-nums font-semibold text-text-primary min-w-[2rem] text-center">
+            {totalRounds}
+          </span>
           <button
             type="button"
-            className="p-1 rounded hover:bg-white/10"
+            className="p-1.5 rounded-md hover:bg-bg transition-colors"
             onClick={() =>
               setTotalRounds((r) => Math.max(1, Math.min(99, r + 1)))
             }
+            aria-label="Increase rounds"
           >
-            <Plus className="w-3 h-3" />
+            <Plus className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      <div className="flex justify-center gap-3">
+      <div className="flex justify-center gap-3 pt-2">
         {phase === "paused" || phase === "countdown" || phase === "finished" ? (
           <Button
             size="lg"
             onClick={start}
-            className="font-mono tracking-wider min-w-[120px]"
+            className="min-w-[120px]"
           >
-            <Play className="w-4 h-4 mr-1" />
+            <Play className="w-4 h-4 mr-2" />
             Start
           </Button>
         ) : (
@@ -313,9 +328,9 @@ export const TimerTool: React.FC = () => {
             size="lg"
             variant="outline"
             onClick={pause}
-            className="font-mono tracking-wider min-w-[120px]"
+            className="min-w-[120px]"
           >
-            <Pause className="w-4 h-4 mr-1" />
+            <Pause className="w-4 h-4 mr-2" />
             Pause
           </Button>
         )}
@@ -323,9 +338,8 @@ export const TimerTool: React.FC = () => {
           size="lg"
           variant="ghost"
           onClick={reset}
-          className="font-mono tracking-wider"
         >
-          <RotateCcw className="w-4 h-4 mr-1" />
+          <RotateCcw className="w-4 h-4 mr-2" />
           Reset
         </Button>
       </div>

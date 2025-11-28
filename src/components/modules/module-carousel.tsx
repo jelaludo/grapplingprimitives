@@ -10,21 +10,10 @@ interface ModuleCarouselProps {
 
 export function ModuleCarousel({ modules }: ModuleCarouselProps) {
   return (
-    <div className="relative">
-      <div className="overflow-x-auto scrollbar-hide pb-4 -mx-4 sm:mx-0">
-        <div className="flex gap-4 px-4 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {modules.map((module) => (
-            <div
-              key={module.id}
-              className={cn(
-                "flex-shrink-0 w-[280px] sm:w-auto"
-              )}
-            >
-              <ModuleCard module={module} variant="carousel" />
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {modules.map((module) => (
+        <ModuleCard key={module.id} module={module} variant="carousel" />
+      ))}
     </div>
   );
 }

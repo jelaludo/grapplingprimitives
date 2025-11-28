@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { ConceptPoint, CONCEPTS } from "@/data/concepts";
 import { usePanZoom } from "@/lib/matrix/panzoom";
 import { getViewBox } from "@/lib/matrix/scales";
@@ -48,6 +49,8 @@ export function ConceptMatrix({
   const [selectedConcept, setSelectedConcept] = useState<ConceptPoint | null>(null);
   const [hoveredConcept, setHoveredConcept] = useState<ConceptPoint | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [mounted, setMounted] = useState(false);
+  const [tooltipScreenPosition, setTooltipScreenPosition] = useState({ x: 0, y: 0 });
   const [concepts, setConcepts] = useState<ConceptPoint[]>(initialConcepts || CONCEPTS);
   const [loading, setLoading] = useState(!initialConcepts);
   const [conceptData, setConceptData] = useState<ConceptData | null>(null);
@@ -129,6 +132,7 @@ export function ConceptMatrix({
 
   // Update dimensions on mount and resize
   useEffect(() => {
+    setMounted(true);
     const updateDimensions = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
@@ -193,26 +197,55 @@ export function ConceptMatrix({
     e.stopPropagation();
     setSelectedConcept(concept);
     
-    if (e.type === "touchstart") {
-      const touch = (e as React.TouchEvent).touches[0];
-      const rect = containerRef.current?.getBoundingClientRect();
-      if (rect) {
-        setTooltipPosition({
-          x: touch.clientX - rect.left,
-          y: touch.clientY - rect.top,
-        });
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (rect) {
+      let clientX: number, clientY: number;
+      
+      if (e.type === "touchstart") {
+        const touch = (e as React.TouchEvent).touches[0];
+        clientX = touch.clientX;
+        clientY = touch.clientY;
+      } else {
+        const mouse = e as React.MouseEvent;
+        clientX = mouse.clientX;
+        clientY = mouse.clientY;
       }
-    } else {
-      const mouse = e as React.MouseEvent;
-      const rect = containerRef.current?.getBoundingClientRect();
-      if (rect) {
-        setTooltipPosition({
-          x: mouse.clientX - rect.left,
-          y: mouse.clientY - rect.top,
-        });
-      }
+      
+      setTooltipPosition({
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+      });
+      
+      setTooltipScreenPosition({
+        x: clientX,
+        y: clientY,
+      });
     }
   };
+
+  // Update tooltip screen position on scroll/resize
+  useEffect(() => {
+    if (!selectedConcept || !containerRef.current) return;
+
+    const updatePosition = () => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (rect) {
+        setTooltipScreenPosition({
+          x: tooltipPosition.x + rect.left,
+          y: tooltipPosition.y + rect.top,
+        });
+      }
+    };
+
+    updatePosition();
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [selectedConcept, tooltipPosition]);
 
   const viewport = {
     width: dimensions.width,
@@ -509,31 +542,56 @@ export function ConceptMatrix({
         />
       </div>
 
-      {/* Tooltip/Card for selected concept */}
-      {selectedConcept && (
+      {/* Tooltip/Card for selected concept - rendered via portal, centered on screen */}
+      {selectedConcept && mounted && typeof document !== 'undefined' && createPortal(
         <div
-          className="absolute z-10 pointer-events-none"
+          className="fixed z-[9999] pointer-events-auto"
           style={{
-            left: `${tooltipPosition.x}px`,
-            top: `${tooltipPosition.y}px`,
-            transform: "translate(-50%, -100%)",
-            marginTop: "-8px",
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            maxWidth: '90vw',
+            maxHeight: '90vh',
           }}
         >
-          <Card className="bg-bg-raised border-border-subtle p-3 min-w-[200px] max-w-[300px]">
-            <div className="space-y-2">
+          <Card className="bg-bg-raised border-border-subtle p-4 min-w-[280px] max-w-[400px] shadow-2xl">
+            <div className="space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <h4 className="font-semibold text-sm">{selectedConcept.label}</h4>
+                <h4 className="font-semibold text-base">{selectedConcept.label}</h4>
                 <Badge variant="outline" className="border-border-subtle text-xs">
                   {selectedConcept.category}
                 </Badge>
               </div>
               {selectedConcept.description && (
-                <p className="text-xs text-text-muted">{selectedConcept.description}</p>
+                <div className="max-h-[60vh] overflow-y-auto">
+                  <p className="text-sm text-text-primary whitespace-pre-wrap break-words leading-relaxed">
+                    {selectedConcept.description}
+                  </p>
+                </div>
               )}
+              <div className="flex justify-end pt-2 border-t border-border-subtle">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedConcept(null)}
+                  className="text-xs"
+                >
+                  Close
+                </Button>
+              </div>
             </div>
           </Card>
-        </div>
+        </div>,
+        document.body
+      )}
+      
+      {/* Backdrop overlay */}
+      {selectedConcept && mounted && typeof document !== 'undefined' && createPortal(
+        <div
+          className="fixed inset-0 z-[9998] bg-black/50 backdrop-blur-sm"
+          onClick={() => setSelectedConcept(null)}
+        />,
+        document.body
       )}
 
       {/* Click outside to deselect */}

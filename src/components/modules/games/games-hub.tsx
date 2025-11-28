@@ -145,39 +145,50 @@ export const GamesHub: React.FC<GamesHubProps> = ({ onExit, initial = 'none' }) 
   };
 
   return (
-    <div className="w-full font-mono tracking-wider">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Games</h2>
-        {onExit && (
-          <Button variant="outline" size="sm" onClick={onExit} className="font-mono tracking-wider">
-            <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Modules
-          </Button>
-        )}
+    <div className="w-full space-y-6">
+      <div className="space-y-2">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl sm:text-3xl font-semibold">Games Hub</h2>
+          {onExit && (
+            <Button variant="outline" size="sm" onClick={onExit}>
+              <ArrowLeft className="w-4 h-4 mr-1" />
+              Back
+            </Button>
+          )}
+        </div>
+        <p className="text-sm text-text-muted">
+          Interactive training games to improve spatial reasoning, memory, and pattern recognition.
+        </p>
       </div>
-      <div className="grid gap-2 md:gap-4 grid-cols-1 md:grid-cols-2">
-        <Card className="aspect-[1/1.2] md:aspect-[2/3] max-h-[380px] md:max-h-[520px] rounded-xl overflow-hidden flex">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="rounded-xl overflow-hidden border-border-subtle hover:border-accent-primary/50 transition-colors">
           <button
             onClick={() => setSelected('centroid')}
-            className="flex flex-col gap-1 md:gap-2 flex-1 p-2 md:p-4 text-left w-full"
+            className="flex flex-col h-full w-full text-left"
           >
-            <CardHeader className="p-0">
-              <CardTitle className="text-lg font-mono">Centroid</CardTitle>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-semibold">Centroid</CardTitle>
+              <CardDescription className="text-xs">
+                Estimate the center of mass of scattered points. Improves spatial reasoning and pattern recognition.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 flex items-stretch justify-center w-full p-0">
+            <CardContent className="flex-1 flex items-center justify-center p-4 pt-0">
               {renderCentroidPreview()}
             </CardContent>
           </button>
         </Card>
-        <Card className="aspect-[1/1.2] md:aspect-[2/3] max-h-[380px] md:max-h-[520px] rounded-xl overflow-hidden flex">
+        <Card className="rounded-xl overflow-hidden border-border-subtle hover:border-accent-primary/50 transition-colors">
           <button
             onClick={() => setSelected('memory')}
-            className="flex flex-col gap-1 md:gap-2 flex-1 p-2 md:p-4 text-left w-full"
+            className="flex flex-col h-full w-full text-left"
           >
-            <CardHeader className="p-0">
-              <CardTitle className="text-lg font-mono">JJJ Memory</CardTitle>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-semibold">JJJ Memory</CardTitle>
+              <CardDescription className="text-xs">
+                Match pairs of technique cards. Enhances visual memory and technique recognition.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 flex items-stretch justify-center w-full p-0">
+            <CardContent className="flex-1 flex items-center justify-center p-4 pt-0">
               {renderMemoryPreview()}
             </CardContent>
           </button>
