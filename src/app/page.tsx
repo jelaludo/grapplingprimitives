@@ -2,6 +2,7 @@ import { MODULES } from "@/data/modules";
 import { Button } from "@/components/ui/button";
 import { ModuleCarousel } from "@/components/modules/module-carousel";
 import { ModuleGrid } from "@/components/modules/module-grid";
+import { RetroTerminalOverlay } from "@/components/retro-terminal-overlay";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -9,7 +10,9 @@ export default function HomePage() {
   const allModules = MODULES.sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
-    <div className="flex flex-col space-y-12 sm:space-y-16 py-8 sm:py-12">
+    <>
+      <RetroTerminalOverlay />
+      <div className="flex flex-col space-y-12 sm:space-y-16 py-8 sm:py-12">
       {/* Hero Section */}
       <section className="flex flex-col items-center text-center space-y-6 sm:space-y-8 animate-fade-in">
         <div className="space-y-4 sm:space-y-6">
@@ -45,6 +48,7 @@ export default function HomePage() {
         <ModuleGrid modules={allModules} />
       </section>
     </div>
+    </>
   );
 }
 

@@ -15,6 +15,9 @@ import { BreathingCycles } from "@/components/modules/breathing/breathing-cycles
 import { SkillCheck } from "@/components/modules/skill-check/skill-check";
 import { WeightClassTool } from "@/components/modules/weight-class/weight-class-tool";
 import { BeltDropout } from "@/components/modules/belt-dropout/belt-dropout";
+import { StoriesHub } from "@/components/modules/stories/stories-hub";
+import { BeyondOffenseDefense } from "@/components/modules/beyond-offense-defense/beyond-offense-defense";
+import { VisualNotes } from "@/components/modules/visual-notes/visual-notes";
 
 interface ModulePageProps {
   params: Promise<{ slug: string }>;
@@ -36,10 +39,12 @@ export default async function ModulePage({ params }: ModulePageProps) {
 
   return (
     <div className="container mx-auto py-8 sm:py-12 space-y-8">
-      <div className="space-y-4">
-        <h1 className="text-3xl sm:text-4xl font-bold">{module.title}</h1>
-        <p className="text-lg text-text-muted">{module.shortDescription}</p>
-      </div>
+      {module.slug !== "beyond-offense-defense" && (
+        <div className="space-y-4">
+          <h1 className="text-3xl sm:text-4xl font-bold">{module.title}</h1>
+          <p className="text-lg text-text-muted">{module.shortDescription}</p>
+        </div>
+      )}
 
       {module.slug === "concept-matrix" ? (
         <div className="space-y-4">
@@ -135,6 +140,28 @@ export default async function ModulePage({ params }: ModulePageProps) {
       ) : module.slug === "belt-dropout" ? (
         <div className="space-y-4">
           <BeltDropout />
+        </div>
+      ) : module.slug === "stories" ? (
+        <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Stories</CardTitle>
+              <CardDescription>
+                Explore visual stories and narratives about grappling.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <StoriesHub />
+            </CardContent>
+          </Card>
+        </div>
+      ) : module.slug === "beyond-offense-defense" ? (
+        <div className="space-y-4">
+          <BeyondOffenseDefense />
+        </div>
+      ) : module.slug === "visual-notes" ? (
+        <div className="space-y-4">
+          <VisualNotes />
         </div>
       ) : (
         <Card>

@@ -122,7 +122,7 @@ const MODULES = [
         slug: "belt-dropout",
         title: "Belt Dropout",
         shortDescription: "Visualize belt progression and dropout rates.",
-        category: "Tools",
+        category: "Visualizations",
         icon: "award",
         featured: false,
         order: 11
@@ -146,6 +146,26 @@ const MODULES = [
         icon: "book",
         featured: false,
         order: 13
+    },
+    {
+        id: "beyond-offense-defense",
+        slug: "beyond-offense-defense",
+        title: "Beyond Offense and Defense",
+        shortDescription: "Visualize the progression from worst to best position in a match.",
+        category: "Visualizations",
+        icon: "trending-up",
+        featured: false,
+        order: 14
+    },
+    {
+        id: "visual-notes",
+        slug: "visual-notes",
+        title: "Visual Notes",
+        shortDescription: "Visual notes I took over the years",
+        category: "Visualizations",
+        icon: "image",
+        featured: false,
+        order: 15
     }
 ];
 }),

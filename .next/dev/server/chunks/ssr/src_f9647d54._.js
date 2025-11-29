@@ -8593,7 +8593,8 @@ const BELTS = [
         mean: 0.92,
         stdDev: 0.04,
         amplitude: 50,
-        dropoutReasons: []
+        dropoutReasons: [],
+        minX: 0.55 // Minimum X position - lowest 1% black belt should be as good as median purple (0.55)
     }
 ];
 // Easing functions for smooth animation
@@ -8656,8 +8657,8 @@ const BeltDropout = ()=>{
                 progress: 0,
                 state: 'spawning',
                 proficiency,
-                startTime: Date.now() + i * 20,
-                duration: 800 + Math.random() * 400 // Individual duration
+                startTime: Date.now() + i * 10,
+                duration: 400 + Math.random() * 200 // Individual duration (2x faster)
             });
         }
         setDots(newDots);
@@ -8698,20 +8699,22 @@ const BeltDropout = ()=>{
                 // Keep settled dropouts as-is (they're done, never process again)
                 if (dot.state === 'settled' && dot.dropoutReason) {
                     updatedDots.push(dot);
-                } else if (dot.state === 'dropping') {
-                    // Keep dropping dots, they'll settle when animation completes
+                    return; // Skip further processing
+                }
+                // Skip if already processed this year
+                if (dot.lastProcessedYear === newYear) {
                     updatedDots.push(dot);
-                } else if (dot.state === 'settling') {
-                    // Keep dots that are settling into bell curves
-                    updatedDots.push(dot);
-                } else if (dot.lastProcessedYear === newYear) {
-                    // This dot was already processed this year, skip it
-                    // This prevents double-processing if progressToNextYear is called multiple times
-                    updatedDots.push(dot);
-                } else {
-                    // Process dots that are settled in bell curves OR still flowing
-                    // Settled dots in bell curves can still progress to next belt
+                    return; // Skip further processing
+                }
+                // Process dots that are settled OR spawning (for any year white belts)
+                // Dots in 'settling' or 'dropping' state are still animating and will be processed when they settle
+                if (dot.state === 'settled' && !dot.dropoutReason || dot.state === 'spawning' && dot.belt === 'white') {
+                    // This dot is settled in a bell curve and ready to be processed
+                    // OR it's a white belt that needs initial processing (year 0 or new students)
                     beltCounts[dot.belt].push(dot);
+                } else {
+                    // Keep animating dots but don't process them yet
+                    updatedDots.push(dot);
                 }
             });
             // Add new white belts each year (fresh influx)
@@ -8736,8 +8739,8 @@ const BeltDropout = ()=>{
                         progress: 0,
                         state: 'spawning',
                         proficiency,
-                        startTime: Date.now() + i * 20,
-                        duration: 800 + Math.random() * 400,
+                        startTime: Date.now() + i * 10,
+                        duration: 400 + Math.random() * 200,
                         lastProcessedYear: newYear // Mark new students as processed this year
                     });
                 }
@@ -8807,7 +8810,10 @@ const BeltDropout = ()=>{
                     // Minimal stacking - only if dots are very close, and with variation
                     const baseStack = veryNearbyDropouts.length * 2; // Reduced from 6px to 2px
                     const scatterY = (Math.random() - 0.5) * 8; // ±4px vertical scatter
-                    const dropoutY = dropoutBucketBaseY - baseStack + scatterY;
+                    // Ensure dropouts stay within bucket bounds (bucket goes from dropoutBucketBaseY - 150 to dropoutBucketBaseY)
+                    const bucketTop = dropoutBucketBaseY - 150;
+                    const bucketBottom = dropoutBucketBaseY;
+                    const dropoutY = Math.max(bucketTop, Math.min(bucketBottom, dropoutBucketBaseY - baseStack + scatterY));
                     updatedDots.push({
                         ...dot,
                         targetX: finalDropoutX,
@@ -8815,31 +8821,31 @@ const BeltDropout = ()=>{
                         state: 'dropping',
                         progress: 0,
                         dropoutReason: getRandomDropoutReason(beltConfig),
-                        startTime: Date.now() + index * 20,
-                        duration: 1000 + Math.random() * 500,
+                        startTime: Date.now() + index * 10,
+                        duration: 500 + Math.random() * 250,
                         lastProcessedYear: newYear // Mark as processed this year
                     });
                 });
-                // Track dropouts
-                setTotalDroppedOut((prev)=>prev + dropoutCount);
+                // Don't track dropouts here - we'll calculate it from the final dots array to avoid double counting
                 // Progressors - some progress, some stay at current belt
                 const progressors = shuffled.slice(dropoutCount, dropoutCount + progressCount);
                 // Calculate progression rate: adjusted to get ~10 black belts (0.75% of starters) in 13 years
-                // Need faster progression at higher belts to reach black belt
-                // White belts: ~12-18% progress per year (need ~2-3 years average)
-                // Blue belts: ~15-22% progress per year (need ~3-4 years average)
-                // Purple belts: ~18-25% progress per year (need ~3-4 years average)
-                // Brown belts: ~20-28% progress per year (need ~4-5 years average)
+                // Need faster progression to get people through 4 belt levels in 13 years
+                // Accounting for dropout rates, we need higher progression rates
+                // White belts: ~25-35% progress per year (need ~3-4 years average to progress)
+                // Blue belts: ~30-40% progress per year (need ~2.5-3 years average)
+                // Purple belts: ~35-45% progress per year (need ~2-3 years average)
+                // Brown belts: ~40-50% progress per year (need ~2-2.5 years average)
                 // Black belts: all stay (no higher belt)
                 const baseProgressionRates = [
-                    0.15,
-                    0.18,
-                    0.22,
-                    0.24,
+                    0.30,
+                    0.35,
+                    0.40,
+                    0.45,
                     0.0
                 ]; // Higher base rates to reach black
-                // Add some randomization: ±4% variation
-                const progressionRate = beltIndex < baseProgressionRates.length ? Math.max(0.08, Math.min(0.30, baseProgressionRates[beltIndex] + (Math.random() - 0.5) * 0.08)) : 0.0;
+                // Add some randomization: ±5% variation
+                const progressionRate = beltIndex < baseProgressionRates.length ? Math.max(0.20, Math.min(0.55, baseProgressionRates[beltIndex] + (Math.random() - 0.5) * 0.10)) : 0.0;
                 const actualProgressCount = Math.floor(progressors.length * progressionRate);
                 const stayCount = progressors.length - actualProgressCount;
                 const sortedProgressors = [
@@ -8850,10 +8856,23 @@ const BeltDropout = ()=>{
                 // Dots that stay at current belt
                 const stayers = sortedProgressors.slice(actualProgressCount);
                 // Handle stayers - keep them at current belt's bell curve
-                stayers.forEach((dot, idx)=>{
+                // Sort by proficiency to distribute evenly along the bell curve
+                const sortedStayers = [
+                    ...stayers
+                ].sort((a, b)=>a.proficiency - b.proficiency);
+                sortedStayers.forEach((dot, idx)=>{
                     const beltForCurve = randomizedBeltConfigs[beltIndex];
-                    const zScore = (dot.proficiency - 0.5) * 2;
-                    const currentBeltX = beltForCurve.mean * canvasWidth + zScore * beltForCurve.stdDev * canvasWidth;
+                    // Use index-based distribution to ensure even spread across bell curve
+                    // Map index (0 to length-1) to a normal distribution using inverse CDF approximation
+                    const normalizedIndex = stayers.length > 1 ? idx / (stayers.length - 1) : 0.5; // 0 to 1
+                    // Convert to z-score using inverse normal CDF approximation (Box-Muller transform approximation)
+                    // This gives us a more even distribution across the bell curve
+                    const zScore = (normalizedIndex - 0.5) * 4; // Scale to ±2 standard deviations
+                    let currentBeltX = beltForCurve.mean * canvasWidth + zScore * beltForCurve.stdDev * canvasWidth;
+                    // For black belt, clamp X to minimum (don't extend below purple median)
+                    if (beltForCurve.name === 'Black' && beltForCurve.minX) {
+                        currentBeltX = Math.max(beltForCurve.minX * canvasWidth, currentBeltX);
+                    }
                     const currentBeltY = getBellCurveYLocal(currentBeltX, beltIndex);
                     updatedDots.push({
                         ...dot,
@@ -8861,19 +8880,29 @@ const BeltDropout = ()=>{
                         targetY: currentBeltY,
                         state: 'settling',
                         progress: 0,
-                        startTime: Date.now() + idx * 10,
-                        duration: 1200 + Math.random() * 600,
+                        startTime: Date.now() + idx * 5,
+                        duration: 600 + Math.random() * 300,
                         lastProcessedYear: newYear // Mark as processed this year
                     });
                 });
                 if (beltIndex < BELTS.length - 1) {
                     // Move to next belt - distribute along the next belt's bell curve
                     const nextBelt = BELTS[beltIndex + 1];
-                    progressorsToNext.forEach((dot, idx)=>{
-                        // Calculate position along next belt's bell curve based on proficiency
+                    // Sort progressors by proficiency to distribute evenly
+                    const sortedProgressorsToNext = [
+                        ...progressorsToNext
+                    ].sort((a, b)=>a.proficiency - b.proficiency);
+                    sortedProgressorsToNext.forEach((dot, idx)=>{
+                        // Calculate position along next belt's bell curve
                         const beltForCurve = randomizedBeltConfigs[beltIndex + 1];
-                        const zScore = (dot.proficiency - 0.5) * 2; // -1 to 1
-                        const nextBeltX = beltForCurve.mean * canvasWidth + zScore * beltForCurve.stdDev * canvasWidth;
+                        // Use index-based distribution to ensure even spread across bell curve
+                        const normalizedIndex = progressorsToNext.length > 1 ? idx / (progressorsToNext.length - 1) : 0.5;
+                        const zScore = (normalizedIndex - 0.5) * 4; // Scale to ±2 standard deviations
+                        let nextBeltX = beltForCurve.mean * canvasWidth + zScore * beltForCurve.stdDev * canvasWidth;
+                        // For black belt, clamp X to minimum (don't extend below purple median)
+                        if (beltForCurve.name === 'Black' && beltForCurve.minX) {
+                            nextBeltX = Math.max(beltForCurve.minX * canvasWidth, nextBeltX);
+                        }
                         const nextBeltY = getBellCurveYLocal(nextBeltX, beltIndex + 1);
                         updatedDots.push({
                             ...dot,
@@ -8890,11 +8919,21 @@ const BeltDropout = ()=>{
                 } else if (newYear < 13) {
                     // Not final year yet - keep progressing (black belts can still progress conceptually)
                     // For now, keep them at their current belt
-                    progressors.forEach((dot)=>{
+                    // Sort by proficiency to distribute evenly
+                    const sortedProgressorsFinal = [
+                        ...progressors
+                    ].sort((a, b)=>a.proficiency - b.proficiency);
+                    sortedProgressorsFinal.forEach((dot, idx)=>{
                         const beltIndexForCurve = BELTS.findIndex((b)=>b.name.toLowerCase() === dot.belt);
                         const beltForCurve = randomizedBeltConfigs[beltIndexForCurve];
-                        const zScore = (dot.proficiency - 0.5) * 2;
-                        const finalX = beltForCurve.mean * canvasWidth + zScore * beltForCurve.stdDev * canvasWidth;
+                        // Use index-based distribution to ensure even spread
+                        const normalizedIndex = progressors.length > 1 ? idx / (progressors.length - 1) : 0.5;
+                        const zScore = (normalizedIndex - 0.5) * 4; // Scale to ±2 standard deviations
+                        let finalX = beltForCurve.mean * canvasWidth + zScore * beltForCurve.stdDev * canvasWidth;
+                        // For black belt, clamp X to minimum (don't extend below purple median)
+                        if (beltForCurve.name === 'Black' && beltForCurve.minX) {
+                            finalX = Math.max(beltForCurve.minX * canvasWidth, finalX);
+                        }
                         const finalYPos = getBellCurveYLocal(finalX, beltIndexForCurve);
                         updatedDots.push({
                             ...dot,
@@ -8902,7 +8941,7 @@ const BeltDropout = ()=>{
                             targetY: finalYPos,
                             state: 'settling',
                             progress: 0,
-                            startTime: Date.now(),
+                            startTime: Date.now() + idx * 10,
                             duration: 1200 + Math.random() * 600,
                             lastProcessedYear: newYear // Mark as processed this year
                         });
@@ -8916,10 +8955,14 @@ const BeltDropout = ()=>{
                     sortedProgressors.forEach((dot, index)=>{
                         const beltIndexForCurve = BELTS.findIndex((b)=>b.name.toLowerCase() === dot.belt);
                         const beltForCurve = randomizedBeltConfigs[beltIndexForCurve];
-                        // Distribute evenly along the bell curve using proficiency
-                        // Use a normal distribution mapping based on proficiency
-                        const zScore = (dot.proficiency - 0.5) * 2; // Map 0-1 to -1 to 1
-                        const finalX = beltForCurve.mean * canvasWidth + zScore * beltForCurve.stdDev * canvasWidth;
+                        // Use index-based distribution to ensure even spread across bell curve
+                        const normalizedIndex = sortedProgressors.length > 1 ? index / (sortedProgressors.length - 1) : 0.5;
+                        const zScore = (normalizedIndex - 0.5) * 4; // Scale to ±2 standard deviations
+                        let finalX = beltForCurve.mean * canvasWidth + zScore * beltForCurve.stdDev * canvasWidth;
+                        // For black belt, clamp X to minimum (don't extend below purple median)
+                        if (beltForCurve.name === 'Black' && beltForCurve.minX) {
+                            finalX = Math.max(beltForCurve.minX * canvasWidth, finalX);
+                        }
                         const finalYPos = getBellCurveYLocal(finalX, beltIndexForCurve);
                         updatedDots.push({
                             ...dot,
@@ -8927,14 +8970,21 @@ const BeltDropout = ()=>{
                             targetY: finalYPos,
                             state: 'settling',
                             progress: 0,
-                            startTime: Date.now() + index * 10,
-                            duration: 1500 + Math.random() * 500,
+                            startTime: Date.now() + index * 5,
+                            duration: 750 + Math.random() * 250,
                             lastProcessedYear: newYear // Mark as processed this year
                         });
                     });
                 }
             });
-            return updatedDots;
+            // Remove any duplicate dots (by ID) to prevent double counting
+            const uniqueDots = updatedDots.reduce((acc, dot)=>{
+                if (!acc.find((d)=>d.id === dot.id)) {
+                    acc.push(dot);
+                }
+                return acc;
+            }, []);
+            return uniqueDots;
         });
     }, [
         getRandomDropoutReason,
@@ -8986,7 +9036,10 @@ const BeltDropout = ()=>{
                             // Add scatter for natural floor effect
                             const scatterY = (Math.random() - 0.5) * 8;
                             const baseStack = nearbySettled.length * 2; // Reduced stacking
-                            finalYPos = dropoutBucketBaseY - baseStack + scatterY;
+                            // Ensure dropouts stay within bucket bounds
+                            const bucketTop = dropoutBucketBaseY - 150;
+                            const bucketBottom = dropoutBucketBaseY;
+                            finalYPos = Math.max(bucketTop, Math.min(bucketBottom, dropoutBucketBaseY - baseStack + scatterY));
                         } else if (dot.state === 'flowing') {
                         // Keep as 'flowing' but mark progress as complete for year progression detection
                         // The dot is now at its belt position and ready for next year's decisions
@@ -9023,7 +9076,7 @@ const BeltDropout = ()=>{
                                     progressToNextYear(nextYear);
                                     return nextYear;
                                 });
-                            }, 500);
+                            }, 250); // 2x faster
                         }
                     } else if (activeDots.length === 0 && currentYear < 13) {
                         // All dots are settled, progress anyway
@@ -9080,16 +9133,20 @@ const BeltDropout = ()=>{
         BELTS.forEach((belt, beltIndex)=>{
             // Special handling for black belt
             if (belt.name === 'Black') {
+                // Calculate minimum X position (clamp to purple median if specified)
+                const minX = belt.minX ? belt.minX * canvasWidth : 0;
                 // Draw lighter grey outline first (thicker)
                 ctx.strokeStyle = '#808080'; // Lighter grey outline
                 ctx.lineWidth = 4;
                 ctx.beginPath();
-                for(let x = 0; x < canvasWidth; x += 2){
+                let firstPoint = true;
+                for(let x = minX; x < canvasWidth; x += 2){
                     const normalizedX = (x / canvasWidth - belt.mean) / belt.stdDev;
                     const bellHeight = belt.amplitude * Math.exp(-(normalizedX * normalizedX) / 2);
                     const y = bellCurveBaseY - bellHeight;
-                    if (x === 0) {
+                    if (firstPoint) {
                         ctx.moveTo(x, y);
+                        firstPoint = false;
                     } else {
                         ctx.lineTo(x, y);
                     }
@@ -9099,12 +9156,14 @@ const BeltDropout = ()=>{
                 ctx.strokeStyle = belt.color;
                 ctx.lineWidth = 3;
                 ctx.beginPath();
-                for(let x = 0; x < canvasWidth; x += 2){
+                firstPoint = true;
+                for(let x = minX; x < canvasWidth; x += 2){
                     const normalizedX = (x / canvasWidth - belt.mean) / belt.stdDev;
                     const bellHeight = belt.amplitude * Math.exp(-(normalizedX * normalizedX) / 2);
                     const y = bellCurveBaseY - bellHeight;
-                    if (x === 0) {
+                    if (firstPoint) {
                         ctx.moveTo(x, y);
+                        firstPoint = false;
                     } else {
                         ctx.lineTo(x, y);
                     }
@@ -9207,8 +9266,6 @@ const BeltDropout = ()=>{
     const handleStart = ()=>{
         if (dots.length === 0) {
             generateInitialCohort();
-        // White belts will go directly to bell curve or dropout via progressToNextYear
-        // No need to flow to intermediate positions
         }
         setIsRunning(true);
     };
@@ -9248,20 +9305,20 @@ const BeltDropout = ()=>{
                             children: "Belt Dropout Visualization"
                         }, void 0, false, {
                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                            lineNumber: 794,
+                            lineNumber: 858,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
                             children: "Watch individual students progress through belt levels. Each dot represents a student moving independently."
                         }, void 0, false, {
                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                            lineNumber: 795,
+                            lineNumber: 859,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                    lineNumber: 793,
+                    lineNumber: 857,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -9279,7 +9336,7 @@ const BeltDropout = ()=>{
                                                 className: "w-4 h-4 mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                lineNumber: 808,
+                                                lineNumber: 872,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             "Pause"
@@ -9290,7 +9347,7 @@ const BeltDropout = ()=>{
                                                 className: "w-4 h-4 mr-2"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                lineNumber: 813,
+                                                lineNumber: 877,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             "Start"
@@ -9298,7 +9355,7 @@ const BeltDropout = ()=>{
                                     }, void 0, true)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                    lineNumber: 802,
+                                    lineNumber: 866,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -9309,14 +9366,14 @@ const BeltDropout = ()=>{
                                             className: "w-4 h-4 mr-2"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                            lineNumber: 819,
+                                            lineNumber: 883,
                                             columnNumber: 15
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         "Reset"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                    lineNumber: 818,
+                                    lineNumber: 882,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9328,13 +9385,13 @@ const BeltDropout = ()=>{
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                    lineNumber: 822,
+                                    lineNumber: 886,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                            lineNumber: 801,
+                            lineNumber: 865,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9347,14 +9404,14 @@ const BeltDropout = ()=>{
                                             className: "w-4 h-4"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                            lineNumber: 830,
+                                            lineNumber: 894,
                                             columnNumber: 15
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         "Dropout Rates (per belt level)"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                    lineNumber: 829,
+                                    lineNumber: 893,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9373,7 +9430,7 @@ const BeltDropout = ()=>{
                                                             children: belt.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 837,
+                                                            lineNumber: 901,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -9384,13 +9441,13 @@ const BeltDropout = ()=>{
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 840,
+                                                            lineNumber: 904,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                    lineNumber: 836,
+                                                    lineNumber: 900,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$slider$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Slider"], {
@@ -9404,24 +9461,24 @@ const BeltDropout = ()=>{
                                                     disabled: isRunning
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                    lineNumber: 844,
+                                                    lineNumber: 908,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, belt.name, true, {
                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                            lineNumber: 835,
+                                            lineNumber: 899,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)))
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                    lineNumber: 833,
+                                    lineNumber: 897,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                            lineNumber: 828,
+                            lineNumber: 892,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9435,12 +9492,12 @@ const BeltDropout = ()=>{
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                lineNumber: 859,
+                                lineNumber: 923,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                            lineNumber: 858,
+                            lineNumber: 922,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -9455,7 +9512,7 @@ const BeltDropout = ()=>{
                                             children: "Simulation Parameters"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                            lineNumber: 871,
+                                            lineNumber: 935,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9468,7 +9525,7 @@ const BeltDropout = ()=>{
                                                             children: "New White Belts Per Year:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 874,
+                                                            lineNumber: 938,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9476,7 +9533,7 @@ const BeltDropout = ()=>{
                                                             children: "About 100 (randomized 85-115 per year)"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 875,
+                                                            lineNumber: 939,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9484,13 +9541,13 @@ const BeltDropout = ()=>{
                                                             children: "Simulation runs for 13 years"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 876,
+                                                            lineNumber: 940,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                    lineNumber: 873,
+                                                    lineNumber: 937,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9500,7 +9557,7 @@ const BeltDropout = ()=>{
                                                             children: "Dropout Rates (per belt level, randomized):"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 879,
+                                                            lineNumber: 943,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9519,7 +9576,7 @@ const BeltDropout = ()=>{
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                            lineNumber: 883,
+                                                                            lineNumber: 947,
                                                                             columnNumber: 27
                                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -9530,7 +9587,7 @@ const BeltDropout = ()=>{
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                            lineNumber: 886,
+                                                                            lineNumber: 950,
                                                                             columnNumber: 27
                                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -9542,24 +9599,24 @@ const BeltDropout = ()=>{
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                            lineNumber: 889,
+                                                                            lineNumber: 953,
                                                                             columnNumber: 27
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     ]
                                                                 }, belt.name, true, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 882,
+                                                                    lineNumber: 946,
                                                                     columnNumber: 25
                                                                 }, ("TURBOPACK compile-time value", void 0)))
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 880,
+                                                            lineNumber: 944,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                    lineNumber: 878,
+                                                    lineNumber: 942,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9569,38 +9626,38 @@ const BeltDropout = ()=>{
                                                             children: "Progression Rates (of those who don't dropout, randomized):"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 897,
+                                                            lineNumber: 961,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             className: "space-y-1 text-xs",
                                                             children: [
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    children: "White → Blue: ~12-18% progress per year (avg ~2-3 years at white)"
+                                                                    children: "White → Blue: ~25-35% progress per year (avg ~3-4 years at white)"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 899,
+                                                                    lineNumber: 963,
                                                                     columnNumber: 23
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    children: "Blue → Purple: ~15-22% progress per year (avg ~3-4 years at blue)"
+                                                                    children: "Blue → Purple: ~30-40% progress per year (avg ~2.5-3 years at blue)"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 900,
+                                                                    lineNumber: 964,
                                                                     columnNumber: 23
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    children: "Purple → Brown: ~18-25% progress per year (avg ~3-4 years at purple)"
+                                                                    children: "Purple → Brown: ~35-45% progress per year (avg ~2-3 years at purple)"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 901,
+                                                                    lineNumber: 965,
                                                                     columnNumber: 23
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    children: "Brown → Black: ~20-28% progress per year (avg ~4-5 years at brown)"
+                                                                    children: "Brown → Black: ~40-50% progress per year (avg ~2-2.5 years at brown)"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 902,
+                                                                    lineNumber: 966,
                                                                     columnNumber: 23
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9608,41 +9665,41 @@ const BeltDropout = ()=>{
                                                                     children: "Target: ~10 black belts (~0.75% of starters) in 13 years"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 903,
+                                                                    lineNumber: 967,
                                                                     columnNumber: 23
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 898,
+                                                            lineNumber: 962,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                    lineNumber: 896,
+                                                    lineNumber: 960,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                            lineNumber: 872,
+                                            lineNumber: 936,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                    lineNumber: 870,
+                                    lineNumber: 934,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                lineNumber: 869,
+                                lineNumber: 933,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                            lineNumber: 868,
+                            lineNumber: 932,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Card"], {
@@ -9657,7 +9714,7 @@ const BeltDropout = ()=>{
                                             children: "Simulation Statistics"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                            lineNumber: 915,
+                                            lineNumber: 979,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9670,7 +9727,7 @@ const BeltDropout = ()=>{
                                                             children: "Total Started"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 920,
+                                                            lineNumber: 984,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9678,13 +9735,13 @@ const BeltDropout = ()=>{
                                                             children: totalStarted
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 921,
+                                                            lineNumber: 985,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                    lineNumber: 919,
+                                                    lineNumber: 983,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9694,32 +9751,32 @@ const BeltDropout = ()=>{
                                                             children: "Total Dropped Out"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 924,
+                                                            lineNumber: 988,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             className: "text-2xl font-bold text-red-400",
-                                                            children: totalDroppedOut
+                                                            children: dots.filter((d)=>d.dropoutReason).length
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 925,
+                                                            lineNumber: 989,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             className: "text-xs text-text-muted mt-1",
                                                             children: [
-                                                                totalStarted > 0 ? (totalDroppedOut / totalStarted * 100).toFixed(1) : '0.0',
+                                                                totalStarted > 0 ? (dots.filter((d)=>d.dropoutReason).length / totalStarted * 100).toFixed(1) : '0.0',
                                                                 "% dropout rate"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 926,
+                                                            lineNumber: 992,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                    lineNumber: 923,
+                                                    lineNumber: 987,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9729,7 +9786,7 @@ const BeltDropout = ()=>{
                                                             children: "Currently Active"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 931,
+                                                            lineNumber: 997,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9737,7 +9794,7 @@ const BeltDropout = ()=>{
                                                             children: dots.filter((d)=>!d.dropoutReason).length
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 932,
+                                                            lineNumber: 998,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9748,19 +9805,19 @@ const BeltDropout = ()=>{
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 935,
+                                                            lineNumber: 1001,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                    lineNumber: 930,
+                                                    lineNumber: 996,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                            lineNumber: 918,
+                                            lineNumber: 982,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -9777,7 +9834,7 @@ const BeltDropout = ()=>{
                                                                     children: "Belt"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 946,
+                                                                    lineNumber: 1012,
                                                                     columnNumber: 25
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -9785,7 +9842,7 @@ const BeltDropout = ()=>{
                                                                     children: "Current"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 947,
+                                                                    lineNumber: 1013,
                                                                     columnNumber: 25
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -9793,7 +9850,7 @@ const BeltDropout = ()=>{
                                                                     children: "Dropped Out"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 948,
+                                                                    lineNumber: 1014,
                                                                     columnNumber: 25
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -9806,13 +9863,13 @@ const BeltDropout = ()=>{
                                                                             children: "ⓘ"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                            lineNumber: 951,
+                                                                            lineNumber: 1017,
                                                                             columnNumber: 27
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 949,
+                                                                    lineNumber: 1015,
                                                                     columnNumber: 25
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -9820,18 +9877,18 @@ const BeltDropout = ()=>{
                                                                     children: "% of Active"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                    lineNumber: 953,
+                                                                    lineNumber: 1019,
                                                                     columnNumber: 25
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                            lineNumber: 945,
+                                                            lineNumber: 1011,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                        lineNumber: 944,
+                                                        lineNumber: 1010,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -9859,12 +9916,12 @@ const BeltDropout = ()=>{
                                                                             children: belt.name
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                            lineNumber: 972,
+                                                                            lineNumber: 1038,
                                                                             columnNumber: 31
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                        lineNumber: 971,
+                                                                        lineNumber: 1037,
                                                                         columnNumber: 29
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -9872,7 +9929,7 @@ const BeltDropout = ()=>{
                                                                         children: current
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                        lineNumber: 976,
+                                                                        lineNumber: 1042,
                                                                         columnNumber: 29
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -9880,7 +9937,7 @@ const BeltDropout = ()=>{
                                                                         children: dropped
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                        lineNumber: 979,
+                                                                        lineNumber: 1045,
                                                                         columnNumber: 29
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -9892,7 +9949,7 @@ const BeltDropout = ()=>{
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                        lineNumber: 982,
+                                                                        lineNumber: 1048,
                                                                         columnNumber: 29
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -9903,63 +9960,63 @@ const BeltDropout = ()=>{
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                        lineNumber: 985,
+                                                                        lineNumber: 1051,
                                                                         columnNumber: 29
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, belt.name, true, {
                                                                 fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                                lineNumber: 970,
+                                                                lineNumber: 1036,
                                                                 columnNumber: 27
                                                             }, ("TURBOPACK compile-time value", void 0));
                                                         })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                        lineNumber: 956,
+                                                        lineNumber: 1022,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                                lineNumber: 943,
+                                                lineNumber: 1009,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                            lineNumber: 942,
+                                            lineNumber: 1008,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                    lineNumber: 914,
+                                    lineNumber: 978,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                                lineNumber: 913,
+                                lineNumber: 977,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                            lineNumber: 912,
+                            lineNumber: 976,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-                    lineNumber: 799,
+                    lineNumber: 863,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-            lineNumber: 792,
+            lineNumber: 856,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/src/components/modules/belt-dropout/belt-dropout.tsx",
-        lineNumber: 791,
+        lineNumber: 855,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

@@ -33,6 +33,7 @@ interface BeltConfig {
   stdDev: number; // Standard deviation for bell curve
   amplitude: number; // Height of bell curve
   dropoutReasons: string[];
+  minX?: number; // Optional minimum X position (0-1) to clamp bell curve left edge
 }
 
 const BELTS: BeltConfig[] = [
@@ -79,7 +80,8 @@ const BELTS: BeltConfig[] = [
         mean: 0.92, // Shifted further right - worst black belt is better than 99.9% of white belts
         stdDev: 0.04, // Tighter distribution - black belts are more consistent
         amplitude: 50,
-        dropoutReasons: []
+        dropoutReasons: [],
+        minX: 0.55 // Minimum X position - lowest 1% black belt should be as good as median purple (0.55)
       }
 ];
 
@@ -151,8 +153,8 @@ export const BeltDropout: React.FC = () => {
         progress: 0,
         state: 'spawning',
         proficiency,
-        startTime: Date.now() + i * 20, // Stagger spawn times
-        duration: 800 + Math.random() * 400 // Individual duration
+        startTime: Date.now() + i * 10, // Stagger spawn times
+        duration: 400 + Math.random() * 200 // Individual duration (2x faster)
       });
     }
     
@@ -194,20 +196,24 @@ export const BeltDropout: React.FC = () => {
         // Keep settled dropouts as-is (they're done, never process again)
         if (dot.state === 'settled' && dot.dropoutReason) {
           updatedDots.push(dot);
-        } else if (dot.state === 'dropping') {
-          // Keep dropping dots, they'll settle when animation completes
+          return; // Skip further processing
+        }
+        
+        // Skip if already processed this year
+        if (dot.lastProcessedYear === newYear) {
           updatedDots.push(dot);
-        } else if (dot.state === 'settling') {
-          // Keep dots that are settling into bell curves
-          updatedDots.push(dot);
-        } else if (dot.lastProcessedYear === newYear) {
-          // This dot was already processed this year, skip it
-          // This prevents double-processing if progressToNextYear is called multiple times
-          updatedDots.push(dot);
-        } else {
-          // Process dots that are settled in bell curves OR still flowing
-          // Settled dots in bell curves can still progress to next belt
+          return; // Skip further processing
+        }
+        
+        // Process dots that are settled OR spawning (for any year white belts)
+        // Dots in 'settling' or 'dropping' state are still animating and will be processed when they settle
+        if ((dot.state === 'settled' && !dot.dropoutReason) || (dot.state === 'spawning' && dot.belt === 'white')) {
+          // This dot is settled in a bell curve and ready to be processed
+          // OR it's a white belt that needs initial processing (year 0 or new students)
           beltCounts[dot.belt].push(dot);
+        } else {
+          // Keep animating dots but don't process them yet
+          updatedDots.push(dot);
         }
       });
 
@@ -234,8 +240,8 @@ export const BeltDropout: React.FC = () => {
             progress: 0,
             state: 'spawning',
             proficiency,
-            startTime: Date.now() + i * 20,
-            duration: 800 + Math.random() * 400,
+            startTime: Date.now() + i * 10,
+            duration: 400 + Math.random() * 200,
             lastProcessedYear: newYear // Mark new students as processed this year
           });
         }
@@ -318,7 +324,10 @@ export const BeltDropout: React.FC = () => {
           // Minimal stacking - only if dots are very close, and with variation
           const baseStack = veryNearbyDropouts.length * 2; // Reduced from 6px to 2px
           const scatterY = (Math.random() - 0.5) * 8; // ±4px vertical scatter
-          const dropoutY = dropoutBucketBaseY - baseStack + scatterY;
+          // Ensure dropouts stay within bucket bounds (bucket goes from dropoutBucketBaseY - 150 to dropoutBucketBaseY)
+          const bucketTop = dropoutBucketBaseY - 150;
+          const bucketBottom = dropoutBucketBaseY;
+          const dropoutY = Math.max(bucketTop, Math.min(bucketBottom, dropoutBucketBaseY - baseStack + scatterY));
           
           updatedDots.push({
             ...dot,
@@ -327,29 +336,29 @@ export const BeltDropout: React.FC = () => {
             state: 'dropping',
             progress: 0,
             dropoutReason: getRandomDropoutReason(beltConfig),
-            startTime: Date.now() + index * 20, // Stagger slightly
-            duration: 1000 + Math.random() * 500,
+            startTime: Date.now() + index * 10, // Stagger slightly
+            duration: 500 + Math.random() * 250,
             lastProcessedYear: newYear // Mark as processed this year
           });
         });
         
-        // Track dropouts
-        setTotalDroppedOut(prev => prev + dropoutCount);
+        // Don't track dropouts here - we'll calculate it from the final dots array to avoid double counting
 
         // Progressors - some progress, some stay at current belt
         const progressors = shuffled.slice(dropoutCount, dropoutCount + progressCount);
         
         // Calculate progression rate: adjusted to get ~10 black belts (0.75% of starters) in 13 years
-        // Need faster progression at higher belts to reach black belt
-        // White belts: ~12-18% progress per year (need ~2-3 years average)
-        // Blue belts: ~15-22% progress per year (need ~3-4 years average)
-        // Purple belts: ~18-25% progress per year (need ~3-4 years average)
-        // Brown belts: ~20-28% progress per year (need ~4-5 years average)
+        // Need faster progression to get people through 4 belt levels in 13 years
+        // Accounting for dropout rates, we need higher progression rates
+        // White belts: ~25-35% progress per year (need ~3-4 years average to progress)
+        // Blue belts: ~30-40% progress per year (need ~2.5-3 years average)
+        // Purple belts: ~35-45% progress per year (need ~2-3 years average)
+        // Brown belts: ~40-50% progress per year (need ~2-2.5 years average)
         // Black belts: all stay (no higher belt)
-        const baseProgressionRates = [0.15, 0.18, 0.22, 0.24, 0.0]; // Higher base rates to reach black
-        // Add some randomization: ±4% variation
+        const baseProgressionRates = [0.30, 0.35, 0.40, 0.45, 0.0]; // Higher base rates to reach black
+        // Add some randomization: ±5% variation
         const progressionRate = beltIndex < baseProgressionRates.length 
-          ? Math.max(0.08, Math.min(0.30, baseProgressionRates[beltIndex] + (Math.random() - 0.5) * 0.08))
+          ? Math.max(0.20, Math.min(0.55, baseProgressionRates[beltIndex] + (Math.random() - 0.5) * 0.10))
           : 0.0;
         
         const actualProgressCount = Math.floor(progressors.length * progressionRate);
@@ -364,11 +373,24 @@ export const BeltDropout: React.FC = () => {
         const stayers = sortedProgressors.slice(actualProgressCount);
         
         // Handle stayers - keep them at current belt's bell curve
-        stayers.forEach((dot, idx) => {
+        // Sort by proficiency to distribute evenly along the bell curve
+        const sortedStayers = [...stayers].sort((a, b) => a.proficiency - b.proficiency);
+        sortedStayers.forEach((dot, idx) => {
           const beltForCurve = randomizedBeltConfigs[beltIndex];
-          const zScore = (dot.proficiency - 0.5) * 2;
-          const currentBeltX = beltForCurve.mean * canvasWidth + 
+          // Use index-based distribution to ensure even spread across bell curve
+          // Map index (0 to length-1) to a normal distribution using inverse CDF approximation
+          const normalizedIndex = stayers.length > 1 ? idx / (stayers.length - 1) : 0.5; // 0 to 1
+          // Convert to z-score using inverse normal CDF approximation (Box-Muller transform approximation)
+          // This gives us a more even distribution across the bell curve
+          const zScore = (normalizedIndex - 0.5) * 4; // Scale to ±2 standard deviations
+          let currentBeltX = beltForCurve.mean * canvasWidth + 
             zScore * beltForCurve.stdDev * canvasWidth;
+          
+          // For black belt, clamp X to minimum (don't extend below purple median)
+          if (beltForCurve.name === 'Black' && beltForCurve.minX) {
+            currentBeltX = Math.max(beltForCurve.minX * canvasWidth, currentBeltX);
+          }
+          
           const currentBeltY = getBellCurveYLocal(currentBeltX, beltIndex);
           
           updatedDots.push({
@@ -377,8 +399,8 @@ export const BeltDropout: React.FC = () => {
             targetY: currentBeltY,
             state: 'settling',
             progress: 0,
-            startTime: Date.now() + idx * 10,
-            duration: 1200 + Math.random() * 600,
+            startTime: Date.now() + idx * 5,
+            duration: 600 + Math.random() * 300,
             lastProcessedYear: newYear // Mark as processed this year
           });
         });
@@ -387,12 +409,22 @@ export const BeltDropout: React.FC = () => {
           // Move to next belt - distribute along the next belt's bell curve
           const nextBelt = BELTS[beltIndex + 1];
           
-          progressorsToNext.forEach((dot, idx) => {
-            // Calculate position along next belt's bell curve based on proficiency
+          // Sort progressors by proficiency to distribute evenly
+          const sortedProgressorsToNext = [...progressorsToNext].sort((a, b) => a.proficiency - b.proficiency);
+          sortedProgressorsToNext.forEach((dot, idx) => {
+            // Calculate position along next belt's bell curve
             const beltForCurve = randomizedBeltConfigs[beltIndex + 1];
-            const zScore = (dot.proficiency - 0.5) * 2; // -1 to 1
-            const nextBeltX = beltForCurve.mean * canvasWidth + 
+            // Use index-based distribution to ensure even spread across bell curve
+            const normalizedIndex = progressorsToNext.length > 1 ? idx / (progressorsToNext.length - 1) : 0.5;
+            const zScore = (normalizedIndex - 0.5) * 4; // Scale to ±2 standard deviations
+            let nextBeltX = beltForCurve.mean * canvasWidth + 
               zScore * beltForCurve.stdDev * canvasWidth;
+            
+            // For black belt, clamp X to minimum (don't extend below purple median)
+            if (beltForCurve.name === 'Black' && beltForCurve.minX) {
+              nextBeltX = Math.max(beltForCurve.minX * canvasWidth, nextBeltX);
+            }
+            
             const nextBeltY = getBellCurveYLocal(nextBeltX, beltIndex + 1);
             
             updatedDots.push({
@@ -410,12 +442,22 @@ export const BeltDropout: React.FC = () => {
         } else if (newYear < 13) {
           // Not final year yet - keep progressing (black belts can still progress conceptually)
           // For now, keep them at their current belt
-          progressors.forEach(dot => {
+          // Sort by proficiency to distribute evenly
+          const sortedProgressorsFinal = [...progressors].sort((a, b) => a.proficiency - b.proficiency);
+          sortedProgressorsFinal.forEach((dot, idx) => {
             const beltIndexForCurve = BELTS.findIndex(b => b.name.toLowerCase() === dot.belt);
             const beltForCurve = randomizedBeltConfigs[beltIndexForCurve];
-            const zScore = (dot.proficiency - 0.5) * 2;
-            const finalX = beltForCurve.mean * canvasWidth + 
+            // Use index-based distribution to ensure even spread
+            const normalizedIndex = progressors.length > 1 ? idx / (progressors.length - 1) : 0.5;
+            const zScore = (normalizedIndex - 0.5) * 4; // Scale to ±2 standard deviations
+            let finalX = beltForCurve.mean * canvasWidth + 
               zScore * beltForCurve.stdDev * canvasWidth;
+            
+            // For black belt, clamp X to minimum (don't extend below purple median)
+            if (beltForCurve.name === 'Black' && beltForCurve.minX) {
+              finalX = Math.max(beltForCurve.minX * canvasWidth, finalX);
+            }
+            
             const finalYPos = getBellCurveYLocal(finalX, beltIndexForCurve);
             
             updatedDots.push({
@@ -424,7 +466,7 @@ export const BeltDropout: React.FC = () => {
               targetY: finalYPos,
               state: 'settling',
               progress: 0,
-              startTime: Date.now(),
+              startTime: Date.now() + idx * 10,
               duration: 1200 + Math.random() * 600,
               lastProcessedYear: newYear // Mark as processed this year
             });
@@ -438,11 +480,17 @@ export const BeltDropout: React.FC = () => {
             const beltIndexForCurve = BELTS.findIndex(b => b.name.toLowerCase() === dot.belt);
             const beltForCurve = randomizedBeltConfigs[beltIndexForCurve];
             
-            // Distribute evenly along the bell curve using proficiency
-            // Use a normal distribution mapping based on proficiency
-            const zScore = (dot.proficiency - 0.5) * 2; // Map 0-1 to -1 to 1
-            const finalX = beltForCurve.mean * canvasWidth + 
+            // Use index-based distribution to ensure even spread across bell curve
+            const normalizedIndex = sortedProgressors.length > 1 ? index / (sortedProgressors.length - 1) : 0.5;
+            const zScore = (normalizedIndex - 0.5) * 4; // Scale to ±2 standard deviations
+            let finalX = beltForCurve.mean * canvasWidth + 
               zScore * beltForCurve.stdDev * canvasWidth;
+            
+            // For black belt, clamp X to minimum (don't extend below purple median)
+            if (beltForCurve.name === 'Black' && beltForCurve.minX) {
+              finalX = Math.max(beltForCurve.minX * canvasWidth, finalX);
+            }
+            
             const finalYPos = getBellCurveYLocal(finalX, beltIndexForCurve);
             
             updatedDots.push({
@@ -451,15 +499,23 @@ export const BeltDropout: React.FC = () => {
               targetY: finalYPos,
               state: 'settling',
               progress: 0,
-              startTime: Date.now() + index * 10, // Stagger slightly
-              duration: 1500 + Math.random() * 500,
+              startTime: Date.now() + index * 5, // Stagger slightly
+              duration: 750 + Math.random() * 250,
               lastProcessedYear: newYear // Mark as processed this year
             });
           });
         }
       });
 
-      return updatedDots;
+      // Remove any duplicate dots (by ID) to prevent double counting
+      const uniqueDots = updatedDots.reduce((acc, dot) => {
+        if (!acc.find(d => d.id === dot.id)) {
+          acc.push(dot);
+        }
+        return acc;
+      }, [] as Dot[]);
+      
+      return uniqueDots;
     });
   }, [getRandomDropoutReason, beltStartX, beltColumnWidth, dropoutBucketBaseY, canvasWidth, beltConfigs, bellCurveBaseY]);
 
@@ -517,7 +573,10 @@ export const BeltDropout: React.FC = () => {
               // Add scatter for natural floor effect
               const scatterY = (Math.random() - 0.5) * 8;
               const baseStack = nearbySettled.length * 2; // Reduced stacking
-              finalYPos = dropoutBucketBaseY - baseStack + scatterY;
+              // Ensure dropouts stay within bucket bounds
+              const bucketTop = dropoutBucketBaseY - 150;
+              const bucketBottom = dropoutBucketBaseY;
+              finalYPos = Math.max(bucketTop, Math.min(bucketBottom, dropoutBucketBaseY - baseStack + scatterY));
             } else if (dot.state === 'flowing') {
               // Keep as 'flowing' but mark progress as complete for year progression detection
               // The dot is now at its belt position and ready for next year's decisions
@@ -558,7 +617,7 @@ export const BeltDropout: React.FC = () => {
                   progressToNextYear(nextYear);
                   return nextYear;
                 });
-              }, 500);
+              }, 250); // 2x faster
             }
           } else if (activeDots.length === 0 && currentYear < 13) {
             // All dots are settled, progress anyway
@@ -619,18 +678,23 @@ export const BeltDropout: React.FC = () => {
     BELTS.forEach((belt, beltIndex) => {
       // Special handling for black belt
       if (belt.name === 'Black') {
+        // Calculate minimum X position (clamp to purple median if specified)
+        const minX = belt.minX ? belt.minX * canvasWidth : 0;
+        
         // Draw lighter grey outline first (thicker)
         ctx.strokeStyle = '#808080'; // Lighter grey outline
         ctx.lineWidth = 4;
         ctx.beginPath();
         
-        for (let x = 0; x < canvasWidth; x += 2) {
+        let firstPoint = true;
+        for (let x = minX; x < canvasWidth; x += 2) {
           const normalizedX = (x / canvasWidth - belt.mean) / belt.stdDev;
           const bellHeight = belt.amplitude * Math.exp(-(normalizedX * normalizedX) / 2);
           const y = bellCurveBaseY - bellHeight;
           
-          if (x === 0) {
+          if (firstPoint) {
             ctx.moveTo(x, y);
+            firstPoint = false;
           } else {
             ctx.lineTo(x, y);
           }
@@ -642,13 +706,15 @@ export const BeltDropout: React.FC = () => {
         ctx.lineWidth = 3;
         ctx.beginPath();
         
-        for (let x = 0; x < canvasWidth; x += 2) {
+        firstPoint = true;
+        for (let x = minX; x < canvasWidth; x += 2) {
           const normalizedX = (x / canvasWidth - belt.mean) / belt.stdDev;
           const bellHeight = belt.amplitude * Math.exp(-(normalizedX * normalizedX) / 2);
           const y = bellCurveBaseY - bellHeight;
           
-          if (x === 0) {
+          if (firstPoint) {
             ctx.moveTo(x, y);
+            firstPoint = false;
           } else {
             ctx.lineTo(x, y);
           }
@@ -757,8 +823,6 @@ export const BeltDropout: React.FC = () => {
   const handleStart = () => {
     if (dots.length === 0) {
       generateInitialCohort();
-      // White belts will go directly to bell curve or dropout via progressToNextYear
-      // No need to flow to intermediate positions
     }
     setIsRunning(true);
   };
@@ -896,10 +960,10 @@ export const BeltDropout: React.FC = () => {
                   <div>
                     <div className="text-text-muted mb-2">Progression Rates (of those who don't dropout, randomized):</div>
                     <div className="space-y-1 text-xs">
-                      <div>White → Blue: ~12-18% progress per year (avg ~2-3 years at white)</div>
-                      <div>Blue → Purple: ~15-22% progress per year (avg ~3-4 years at blue)</div>
-                      <div>Purple → Brown: ~18-25% progress per year (avg ~3-4 years at purple)</div>
-                      <div>Brown → Black: ~20-28% progress per year (avg ~4-5 years at brown)</div>
+                      <div>White → Blue: ~25-35% progress per year (avg ~3-4 years at white)</div>
+                      <div>Blue → Purple: ~30-40% progress per year (avg ~2.5-3 years at blue)</div>
+                      <div>Purple → Brown: ~35-45% progress per year (avg ~2-3 years at purple)</div>
+                      <div>Brown → Black: ~40-50% progress per year (avg ~2-2.5 years at brown)</div>
                       <div className="text-text-muted mt-2">Target: ~10 black belts (~0.75% of starters) in 13 years</div>
                     </div>
                   </div>
@@ -922,9 +986,11 @@ export const BeltDropout: React.FC = () => {
                   </div>
                   <div>
                     <div className="text-xs text-text-muted mb-1">Total Dropped Out</div>
-                    <div className="text-2xl font-bold text-red-400">{totalDroppedOut}</div>
+                    <div className="text-2xl font-bold text-red-400">
+                      {dots.filter(d => d.dropoutReason).length}
+                    </div>
                     <div className="text-xs text-text-muted mt-1">
-                      {totalStarted > 0 ? ((totalDroppedOut / totalStarted) * 100).toFixed(1) : '0.0'}% dropout rate
+                      {totalStarted > 0 ? ((dots.filter(d => d.dropoutReason).length / totalStarted) * 100).toFixed(1) : '0.0'}% dropout rate
                     </div>
                   </div>
                   <div>
