@@ -18,6 +18,7 @@ import { BeltDropout } from "@/components/modules/belt-dropout/belt-dropout";
 import { StoriesHub } from "@/components/modules/stories/stories-hub";
 import { BeyondOffenseDefense } from "@/components/modules/beyond-offense-defense/beyond-offense-defense";
 import { VisualNotes } from "@/components/modules/visual-notes/visual-notes";
+import { GifTraining } from "@/components/modules/gif-training/gif-training";
 
 interface ModulePageProps {
   params: Promise<{ slug: string }>;
@@ -162,6 +163,10 @@ export default async function ModulePage({ params }: ModulePageProps) {
       ) : module.slug === "visual-notes" ? (
         <div className="space-y-4">
           <VisualNotes />
+        </div>
+      ) : module.slug === "gif-training" ? (
+        <div className="space-y-4">
+          <GifTraining />
         </div>
       ) : (
         <Card>

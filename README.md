@@ -149,16 +149,39 @@ node scripts/generate-beta-passwords.js
 node scripts/generate-jwt-secret.js
 ```
 
-### Vercel Environment Variables
-Set these in Vercel dashboard > Project Settings > Environment Variables:
+## 🚀 Deployment
 
-1. **BETA_PASSWORD_HASHES**: Comma-separated bcrypt hashes (no spaces)
-2. **JWT_SECRET**: Secure random string for JWT signing
+### Cloudflare Pages Deployment
 
-### Deploy to Vercel
-1. Install Vercel CLI: `npm i -g vercel`
-2. Deploy: `vercel --prod`
-3. The app will be available at your Vercel URL
+This project is deployed to **Cloudflare Pages** with **R2** for media storage.
+
+#### Environment Variables (Cloudflare Pages)
+Set these in Cloudflare Pages dashboard > Settings > Environment Variables:
+
+1. **NODE_ENV**: `production`
+2. **NEXT_STATIC_EXPORT**: `true`
+3. **NEXT_PUBLIC_R2_BUCKET_URL**: `https://pub-jelaludo-media.r2.dev` (or your R2 bucket URL)
+4. **NEXT_PUBLIC_R2_GIFS_PATH**: `/gifs`
+5. **BETA_PASSWORD_HASHES**: Comma-separated bcrypt hashes (no spaces) - if using beta auth
+6. **JWT_SECRET**: Secure random string for JWT signing - if using beta auth
+
+#### Build Configuration
+- **Framework**: Next.js
+- **Build command**: `npm run build`
+- **Output directory**: `out`
+- **Node version**: 20.x
+
+#### Custom Domain
+- **Production**: `grapplingprimitives.com`
+- DNS managed through Cloudflare
+- SSL/TLS auto-provisioned by Cloudflare
+
+#### Media Storage (R2)
+- GIFs stored in Cloudflare R2 bucket
+- Local development uses `/public/images/gifs/`
+- Production uses R2 URLs via environment variables
+
+See `DEPLOYMENT_PLAN.md` and `MIGRATION_PLAN.md` for detailed setup instructions.
 
 ### Testing Beta Access
 - Visit your deployed app

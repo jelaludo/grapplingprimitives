@@ -171,5 +171,15 @@ export const MODULES: ModuleDefinition[] = [
     featured: false,
     order: 15,
   },
+  {
+    id: "gif-training",
+    slug: "gif-training",
+    title: "Gif Training",
+    shortDescription: "10+ years of gif made and collected over the years as dynamic visual reminders",
+    category: "Training",
+    icon: "film",
+    featured: false,
+    order: 16,
+  },
 ];
 

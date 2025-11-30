@@ -1,5 +1,0 @@
-{
-  "/modules/[slug]/page": "app/modules/[slug]/page.js",
-  "/modules/page": "app/modules/page.js",
-  "/page": "app/page.js"
-}

@@ -30,3 +30,11 @@ src/data/betaPasswords.json
 
 # Problematic backup files that cause TypeScript errors
 backups/BackupsSkillMasterLists/TSolder/
+
+# Media files - stored in R2, not committed to repo
+/public/images/gifs/
+/gifs/
+
+# Vercel (migrated to Cloudflare)
+.vercel/
+.vercelignore

@@ -1,223 +1,180 @@
-# BJJ Skill Matrix - New Computer Migration Checklist
+# Migration Checklist: Vercel → Cloudflare Pages
 
-## 🖥️ System Requirements Check
-- [ ] **Node.js**: Install Node.js version 18.0.0 or higher
-  - Download from: https://nodejs.org/
-  - Verify with: `node --version`
-  - Verify npm: `npm --version`
-- [ ] **Git**: Ensure Git is installed and configured
-  - Verify with: `git --version`
-  - Configure user: `git config --global user.name "Your Name"`
-  - Configure email: `git config --global user.email "your.email@example.com"`
+## Pre-Migration (Do This First)
 
-## 📁 Project Setup
-- [ ] **Clone Repository** (if not already done):
-  ```bash
-  git clone <your-repo-url> bjj-skill-matrix
-  cd bjj-skill-matrix
-  ```
-- [ ] **Verify Git Status**:
-  ```bash
-  git status
-  git remote -v
-  ```
-- [ ] **Check for Untracked Files**:
-  ```bash
-  git log --oneline -5
-  ```
+### 1. Repository Setup
+- [ ] Create new GitHub repository: `GrapplingPrimitives`
+  - Go to GitHub → New repository
+  - Name: `GrapplingPrimitives`
+  - Description: "Grappling Primitives - BJJ Skill Matrix & Training Tools"
+  - Visibility: Private (or Public)
+  - **DO NOT** initialize with README, .gitignore, or license
 
-## 📦 Dependencies Installation
-- [ ] **Install Node Dependencies**:
+### 2. Code Cleanup
+- [ ] Checkout refactor branch: `git checkout obra-shadcn-ui-refactor`
+- [ ] Create migration branch: `git checkout -b cloudflare-migration`
+- [ ] Remove Vercel files:
   ```bash
-  npm install
+  rm -f vercel.json
+  rm -rf .vercel
   ```
-- [ ] **Verify Installation**:
+- [ ] Update `.gitignore` (already done):
+  - ✅ `/public/images/gifs/` 
+  - ✅ `.vercel/`
+- [ ] Commit cleanup:
   ```bash
-  npm list --depth=0
-  ```
-- [ ] **Check for Missing Dependencies**:
-  ```bash
-  npm audit
+  git add .gitignore
+  git commit -m "chore: remove Vercel config, prepare for Cloudflare migration"
   ```
 
-## 🔧 Development Environment Setup
-- [ ] **TypeScript Configuration**:
-  - Verify `tsconfig.json` exists and is valid
-  - Run type check: `npm run typecheck`
-- [ ] **Environment Variables** (if needed):
-  - Check for `.env` files in `.gitignore`
-  - Create any missing environment files
-- [ ] **IDE/Editor Setup**:
-  - Install TypeScript support
-  - Install React/JSX support
-  - Configure ESLint if using VS Code
+### 3. Test Build Locally
+- [ ] Run production build: `npm run build`
+- [ ] Verify `out/` directory is created
+- [ ] Test static export: `npm run start` (if available) or serve `out/` directory
+- [ ] Check all modules load correctly
+- [ ] Verify no Vercel-specific code remains
 
-## 🚀 Application Testing
-- [ ] **Start Development Server**:
-  ```bash
-  npm start
-  ```
-  - Should open at http://localhost:3000
-  - Check for any console errors
-- [ ] **Start Backend Server** (in separate terminal):
-  ```bash
-  node server.js
-  ```
-  - Should run on http://localhost:3001
-  - Check for any startup errors
-- [ ] **Test API Endpoints**:
-  ```bash
-  npm run test:server
-  ```
+### 4. R2 Bucket Preparation
+- [ ] Create Cloudflare account (if not already)
+- [ ] Go to R2 → Create bucket: `jelaludo-media` (or `grapplingprimitives-media`)
+- [ ] Enable public access on bucket
+- [ ] Note the public URL (e.g., `https://pub-jelaludo-media.r2.dev`)
+- [ ] Upload GIFs to R2 (can do this later, but prepare bucket)
 
-## 📊 Data Verification
-- [ ] **Check Data Files**:
-  - Verify `public/data/BJJMasterList.json` exists
-  - Verify `src/data/productionData.ts` exists
-  - Check backup files in `backups/` directory
-- [ ] **Test Data Loading**:
-  - Open app and verify skills load correctly
-  - Check for any missing images or assets
-- [ ] **Verify MongoDB Connection** (if using):
-  - Check `api/lib/mongodb.js` configuration
-  - Test database connectivity
+## Migration Day
 
-## 🧪 Testing & Validation
-- [ ] **Run TypeScript Compilation**:
-  ```bash
-  npm run typecheck
-  ```
-- [ ] **Run Tests** (if available):
-  ```bash
-  npm test
-  ```
-- [ ] **Test Build Process**:
-  ```bash
-  npm run build
-  ```
-- [ ] **Validate Data Integrity**:
-  ```bash
-  npm run validate:data
-  ```
-
-## 🔐 Authentication & Security
-- [ ] **Check Beta Authentication**:
-  - Verify `src/data/betaPasswords.json` exists (if needed)
-  - Test login functionality
-- [ ] **JWT Configuration**:
-  - Check JWT_SECRET in server.js
-  - Verify authentication endpoints work
-
-## 📁 File Structure Verification
-- [ ] **Core Directories**:
-  - [ ] `src/components/` - React components
-  - [ ] `src/modules/` - Feature modules
-  - [ ] `public/data/` - Static data files
-  - [ ] `backups/` - Backup files
-  - [ ] `api/` - Backend API routes
-  - [ ] `scripts/` - Utility scripts
-- [ ] **Key Files**:
-  - [ ] `package.json` - Dependencies and scripts
-  - [ ] `tsconfig.json` - TypeScript configuration
-  - [ ] `server.js` - Express server
-  - [ ] `src/App.tsx` - Main React component
-
-## 🎮 Feature Testing
-- [ ] **Core Features**:
-  - [ ] Skill matrix visualization
-  - [ ] Card system functionality
-  - [ ] Memory game
-  - [ ] Training modules
-  - [ ] Calendar/session tracking
-  - [ ] Article system
-- [ ] **Admin Features**:
-  - [ ] Beta dashboard access
-  - [ ] Data management tools
-- [ ] **Games & Tools**:
-  - [ ] Centroid game
-  - [ ] Armbar shearing simulation
-  - [ ] Skill assessment
-
-## 🔄 Git Workflow Verification
-- [ ] **Branch Management**:
-  ```bash
-  git branch -a
-  ```
-- [ ] **Pull Latest Changes**:
-  ```bash
-  git pull origin main
-  ```
-- [ ] **Test Commit Process**:
-  ```bash
-  git add .
-  git commit -m "test: migration verification"
-  git push origin main
-  ```
-
-## 📋 Optional Setup
-- [ ] **Development Tools**:
-  - [ ] Install React Developer Tools browser extension
-  - [ ] Install Redux DevTools (if using Redux)
-  - [ ] Configure VS Code extensions for React/TypeScript
-- [ ] **Performance Monitoring**:
-  - [ ] Set up Vercel Analytics (if deployed)
-  - [ ] Configure error tracking
-
-## 🚨 Troubleshooting Checklist
-- [ ] **Common Issues**:
-  - [ ] Port conflicts (3000/3001)
-  - [ ] Node version compatibility
-  - [ ] Missing environment variables
-  - [ ] CORS issues between frontend/backend
-  - [ ] TypeScript compilation errors
-  - [ ] Missing dependencies
-
-## ✅ Final Verification
-- [ ] **Full Application Test**:
-  - [ ] Frontend loads without errors
-  - [ ] Backend API responds correctly
-  - [ ] All major features work
-  - [ ] Data persistence functions
-  - [ ] Authentication works (if applicable)
-- [ ] **Documentation**:
-  - [ ] README.md is up to date
-  - [ ] Development workflow documented
-  - [ ] API endpoints documented
-
-## 📝 Notes
-- **Node Version**: Requires Node.js >= 18.0.0
-- **Ports**: Frontend (3000), Backend (3001)
-- **Database**: MongoDB (if configured)
-- **Key Dependencies**: React 19, TypeScript, Express, D3, Material-UI
-
-## 🔗 Useful Commands
+### Step 1: Push to New Repository
 ```bash
-# Start development
-npm start
+# Add new remote
+git remote add cloudflare https://github.com/YOUR_USERNAME/GrapplingPrimitives.git
 
-# Start backend server
-node server.js
+# Push to new repo (main branch)
+git push cloudflare cloudflare-migration:main
 
-# Type checking
-npm run typecheck
-
-# Build for production
-npm run build
-
-# Test server endpoints
-npm run test:server
-
-# Validate data
-npm run validate:data
-
-# Seed data (if needed)
-npm run seed:concepts
-npm run seed:categories
+# Verify push succeeded
+git remote -v
 ```
 
----
-**Migration completed on**: [Date]
-**Node version**: [Version]
-**Issues encountered**: [List any problems]
-**Additional setup required**: [Any custom configuration]
+### Step 2: Cloudflare Pages Setup
+- [ ] Go to Cloudflare Dashboard → Pages
+- [ ] Click "Create a project" → "Connect to Git"
+- [ ] Authorize GitHub and select `GrapplingPrimitives` repository
+- [ ] Configure build settings:
+  - **Framework preset**: Next.js
+  - **Build command**: `npm run build`
+  - **Build output directory**: `out`
+  - **Root directory**: `/` (leave empty)
+  - **Node version**: 20.x (or 18.x)
+- [ ] Add environment variables:
+  ```
+  NODE_ENV=production
+  NEXT_STATIC_EXPORT=true
+  NEXT_PUBLIC_R2_BUCKET_URL=https://pub-jelaludo-media.r2.dev
+  NEXT_PUBLIC_R2_GIFS_PATH=/gifs
+  ```
+- [ ] Click "Save and Deploy"
+- [ ] Wait for first deployment to complete
+- [ ] Note the Pages URL (e.g., `grapplingprimitives.pages.dev`)
 
+### Step 3: Test Cloudflare Pages Deployment
+- [ ] Visit the Pages URL
+- [ ] Verify site loads correctly
+- [ ] Test all major modules:
+  - [ ] Concept Matrix
+  - [ ] Games Hub
+  - [ ] Flash Cards
+  - [ ] Visual Notes
+  - [ ] Belt Dropout
+  - [ ] Beyond Offense and Defense
+  - [ ] Stories
+- [ ] Check mobile responsiveness
+- [ ] Verify no console errors
+
+### Step 4: DNS Configuration (Cloudflare)
+- [ ] Go to Cloudflare Dashboard → DNS
+- [ ] Find `grapplingprimitives.com` domain
+- [ ] **Remove Vercel DNS records**:
+  - [ ] Delete CNAME record pointing to Vercel (if exists)
+  - [ ] Delete A record pointing to Vercel (if exists)
+- [ ] **Add Cloudflare Pages custom domain**:
+  - [ ] Go to Pages project → Settings → Custom domains
+  - [ ] Add `grapplingprimitives.com`
+  - [ ] Add `www.grapplingprimitives.com` (optional)
+  - [ ] Cloudflare will auto-configure DNS records
+- [ ] **Verify DNS records**:
+  - [ ] Check DNS tab shows CNAME for `@` → Pages project
+  - [ ] Check `www` → Pages project (if configured)
+
+### Step 5: DNS Propagation Wait
+- [ ] Wait 5-60 minutes for DNS propagation
+- [ ] Check DNS propagation: `nslookup grapplingprimitives.com`
+- [ ] Test domain: `curl -I https://grapplingprimitives.com`
+- [ ] Verify SSL certificate is active (Cloudflare auto-provisions)
+
+### Step 6: Final Verification
+- [ ] Visit `https://grapplingprimitives.com`
+- [ ] Visit `https://www.grapplingprimitives.com` (if configured)
+- [ ] Test all features again on live domain
+- [ ] Check browser console for errors
+- [ ] Test on mobile device
+- [ ] Verify R2 GIFs load (when uploaded)
+
+## Post-Migration
+
+### Cleanup
+- [ ] Archive or delete old `bjj-skill-matrix` repository (optional)
+- [ ] Remove Vercel project from Vercel dashboard
+- [ ] Cancel Vercel paid plans (if applicable)
+- [ ] Update any bookmarks or links
+
+### Documentation
+- [ ] Update README.md with Cloudflare deployment info
+- [ ] Remove Vercel references from documentation
+- [ ] Update any deployment guides
+
+### Monitoring (First 48 Hours)
+- [ ] Monitor Cloudflare Pages deployment logs
+- [ ] Check error rates in Cloudflare Analytics
+- [ ] Verify all modules continue working
+- [ ] Test R2 GIF loading (when ready)
+- [ ] Check page load times
+
+## Rollback Plan (If Needed)
+
+If issues occur:
+1. **Immediate**: Revert DNS to Vercel (if old deployment still works)
+2. **Fix Issues**: Debug in Cloudflare Pages
+3. **Redeploy**: Push fixes and redeploy
+4. **Re-cutover**: Update DNS again after fixes
+
+## Quick Reference
+
+### Cloudflare Pages URLs
+- **Project Dashboard**: https://dash.cloudflare.com/[account-id]/pages
+- **Deployment URL**: `https://[project-name].pages.dev`
+- **Custom Domain**: `https://grapplingprimitives.com`
+
+### Environment Variables Needed
+```
+NODE_ENV=production
+NEXT_STATIC_EXPORT=true
+NEXT_PUBLIC_R2_BUCKET_URL=https://pub-jelaludo-media.r2.dev
+NEXT_PUBLIC_R2_GIFS_PATH=/gifs
+```
+
+### Build Commands
+```bash
+# Local test
+npm run build
+# Output: out/
+
+# Deploy (automatic via Git push)
+git push cloudflare main
+```
+
+## Notes
+- DNS propagation: Usually 5-60 minutes, can take up to 48 hours
+- Keep old Vercel deployment running during transition
+- Test thoroughly before DNS cutover
+- Cloudflare Pages free tier: Unlimited requests, 500 builds/month
+- R2 storage: ~$0.04/month for 1.4GB GIFs
