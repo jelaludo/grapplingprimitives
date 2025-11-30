@@ -23,11 +23,14 @@ The new repo contains **only the refactored code** (Next.js App Router, TypeScri
 ### ⏳ What Needs to Be Done
 
 #### 1. **Immediate Cleanup** (Do This First)
-- [ ] Delete `vercel.json` (if exists)
-- [ ] Delete `.vercel/` folder (if exists)
-- [ ] Delete `node_modules/` (will reinstall from package.json)
-- [ ] Delete build artifacts: `.next/`, `out/`, `build/`
-- [ ] Update `package.json`: Change `"name"` from `"bjj-skill-matrix"` to `"grapplingprimitives"`
+- [x] Delete `vercel.json` (if exists) ✅
+- [x] Delete `.vercel/` folder (if exists) ✅
+- [x] Delete build artifacts: `.next/`, `out/`, `build/` ✅
+- [x] Update `package.json`: Change `"name"` from `"bjj-skill-matrix"` to `"grapplingprimitives"` ✅
+- [x] Remove Vercel Analytics dependency ✅
+- [x] Remove MUI dependencies (legacy code) ✅
+- [x] Remove legacy `src/modules/` directory ✅
+- [x] Remove legacy `src/layouts/` directory ✅
 
 #### 2. **Install Dependencies**
 ```powershell

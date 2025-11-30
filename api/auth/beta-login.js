@@ -39,9 +39,12 @@ module.exports = async function handler(req, res) {
     }
 
     // Generate JWT token
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ error: 'JWT_SECRET not configured' });
+    }
     const token = jwt.sign(
       { authenticated: true, timestamp: Date.now() },
-      process.env.JWT_SECRET || 'fallback-secret',
+      process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
 

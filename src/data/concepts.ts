@@ -47,10 +47,12 @@ export const CONCEPTS: ConceptPoint[] = [
 
 // Helper function to convert BJJConcept to ConceptPoint
 // The data uses 0-1 range, we need to convert to -1 to 1 for our coordinate system
-// IMPORTANT: The old D3 code used:
-//   X axis = axis_mental_physical (0=Mental/left, 1=Physical/right)
-//   Y axis = axis_self_opponent (0=Opponent/bottom, 1=Self/top, inverted)
-// We need to match this mapping for consistency
+// IMPORTANT: The axes were swapped in the old D3 code!
+//   The old code used axis_mental_physical for X but labeled it as Opponent/Self
+//   The old code used axis_self_opponent for Y but labeled it as Physical/Mental
+// CORRECT MAPPING:
+//   X axis = axis_self_opponent (0=Opponent/left, 1=Self/right)
+//   Y axis = axis_mental_physical (0=Physical/bottom, 1=Mental/top, inverted)
 export function convertBJJConceptToConceptPoint(
   concept: {
     id: string;
@@ -63,18 +65,18 @@ export function convertBJJConceptToConceptPoint(
   }
 ): ConceptPoint {
   // Convert 0-1 range to -1 to 1 range
-  // X axis: axis_mental_physical (0=Mental/left, 1=Physical/right)
-  // Y axis: axis_self_opponent (0=Opponent/bottom, 1=Self/top)
+  // X axis: axis_self_opponent (0=Opponent/left, 1=Self/right)
+  // Y axis: axis_mental_physical (0=Physical/bottom, 1=Mental/top)
   // In our coordinate system: -1 to 1, where center is 0
-  // SVG Y increases downward, so we invert: Self (1) should be at top (-1)
-  const x = (concept.axis_mental_physical - 0.5) * 2; // 0->-1 (Mental/left), 0.5->0, 1->1 (Physical/right)
-  const y = -((concept.axis_self_opponent - 0.5) * 2); // 0->1 (Opponent/bottom), 0.5->0, 1->-1 (Self/top)
+  // SVG Y increases downward, so we invert: Mental (1) should be at top (-1)
+  const x = (concept.axis_self_opponent - 0.5) * 2; // 0->-1 (Opponent/left), 0.5->0, 1->1 (Self/right)
+  const y = -((concept.axis_mental_physical - 0.5) * 2); // 0->1 (Physical/bottom), 0.5->0, 1->-1 (Mental/top)
   
   return {
     id: concept.id,
     label: concept.concept,
-    x: x, // Now in -1 to 1 range
-    y: y, // Now in -1 to 1 range, inverted so Self is at top
+    x: x, // Now in -1 to 1 range: left=Opponent, right=Self
+    y: y, // Now in -1 to 1 range, inverted so Mental is at top: bottom=Physical, top=Mental
     category: concept.category,
     description: concept.description,
     color: concept.color,

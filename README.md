@@ -1,6 +1,6 @@
-# BJJ Skill Matrix
+# Grappling Primitives
 
-A React-based visualization tool for mapping Brazilian Jiu-Jitsu techniques across mental/physical and self/opponent axes.
+A modern, mobile-first Next.js application for exploring and learning grappling concepts through interactive modules, visualizations, and training tools.
 
 ## 🚀 Quick Start
 
@@ -8,8 +8,8 @@ A React-based visualization tool for mapping Brazilian Jiu-Jitsu techniques acro
 # Install dependencies
 npm install
 
-# Start development server
-npm start
+# Start Next.js development server
+npm run dev
 
 # Start backend server (in separate terminal)
 node server.js
@@ -17,11 +17,11 @@ node server.js
 
 ## 🏗️ Architecture
 
-### Frontend (React + TypeScript)
-- **Components:** Modular React components with custom hooks
+### Frontend (Next.js 16 + TypeScript)
+- **Framework:** Next.js 16 with App Router
+- **Styling:** Tailwind CSS + shadcn/ui components
 - **Visualization:** D3.js scatter plot with interactive nodes
-- **UI:** Material-UI v7 with dark theme
-- **State:** Custom hooks for data management and interactions
+- **State:** React hooks and custom hooks for state management
 
 ### Backend (Node.js + Express)
 - **API:** RESTful endpoints for data operations

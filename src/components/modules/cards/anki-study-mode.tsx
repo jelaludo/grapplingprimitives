@@ -41,8 +41,16 @@ export const AnkiStudyMode: React.FC<AnkiStudyModeProps> = ({
 
   // Reset card state when moving to a new card
   useEffect(() => {
+    // Prevent scroll jump during card transition
+    const scrollY = window.scrollY;
+    
     setFlipped(false);
     setPhase('question');
+    
+    // Maintain scroll position after state update
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: scrollY, behavior: 'instant' });
+    });
   }, [currentIndex]);
 
   const current = shuffledConcepts[currentIndex];
@@ -67,8 +75,16 @@ export const AnkiStudyMode: React.FC<AnkiStudyModeProps> = ({
       // Finished all cards
       onExit();
     } else {
+      // Prevent scroll jump by maintaining current scroll position
+      const scrollY = window.scrollY;
+      
       // Move to next card - useEffect will reset the state
       setCurrentIndex(prev => prev + 1);
+      
+      // Restore scroll position after state update
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: scrollY, behavior: 'instant' });
+      });
     }
   };
 
@@ -107,7 +123,7 @@ export const AnkiStudyMode: React.FC<AnkiStudyModeProps> = ({
       </div>
 
       {/* Card */}
-      <div className="relative min-h-[400px]">
+      <div className="relative min-h-[400px]" style={{ scrollMarginTop: '1rem' }}>
         <div
           className="relative w-full h-full"
           style={{
@@ -122,6 +138,7 @@ export const AnkiStudyMode: React.FC<AnkiStudyModeProps> = ({
             style={{
               transformStyle: 'preserve-3d',
               transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+              willChange: 'transform',
             }}
           >
             {/* Front (Question) */}
@@ -182,30 +199,43 @@ export const AnkiStudyMode: React.FC<AnkiStudyModeProps> = ({
         </div>
       </div>
 
-      {/* Controls */}
-      {phase === 'answer' && (
-        <div className="space-y-4">
-          <div className="text-center text-sm text-text-muted mb-4">
-            How well did you know this?
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {RATINGS.map(({ value, label, icon: Icon, color }) => (
-              <Button
-                key={value}
-                variant="outline"
-                className={cn(
-                  "flex flex-col items-center gap-2 h-auto py-4",
-                  "hover:border-accent-primary hover:bg-accent-primary/10"
-                )}
-                onClick={() => handleRating(value)}
-              >
-                <Icon className={cn("w-6 h-6", color)} />
-                <span className="text-xs font-medium">{label}</span>
-              </Button>
-            ))}
-          </div>
+      {/* Controls - Always render to prevent layout shift */}
+      <div 
+        className="space-y-4"
+        style={{ 
+          minHeight: '120px',
+          opacity: phase === 'answer' ? 1 : 0,
+          pointerEvents: phase === 'answer' ? 'auto' : 'none',
+          transition: 'opacity 0.2s ease-out',
+          visibility: phase === 'answer' ? 'visible' : 'hidden',
+        }}
+      >
+        <div className="text-center text-sm text-text-muted mb-4">
+          How well did you know this?
         </div>
-      )}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {RATINGS.map(({ value, label, icon: Icon, color }) => (
+            <Button
+              key={value}
+              variant="outline"
+              className={cn(
+                "flex flex-col items-center gap-2 h-auto py-4",
+                "hover:border-accent-primary hover:bg-accent-primary/10",
+                "transition-all duration-200"
+              )}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleRating(value);
+              }}
+              type="button"
+            >
+              <Icon className={cn("w-6 h-6", color)} />
+              <span className="text-xs font-medium">{label}</span>
+            </Button>
+          ))}
+        </div>
+      </div>
 
       {/* Navigation */}
       <div className="flex justify-between items-center pt-4 border-t border-border-subtle">

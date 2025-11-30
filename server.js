@@ -1,3 +1,10 @@
+// Load environment variables from .env.local if it exists (for local development)
+try {
+  require('dotenv').config({ path: '.env.local' });
+} catch (e) {
+  // dotenv not installed or .env.local doesn't exist - that's okay
+}
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -12,7 +19,13 @@ const app = express();
 const PORT = 3001;
 
 // Beta Authentication Configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('Error: JWT_SECRET environment variable is required');
+  console.error('Run: powershell -ExecutionPolicy Bypass -File setup-env.ps1');
+  console.error('Or set JWT_SECRET environment variable manually');
+  process.exit(1);
+}
 const BETA_PASSWORDS_FILE = path.resolve(__dirname, 'src/data/betaPasswords.json');
 
 app.use(cors());

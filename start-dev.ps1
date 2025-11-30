@@ -1,6 +1,6 @@
-# BJJ Skill Matrix Development Server - PowerShell Version
+# Grappling Primitives Development Server - PowerShell Version
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "BJJ Skill Matrix Development Server" -ForegroundColor Cyan
+Write-Host "Grappling Primitives Development Server" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -36,12 +36,12 @@ Write-Host "- NODE_ENV=development" -ForegroundColor Gray
 Write-Host "- GENERATE_SOURCEMAP=false" -ForegroundColor Gray
 Write-Host ""
 
-Write-Host "Starting React development server..." -ForegroundColor Green
+Write-Host "Starting Next.js development server..." -ForegroundColor Green
 Write-Host "(Press Ctrl+C to stop)" -ForegroundColor Gray
 Write-Host ""
 
 try {
-    npm start
+    npm run dev
 } catch {
     Write-Host "Error starting server: $($_.Exception.Message)" -ForegroundColor Red
 }

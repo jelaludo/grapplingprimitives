@@ -13,7 +13,10 @@ module.exports = async function handler(req, res) {
     }
 
     // Verify JWT token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ error: 'JWT_SECRET not configured' });
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     if (decoded.authenticated) {
       res.status(200).json({ 

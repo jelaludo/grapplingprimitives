@@ -72,23 +72,45 @@ export function ConceptMatrix({
     return map;
   }, [conceptData]);
   
-  // Get axis labels from the first category (or selected categories)
-  // Note: X axis = mental_physical, Y axis = self_opponent (matching old D3 code)
+  // Get axis labels from categories - update when categories change
+  // CORRECTED MAPPING: X axis = self_opponent, Y axis = mental_physical
+  // X axis: Opponent (left) ↔ Self (right)
+  // Y axis: Physical (bottom) ↔ Mental (top)
   const axisLabels = useMemo(() => {
     if (!conceptData?.categories || conceptData.categories.length === 0) {
       return {
-        xAxis: { left: "Mental", right: "Physical" },
-        yAxis: { bottom: "Opponent", top: "Self" },
+        xAxis: { left: "Opponent", right: "Self" },
+        yAxis: { bottom: "Physical", top: "Mental" },
       };
     }
-    // Use the first category's axis labels, or from selected categories
-    const category = selectedCategories.size > 0
-      ? conceptData.categories.find(cat => selectedCategories.has(cat.name))
-      : conceptData.categories[0];
-    // Swap the labels to match our axis mapping
+    
+    // If categories are selected, use the first selected category's labels
+    // Otherwise, use the first available category
+    let category = null;
+    if (selectedCategories.size > 0) {
+      // Find first selected category that has axis labels
+      for (const catName of selectedCategories) {
+        const cat = conceptData.categories.find(c => c.name === catName);
+        if (cat && (cat.xAxis || cat.yAxis)) {
+          category = cat;
+          break;
+        }
+      }
+      // If no selected category has labels, use first selected category
+      if (!category) {
+        category = conceptData.categories.find(cat => selectedCategories.has(cat.name));
+      }
+    } else {
+      // No categories selected, use first category with labels, or first category
+      category = conceptData.categories.find(cat => cat.xAxis || cat.yAxis) || conceptData.categories[0];
+    }
+    
+    // Return axis labels - xAxis maps to self_opponent (X), yAxis maps to mental_physical (Y)
+    // Note: Category data may have labels swapped, so we need to check the mapping
+    // If category has xAxis/yAxis, use them directly (they should match our corrected mapping)
     return {
-      xAxis: category?.yAxis || { left: "Mental", right: "Physical" }, // mental_physical maps to X
-      yAxis: category?.xAxis || { bottom: "Opponent", top: "Self" }, // self_opponent maps to Y
+      xAxis: category?.xAxis || { left: "Opponent", right: "Self" },
+      yAxis: category?.yAxis || { bottom: "Physical", top: "Mental" },
     };
   }, [conceptData, selectedCategories]);
   
@@ -263,31 +285,6 @@ export function ConceptMatrix({
   const toSVGX = (normalized: number) => normalized * 2;
   const toSVGY = (normalized: number) => normalized * 2;
 
-  // Handle quadrant navigation
-  const handleQuadrant = (quadrant: 1 | 2 | 3 | 4) => {
-    const centerX = dimensions.width / 2;
-    const centerY = dimensions.height / 2;
-    
-    // Quadrant centers in normalized coordinates
-    const quadrantCenters = {
-      1: { x: 0.5, y: 0.5 },   // Top-right
-      2: { x: -0.5, y: 0.5 },  // Top-left
-      3: { x: -0.5, y: -0.5 }, // Bottom-left
-      4: { x: 0.5, y: -0.5 },  // Bottom-right
-    };
-    
-    const target = quadrantCenters[quadrant];
-    // Convert to screen coordinates and center
-    const screenX = centerX + target.x * (dimensions.width / 2);
-    const screenY = centerY - target.y * (dimensions.height / 2);
-    
-    // Set zoom and translate to center on quadrant
-    panZoom.setZoom(1.5);
-    panZoom.panBy(
-      centerX - screenX,
-      centerY - screenY
-    );
-  };
 
   if (loading) {
     return (
@@ -375,46 +372,56 @@ export function ConceptMatrix({
           strokeWidth="0.1"
         />
         
-        {/* Axis labels */}
+        {/* Axis labels - positioned just outside the frame, centered */}
+        {/* X-axis labels (Opponent/Self) - rotated 90 degrees on left and right */}
+        {/* Opponent on left, Self on right */}
         <text
-          x="-1.9"
-          y="0.15"
-          fill="#6B7280"
-          fontSize="0.3"
-          textAnchor="start"
-          className="pointer-events-none"
+          x="-2.15"
+          y="0"
+          fill="#9CA3AF"
+          fontSize="0.22"
+          fontWeight="400"
+          textAnchor="middle"
+          transform="rotate(-90 -2.15 0)"
+          className="pointer-events-none select-none"
         >
           {axisLabels.xAxis.left}
         </text>
         <text
-          x="1.9"
-          y="0.15"
-          fill="#6B7280"
-          fontSize="0.3"
-          textAnchor="end"
-          className="pointer-events-none"
+          x="2.15"
+          y="0"
+          fill="#9CA3AF"
+          fontSize="0.22"
+          fontWeight="400"
+          textAnchor="middle"
+          transform="rotate(90 2.15 0)"
+          className="pointer-events-none select-none"
         >
           {axisLabels.xAxis.right}
         </text>
+        {/* Y-axis labels (Physical/Mental) - centered at top and bottom */}
+        {/* Physical at bottom, Mental at top */}
         <text
-          x="0.1"
-          y="-1.9"
-          fill="#6B7280"
-          fontSize="0.3"
-          textAnchor="start"
-          className="pointer-events-none"
-        >
-          {axisLabels.yAxis.top}
-        </text>
-        <text
-          x="0.1"
-          y="1.9"
-          fill="#6B7280"
-          fontSize="0.3"
-          textAnchor="start"
-          className="pointer-events-none"
+          x="0"
+          y="2.15"
+          fill="#9CA3AF"
+          fontSize="0.22"
+          fontWeight="400"
+          textAnchor="middle"
+          className="pointer-events-none select-none"
         >
           {axisLabels.yAxis.bottom}
+        </text>
+        <text
+          x="0"
+          y="-2.15"
+          fill="#9CA3AF"
+          fontSize="0.22"
+          fontWeight="400"
+          textAnchor="middle"
+          className="pointer-events-none select-none"
+        >
+          {axisLabels.yAxis.top}
         </text>
 
         {/* Dots are at FIXED coordinates - NO TRANSFORM APPLIED */}
@@ -468,10 +475,7 @@ export function ConceptMatrix({
       {/* Category Filter - Horizontal at top */}
       <div className="absolute top-0 left-0 right-0 z-20 bg-bg-raised border-b border-border-subtle">
         <div className="px-4 py-2 flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-text-muted" />
-            <span className="text-sm font-semibold">Categories</span>
-          </div>
+          <span className="text-sm font-semibold">Categories</span>
           
           <Button
             variant={selectedCategories.size === 0 ? "default" : "outline"}
@@ -538,7 +542,6 @@ export function ConceptMatrix({
           onZoomIn={panZoom.zoomIn}
           onZoomOut={panZoom.zoomOut}
           onReset={panZoom.reset}
-          onQuadrant={handleQuadrant}
         />
       </div>
 

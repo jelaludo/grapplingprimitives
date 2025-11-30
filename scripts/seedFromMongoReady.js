@@ -3,8 +3,13 @@ const fs = require("fs");
 const path = require("path");
 
 // Configuration
-const uri = process.env.MONGODB_URI || "mongodb+srv://gfabrot:SZJ5SJ1e5zVO90ns@bjjskillmatrix.ynjznku.mongodb.net/?retryWrites=true&w=majority&appName=BJJSkillMatrix";
+const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB || "BJJSkillMatrix";
+
+if (!uri) {
+  console.error('Error: MONGODB_URI environment variable is required');
+  process.exit(1);
+}
 
 // Get the most recent mongo-ready file
 function getLatestMongoReadyFile() {

@@ -1,7 +1,12 @@
 const { MongoClient } = require('mongodb');
 
-const uri = process.env.MONGODB_URI || 'mongodb+srv://gfabrot:SZJ5SJ1e5zVO90ns@bjjskillmatrix.ynjznku.mongodb.net/?retryWrites=true&w=majority&appName=BJJSkillMatrix';
+const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB || 'BJJSkillMatrix';
+
+if (!uri) {
+  console.error('Error: MONGODB_URI environment variable is required');
+  process.exit(1);
+}
 
 async function migrate() {
   const client = new MongoClient(uri);

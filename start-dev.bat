@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo BJJ Skill Matrix Development Server
+echo Grappling Primitives Development Server
 echo ========================================
 echo.
 
@@ -33,11 +33,11 @@ echo - NODE_ENV=development
 echo - GENERATE_SOURCEMAP=false
 echo.
 
-echo Starting React development server...
+echo Starting Next.js development server...
 echo (Press Ctrl+C to stop)
 echo.
 
-npm start
+npm run dev
 
 echo.
 echo Server stopped. Press any key to exit...
