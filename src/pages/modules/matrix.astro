@@ -7,18 +7,18 @@ import { getCollection } from 'astro:content';
 const conceptEntries  = await getCollection('concepts');
 const categoryEntries = await getCollection('categories');
 
-// Raw axis values in the source data are stored in [0, 1].
-// The semantic range for plotting is [-1, 1] (0=Opponent/Physical, 1=Self/Mental).
-// Transform:  plotValue = rawValue * 2 - 1
-const remap = (v: number) => v * 2 - 1;
+// Axis values in the .md files are stored in [-1, 1] (migration script remaps from raw [0,1]).
+// Use them directly — no further transform needed.
+// x: axis_self_opponent   [-1=Opponent … +1=Self]
+// y: axis_mental_physical [-1=Physical … +1=Mental]
 
 // Serialise to plain objects for the canvas script (define:vars must be JSON-safe)
 const concepts = conceptEntries.map(e => ({
   id:       e.data.id,
   concept:  e.data.concept,
   category: e.data.category,
-  x:        remap(e.data.axis_self_opponent),    // [-1=Opponent … +1=Self]
-  y:        remap(e.data.axis_mental_physical),  // [-1=Physical … +1=Mental]
+  x:        e.data.axis_self_opponent,
+  y:        e.data.axis_mental_physical,
   color:    e.data.color ?? '',
   desc:     e.body ?? '',
   short:    e.data.short_description ?? '',
