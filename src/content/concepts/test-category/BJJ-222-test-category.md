@@ -2,8 +2,8 @@
 id: "BJJ-222"
 concept: "Test Category"
 category: "Test Category"
-axis_self_opponent: 0.7
-axis_mental_physical: 0.41
+axis_self_opponent: 0.4
+axis_mental_physical: -0.18
 color: "#f40101"
 short_description: "testing if LRTB works correctly"
 tags: []

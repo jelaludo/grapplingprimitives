@@ -2,8 +2,8 @@
 id: "BJJ-093"
 concept: "Different learning patterns"
 category: "Coaching"
-axis_self_opponent: 0.69
-axis_mental_physical: 0.73
+axis_self_opponent: 0.38
+axis_mental_physical: 0.46
 color: "#6b6d70"
 tags: []
 related: []

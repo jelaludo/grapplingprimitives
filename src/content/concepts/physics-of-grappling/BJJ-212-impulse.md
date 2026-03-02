@@ -2,8 +2,8 @@
 id: "BJJ-212"
 concept: "Impulse"
 category: "Physics of Grappling"
-axis_self_opponent: 0.79
-axis_mental_physical: 0.20999999999999996
+axis_self_opponent: 0.58
+axis_mental_physical: -0.58
 color: "#888888"
 short_description: "Force x Time"
 tags: []

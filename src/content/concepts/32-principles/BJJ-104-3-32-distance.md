@@ -2,8 +2,8 @@
 id: "BJJ-104"
 concept: "3/32 Distance"
 category: "32 Principles"
-axis_self_opponent: 0.33
-axis_mental_physical: 0.5
+axis_self_opponent: -0.34
+axis_mental_physical: 0
 color: "#FFD700"
 short_description: "see distance management"
 tags: []

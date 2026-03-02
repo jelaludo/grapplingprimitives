@@ -2,8 +2,8 @@
 id: "BJJ-147"
 concept: "Roger Gracie"
 category: "Noteworthy Grapplers"
-axis_self_opponent: 0.97
-axis_mental_physical: 0.04999999999999999
+axis_self_opponent: 0.94
+axis_mental_physical: -0.9
 color: "#ff00d4"
 short_description: "Old School GOAT"
 tags: []

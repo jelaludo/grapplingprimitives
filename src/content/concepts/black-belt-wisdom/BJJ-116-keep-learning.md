@@ -2,8 +2,8 @@
 id: "BJJ-116"
 concept: "Keep Learning."
 category: "Black Belt Wisdom"
-axis_self_opponent: 0.67
-axis_mental_physical: 0.75
+axis_self_opponent: 0.34
+axis_mental_physical: 0.5
 color: "#FF6B35"
 short_description: "Advice for each belt : \nWhite : Relax\nBlue : Relax\nPurple : Relax\nBrown : Relax\nBlack : Keep Learning\n-- Jocko?\n\nnot a bad model ^^\nkeep learning, it never stops!"
 tags: []

@@ -137,9 +137,12 @@ for (const c of cleanConcepts) {
   const catName  = c.category || 'Uncategorised';
   const catSlug  = catSlugMap.get(catName) || slugify(catName);
 
-  // Clamp axis values to [-1, 1]
-  const ax_so = Math.max(-1, Math.min(1, c.axis_self_opponent   ?? 0));
-  const ax_mp = Math.max(-1, Math.min(1, c.axis_mental_physical ?? 0));
+  // Source data stores axes in [0, 1]. Remap to [-1, 1] so Obsidian values
+  // are semantically meaningful (negative = Opponent/Physical, positive = Self/Mental).
+  // Formula: plotValue = rawValue * 2 - 1
+  const remap = v => Math.max(-1, Math.min(1, (v ?? 0.5) * 2 - 1));
+  const ax_so = parseFloat(remap(c.axis_self_opponent).toFixed(4));
+  const ax_mp = parseFloat(remap(c.axis_mental_physical).toFixed(4));
 
   // ── Category subfolder ───────────────────────────────────────────────────
   // e.g. src/content/concepts/coaching/BJJ-100-name.md

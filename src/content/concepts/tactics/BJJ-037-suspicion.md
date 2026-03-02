@@ -2,8 +2,8 @@
 id: "BJJ-037"
 concept: "Suspicion"
 category: "Tactics"
-axis_self_opponent: 0.95
-axis_mental_physical: 0.2
+axis_self_opponent: 0.9
+axis_mental_physical: -0.6
 color: "#8A2BE2"
 short_description: "If you did not create the position, be suspicious"
 tags: []

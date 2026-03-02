@@ -2,8 +2,8 @@
 id: "BJJ-003"
 concept: "Grip Fighting"
 category: "Grappling Primitives"
-axis_self_opponent: 0.3
-axis_mental_physical: 0.3
+axis_self_opponent: -0.4
+axis_mental_physical: -0.4
 color: "#848a94"
 short_description: "Controlling and breaking grips to dominate exchanges."
 tags: []
