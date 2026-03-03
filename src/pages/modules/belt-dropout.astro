@@ -1,0 +1,575 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Belt Dropout — Grappling Primitives" fullscreen={true}>
+
+  <!-- ── Toolbar ──────────────────────────────────────────────────────────── -->
+  <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+    <a href="/" style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+    <span style="color:#21262d;">|</span>
+    <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Belt Dropout</span>
+    <span style="color:#21262d;">|</span>
+    <span id="year-label" style="font-size:11px;letter-spacing:0.1em;color:#c9d1d9;min-width:52px;">Year 0</span>
+    <div style="flex:1;"></div>
+    <button id="btn-play" style="font-family:inherit;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;border:1px solid #00d4ff;background:rgba(0,212,255,0.1);color:#00d4ff;cursor:pointer;">▶ Play</button>
+    <div style="display:flex;gap:4px;">
+      <button data-speed="0" style="font-family:inherit;font-size:10px;padding:3px 7px;border-radius:3px;border:1px solid #00d4ff;background:rgba(0,212,255,0.15);color:#00d4ff;cursor:pointer;">1×</button>
+      <button data-speed="1" style="font-family:inherit;font-size:10px;padding:3px 7px;border-radius:3px;border:1px solid #21262d;background:transparent;color:#6b7280;cursor:pointer;">2×</button>
+      <button data-speed="2" style="font-family:inherit;font-size:10px;padding:3px 7px;border-radius:3px;border:1px solid #21262d;background:transparent;color:#6b7280;cursor:pointer;">5×</button>
+    </div>
+    <button id="btn-replay" style="display:none;font-family:inherit;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;border:1px solid #6b7280;background:transparent;color:#6b7280;cursor:pointer;">↺ Replay</button>
+  </div>
+
+  <!-- ── Canvas ──────────────────────────────────────────────────────────── -->
+  <canvas id="main-canvas" style="position:fixed;top:36px;left:0;right:0;bottom:28px;width:100%;display:block;"></canvas>
+
+  <!-- ── Recap panel (shown at year 13) ─────────────────────────────────── -->
+  <div id="recap-panel" style="display:none;position:fixed;top:36px;left:0;right:0;bottom:28px;z-index:45;overflow-y:auto;background:rgba(8,11,18,0.93);font-family:'Courier New',Consolas,Monaco,monospace;padding:24px 28px;">
+    <div style="max-width:660px;margin:0 auto;">
+
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.14em;color:#c9d1d9;text-transform:uppercase;margin-bottom:20px;">Simulation Statistics</div>
+
+      <!-- Summary row -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid #21262d;">
+        <div>
+          <div style="font-size:9px;letter-spacing:0.14em;color:#6b7280;text-transform:uppercase;margin-bottom:6px;">Total Started</div>
+          <div id="rs-total" style="font-size:26px;font-weight:700;color:#c9d1d9;">0</div>
+        </div>
+        <div>
+          <div style="font-size:9px;letter-spacing:0.14em;color:#6b7280;text-transform:uppercase;margin-bottom:6px;">Total Dropped Out</div>
+          <div id="rs-dropped" style="font-size:26px;font-weight:700;color:#f87171;">0</div>
+          <div id="rs-dropout-pct" style="font-size:9px;color:#f87171;margin-top:3px;"></div>
+        </div>
+        <div>
+          <div style="font-size:9px;letter-spacing:0.14em;color:#6b7280;text-transform:uppercase;margin-bottom:6px;">Currently Active</div>
+          <div id="rs-active" style="font-size:26px;font-weight:700;color:#34d399;">0</div>
+          <div id="rs-retention-pct" style="font-size:9px;color:#34d399;margin-top:3px;"></div>
+        </div>
+      </div>
+
+      <!-- Belt table -->
+      <table style="width:100%;border-collapse:collapse;font-size:11px;">
+        <thead>
+          <tr style="border-bottom:1px solid #21262d;">
+            <th style="text-align:left;padding:6px 0;font-size:9px;letter-spacing:0.12em;color:#6b7280;font-weight:400;text-transform:uppercase;">Belt</th>
+            <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:0.12em;color:#6b7280;font-weight:400;text-transform:uppercase;">Current</th>
+            <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:0.12em;color:#6b7280;font-weight:400;text-transform:uppercase;">Dropped Out</th>
+            <th style="text-align:right;padding:6px 10px;font-size:9px;letter-spacing:0.12em;color:#6b7280;font-weight:400;text-transform:uppercase;">% at This Belt</th>
+            <th style="text-align:right;padding:6px 0;font-size:9px;letter-spacing:0.12em;color:#6b7280;font-weight:400;text-transform:uppercase;">% of Active</th>
+          </tr>
+        </thead>
+        <tbody id="rs-tbody"></tbody>
+      </table>
+
+      <!-- Avg years -->
+      <div style="margin-top:20px;padding-top:14px;border-top:1px solid #21262d;">
+        <div style="font-size:9px;letter-spacing:0.12em;color:#6b7280;text-transform:uppercase;margin-bottom:8px;">Avg Years to Reach Belt (cumulative)</div>
+        <div id="rs-avg-years" style="font-size:11px;color:#8b949e;line-height:1.8;"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Stats bar ───────────────────────────────────────────────────────── -->
+  <div style="position:fixed;bottom:0;left:0;right:0;height:28px;z-index:50;display:flex;align-items:center;justify-content:center;gap:14px;padding:0 12px;border-top:1px solid #21262d;background:rgba(5,5,9,0.97);font-family:'Courier New',Consolas,Monaco,monospace;font-size:10px;color:#6b7280;letter-spacing:0.06em;white-space:nowrap;">
+    <span>White <span id="stat-0" style="color:#d1d5db;">0</span></span>
+    <span style="color:#21262d;">·</span>
+    <span>Blue <span id="stat-1" style="color:#3b82f6;">0</span></span>
+    <span style="color:#21262d;">·</span>
+    <span>Purple <span id="stat-2" style="color:#8b5cf6;">0</span></span>
+    <span style="color:#21262d;">·</span>
+    <span>Brown <span id="stat-3" style="color:#7c3d11;">0</span></span>
+    <span style="color:#21262d;">·</span>
+    <span>Black <span id="stat-4" style="color:#c8c8c8;">0</span></span>
+    <span style="color:#21262d;">·</span>
+    <span>Dropped <span id="stat-out" style="color:#ff4444;">0</span></span>
+  </div>
+
+  <script>
+    // ── Belt config ──────────────────────────────────────────────────────────
+    // Model: each year each practitioner rolls dropout, then (if survives) rolls
+    // progression. No skill thresholds or minYears — pure probability.
+    // progressMin/Max = fraction of survivors who promote in a given year.
+    // Target: ~10 black belts from 1300 introduced over 13 years.
+    const BELTS = [
+      { name: 'White',  color: '#d1d5db', mu: 170, sigma: 55,
+        dropout: 0.50, dropVar: 0.15, progressMin: 0.25, progressMax: 0.35 },
+      { name: 'Blue',   color: '#3b82f6', mu: 315, sigma: 65,
+        dropout: 0.40, dropVar: 0.12, progressMin: 0.30, progressMax: 0.40 },
+      { name: 'Purple', color: '#8b5cf6', mu: 455, sigma: 70,
+        dropout: 0.30, dropVar: 0.09, progressMin: 0.35, progressMax: 0.45 },
+      { name: 'Brown',  color: '#7c3d11', mu: 600, sigma: 65,
+        dropout: 0.15, dropVar: 0.05, progressMin: 0.40, progressMax: 0.50 },
+      { name: 'Black',  color: '#c8c8c8', mu: 760, sigma: 75,
+        dropout: 0.04, dropVar: 0.015, progressMin: 0,   progressMax: 0 },
+    ];
+
+    const N_PER_YEAR  = 100;
+    const MAX_YEAR    = 13;
+    const PAD_L       = 48, PAD_R = 20;
+    const SPEEDS      = [1200, 600, 240];
+    const NUM_SLOTS   = 280;
+    const LAYER_PX    = 4;
+
+    // ── Canvas ───────────────────────────────────────────────────────────────
+    const canvas = document.getElementById('main-canvas');
+    const ctx    = canvas.getContext('2d');
+    let W = 0, H = 0;
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+    function resize() {
+      W = canvas.clientWidth  || window.innerWidth;
+      H = canvas.clientHeight || (window.innerHeight - 64);
+      canvas.width  = W * DPR;
+      canvas.height = H * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+
+    // ── Coordinate helpers ───────────────────────────────────────────────────
+    function skillX(s)   { return PAD_L + (s / 1000) * (W - PAD_L - PAD_R); }
+    function groundY()   { return H * 0.68; }
+    function bellH(s, b) {
+      const z = (s - BELTS[b].mu) / BELTS[b].sigma;
+      return Math.exp(-0.5 * z * z) * 115;
+    }
+    function targetY(p)  { return groundY() - bellH(p.skill, p.belt) + p.jitter; }
+
+    function slotW()        { return (W - PAD_L - PAD_R) / NUM_SLOTS; }
+    function xToSlot(x)     { return Math.max(0, Math.min(NUM_SLOTS - 1, Math.floor((x - PAD_L) / slotW()))); }
+    function pileFloorY(sl) { return H - 4 - pileSlots[sl] * LAYER_PX; }
+
+    // ── Sim state ────────────────────────────────────────────────────────────
+    let people = [], pileSlots, promotionStats, totalIntroduced;
+    let year = 0, playing = false, finished = false, lastTick = 0, speedIdx = 0;
+
+    function mkPerson() {
+      const b = BELTS[0];
+      return {
+        // Skill starts spread across the white belt range (including low-skill tail)
+        skill:      b.mu + (Math.random() - 0.5) * b.sigma * 3.0,  // wide spread
+        belt: 0, yearsAtBelt: 0, totalYears: 0,
+        active: true, dropping: false, promoting: false, piled: false,
+        x: 0, y: 0,
+        jitter:     (Math.random() - 0.5) * 28,
+        vy: 0, alpha: 1, glowTimer: 0,
+        promStartX: 0, promTargetX: 0, promT: 0,
+        pileSlot: 0, pileLayer: 0,
+      };
+    }
+
+    function initSim() {
+      people          = [];
+      pileSlots       = new Array(NUM_SLOTS).fill(0);
+      promotionStats  = Array.from({ length: 4 }, () => ({ count: 0, totalYears: 0 }));
+      totalIntroduced = 0;
+      year = 0; playing = false; finished = false; lastTick = 0;
+      resize();
+      updateStats();
+      updateYearLabel();
+    }
+
+    // ── Plateau spawn point ──────────────────────────────────────────────────
+    function plateauCenter() {
+      const gy = groundY();
+      return {
+        x: skillX(75),
+        y: gy - bellH(BELTS[0].mu, 0) - 62,
+      };
+    }
+
+    function drawPlateau() {
+      const { x: cx, y: cy } = plateauCenter();
+      const pw = 112, ph = 7;
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(-0.07);
+
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      ctx.fillRect(-pw / 2 + 3, ph + 1, pw, 4);
+
+      ctx.fillStyle   = 'rgba(209,213,219,0.08)';
+      ctx.strokeStyle = 'rgba(209,213,219,0.36)';
+      ctx.lineWidth   = 1;
+      ctx.beginPath();
+      ctx.rect(-pw / 2, 0, pw, ph);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(209,213,219,0.18)';
+      ctx.setLineDash([2, 3]);
+      ctx.beginPath();
+      ctx.moveTo(-pw / 2 + 14, ph); ctx.lineTo(-pw / 2 + 14, ph + 28);
+      ctx.moveTo( pw / 2 - 14, ph); ctx.lineTo( pw / 2 - 14, ph + 28);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = 'rgba(209,213,219,0.38)';
+      ctx.font      = '8px "Courier New",monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('new recruits', 0, -5);
+      ctx.restore();
+    }
+
+    // ── Add cohort ───────────────────────────────────────────────────────────
+    function addCohort() {
+      const { x: px, y: py } = plateauCenter();
+      for (let i = 0; i < N_PER_YEAR; i++) {
+        const p = mkPerson();
+        p.x = px + (Math.random() - 0.5) * 90;
+        p.y = py + (Math.random() - 0.5) * 5;
+        people.push(p);
+        totalIntroduced++;
+      }
+    }
+
+    // ── Year simulation ──────────────────────────────────────────────────────
+    function runYear() {
+      year++;
+      addCohort();
+
+      for (const p of people) {
+        if (!p.active || p.dropping || p.promoting) continue;
+
+        const b = BELTS[p.belt];
+
+        // Visual skill: drift toward belt mean so dots cluster on correct curve.
+        // Noise keeps them from collapsing to a single point.
+        const driftSpeed = 0.22;
+        p.skill += (b.mu - p.skill) * driftSpeed + (Math.random() - 0.5) * b.sigma * 0.18;
+        p.skill = Math.max(0, Math.min(999, p.skill));
+
+        // Dropout — randomized ±dropVar around base rate
+        const dropChance = b.dropout + (Math.random() - 0.5) * 2 * b.dropVar;
+        if (Math.random() < dropChance) {
+          p.dropping = true;
+          p.vy = 0;
+          continue;
+        }
+
+        p.yearsAtBelt++;
+        p.totalYears++;
+
+        // Progression — random rate within belt's given range (of survivors)
+        if (p.belt < 4) {
+          const rate = b.progressMin + Math.random() * (b.progressMax - b.progressMin);
+          if (Math.random() < rate) {
+            const nb = p.belt + 1;
+            p.belt      = nb;
+            p.yearsAtBelt = 0;
+            p.promoting   = true;
+            p.promStartX  = p.x;
+            // Jump skill into new belt's visual distribution
+            p.skill       = BELTS[nb].mu + (Math.random() - 0.5) * BELTS[nb].sigma * 1.4;
+            p.promTargetX = skillX(p.skill);
+            p.promT       = 0;
+            p.glowTimer   = 40;
+            promotionStats[nb - 1].count++;
+            promotionStats[nb - 1].totalYears += p.totalYears;
+          }
+        }
+      }
+      updateStats();
+      updateYearLabel();
+    }
+
+    // ── DOM stats ────────────────────────────────────────────────────────────
+    function updateStats() {
+      const c = [0, 0, 0, 0, 0]; let out = 0;
+      for (const p of people) {
+        if (p.active) c[p.belt]++;
+        else out++;
+      }
+      for (let i = 0; i < 5; i++)
+        document.getElementById(`stat-${i}`).textContent = c[i];
+      document.getElementById('stat-out').textContent = out;
+    }
+    function updateYearLabel() {
+      document.getElementById('year-label').textContent = `Year ${year}`;
+    }
+
+    // ── Recap panel ──────────────────────────────────────────────────────────
+    function showRecap() {
+      // Tally current state
+      const cur  = [0, 0, 0, 0, 0];  // active per belt
+      const drp  = [0, 0, 0, 0, 0];  // dropped per belt (piled dot's belt at dropout)
+      let activeTotal = 0;
+      for (const p of people) {
+        if (p.active) { cur[p.belt]++; activeTotal++; }
+        else drp[p.belt]++;
+      }
+      const droppedTotal = totalIntroduced - activeTotal;
+
+      document.getElementById('rs-total').textContent   = totalIntroduced;
+      document.getElementById('rs-dropped').textContent = droppedTotal;
+      document.getElementById('rs-dropout-pct').textContent =
+        `${(droppedTotal / totalIntroduced * 100).toFixed(1)}% dropout rate`;
+      document.getElementById('rs-active').textContent  = activeTotal;
+      document.getElementById('rs-retention-pct').textContent =
+        `${(activeTotal / totalIntroduced * 100).toFixed(1)}% retention`;
+
+      const tbody = document.getElementById('rs-tbody');
+      tbody.innerHTML = '';
+      BELTS.forEach((belt, b) => {
+        const total_here = cur[b] + drp[b];
+        const pct_all    = (total_here / totalIntroduced * 100).toFixed(1);
+        const pct_active = activeTotal > 0 ? (cur[b] / activeTotal * 100).toFixed(1) : '0.0';
+        const tr = document.createElement('tr');
+        tr.style.cssText = 'border-bottom:1px solid #0d1117;';
+        tr.innerHTML = `
+          <td style="padding:9px 0;font-weight:600;color:${belt.color};">${belt.name}</td>
+          <td style="padding:9px 10px;text-align:right;color:#c9d1d9;">${cur[b]}</td>
+          <td style="padding:9px 10px;text-align:right;color:#f87171;">${drp[b]}</td>
+          <td style="padding:9px 10px;text-align:right;color:#8b949e;">${pct_all}%</td>
+          <td style="padding:9px 0;text-align:right;color:#8b949e;">${pct_active}%</td>`;
+        tbody.appendChild(tr);
+      });
+
+      const parts = ['Blue', 'Purple', 'Brown', 'Black'].map((name, i) => {
+        const s = promotionStats[i];
+        const avg = s.count > 0 ? (s.totalYears / s.count).toFixed(1) : '--';
+        return `<span style="color:${BELTS[i+1].color};">${name}</span> ${avg} yr`;
+      });
+      document.getElementById('rs-avg-years').innerHTML = parts.join('&nbsp;&nbsp;·&nbsp;&nbsp;');
+
+      document.getElementById('recap-panel').style.display = 'block';
+    }
+
+    // ── Easing ───────────────────────────────────────────────────────────────
+    function easeOut3(t) { return 1 - Math.pow(1 - t, 3); }
+
+    // ── Canvas overlay panels ────────────────────────────────────────────────
+    function drawPanel(bx, by, bw, bh) {
+      ctx.fillStyle   = 'rgba(8,11,18,0.82)';
+      ctx.strokeStyle = '#1c2230';
+      ctx.lineWidth   = 1;
+      ctx.beginPath(); ctx.rect(bx, by, bw, bh); ctx.fill(); ctx.stroke();
+    }
+
+    function drawAssumptionsBox() {
+      const bx = 10, by = 10, bw = 222, bh = 88;
+      drawPanel(bx, by, bw, bh);
+      ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'left';
+      const lx = bx + 9;
+      ctx.fillStyle = '#8b949e'; ctx.fillText('ASSUMPTIONS', lx, by + 15);
+      ctx.fillStyle = '#1c2230'; ctx.fillText('──────────────────────────', lx, by + 26);
+      ctx.fillStyle = '#4b5563'; ctx.fillText('+100 white belts / year', lx, by + 39);
+      ctx.fillStyle = '#4b5563'; ctx.fillText('Dropout:  W:50% B:40% P:30% Br:15% Bk:4%', lx, by + 52);
+      ctx.fillStyle = '#4b5563'; ctx.fillText('Progress: W:30% B:35% P:40% Br:45% of survivors', lx, by + 65);
+      ctx.fillStyle = '#4b5563'; ctx.fillText('Randomized each year within stated ranges', lx, by + 78);
+    }
+
+    function drawStatsBox() {
+      const bw = 234, bx = W - bw - 10, by = 10, bh = 102;
+      drawPanel(bx, by, bw, bh);
+      ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'left';
+      const lx = bx + 9;
+      ctx.fillStyle = '#8b949e';
+      ctx.fillText(`STATS  (${totalIntroduced} introduced)`, lx, by + 15);
+      ctx.fillStyle = '#1c2230';
+      ctx.fillText('──────────────────────────────────', lx, by + 26);
+      const rows = [
+        { label: '→ Blue:  ', idx: 0, color: '#3b82f6' },
+        { label: '→ Purple:', idx: 1, color: '#8b5cf6' },
+        { label: '→ Brown: ', idx: 2, color: '#7c3d11' },
+        { label: '→ Black: ', idx: 3, color: '#c8c8c8' },
+      ];
+      rows.forEach(({ label, idx, color }, i) => {
+        const s   = promotionStats[idx];
+        const cnt = s.count;
+        const pct = totalIntroduced > 0 ? (cnt / totalIntroduced * 100).toFixed(1) + '%' : '-.-% ';
+        const avg = cnt > 0 ? (s.totalYears / cnt).toFixed(1) + ' yr' : '-.-  yr';
+        ctx.fillStyle = color;
+        ctx.fillText(`${label} ${cnt.toString().padStart(3)}  (${pct.padStart(5)})  avg ${avg}`, lx, by + 39 + i * 14);
+      });
+    }
+
+    // ── Main draw ────────────────────────────────────────────────────────────
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#080b12';
+      ctx.fillRect(0, 0, W, H);
+
+      const gy = groundY();
+
+      // Bell curves
+      for (let b = 0; b < 5; b++) {
+        const belt = BELTS[b];
+        ctx.beginPath();
+        ctx.moveTo(skillX(0), gy);
+        for (let s = 0; s <= 1000; s += 4) ctx.lineTo(skillX(s), gy - bellH(s, b));
+        ctx.lineTo(skillX(1000), gy);
+        ctx.closePath();
+        ctx.fillStyle = belt.color; ctx.globalAlpha = 0.09; ctx.fill(); ctx.globalAlpha = 1;
+
+        ctx.beginPath();
+        for (let s = 0; s <= 1000; s += 4) {
+          const x = skillX(s), y = gy - bellH(s, b);
+          s === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = belt.color; ctx.globalAlpha = 0.25; ctx.lineWidth = 1;
+        ctx.stroke(); ctx.globalAlpha = 1;
+
+        ctx.fillStyle = belt.color; ctx.globalAlpha = 0.60;
+        ctx.font = 'bold 10px "Courier New",monospace'; ctx.textAlign = 'center';
+        ctx.fillText(belt.name[0], skillX(belt.mu), gy - bellH(belt.mu, b) - 8);
+        ctx.globalAlpha = 1;
+      }
+
+      // Plateau
+      drawPlateau();
+
+      // Ground line
+      ctx.strokeStyle = '#1c2230'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(PAD_L, gy); ctx.lineTo(W - PAD_R, gy); ctx.stroke();
+
+      // Belt labels + drop-outs label below ground
+      ctx.textAlign = 'center';
+      for (let b = 0; b < 5; b++) {
+        ctx.fillStyle = BELTS[b].color; ctx.globalAlpha = 0.30;
+        ctx.font = '9px "Courier New",monospace';
+        ctx.fillText(BELTS[b].name, skillX(BELTS[b].mu), gy + 20);
+      }
+      ctx.globalAlpha = 1; ctx.textAlign = 'left';
+
+      ctx.fillStyle = '#374151'; ctx.globalAlpha = 0.55;
+      ctx.font = '9px "Courier New",monospace';
+      ctx.fillText('↓  drop-outs', PAD_L, gy + 38);
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = '#2d3748';
+      ctx.fillText('skill →', W - PAD_R - 46, gy + 13);
+
+      // ── Physics update ─────────────────────────────────────────────────────
+      for (const p of people) {
+        if (!p.active && !p.dropping) continue;
+        if (p.dropping) {
+          p.vy += 0.45; p.y += p.vy;
+          const sl = xToSlot(p.x), floor = pileFloorY(sl);
+          if (p.y >= floor) {
+            p.pileSlot = sl; p.pileLayer = pileSlots[sl]; pileSlots[sl]++;
+            p.y = floor; p.dropping = false; p.active = false; p.piled = true;
+          }
+        } else if (p.promoting) {
+          p.promT = Math.min(1, p.promT + 0.04);
+          p.x = p.promStartX + (p.promTargetX - p.promStartX) * easeOut3(p.promT);
+          p.y += (targetY(p) - p.y) * 0.08;
+          if (p.promT >= 1) p.promoting = false;
+          if (p.glowTimer > 0) p.glowTimer--;
+        } else {
+          p.x += (skillX(p.skill) - p.x) * 0.05;
+          p.y += (targetY(p)      - p.y) * 0.05;
+        }
+      }
+
+      // ── Piled dots (graveyard) ─────────────────────────────────────────────
+      const sw = slotW();
+      for (const p of people) {
+        if (!p.piled) continue;
+        const px = PAD_L + (p.pileSlot + 0.5) * sw;
+        const py = H - 4 - p.pileLayer * LAYER_PX;
+        ctx.save();
+        ctx.globalAlpha = 0.38;
+        if (p.belt === 4) {
+          ctx.shadowBlur = 5; ctx.shadowColor = 'rgba(220,38,38,0.5)';
+          ctx.beginPath(); ctx.arc(px, py, 2, 0, Math.PI * 2);
+          ctx.fillStyle = '#111111'; ctx.fill(); ctx.shadowBlur = 0;
+        } else {
+          ctx.beginPath(); ctx.arc(px, py, 2, 0, Math.PI * 2);
+          ctx.fillStyle = BELTS[p.belt].color; ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      // ── Active / dropping dots ─────────────────────────────────────────────
+      for (const p of people) {
+        if (!p.active && !p.dropping) continue;
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        if (p.glowTimer > 0) {
+          const gf = p.glowTimer / 40;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 5 + (1 - gf) * 9, 0, Math.PI * 2);
+          ctx.strokeStyle = BELTS[p.belt].color;
+          ctx.globalAlpha = p.alpha * gf * 0.65; ctx.lineWidth = 1.5;
+          ctx.stroke(); ctx.globalAlpha = p.alpha;
+        }
+        if (p.belt === 4) {
+          ctx.shadowBlur = 10; ctx.shadowColor = 'rgba(220,38,38,0.55)';
+          ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = '#101010'; ctx.fill(); ctx.shadowBlur = 0;
+        } else {
+          ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = BELTS[p.belt].color; ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      // Overlay panels
+      drawAssumptionsBox();
+      drawStatsBox();
+    }
+
+    // ── RAF loop ─────────────────────────────────────────────────────────────
+    function loop(ts) {
+      draw();
+      if (playing && !finished) {
+        if (!lastTick) lastTick = ts;
+        if (ts - lastTick >= SPEEDS[speedIdx]) {
+          lastTick = ts;
+          runYear();
+          if (year >= MAX_YEAR) {
+            finished = true; playing = false;
+            document.getElementById('btn-play').style.display   = 'none';
+            document.getElementById('btn-replay').style.display = 'inline';
+            // Small delay so final-year animations settle before recap
+            setTimeout(showRecap, 1800);
+          }
+        }
+      }
+      requestAnimationFrame(loop);
+    }
+
+    // ── Controls ─────────────────────────────────────────────────────────────
+    document.getElementById('btn-play').addEventListener('click', () => {
+      if (finished) return;
+      playing = !playing;
+      document.getElementById('btn-play').textContent = playing ? '⏸ Pause' : '▶ Play';
+      if (playing) lastTick = 0;
+    });
+
+    document.getElementById('btn-replay').addEventListener('click', () => {
+      document.getElementById('recap-panel').style.display = 'none';
+      document.getElementById('btn-replay').style.display  = 'none';
+      document.getElementById('btn-play').style.display    = 'inline';
+      document.getElementById('btn-play').textContent      = '▶ Play';
+      initSim();
+    });
+
+    document.querySelectorAll('[data-speed]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        speedIdx = parseInt(btn.dataset.speed);
+        document.querySelectorAll('[data-speed]').forEach((b) => {
+          const on = parseInt(b.dataset.speed) === speedIdx;
+          b.style.background  = on ? 'rgba(0,212,255,0.15)' : 'transparent';
+          b.style.color       = on ? '#00d4ff' : '#6b7280';
+          b.style.borderColor = on ? '#00d4ff' : '#21262d';
+        });
+      });
+    });
+
+    window.addEventListener('resize', () => {
+      resize();
+      for (const p of people) {
+        if (!p.active || p.dropping || p.promoting) continue;
+        p.x = skillX(p.skill);
+        p.y = targetY(p);
+      }
+    });
+
+    // ── Init ─────────────────────────────────────────────────────────────────
+    initSim();
+    requestAnimationFrame(loop);
+  </script>
+
+</BaseLayout>
