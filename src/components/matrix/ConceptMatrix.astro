@@ -309,36 +309,54 @@ function draw() {
   ctx.beginPath(); ctx.moveTo(x0, axY); ctx.lineTo(x1, axY); ctx.stroke(); // X axis
   ctx.beginPath(); ctx.moveTo(axX, y0); ctx.lineTo(axX, y1); ctx.stroke(); // Y axis
 
-  // ── Axis labels ──────────────────────────────────────────────────────
+  // ── Axis labels — use category-specific labels when one category is active ──
+  // Priority: zoomed category > single active filter > defaults
+  function getAxisLabels() {
+    let cat = null;
+    if (zoomedCat) {
+      cat = categories.find(c => c.name === zoomedCat);
+    } else if (activeCategories.size === 1) {
+      const name = Array.from(activeCategories)[0];
+      cat = categories.find(c => c.name === name);
+    }
+    return {
+      top:    (cat?.yAxis?.top    ?? 'Mental').toUpperCase(),
+      bottom: (cat?.yAxis?.bottom ?? 'Physical').toUpperCase(),
+      left:   (cat?.xAxis?.left   ?? 'Opponent').toUpperCase(),
+      right:  (cat?.xAxis?.right  ?? 'Self').toUpperCase(),
+    };
+  }
+  const axLabels = getAxisLabels();
+
   const fontSize = Math.max(9, Math.min(11, W / 80));
   ctx.font = `${fontSize}px ${FONT}`;
   ctx.fillStyle = C_LABEL;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  // Top / bottom (Mental / Physical)
-  ctx.fillText('MENTAL',   axX, y0 - 14);
-  ctx.fillText('PHYSICAL', axX, y1 + 14);
+  // Top / bottom
+  ctx.fillText(axLabels.top,    axX, y0 - 14);
+  ctx.fillText(axLabels.bottom, axX, y1 + 14);
 
-  // Left / right (Opponent / Self)
+  // Left / right (rotated)
   ctx.save();
   ctx.translate(x0 - 14, axY);
   ctx.rotate(-Math.PI / 2);
-  ctx.fillText('OPPONENT', 0, 0);
+  ctx.fillText(axLabels.left, 0, 0);
   ctx.restore();
 
   ctx.save();
   ctx.translate(x1 + 14, axY);
   ctx.rotate(Math.PI / 2);
-  ctx.fillText('SELF', 0, 0);
+  ctx.fillText(axLabels.right, 0, 0);
   ctx.restore();
 
-  // Corner quadrant labels (faint)
+  // Corner quadrant labels (faint) — derived from active axis labels
   const qLabels = [
-    { cx: -0.55, cy:  0.55, t: 'Mental\nOpponent' },
-    { cx:  0.55, cy:  0.55, t: 'Mental\nSelf'     },
-    { cx: -0.55, cy: -0.55, t: 'Physical\nOpponent'},
-    { cx:  0.55, cy: -0.55, t: 'Physical\nSelf'   },
+    { cx: -0.55, cy:  0.55, t: `${axLabels.top}\n${axLabels.left}`    },
+    { cx:  0.55, cy:  0.55, t: `${axLabels.top}\n${axLabels.right}`   },
+    { cx: -0.55, cy: -0.55, t: `${axLabels.bottom}\n${axLabels.left}` },
+    { cx:  0.55, cy: -0.55, t: `${axLabels.bottom}\n${axLabels.right}`},
   ];
   ctx.font = `${Math.max(8, fontSize - 1)}px ${FONT}`;
   ctx.fillStyle = 'rgba(76,141,255,0.18)';
