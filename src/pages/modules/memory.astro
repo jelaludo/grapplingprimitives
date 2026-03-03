@@ -4,8 +4,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
 <BaseLayout title="Memory Game — Grappling Primitives" fullscreen={true}>
 
-<style>
+<style is:global>
   /* ── Card 3D flip ──────────────────────────────────────────────────────── */
+  /* NOTE: is:global required — cards are built dynamically in JS and won't
+     receive Astro's scoped data-attribute, so scoped selectors never match. */
   .card-wrap {
     cursor: pointer;
     border-radius: 10px;
@@ -57,21 +59,16 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     border-radius: 10px;
   }
 
-  /* ── Grid ──────────────────────────────────────────────────────────────── */
-  #grid {
-    display: grid;
-    gap: var(--gap, 8px);
-  }
-
   /* ── Phase banner ──────────────────────────────────────────────────────── */
   #phase-banner {
     position: fixed;
-    top: 36px;
+    top: 44px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 40;
     pointer-events: none;
     transition: opacity 0.3s;
+    white-space: nowrap;
   }
 </style>
 
@@ -96,8 +93,10 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 </div>
 
 <!-- ── Game area ──────────────────────────────────────────────────────────── -->
-<div id="game-area" style="min-height:100vh;padding-top:36px;display:flex;align-items:center;justify-content:center;">
-  <div id="grid"></div>
+<!-- Fixed container exactly filling the space below the toolbar.
+     This guarantees the grid never overflows — computeCardW() sizes to fit. -->
+<div id="game-area" style="position:fixed;top:36px;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+  <div id="grid" style="display:grid;"></div>
 </div>
 
 <!-- ── Win modal ─────────────────────────────────────────────────────────── -->
@@ -180,14 +179,21 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     return a;
   }
 
-  // ── Card sizing (fills viewport without scroll) ───────────────────────────
+  // ── Card sizing ───────────────────────────────────────────────────────────
+  // Available area = viewport minus fixed toolbar (36px) minus padding (16px).
+  // Cards must fit in a 4×4 grid within that space without scrolling.
   function computeCardW() {
-    const vw = window.innerWidth, vh = window.innerHeight;
-    const cols = 4, rows = 4, padX = 16, topRes = 52;
-    let w = Math.floor((vw - padX * 2 - GAP * (cols - 1)) / cols);
-    let h = Math.floor(w * CARD_RATIO);
-    while (rows * h + GAP * (rows - 1) > vh - topRes && w > 50) { w--; h = Math.floor(w * CARD_RATIO); }
-    return w;
+    const vw = window.innerWidth;
+    const availH = window.innerHeight - 36 - 16; // toolbar + padding
+    const availW = vw - 16;                       // horizontal padding
+    const cols = 4, rows = 4;
+
+    // Width-constrained size
+    let wFromW = Math.floor((availW - GAP * (cols - 1)) / cols);
+    // Height-constrained size
+    let wFromH = Math.floor(((availH - GAP * (rows - 1)) / rows) / CARD_RATIO);
+
+    return Math.max(50, Math.min(wFromW, wFromH));
   }
 
   function applyLayout() {
