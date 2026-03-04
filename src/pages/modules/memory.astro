@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout title="Memory Game — Grappling Primitives" fullscreen={true}>
@@ -73,11 +74,11 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 </style>
 
 <!-- Preload card back -->
-<link rel="preload" as="image" href="/images/memory/Memory_JJJ_Back_440x.webp">
+<link rel="preload" as="image" href={`${base}/images/memory/Memory_JJJ_Back_440x.webp`}>
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────── -->
 <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
-  <a href="/" style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+  <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
   <span style="color:#21262d;">|</span>
   <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Memory Game</span>
   <div style="flex:1;"></div>
@@ -122,14 +123,14 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     <div id="win-prev" style="font-size:11px;color:#6b7280;margin-bottom:18px;min-height:16px;"></div>
     <div style="display:flex;gap:8px;">
       <button id="btn-again" style="flex:1;padding:10px;font-family:inherit;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;cursor:pointer;border:1px solid #00d4ff;background:rgba(0,212,255,0.1);color:#00d4ff;">Play Again</button>
-      <a href="/" style="flex:1;padding:10px;font-family:inherit;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;text-decoration:none;border:1px solid #21262d;background:transparent;color:#8b949e;display:flex;align-items:center;justify-content:center;">← Home</a>
+      <a href={`${base}/`} style="flex:1;padding:10px;font-family:inherit;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;text-decoration:none;border:1px solid #21262d;background:transparent;color:#8b949e;display:flex;align-items:center;justify-content:center;">← Home</a>
     </div>
   </div>
 </div>
 
 <!-- ── Splash / intro ─────────────────────────────────────────────────────── -->
 <div id="splash" style="position:fixed;inset:0;z-index:80;background:rgba(0,0,0,0.88);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:20px;">
-  <img id="splash-img" src="/images/memory/Memory_JJJ_Back_440x.webp" alt="card back" width="440" height="597"
+  <img id="splash-img" src={`${base}/images/memory/Memory_JJJ_Back_440x.webp`} alt="card back" width="440" height="597"
     style="width:min(55vw,200px);height:auto;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.9);display:block;">
   <div style="font-family:'Courier New',Consolas,Monaco,monospace;text-align:center;">
     <div style="font-size:13px;font-weight:600;letter-spacing:0.08em;color:#c9d1d9;margin-bottom:6px;">Memory Game</div>
@@ -143,7 +144,8 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
   const PAIRS        = 8;
   const CARD_RATIO   = 597 / 440;
   const GAP          = 8;
-  const BACK_URL     = '/images/memory/Memory_JJJ_Back_440x.webp';
+  const _base        = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const BACK_URL     = `${_base}/images/memory/Memory_JJJ_Back_440x.webp`;
   const PER_PAIR_MS  = 650;   // reveal speed per pair
   const LSKEY        = 'gp-memory-best-8';
 
@@ -162,7 +164,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   const pad = n => n.toString().padStart(3, '0');
-  const imgUrl = (id, ext) => `/images/memory/${ext}/${id}.${ext}`;
+  const imgUrl = (id, ext) => `${_base}/images/memory/${ext}/${id}.${ext}`;
   const fmt = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
   const el = id => document.getElementById(id);
 
