@@ -1,0 +1,253 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const STEPS = [
+  { label: 'had to tap!',                        note: 'The round is over. Nothing left but to learn from it.' },
+  { label: 'Resisting a submission',             note: 'Surviving one moment at a time.' },
+  { label: 'Limbs isolated',                     note: 'Options are shrinking. Escape is the only objective.' },
+  { label: 'Alignment compromised',              note: 'Structure is failing under pressure.' },
+  { label: 'Frames collapsing',                  note: 'Running out of defensive answers.' },
+  { label: 'Dominated Position',                 note: 'Pinned and controlled. Survive, recover, endure.' },
+  { label: 'Losing Grip Fight',                  note: 'Initiative is slipping. Recover it or concede the position.' },
+  { label: 'Disengaged',                         note: 'No advantage for either player. A new scramble begins.' },
+  { label: 'Dominant Grips',                     note: 'You control the setup. Press the initiative.' },
+  { label: 'Dominant Position',                  note: 'In control. Finishing options are opening.' },
+  { label: 'Pressure, Collapsing their frames',  note: 'Consistent weight. Their defense cannot sustain it.' },
+  { label: "Opponent's alignment compromised",   note: 'Their structure is failing. The finish is within reach.' },
+  { label: "Opponent's Limbs isolated",          note: 'The path to submission is clear. Patience over force.' },
+  { label: 'Applying a controlled submission',   note: 'Executing with precision. The end is near.' },
+  { label: 'Opponent tapped.',                   note: 'The journey is complete — until the next round begins.' },
+];
+
+const COLORS = [
+  '#b71c1c','#c62828','#d32f2f','#ef5350','#ef6c00',
+  '#f57c00','#fdd835','#78909c',
+  '#66bb6a','#43a047','#2e7d32','#00897b','#00acc1','#0288d1','#00d4ff',
+];
+
+function fw(pos: number): number {
+  const d = Math.abs(pos - 7);
+  if (d >= 7) return 800;
+  if (d >= 5) return 700;
+  if (d >= 3) return 600;
+  if (d >= 1) return 500;
+  return 400;
+}
+
+function fs(pos: number): number {
+  const d = Math.abs(pos - 7);
+  if (d >= 7) return 15;
+  if (d >= 5) return 14;
+  if (d >= 3) return 13;
+  if (d >= 1) return 12;
+  return 13;
+}
+
+// rows: index i → YOU at position (14-i), OPPONENT at position i
+const rows = STEPS.map((_, i) => {
+  const youPos = 14 - i;
+  const oppPos = i;
+  return { i, youPos, oppPos };
+});
+---
+
+<BaseLayout title="Beyond Offense & Defense — Grappling Primitives" fullscreen={true}>
+
+  <!-- ── Toolbar ──────────────────────────────────────────────────────────── -->
+  <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+    <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+    <span style="color:#21262d;">|</span>
+    <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Beyond Offense &amp; Defense</span>
+  </div>
+
+  <!-- ── Content ──────────────────────────────────────────────────────────── -->
+  <div style="padding-top:36px;max-width:900px;margin:0 auto;padding-left:16px;padding-right:16px;padding-bottom:60px;font-family:'Courier New',Consolas,Monaco,monospace;">
+
+    <!-- Header -->
+    <div style="margin-bottom:32px;padding-top:28px;">
+      <p style="font-size:9px;letter-spacing:4px;color:#00d4ff;text-transform:uppercase;margin:0 0 8px;">Modules / Concepts</p>
+      <h1 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-0.02em;color:#c9d1d9;margin:0 0 8px;line-height:1.1;">Beyond Offense &amp; Defense</h1>
+      <p style="font-size:13px;color:#8b949e;margin:0;letter-spacing:0.05em;font-style:italic;">it's always the same — improve your relative position</p>
+    </div>
+
+    <!-- Scale container -->
+    <div id="scale" style="position:relative;margin-bottom:24px;">
+
+      <!-- Column headers -->
+      <div style="display:grid;grid-template-columns:1fr 48px 1fr;margin-bottom:8px;padding:0 4px;">
+        <div style="font-size:9px;letter-spacing:3px;color:#00d4ff;text-transform:uppercase;text-align:right;padding-right:16px;">YOU ↑</div>
+        <div></div>
+        <div style="font-size:9px;letter-spacing:3px;color:#b71c1c;text-transform:uppercase;text-align:left;padding-left:16px;">↓ OPPONENT</div>
+      </div>
+
+      <!-- Gradient axis line (absolute, behind dots) -->
+      <div style="position:absolute;left:calc(50% - 1px);top:32px;bottom:0;width:2px;background:linear-gradient(to bottom,#00d4ff,#78909c,#b71c1c);opacity:0.4;pointer-events:none;"></div>
+
+      <!-- Step rows -->
+      {rows.map(({ i, youPos, oppPos }) => {
+        const youColor = COLORS[youPos];
+        const oppColor = COLORS[oppPos];
+        const youLabel = STEPS[youPos].label;
+        const oppLabel = STEPS[oppPos].label;
+        const youFW = fw(youPos);
+        const youFS = fs(youPos);
+        const oppFW = fw(oppPos);
+        const oppFS = fs(oppPos);
+        const isNeutral = i === 7;
+        const barMaxW = 80;
+        const youBarW = Math.round((youPos / 14) * barMaxW);
+        const oppBarW = Math.round((oppPos / 14) * barMaxW);
+        return (
+          <div
+            class="step-row"
+            data-i={i}
+            style={`display:grid;grid-template-columns:1fr 48px 1fr;align-items:center;padding:${isNeutral ? '7px 4px' : '4px 4px'};cursor:pointer;border-radius:3px;transition:background 0.15s,opacity 0.2s;${isNeutral ? 'margin:4px 0;' : ''}`}
+          >
+            <!-- YOU side -->
+            <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;padding-right:8px;">
+              <span
+                class="you-label"
+                style={`font-size:${youFS}px;font-weight:${youFW};color:${youColor};${isNeutral ? 'font-style:italic;' : ''}text-align:right;`}
+              >{youLabel}</span>
+              <div style={`width:${youBarW}px;height:3px;background:${youColor};opacity:0.5;border-radius:2px;flex-shrink:0;`}></div>
+            </div>
+
+            <!-- Center dot -->
+            <div style="display:flex;align-items:center;justify-content:center;">
+              <div
+                class="step-dot"
+                style={`width:8px;height:8px;border-radius:50%;background:${youColor};transition:transform 0.15s,box-shadow 0.15s;`}
+              ></div>
+            </div>
+
+            <!-- OPPONENT side -->
+            <div style="display:flex;align-items:center;justify-content:flex-start;gap:8px;padding-left:8px;">
+              <div style={`width:${oppBarW}px;height:3px;background:${oppColor};opacity:0.5;border-radius:2px;flex-shrink:0;`}></div>
+              <span
+                class="opp-label"
+                style={`font-size:${oppFS}px;font-weight:${oppFW};color:${oppColor};${isNeutral ? 'font-style:italic;' : ''}text-align:left;`}
+              >{oppLabel}</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- Info panel -->
+    <div id="info-panel" style="display:none;border:1px solid #21262d;border-radius:4px;padding:16px 20px;margin-bottom:28px;background:rgba(13,17,23,0.8);">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;">
+        <div>
+          <div style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">YOUR POSITION</div>
+          <div id="info-you-label" style="font-size:18px;font-weight:800;line-height:1.2;"></div>
+        </div>
+        <div>
+          <div style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">OPPONENT IS AT</div>
+          <div id="info-opp-label" style="font-size:18px;font-weight:800;line-height:1.2;"></div>
+        </div>
+      </div>
+      <div id="info-note" style="font-size:11px;color:#8b949e;font-style:italic;margin-bottom:10px;line-height:1.6;"></div>
+      <div style="font-size:9px;letter-spacing:2px;color:#6b7280;text-transform:uppercase;border-top:1px solid #21262d;padding-top:8px;">↑ both players always want to improve — in opposite directions</div>
+    </div>
+
+    <!-- Note -->
+    <div style="border-left:2px solid #21262d;padding-left:16px;margin-top:8px;">
+      <p style="font-size:11px;color:#6b7280;margin:0 0 4px;line-height:1.7;">
+        This one was inspired by a discussion I had with Wim Deputter, and I like this model. It goes to a simple truth : wherever we are in a match or fight, we want to get to a better place, until it's over.
+      </p>
+    </div>
+
+  </div>
+
+  <style>
+    .step-row:hover { background: rgba(255,255,255,0.03); }
+    .step-row:hover .step-dot { transform: scale(1.6); }
+    .step-row.active { background: rgba(255,255,255,0.05); }
+    .step-row.active .step-dot { transform: scale(1.8); box-shadow: 0 0 14px currentColor; }
+    #scale.has-active .step-row:not(.active) { opacity: 0.3; }
+    @media (max-width: 600px) {
+      .you-label, .opp-label { font-size: clamp(9px, 2.5vw, 12px) !important; }
+    }
+  </style>
+
+  <script>
+    const STEPS_DATA = [
+      { label: 'had to tap!',                        note: 'The round is over. Nothing left but to learn from it.' },
+      { label: 'Resisting a submission',             note: 'Surviving one moment at a time.' },
+      { label: 'Limbs isolated',                     note: 'Options are shrinking. Escape is the only objective.' },
+      { label: 'Alignment compromised',              note: 'Structure is failing under pressure.' },
+      { label: 'Frames collapsing',                  note: 'Running out of defensive answers.' },
+      { label: 'Dominated Position',                 note: 'Pinned and controlled. Survive, recover, endure.' },
+      { label: 'Losing Grip Fight',                  note: 'Initiative is slipping. Recover it or concede the position.' },
+      { label: 'Disengaged',                         note: 'No advantage for either player. A new scramble begins.' },
+      { label: 'Dominant Grips',                     note: 'You control the setup. Press the initiative.' },
+      { label: 'Dominant Position',                  note: 'In control. Finishing options are opening.' },
+      { label: 'Pressure, Collapsing their frames',  note: 'Consistent weight. Their defense cannot sustain it.' },
+      { label: "Opponent's alignment compromised",   note: 'Their structure is failing. The finish is within reach.' },
+      { label: "Opponent's Limbs isolated",          note: 'The path to submission is clear. Patience over force.' },
+      { label: 'Applying a controlled submission',   note: 'Executing with precision. The end is near.' },
+      { label: 'Opponent tapped.',                   note: 'The journey is complete — until the next round begins.' },
+    ];
+
+    const COLORS_DATA = [
+      '#b71c1c','#c62828','#d32f2f','#ef5350','#ef6c00',
+      '#f57c00','#fdd835','#78909c',
+      '#66bb6a','#43a047','#2e7d32','#00897b','#00acc1','#0288d1','#00d4ff',
+    ];
+
+    const scale = document.getElementById('scale');
+    const infoPanel = document.getElementById('info-panel');
+    const infoYouLabel = document.getElementById('info-you-label');
+    const infoOppLabel = document.getElementById('info-opp-label');
+    const infoNote = document.getElementById('info-note');
+
+    let activeRow: number | null = null;
+
+    function deactivate() {
+      scale?.classList.remove('has-active');
+      document.querySelectorAll('.step-row.active').forEach(el => el.classList.remove('active'));
+      if (infoPanel) infoPanel.style.display = 'none';
+      activeRow = null;
+    }
+
+    function activate(i: number) {
+      const youPos = 14 - i;
+      const oppPos = i;
+
+      scale?.classList.add('has-active');
+      document.querySelectorAll('.step-row').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.step-row[data-i="${i}"]`)?.classList.add('active');
+
+      if (infoYouLabel) {
+        infoYouLabel.textContent = STEPS_DATA[youPos].label;
+        infoYouLabel.style.color = COLORS_DATA[youPos];
+      }
+      if (infoOppLabel) {
+        infoOppLabel.textContent = STEPS_DATA[oppPos].label;
+        infoOppLabel.style.color = COLORS_DATA[oppPos];
+      }
+      if (infoNote) {
+        // Show note for the YOU position (higher up the scale)
+        infoNote.textContent = STEPS_DATA[youPos].note;
+      }
+      if (infoPanel) {
+        infoPanel.style.display = 'block';
+        infoPanel.style.borderColor = COLORS_DATA[youPos] + '44';
+      }
+
+      activeRow = i;
+    }
+
+    document.querySelectorAll('.step-row').forEach(row => {
+      row.addEventListener('click', () => {
+        const i = parseInt((row as HTMLElement).dataset.i ?? '0', 10);
+        if (activeRow === i) {
+          deactivate();
+        } else {
+          activate(i);
+        }
+      });
+    });
+  </script>
+
+</BaseLayout>
