@@ -2,6 +2,7 @@
 // QuadTreeViz.astro — 4-quadrant treemap visualization
 // Data sourced from Astro Content Collections (same concepts as ConceptMatrix).
 // Click a category box to zoom into its scatter plot; pan/zoom in overview.
+// In dev: KANRI mode allows drag-to-reposition nodes, saving back to .md files.
 
 interface Concept {
   id: string;
@@ -27,7 +28,8 @@ interface Props {
 }
 
 const { concepts, categories } = Astro.props;
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const base  = import.meta.env.BASE_URL.replace(/\/$/, '');
+const isDev = import.meta.env.DEV;
 ---
 
 <!-- ── Layout ─────────────────────────────────────────────────────────────── -->
@@ -37,7 +39,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <div id="qt-toolbar" class="absolute top-0 left-0 right-0 z-20 h-9 bg-bg/95 border-b border-border flex items-center gap-3 px-3 backdrop-blur-sm">
     <a href={`${base}/`} class="text-[10px] tracking-[2px] text-text-dim hover:text-accent transition-colors uppercase whitespace-nowrap">← Home</a>
     <span class="text-border">|</span>
-    <span class="text-[10px] tracking-[3px] text-text-dim uppercase whitespace-nowrap select-none">Quad Map</span>
+    <button id="qt-breadcrumb" class="text-[10px] tracking-[3px] text-text-dim uppercase whitespace-nowrap select-none hover:text-accent transition-colors" style="background:none;border:none;padding:0;cursor:default;" title="Return to quad overview">Quad Map</button>
     <span class="text-border">|</span>
     <input
       id="qt-search"
@@ -47,6 +49,25 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     />
     <span id="qt-search-count" class="text-[11px] text-text-dim whitespace-nowrap hidden"></span>
     <span class="flex-1"></span>
+
+    <!-- Label size buttons (小中大) -->
+    <div class="flex gap-1">
+      <button id="qt-sz-s" title="Small labels"  class="text-[13px] text-text-dim  border border-border       px-2 h-6 hover:border-accent/50 hover:text-accent transition-all">小</button>
+      <button id="qt-sz-m" title="Medium labels" class="text-[13px] text-accent    border border-accent/40    px-2 h-6 hover:bg-accent/10    transition-all">中</button>
+      <button id="qt-sz-l" title="Large labels"  class="text-[13px] text-text-dim  border border-border       px-2 h-6 hover:border-accent/50 hover:text-accent transition-all">大</button>
+    </div>
+
+    <!-- KANRI toggle — dev only -->
+    {isDev && (
+      <button id="qt-kanri"
+        title="管理 — Kanri: drag nodes to reposition, saves to .md"
+        class="text-[13px] text-text-dim border border-border px-2 h-6 hover:border-[#ff00cc] hover:text-[#ff00cc] transition-all"
+      >管</button>
+    )}
+
+    <!-- Save toast -->
+    <span id="qt-toast" class="hidden text-[10px] tracking-[2px] uppercase" style="color:#00ff88"></span>
+
     <button id="qt-back" class="hidden text-[11px] tracking-[1px] text-accent border border-accent/40 px-2 h-6 hover:bg-accent/10 transition-all uppercase">
       ← Back
     </button>
@@ -98,18 +119,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 
 <!-- ── Canvas Script ──────────────────────────────────────────────────────── -->
-<script define:vars={{ concepts, categories }}>
+<script define:vars={{ concepts, categories, isDev }}>
 'use strict';
 
 const DPR        = Math.min(window.devicePixelRatio || 1, 2);
 const FONT       = "'Courier New', Consolas, monospace";
 const TOOLBAR_H  = 36;
 const HUD_H      = 28;
-const BOX_PAD    = 3;   // padding between boxes in px
+const BOX_PAD    = 3;
 
-// ── 4-quadrant group definitions ─────────────────────────────────────────────
-// Categories are assigned to groups; any category not listed falls through to
-// a catch-all rendered at the end of THE PATH.
+// ── 4-quadrant group definitions ──────────────────────────────────────────────
 const GROUPS = [
   {
     name: 'THE MAT',  kanji: '地', color: '#00d4ff', col: 0, row: 0,
@@ -129,12 +148,11 @@ const GROUPS = [
   },
 ];
 
-// Build lookup maps from content collection data
 const catColorMap = new Map(categories.map(c => [c.name, c.color]));
 const catAxesMap  = new Map(categories.map(c => [c.name, c]));
 
 function nodeColor(n) { return n.color || catColorMap.get(n.category) || '#6B7280'; }
-function toPlotX(x)   { return (x + 1) / 2; }  // [-1,1] → [0,1]
+function toPlotX(x)   { return (x + 1) / 2; }
 function toPlotY(y)   { return (y + 1) / 2; }
 
 function hexToRgba(hex, a) {
@@ -150,17 +168,29 @@ const cam = { x: 0, y: 0, z: 1 };
 
 let zoomedCat   = null;
 let layoutNodes = [];
-let catBounds   = {};   // catName → {x,y,w,h} in world coords
+let catBounds   = {};
 let searchQuery = '';
 let hoveredNode = null;
 let dirty       = true;
 const markDirty = () => { if (!dirty) { dirty = true; requestAnimationFrame(drawLoop); } };
 
-let drag  = null;  // { sx, sy, ox, oy } — sx/sy update each move, ox/oy = origin
-let pinch = null;  // { dist }
+let drag  = null;
+let pinch = null;
 let tapTimeout = null;
 
-// ── DOM refs ─────────────────────────────────────────────────────────────────
+// ── Axis label size ───────────────────────────────────────────────────────────
+// 小=9  中=13  大=17  (default: medium)
+let axisLabelSize = 13;
+
+// ── KANRI state (dev only) ────────────────────────────────────────────────────
+let kanriMode    = false;
+let kanriNode    = null;   // node currently being dragged
+let kanriMoved   = false;  // did the drag actually move?
+
+// Plot bounds in screen coords — set each drawZoomed(), used for coord inversion
+let plotIX = 0, plotIY = 0, plotIW = 1, plotIH = 1;
+
+// ── DOM refs ──────────────────────────────────────────────────────────────────
 const root        = document.getElementById('qt-root');
 const canvas      = document.getElementById('qt-canvas');
 const ctx         = canvas.getContext('2d');
@@ -181,9 +211,13 @@ const searchCount = document.getElementById('qt-search-count');
 const hudTotal    = document.getElementById('qt-hud-total');
 const hudCat      = document.getElementById('qt-hud-cat');
 const hudHint     = document.getElementById('qt-hud-hint');
+const kanriBtn    = document.getElementById('qt-kanri');
+const toastEl     = document.getElementById('qt-toast');
+const breadcrumb  = document.getElementById('qt-breadcrumb');
+const szBtns      = ['qt-sz-s', 'qt-sz-m', 'qt-sz-l'].map(id => document.getElementById(id));
+const szSizes     = [9, 13, 17];
 
 // ── Treemap algorithm ─────────────────────────────────────────────────────────
-// Recursively divides a rect proportionally by weight, alternating split axis.
 function treemap(rect, items, weightFn) {
   if (!items.length) return;
   if (items.length === 1) { items[0].bounds = { ...rect }; return; }
@@ -214,7 +248,6 @@ function treemap(rect, items, weightFn) {
 function buildHierarchy() {
   catBounds = {};
 
-  // Build catMap and initialise group nodes
   const catMap = {};
   GROUPS.forEach(g => {
     g.nodes = [];
@@ -225,7 +258,6 @@ function buildHierarchy() {
     });
   });
 
-  // Distribute concepts into categories / groups
   concepts.forEach(n => {
     const co = catMap[n.category];
     if (co) {
@@ -235,29 +267,23 @@ function buildHierarchy() {
     }
   });
 
-  // 2×2 quadrant layout
   const qW = W / 2, qH = H / 2;
   GROUPS.forEach(g => {
     g.bounds = { x: g.col * qW, y: g.row * qH, w: qW, h: qH };
   });
 
-  // Treemap categories within each quadrant
   GROUPS.forEach(g => {
     const inner = {
-      x: g.bounds.x + BOX_PAD,
-      y: g.bounds.y + BOX_PAD,
-      w: g.bounds.w - BOX_PAD * 2,
-      h: g.bounds.h - BOX_PAD * 2,
+      x: g.bounds.x + BOX_PAD, y: g.bounds.y + BOX_PAD,
+      w: g.bounds.w - BOX_PAD * 2, h: g.bounds.h - BOX_PAD * 2,
     };
     const active = g.catObjects.filter(c => c.nodes.length > 0);
     if (!active.length) return;
     treemap(inner, active, c => Math.max(c.nodes.length, 1));
     active.forEach(c => {
       c.inner = {
-        x: c.bounds.x + BOX_PAD,
-        y: c.bounds.y + BOX_PAD,
-        w: c.bounds.w - BOX_PAD * 2,
-        h: c.bounds.h - BOX_PAD * 2,
+        x: c.bounds.x + BOX_PAD, y: c.bounds.y + BOX_PAD,
+        w: c.bounds.w - BOX_PAD * 2, h: c.bounds.h - BOX_PAD * 2,
       };
       catBounds[c.name] = c.bounds;
     });
@@ -274,20 +300,16 @@ function clampCam() {
   cam.y = Math.max(-my, Math.min(my, cam.y));
 }
 
-// Zoom anchored at screen point (sx, sy)
 function zoomAt(sx, sy, f) {
   if (zoomedCat) return;
-  // World point under cursor before zoom
   const wx = (sx - W/2) / cam.z + W/2 - cam.x;
   const wy = (sy - H/2) / cam.z + H/2 - cam.y;
   cam.z = Math.max(0.5, Math.min(6, cam.z * f));
-  // Re-anchor: same world point should map back to (sx, sy)
   cam.x = (sx - W/2) / cam.z + W/2 - wx;
   cam.y = (sy - H/2) / cam.z + H/2 - wy;
   clampCam();
 }
 
-// Screen → world coordinate (inverse of drawFull camera transform)
 function screen2world(sx, sy) {
   return {
     x: (sx - W/2) / cam.z + W/2 - cam.x,
@@ -304,7 +326,6 @@ function resize() {
   canvas.height = H * DPR;
   canvas.style.width  = W + 'px';
   canvas.style.height = H + 'px';
-  // Reset transform on resize (canvas.width assignment resets it)
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   buildHierarchy();
   markDirty();
@@ -312,11 +333,7 @@ function resize() {
 window.addEventListener('resize', resize);
 
 // ── Draw loop ─────────────────────────────────────────────────────────────────
-function drawLoop() {
-  if (!dirty) return;
-  dirty = false;
-  draw();
-}
+function drawLoop() { if (!dirty) return; dirty = false; draw(); }
 
 function draw() {
   ctx.clearRect(0, 0, W, H);
@@ -326,10 +343,9 @@ function draw() {
   else           drawFull();
 }
 
-// ── Full overview (4 quadrants, treemap boxes, dots) ─────────────────────────
+// ── Full overview ─────────────────────────────────────────────────────────────
 function drawFull() {
   ctx.save();
-  // Apply camera transform: zoom centred on canvas, then pan
   ctx.translate(W/2, H/2);
   ctx.scale(cam.z, cam.z);
   ctx.translate(-W/2 + cam.x, -H/2 + cam.y);
@@ -339,19 +355,14 @@ function drawFull() {
 
   GROUPS.forEach(g => {
     if (!g.bounds) return;
-    const b  = g.bounds;
-    const gc = g.color;
+    const b = g.bounds, gc = g.color;
 
-    // Quadrant background
     ctx.fillStyle = hexToRgba(gc, 0.035);
     ctx.fillRect(b.x, b.y, b.w, b.h);
-
-    // Quadrant border
     ctx.strokeStyle = hexToRgba(gc, 0.28);
     ctx.lineWidth   = 1.5;
     ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1);
 
-    // Corner brackets
     const cs = 14;
     ctx.lineWidth   = 2;
     ctx.strokeStyle = hexToRgba(gc, 0.65);
@@ -362,71 +373,51 @@ function drawFull() {
       ctx.stroke();
     });
 
-    // Quadrant centre label (very faint background watermark)
-    ctx.font         = `bold 13px ${FONT}`;
-    ctx.textAlign    = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle    = hexToRgba(gc, 0.1);
+    ctx.font = `bold 13px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = hexToRgba(gc, 0.1);
     ctx.fillText(`${g.name}  ${g.kanji}`, b.x + b.w / 2, b.y + b.h / 2);
 
-    // ── Per-category boxes ─────────────────────────────────────────────────
     (g.catObjects || []).filter(cat => cat.nodes.length > 0 && cat.bounds).forEach(cat => {
-      const cb = cat.bounds, ci = cat.inner;
-      const cc = cat.color;
+      const cb = cat.bounds, ci = cat.inner, cc = cat.color;
 
-      // Category background
       ctx.fillStyle = hexToRgba(cc, 0.06);
       ctx.fillRect(cb.x, cb.y, cb.w, cb.h);
-
-      // Category border
       ctx.strokeStyle = hexToRgba(cc, 0.55);
       ctx.lineWidth   = 1;
       ctx.strokeRect(cb.x + 0.5, cb.y + 0.5, cb.w - 1, cb.h - 1);
 
-      // Category name label
       if (cb.h > 16 && cb.w > 22) {
         const fs   = Math.min(9, Math.max(6.5, cb.w / 14));
         const maxC = Math.floor(cb.w / (fs * 0.62));
         const lbl  = cat.name.length > maxC ? cat.name.slice(0, maxC - 1) + '…' : cat.name;
-        ctx.font         = `${fs}px ${FONT}`;
-        ctx.textAlign    = 'center';
-        ctx.textBaseline = 'top';
-        ctx.fillStyle    = hexToRgba(cc, 0.85);
+        ctx.font = `${fs}px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.fillStyle = hexToRgba(cc, 0.85);
         ctx.fillText(lbl, cb.x + cb.w / 2, cb.y + 3);
 
         if (cb.h > 26) {
-          ctx.font      = `6px ${FONT}`;
-          ctx.fillStyle = hexToRgba(cc, 0.38);
+          ctx.font = `6px ${FONT}`; ctx.fillStyle = hexToRgba(cc, 0.38);
           ctx.fillText(`[${cat.nodes.length}]`, cb.x + cb.w / 2, cb.y + 3 + fs + 2);
         }
       }
 
-      // ── Concept dots within the category box ────────────────────────────
       cat.nodes.forEach(n => {
         const px = toPlotX(n.x), py = toPlotY(n.y);
-        const nx = ci.x + px * ci.w;
-        const ny = ci.y + (1 - py) * ci.h;   // Y flipped: +y = up
+        const nx = ci.x + px * ci.w, ny = ci.y + (1 - py) * ci.h;
         const dc = nodeColor(n);
-
         let matched = false, dimmed = false;
         if (q) {
           matched = n.concept.toLowerCase().includes(q) || n.category.toLowerCase().includes(q) || n.desc.toLowerCase().includes(q);
           dimmed  = !matched;
         }
-
         ctx.globalAlpha = dimmed ? 0.1 : (matched ? 1 : 0.72);
-
         if (matched) {
-          // Search match: white halo + bright dot
           ctx.beginPath(); ctx.arc(nx, ny, 4, 0, Math.PI * 2);
           ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.fill();
           ctx.beginPath(); ctx.arc(nx, ny, 2.5, 0, Math.PI * 2);
           ctx.fillStyle = '#fff'; ctx.fill();
         } else {
-          ctx.beginPath(); ctx.arc(nx, ny, 2, 0, Math.PI * 2);
-          ctx.fillStyle = dc; ctx.fill();
+          ctx.beginPath(); ctx.arc(nx, ny, 2, 0, Math.PI * 2); ctx.fillStyle = dc; ctx.fill();
         }
-
         ctx.globalAlpha = 1;
         layoutNodes.push({ node: n, wx: nx, wy: ny, matched, dimmed });
       });
@@ -435,7 +426,6 @@ function drawFull() {
 
   ctx.restore();
 
-  // Update search count display
   if (q) {
     const mc = layoutNodes.filter(l => l.matched).length;
     searchCount.textContent = `${mc} / ${layoutNodes.length}`;
@@ -449,7 +439,7 @@ function drawFull() {
   hudHint.textContent  = 'CLICK CATEGORY TO ZOOM  ·  SCROLL TO ZOOM  ·  DRAG TO PAN';
 }
 
-// ── Zoomed single-category scatter view ──────────────────────────────────────
+// ── Zoomed single-category scatter view ───────────────────────────────────────
 function drawZoomed() {
   const cat = GROUPS.flatMap(g => g.catObjects || []).find(c => c.name === zoomedCat);
   if (!cat) { zoomOut(); return; }
@@ -459,10 +449,10 @@ function drawZoomed() {
   const q     = searchQuery.toLowerCase();
   layoutNodes = [];
 
-  const Z_PAD  = 44;
+  // Dynamic padding based on label size
+  const Z_PAD  = Math.max(52, 32 + axisLabelSize * 1.4);
   const titleY = 24;
 
-  // Background + border
   ctx.fillStyle   = hexToRgba(cc, 0.03);
   ctx.fillRect(0, 0, W, H);
   ctx.strokeStyle = hexToRgba(cc, 0.35);
@@ -470,23 +460,29 @@ function drawZoomed() {
   ctx.strokeRect(2, 2, W - 4, H - 4);
 
   // Category title
-  ctx.font         = `bold 15px ${FONT}`;
-  ctx.textAlign    = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle    = cc;
+  ctx.font = `bold 15px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = cc;
   ctx.fillText(zoomedCat.toUpperCase(), W / 2, titleY);
 
-  ctx.font      = `9px ${FONT}`;
-  ctx.fillStyle = hexToRgba(cc, 0.5);
+  ctx.font = `9px ${FONT}`; ctx.fillStyle = hexToRgba(cc, 0.5);
   ctx.fillText(`[ ${nodes.length} CONCEPTS ]`, W / 2, titleY + 17);
 
-  // Inner plot area bounds
-  const iX = Z_PAD, iY = titleY + 36;
-  const iW = W - Z_PAD * 2, iH = H - iY - Z_PAD * 0.7;
+  // KANRI mode indicator
+  if (kanriMode && isDev) {
+    ctx.font = `9px ${FONT}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillStyle = 'rgba(255,0,204,0.5)';
+    ctx.fillText('管理 EDIT MODE — drag to reposition', W - 8, 4);
+  }
+
+  // Inner plot area
+  const iX = Z_PAD, iY = titleY + 38;
+  const iW = W - Z_PAD * 2, iH = H - iY - Z_PAD * 0.75;
+
+  // Store for KANRI coord inversion
+  plotIX = iX; plotIY = iY; plotIW = iW; plotIH = iH;
 
   // Grid lines
-  ctx.strokeStyle = hexToRgba(cc, 0.06);
-  ctx.lineWidth   = 0.5;
+  ctx.strokeStyle = hexToRgba(cc, 0.06); ctx.lineWidth = 0.5;
   for (let gx = iX; gx <= iX + iW; gx += iW / 8) {
     ctx.beginPath(); ctx.moveTo(gx, iY); ctx.lineTo(gx, iY + iH); ctx.stroke();
   }
@@ -494,59 +490,60 @@ function drawZoomed() {
     ctx.beginPath(); ctx.moveTo(iX, gy); ctx.lineTo(iX + iW, gy); ctx.stroke();
   }
 
-  // Centre axis lines
-  ctx.strokeStyle = hexToRgba(cc, 0.22);
-  ctx.lineWidth   = 1;
+  // Centre axes
+  ctx.strokeStyle = hexToRgba(cc, 0.22); ctx.lineWidth = 1;
   const axX = iX + iW / 2, axY = iY + iH / 2;
   ctx.beginPath(); ctx.moveTo(axX, iY);  ctx.lineTo(axX, iY + iH); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(iX, axY);  ctx.lineTo(iX + iW, axY); ctx.stroke();
 
-  // Axis labels (category-specific if defined)
+  // Axis labels — size controlled by 小中大
   const catData  = catAxesMap.get(zoomedCat);
   const topLbl   = (catData?.yAxis?.top    ?? 'Mental').toUpperCase();
   const botLbl   = (catData?.yAxis?.bottom ?? 'Physical').toUpperCase();
   const leftLbl  = (catData?.xAxis?.left   ?? 'Opponent').toUpperCase();
   const rightLbl = (catData?.xAxis?.right  ?? 'Self').toUpperCase();
 
-  ctx.font      = `9px ${FONT}`;
-  ctx.fillStyle = hexToRgba(cc, 0.4);
+  ctx.font      = `bold ${axisLabelSize}px ${FONT}`;
+  ctx.fillStyle = hexToRgba(cc, 0.55);
 
-  ctx.textAlign    = 'center'; ctx.textBaseline = 'bottom';
-  ctx.fillText(topLbl, axX, iY - 4);
+  ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+  ctx.fillText(topLbl, axX, iY - 6);
   ctx.textBaseline = 'top';
-  ctx.fillText(botLbl, axX, iY + iH + 5);
+  ctx.fillText(botLbl, axX, iY + iH + 7);
 
   ctx.save();
-  ctx.translate(iX - 8, axY); ctx.rotate(-Math.PI / 2);
+  ctx.translate(iX - axisLabelSize - 4, axY);
+  ctx.rotate(-Math.PI / 2);
   ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
   ctx.fillText(leftLbl, 0, 0);
   ctx.restore();
 
   ctx.save();
-  ctx.translate(iX + iW + 8, axY); ctx.rotate(Math.PI / 2);
+  ctx.translate(iX + iW + axisLabelSize + 4, axY);
+  ctx.rotate(Math.PI / 2);
   ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
   ctx.fillText(rightLbl, 0, 0);
   ctx.restore();
 
-  // Compute label positions
-  const LH = 11;
+  // Node label layout
+  const LH       = axisLabelSize + 3;
+  const charW     = axisLabelSize * 0.62;
   const positioned = nodes.map(n => {
     const px = toPlotX(n.x), py = toPlotY(n.y);
     const nx = iX + px * iW;
     const ny = iY + (1 - py) * iH;
     const matched = q ? (n.concept.toLowerCase().includes(q) || n.desc.toLowerCase().includes(q)) : false;
     const dimmed  = q ? !matched : false;
-    return { n, nx, ny, matched, dimmed, lx: nx, ly: ny - 11 };
+    return { n, nx, ny, matched, dimmed, lx: nx, ly: ny - (axisLabelSize + 2) };
   });
 
-  // Label collision avoidance — 5 passes of push-apart
+  // Label collision avoidance
   for (let pass = 0; pass < 5; pass++) {
     for (let i = 0; i < positioned.length; i++) {
       for (let j = i + 1; j < positioned.length; j++) {
         const a = positioned[i], b = positioned[j];
-        const dy = Math.abs(a.ly - b.ly);
-        const dx = Math.abs(a.lx - b.lx);
-        const approxW = Math.max(a.n.concept.length, b.n.concept.length) * 5.5;
+        const dy = Math.abs(a.ly - b.ly), dx = Math.abs(a.lx - b.lx);
+        const approxW = Math.max(a.n.concept.length, b.n.concept.length) * charW;
         if (dx < approxW && dy < LH + 3) {
           const push = (LH + 3 - dy) / 2 + 0.5;
           a.ly -= push; b.ly += push;
@@ -558,50 +555,55 @@ function drawZoomed() {
   // Draw nodes + labels
   positioned.forEach(({ n, nx, ny, matched, dimmed, lx, ly }) => {
     const dc = nodeColor(n);
+    const isKanriTarget = kanriMode && kanriNode === n;
     ctx.globalAlpha = dimmed ? 0.12 : 1;
-    const r = matched ? 5.5 : 3.5;
+    const r = matched ? 5.5 : (isKanriTarget ? 6 : 3.5);
 
     // Halo
     ctx.beginPath(); ctx.arc(nx, ny, r * 2.2, 0, Math.PI * 2);
-    ctx.fillStyle = hexToRgba(dc, 0.13); ctx.fill();
+    ctx.fillStyle = isKanriTarget ? 'rgba(255,0,204,0.2)' : hexToRgba(dc, 0.13);
+    ctx.fill();
     // Dot
     ctx.beginPath(); ctx.arc(nx, ny, r, 0, Math.PI * 2);
-    ctx.fillStyle = dc; ctx.fill();
+    ctx.fillStyle = isKanriTarget ? '#ff00cc' : dc;
+    ctx.fill();
+    // Kanri drag ring
+    if (isKanriTarget) {
+      ctx.beginPath(); ctx.arc(nx, ny, r + 3, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,0,204,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
 
     // Label
-    ctx.font         = `${matched ? 'bold ' : ''}9px ${FONT}`;
+    ctx.font = `${matched || isKanriTarget ? 'bold ' : ''}${axisLabelSize}px ${FONT}`;
     ctx.textBaseline = 'bottom';
     const edge = iW * 0.1;
     let align = 'center', finalLx = lx;
-    if      (nx - iX    < edge) { align = 'left';  finalLx = nx + 9; }
-    else if (iX + iW - nx < edge) { align = 'right'; finalLx = nx - 9; }
+    if      (nx - iX < edge)         { align = 'left';  finalLx = nx + axisLabelSize; }
+    else if (iX + iW - nx < edge)    { align = 'right'; finalLx = nx - axisLabelSize; }
     ctx.textAlign = align;
-    ctx.fillStyle = dimmed ? hexToRgba(dc, 0.25) : hexToRgba(dc, 0.85);
+    ctx.fillStyle = dimmed ? hexToRgba(dc, 0.25) : (isKanriTarget ? 'rgba(255,0,204,0.9)' : hexToRgba(dc, 0.85));
     ctx.fillText(n.concept, finalLx, ly);
 
     ctx.globalAlpha = 1;
     layoutNodes.push({ node: n, wx: nx, wy: ny });
   });
 
-  // HUD update
   hudTotal.textContent = `${nodes.length} CONCEPTS`;
   hudCat.textContent   = `  ›  ${zoomedCat}`;
   hudCat.classList.remove('hidden');
-  hudHint.textContent  = '← BACK TO OVERVIEW';
+  hudHint.textContent  = kanriMode && isDev ? 'KANRI: DRAG NODES TO REPOSITION' : '← BACK TO OVERVIEW';
 }
 
 // ── Hit testing ───────────────────────────────────────────────────────────────
 function hitTestNode(sx, sy) {
   let best = null, bestD;
   if (zoomedCat) {
-    // Zoomed: screen coords match canvas coords directly
-    bestD = 18;
+    bestD = 20;
     layoutNodes.forEach(({ node, wx, wy }) => {
       const d = Math.hypot(wx - sx, wy - sy);
       if (d < bestD) { bestD = d; best = node; }
     });
   } else {
-    // Full view: convert screen → world, compare with world coords
     const { x: wx, y: wy } = screen2world(sx, sy);
     bestD = 12 / cam.z;
     layoutNodes.forEach(({ node, wx: nx, wy: ny }) => {
@@ -645,10 +647,10 @@ function hideTooltip() { tooltip.classList.add('hidden'); }
 // ── Card modal ────────────────────────────────────────────────────────────────
 function openCard(node) {
   const color = nodeColor(node);
-  cardTitle.textContent               = node.concept;
-  cardCat.textContent                 = node.category;
-  cardCat.style.color                 = color;
-  document.getElementById('qt-card-inner').style.borderColor = color + '88';
+  cardTitle.textContent                                               = node.concept;
+  cardCat.textContent                                                 = node.category;
+  cardCat.style.color                                                 = color;
+  document.getElementById('qt-card-inner').style.borderColor          = color + '88';
   cardBody.textContent = node.desc || node.short || '—';
   cardModal.classList.remove('hidden');
   hideTooltip();
@@ -664,6 +666,8 @@ function zoomIntoCategory(name) {
   hoveredNode = null;
   hideTooltip();
   backBtn.classList.remove('hidden');
+  canvas.style.cursor = kanriMode && isDev ? 'cell' : 'crosshair';
+  if (breadcrumb) breadcrumb.style.cursor = 'pointer';
   markDirty();
 }
 
@@ -671,14 +675,19 @@ function zoomOut() {
   zoomedCat   = null;
   layoutNodes = [];
   hoveredNode = null;
+  kanriNode   = null;
+  kanriMoved  = false;
   hideTooltip();
   backBtn.classList.add('hidden');
   resetCamera();
+  canvas.style.cursor = 'crosshair';
+  if (breadcrumb) breadcrumb.style.cursor = 'default';
   markDirty();
 }
 
 backBtn.addEventListener('click', zoomOut);
 resetBtn.addEventListener('click', () => { if (!zoomedCat) { resetCamera(); markDirty(); } else zoomOut(); });
+if (breadcrumb) breadcrumb.addEventListener('click', () => { if (zoomedCat) zoomOut(); });
 
 // ── Search ────────────────────────────────────────────────────────────────────
 searchInput.addEventListener('input', e => {
@@ -686,9 +695,127 @@ searchInput.addEventListener('input', e => {
   markDirty();
 });
 
+// ── Label size buttons ────────────────────────────────────────────────────────
+szBtns.forEach((btn, i) => {
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    axisLabelSize = szSizes[i];
+    szBtns.forEach((b, j) => {
+      if (!b) return;
+      const on = j === i;
+      b.style.color       = on ? 'var(--color-accent, #00d4ff)' : '';
+      b.style.borderColor = on ? 'rgba(0,212,255,0.4)' : '';
+    });
+    markDirty();
+  });
+});
+// Set initial active state (medium = index 1)
+if (szBtns[1]) { szBtns[1].style.color = 'var(--color-accent, #00d4ff)'; szBtns[1].style.borderColor = 'rgba(0,212,255,0.4)'; }
+
+// ── KANRI toggle ──────────────────────────────────────────────────────────────
+if (kanriBtn && isDev) {
+  kanriBtn.addEventListener('click', () => {
+    kanriMode = !kanriMode;
+    kanriBtn.style.color       = kanriMode ? '#ff00cc' : '';
+    kanriBtn.style.borderColor = kanriMode ? '#ff00cc' : '';
+    canvas.style.cursor        = kanriMode && zoomedCat ? 'cell' : 'crosshair';
+    markDirty();
+  });
+}
+
+// ── KANRI session persistence (survives HMR reloads) ─────────────────────────
+const KANRI_SS_KEY = 'qt-kanri-session';
+
+function persistKanriState() {
+  if (!isDev) return;
+  try {
+    sessionStorage.setItem(KANRI_SS_KEY, JSON.stringify({
+      zoomedCat, kanriMode, axisLabelSize,
+    }));
+  } catch (_) {}
+}
+
+function restoreKanriState() {
+  if (!isDev) return;
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(KANRI_SS_KEY) || 'null');
+    if (!saved) return;
+
+    // Restore label size
+    if (saved.axisLabelSize) {
+      axisLabelSize = saved.axisLabelSize;
+      const idx = szSizes.indexOf(axisLabelSize);
+      if (idx >= 0) {
+        szBtns.forEach((b, j) => {
+          if (!b) return;
+          b.style.color       = j === idx ? 'var(--color-accent, #00d4ff)' : '';
+          b.style.borderColor = j === idx ? 'rgba(0,212,255,0.4)' : '';
+        });
+      }
+    }
+
+    // Restore KANRI mode
+    if (saved.kanriMode) {
+      kanriMode = true;
+      if (kanriBtn) {
+        kanriBtn.style.color       = '#ff00cc';
+        kanriBtn.style.borderColor = '#ff00cc';
+      }
+    }
+
+    // Restore zoomed category (after hierarchy is built by resize())
+    if (saved.zoomedCat) {
+      zoomIntoCategory(saved.zoomedCat);
+    }
+  } catch (_) {}
+}
+
+// ── KANRI save to .md ─────────────────────────────────────────────────────────
+let toastTimer = null;
+function showToast(msg, color) {
+  if (!toastEl) return;
+  toastEl.textContent  = msg;
+  toastEl.style.color  = color || '#00ff88';
+  toastEl.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.add('hidden'), 2200);
+}
+
+async function saveNode(node) {
+  persistKanriState();   // save before fetch so state survives any reload
+  try {
+    const res  = await fetch('/api/kanri', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ id: node.id, x: node.x, y: node.y }),
+    });
+    const data = await res.json();
+    if (data.ok) showToast(`SAVED ✓  ${node.id}  (${Number(node.x).toFixed(2)}, ${Number(node.y).toFixed(2)})`);
+    else         showToast('ERROR: ' + (data.error || '?'), '#ff4444');
+  } catch (err) {
+    showToast('SAVE FAILED', '#ff4444');
+    console.error('[Kanri]', err);
+  }
+}
+
 // ── Mouse events ──────────────────────────────────────────────────────────────
 canvas.addEventListener('mousedown', e => {
   if (e.button !== 0) return;
+
+  // KANRI: intercept click on a node in zoomed view before starting pan
+  if (kanriMode && isDev && zoomedCat) {
+    const rect = canvas.getBoundingClientRect();
+    const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+    const hit = hitTestNode(sx, sy);
+    if (hit) {
+      kanriNode  = hit;
+      kanriMoved = false;
+      canvas.style.cursor = 'grabbing';
+      e.preventDefault();
+      return;
+    }
+  }
+
   drag = { sx: e.clientX, sy: e.clientY, ox: e.clientX, oy: e.clientY };
   canvas.style.cursor = 'grabbing';
   e.preventDefault();
@@ -696,8 +823,19 @@ canvas.addEventListener('mousedown', e => {
 
 canvas.addEventListener('mousemove', e => {
   const rect = canvas.getBoundingClientRect();
-  const sx = e.clientX - rect.left;
-  const sy = e.clientY - rect.top;
+  const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+
+  // KANRI node drag
+  if (kanriNode) {
+    const px = Math.max(0, Math.min(1, (sx - plotIX) / plotIW));
+    const py = Math.max(0, Math.min(1, 1 - (sy - plotIY) / plotIH));
+    kanriNode.x = parseFloat((px * 2 - 1).toFixed(4));
+    kanriNode.y = parseFloat((py * 2 - 1).toFixed(4));
+    kanriMoved  = true;
+    canvas.style.cursor = 'grabbing';
+    markDirty();
+    return;
+  }
 
   if (drag) {
     if (!zoomedCat) {
@@ -715,15 +853,26 @@ canvas.addEventListener('mousemove', e => {
   if (hit !== hoveredNode) { hoveredNode = hit; markDirty(); }
 
   if (hit) {
-    showTooltip(hit, e.clientX, e.clientY);
-    canvas.style.cursor = 'pointer';
+    if (!kanriMode) showTooltip(hit, e.clientX, e.clientY);
+    canvas.style.cursor = kanriMode && zoomedCat ? 'grab' : 'pointer';
   } else {
     hideTooltip();
-    canvas.style.cursor = hitTestCategory(sx, sy) ? 'pointer' : 'crosshair';
+    canvas.style.cursor = kanriMode && zoomedCat
+      ? 'cell'
+      : (hitTestCategory(sx, sy) ? 'pointer' : 'crosshair');
   }
 });
 
 canvas.addEventListener('mouseup', e => {
+  // KANRI node drop
+  if (kanriNode) {
+    if (kanriMoved) saveNode(kanriNode);
+    kanriNode  = null;
+    kanriMoved = false;
+    canvas.style.cursor = kanriMode && zoomedCat ? 'cell' : 'crosshair';
+    return;
+  }
+
   const moved = drag && (Math.abs(e.clientX - drag.ox) + Math.abs(e.clientY - drag.oy)) > 4;
   drag = null;
   canvas.style.cursor = 'crosshair';
@@ -739,6 +888,7 @@ canvas.addEventListener('mouseup', e => {
 });
 
 canvas.addEventListener('mouseleave', () => {
+  if (kanriNode) { kanriNode = null; kanriMoved = false; }
   drag = null; hoveredNode = null;
   hideTooltip();
   canvas.style.cursor = 'crosshair';
@@ -803,6 +953,7 @@ canvas.addEventListener('touchend', e => {
 }, { passive: false });
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
-resize();
+resize();                  // builds hierarchy, sizes canvas
+restoreKanriState();       // re-enter zoomed cat + kanri mode if page was reloaded
 requestAnimationFrame(drawLoop);
 </script>
