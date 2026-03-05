@@ -40,7 +40,7 @@ const imgBase = base + '/images/partners/';
     <div id="char-img-wrap" style="position:relative;width:100%;aspect-ratio:5/7;flex-shrink:0;background:#0d1117;overflow:hidden;">
       <img id="char-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center top;opacity:0.9;transition:opacity 0.3s;" />
       <div id="char-color-bar" style="position:absolute;bottom:0;left:0;right:0;height:3px;"></div>
-      <div id="char-overall" style="position:absolute;bottom:10px;right:10px;font-size:8px;letter-spacing:0.14em;color:rgba(255,255,255,0.75);text-transform:uppercase;background:rgba(0,0,0,0.7);padding:3px 8px;border-radius:2px;"></div>
+      <div id="char-overall" style="position:absolute;bottom:10px;right:10px;font-family:'DS-Digital',monospace;font-size:15px;font-weight:700;color:rgba(255,255,255,0.9);background:rgba(0,0,0,0.75);padding:3px 10px;border-radius:2px;letter-spacing:0.06em;text-shadow:0 0 8px rgba(255,255,255,0.3);"></div>
     </div>
     <div style="padding:14px 14px 6px;flex-shrink:0;">
       <div id="char-name"    style="font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#c9d1d9;margin-bottom:3px;"></div>
@@ -54,7 +54,7 @@ const imgBase = base + '/images/partners/';
         <img id="match-img" src="" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:2px;flex-shrink:0;" />
         <div>
           <div id="match-name" style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px;"></div>
-          <div id="match-pct"  style="font-size:9px;color:#6b7280;"></div>
+          <div id="match-pct"  style="font-family:'DS-Digital',monospace;font-size:13px;font-weight:700;color:#6b7280;letter-spacing:0.04em;"></div>
         </div>
       </div>
       <div id="match-msg" style="font-size:9px;color:#8b949e;line-height:1.65;font-style:italic;"></div>
@@ -305,7 +305,7 @@ function makeBarRow(attrLabel, v, color, tooltip, inverted) {
     <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:${zoneBg(inverted)};pointer-events:none;"></div>
     <div style="position:absolute;top:0;left:0;width:${pct}%;height:100%;background:${fcolor};opacity:0.75;z-index:1;"></div>
     <div data-dot="1" style="position:absolute;top:50%;left:${pct}%;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);background:#0c0c18;border:2.5px solid ${fcolor};box-shadow:0 0 4px ${fcolor}88;z-index:3;"></div>
-    <div style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;color:${fcolor};z-index:4;font-family:inherit;">${v}</div>
+    <div style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-family:'DS-Digital',monospace;font-size:12px;font-weight:700;color:${fcolor};z-index:4;">${v}</div>
   `;
 
   row.appendChild(lbl);
@@ -448,7 +448,7 @@ function buildSelfSliders() {
       dot.style.cssText = `position:absolute;top:50%;left:${v*10}%;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);background:#0c0c18;border:2.5px solid ${fcolor};box-shadow:0 0 4px ${fcolor}88;z-index:3;pointer-events:none;transition:left 0.1s,border-color 0.1s;`;
 
       const numEl = document.createElement('div');
-      numEl.style.cssText = `position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:700;color:${fcolor};z-index:4;font-family:inherit;pointer-events:none;`;
+      numEl.style.cssText = `position:absolute;right:6px;top:50%;transform:translateY(-50%);font-family:'DS-Digital',monospace;font-size:12px;font-weight:700;color:${fcolor};z-index:4;pointer-events:none;`;
       numEl.textContent = v;
 
       const slider = document.createElement('input');
