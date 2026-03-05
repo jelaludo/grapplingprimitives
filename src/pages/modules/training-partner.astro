@@ -641,6 +641,98 @@ if (isLocal) {
 
   let kanriArch = ARCHETYPES[0];
 
+  // ── File System Access helpers ──────────────────────────────────────────────
+  const IDB_NAME = 'gp-kanri-store';
+  const IDB_HANDLE_KEY = 'archetypes-file-handle';
+  const LS_BACKUP_KEY = 'gp-archetypes-backup';
+
+  function idbGet(key) {
+    return new Promise((res, rej) => {
+      const req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = () => req.result.createObjectStore('kv');
+      req.onsuccess = () => {
+        const r = req.result.transaction('kv','readonly').objectStore('kv').get(key);
+        r.onsuccess = () => res(r.result); r.onerror = rej;
+      };
+      req.onerror = rej;
+    });
+  }
+  function idbSet(key, val) {
+    return new Promise((res, rej) => {
+      const req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = () => req.result.createObjectStore('kv');
+      req.onsuccess = () => {
+        const tx = req.result.transaction('kv','readwrite');
+        tx.objectStore('kv').put(val, key);
+        tx.oncomplete = res; tx.onerror = rej;
+      };
+      req.onerror = rej;
+    });
+  }
+
+  async function exportToSource(toastEl) {
+    const json = JSON.stringify(ARCHETYPES, null, 2);
+    const toast = (msg, color='#9ccc65') => {
+      if (!toastEl) return;
+      toastEl.textContent = msg; toastEl.style.color = color;
+      toastEl.style.opacity = '1'; setTimeout(() => { toastEl.style.opacity = '0'; }, 3500);
+    };
+
+    // Fallback for browsers without File System Access API
+    if (!window.showSaveFilePicker) {
+      const blob = new Blob([json], { type:'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'archetypes.json'; a.click();
+      URL.revokeObjectURL(url);
+      toast('↓ downloaded — replace src/data/archetypes.json and push');
+      return;
+    }
+
+    // Retrieve stored handle
+    let handle = await idbGet(IDB_HANDLE_KEY).catch(() => null);
+    if (handle) {
+      const perm = await handle.queryPermission({ mode:'readwrite' });
+      if (perm !== 'granted') {
+        const r = await handle.requestPermission({ mode:'readwrite' });
+        if (r !== 'granted') handle = null;
+      }
+    }
+
+    // First time (or permission lost): ask user to pick the file
+    if (!handle) {
+      try {
+        handle = await window.showSaveFilePicker({
+          suggestedName: 'archetypes.json',
+          types: [{ description:'JSON', accept:{ 'application/json':['.json'] } }],
+        });
+        await idbSet(IDB_HANDLE_KEY, handle);
+      } catch(e) {
+        if (e.name !== 'AbortError') toast('Error: ' + e.message, '#ef5350');
+        return;
+      }
+    }
+
+    // Backup existing content before overwriting
+    try {
+      const existing = await (await handle.getFile()).text();
+      localStorage.setItem(LS_BACKUP_KEY, JSON.stringify({ ts: Date.now(), data: existing }));
+    } catch(e) {}
+
+    // Write
+    try {
+      const writable = await handle.createWritable();
+      await writable.write(json); await writable.close();
+      toast('✓ archetypes.json saved — git push to deploy');
+      // Refresh backup button in panel
+      renderKanriPanel();
+    } catch(e) {
+      // Handle may have gone stale — clear it and retry once
+      await idbSet(IDB_HANDLE_KEY, null).catch(()=>{});
+      toast('Permission lost — click Export again to re-pick the file', '#fdd835');
+    }
+  }
+
   function openKanri() {
     let overlay = document.getElementById('kanri-overlay');
     if (overlay) { overlay.style.display='flex'; renderKanriPanel(); return; }
@@ -702,14 +794,8 @@ if (isLocal) {
       if(mode==='archetypes') selectArchetype(currentArch);
       renderKanriPanel();
     },'#ef5350'));
-    ctrl.appendChild(makeCtrlBtn('⬇ Export JSON','Download archetypes.json — replace src/data/archetypes.json and git push to deploy',()=>{
-      const json = JSON.stringify(ARCHETYPES, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'archetypes.json'; a.click();
-      URL.revokeObjectURL(url);
-      const t=ctrl.querySelector('[data-toast]'); if(t){t.style.opacity='1';setTimeout(()=>{t.style.opacity='0';},3000);}
+    ctrl.appendChild(makeCtrlBtn('⬇ Export to Source','Write directly to src/data/archetypes.json (pick file once, then auto-saves)',()=>{
+      exportToSource(ctrl.querySelector('[data-toast]'));
     },'#9ccc65'));
     ctrl.appendChild(makeCtrlBtn('↺ Reset','Reset to defaults',()=>{
       if(!confirm('Reset all archetypes to defaults?')) return;
@@ -718,8 +804,24 @@ if (isLocal) {
       if(mode==='archetypes') selectArchetype(currentArch);
       renderKanriPanel();
     },'#6b7280'));
+    // Restore Backup button — only if a backup exists
+    try {
+      const raw = localStorage.getItem(LS_BACKUP_KEY);
+      if (raw) {
+        const { ts } = JSON.parse(raw);
+        const age = new Date(ts).toLocaleTimeString();
+        ctrl.appendChild(makeCtrlBtn(`↩ Restore backup (${age})`, 'Restore archetypes from before last export', () => {
+          if (!confirm('Restore backup? Current KANRI state will be replaced.')) return;
+          const { data } = JSON.parse(localStorage.getItem(LS_BACKUP_KEY));
+          ARCHETYPES.length = 0; JSON.parse(data).forEach(a => ARCHETYPES.push(a));
+          kanriArch = ARCHETYPES[0]; saveArchetypes(); buildPills();
+          if (mode === 'archetypes') selectArchetype(currentArch);
+          renderKanriPanel();
+        }, '#fdd835'));
+      }
+    } catch(e) {}
     const toast=document.createElement('span'); toast.setAttribute('data-toast','1');
-    toast.textContent='↓ archetypes.json — replace src/data/ and git push'; toast.style.cssText='font-size:7px;color:#9ccc65;opacity:0;transition:opacity 0.3s;align-self:center;letter-spacing:0.04em;';
+    toast.textContent=''; toast.style.cssText='font-size:7px;color:#9ccc65;opacity:0;transition:opacity 0.3s;align-self:center;letter-spacing:0.04em;';
     ctrl.appendChild(toast); panel.appendChild(ctrl);
 
     // Archetype selector pills
