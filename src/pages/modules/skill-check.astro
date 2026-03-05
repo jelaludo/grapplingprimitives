@@ -1,0 +1,382 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import rawData from '@/data/skill-assessment.json';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+type RawQuestion = { id: string; text: string; level: string; required?: boolean };
+type RawCategory = { id: string; name: string; questions: RawQuestion[] };
+
+const categories = (rawData as any).assessment.categories as RawCategory[];
+
+// Pick 2 per category for SHORT mode: prefer required+basic first
+function pickShortIds(qs: RawQuestion[]): Set<string> {
+  const sorted = [...qs].sort((a, b) => {
+    const pri = (q: RawQuestion) =>
+      (q.required ? 0 : 2) + (q.level === 'basic' ? 0 : q.level === 'intermediate' ? 1 : 2);
+    return pri(a) - pri(b);
+  });
+  return new Set(sorted.slice(0, 2).map(q => q.id));
+}
+
+const CAT_DATA = categories.map(cat => {
+  const sIds = pickShortIds(cat.questions);
+  return {
+    id: cat.id,
+    name: cat.name,
+    questions: cat.questions.map(q => ({
+      id: q.id,
+      text: q.text,
+      level: q.level,
+      weight: q.level === 'basic' ? 1 : q.level === 'intermediate' ? 1.5 : 2,
+      short: sIds.has(q.id),
+    })),
+  };
+});
+
+const totalFull  = categories.reduce((s, c) => s + c.questions.length, 0);
+const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short).length, 0);
+---
+
+<BaseLayout title="Skill Assessment — Grappling Primitives" fullscreen={true}>
+
+  <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
+  <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+    <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+    <span style="color:#21262d;">|</span>
+    <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Skill Assessment</span>
+    <div style="flex:1;"></div>
+    <button id="btn-deeplink" style="font-family:inherit;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:3px 9px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;">Link</button>
+  </div>
+
+  <!-- ── Content ──────────────────────────────────────────────────────────────── -->
+  <div style="padding-top:52px;max-width:680px;margin:0 auto;padding-left:16px;padding-right:16px;padding-bottom:60px;font-family:'Courier New',Consolas,Monaco,monospace;">
+
+    <!-- ── VIEW: SETUP ──────────────────────────────────────────────────────── -->
+    <div id="v-setup">
+
+      <div style="margin-bottom:40px;padding-top:20px;">
+        <p style="font-size:9px;letter-spacing:4px;color:#00d4ff;text-transform:uppercase;margin:0 0 8px;">Modules / Tools</p>
+        <h1 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:800;letter-spacing:-0.02em;color:#c9d1d9;margin:0 0 8px;line-height:1.1;">Skill Assessment</h1>
+        <p style="font-size:13px;color:#8b949e;margin:0;letter-spacing:0.04em;line-height:1.6;">Rate your confidence on each topic, 1–10. No right or wrong answers — just honest self-reflection.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px;">
+        <button id="btn-short" class="mode-btn">
+          <div class="mode-title">Short</div>
+          <div class="mode-count">{totalShort} questions</div>
+          <div class="mode-desc">2 per area · ~5 min</div>
+        </button>
+        <button id="btn-full" class="mode-btn">
+          <div class="mode-title">Full</div>
+          <div class="mode-count">{totalFull} questions</div>
+          <div class="mode-desc">All questions · ~20 min</div>
+        </button>
+      </div>
+
+      <div style="border-left:2px solid #21262d;padding-left:16px;">
+        <p style="font-size:11px;color:#6b7280;margin:0;line-height:1.7;">
+          Covers {categories.length} areas: takedowns, guard passing &amp; retention, closed guard, open guard, half guard, mount, back mount, and leg/wrist locks.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── VIEW: QUIZ ───────────────────────────────────────────────────────── -->
+    <div id="v-quiz" style="display:none;">
+
+      <!-- Progress header -->
+      <div style="margin-bottom:32px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+          <span id="q-cat" style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#00d4ff;"></span>
+          <span id="q-num" style="font-size:9px;letter-spacing:2px;color:#6b7280;"></span>
+        </div>
+        <div style="height:2px;background:#21262d;border-radius:2px;">
+          <div id="q-bar" style="height:100%;background:#00d4ff;border-radius:2px;transition:width 0.3s;width:0%;"></div>
+        </div>
+      </div>
+
+      <!-- Question -->
+      <div style="margin-bottom:28px;min-height:80px;">
+        <div id="q-level" style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#6b7280;margin-bottom:10px;"></div>
+        <div id="q-text" style="font-size:clamp(14px,3vw,20px);color:#c9d1d9;line-height:1.6;font-weight:500;"></div>
+      </div>
+
+      <!-- Rating buttons 1–10 -->
+      <div style="margin-bottom:16px;">
+        <div id="q-btns" style="display:flex;gap:5px;margin-bottom:8px;"></div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-size:9px;letter-spacing:1px;color:#6b7280;">Not confident</span>
+          <span style="font-size:9px;letter-spacing:1px;color:#6b7280;">Fully confident</span>
+        </div>
+      </div>
+
+      <!-- Skip -->
+      <button id="q-skip" style="font-family:inherit;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:transparent;border:none;color:#6b7280;cursor:pointer;padding:4px 0;transition:color 0.15s;" onmouseover="this.style.color='#c9d1d9'" onmouseout="this.style.color='#6b7280'">Skip →</button>
+    </div>
+
+    <!-- ── VIEW: RESULTS ─────────────────────────────────────────────────────── -->
+    <div id="v-results" style="display:none;">
+
+      <div style="margin-bottom:28px;">
+        <p style="font-size:9px;letter-spacing:4px;color:#00d4ff;text-transform:uppercase;margin:0 0 8px;">Assessment Complete</p>
+        <h2 style="font-size:clamp(1.5rem,4vw,2.5rem);font-weight:800;letter-spacing:-0.02em;color:#c9d1d9;margin:0;line-height:1.1;">Your Results</h2>
+      </div>
+
+      <!-- Overall score -->
+      <div id="r-overall" style="display:flex;align-items:center;gap:20px;margin-bottom:28px;padding:16px 20px;border:1px solid #21262d;border-radius:4px;background:rgba(13,17,23,0.8);"></div>
+
+      <!-- Per-category bars -->
+      <div id="r-bars" style="margin-bottom:32px;"></div>
+
+      <!-- Retake -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button id="btn-retake-short" class="retake-btn">Retake Short ({totalShort}q)</button>
+        <button id="btn-retake-full"  class="retake-btn">Retake Full ({totalFull}q)</button>
+      </div>
+    </div>
+
+  </div>
+
+  <style>
+    .mode-btn {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      background: rgba(13,17,23,0.8);
+      border: 1px solid #21262d;
+      border-radius: 4px;
+      padding: 20px 16px;
+      cursor: pointer;
+      text-align: left;
+      color: #c9d1d9;
+      transition: border-color 0.15s, background 0.15s;
+      width: 100%;
+    }
+    .mode-btn:hover { border-color: #00d4ff; background: rgba(0,212,255,0.04); }
+    .mode-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; color: #c9d1d9; }
+    .mode-count { font-size: 13px; color: #00d4ff; margin-bottom: 4px; }
+    .mode-desc  { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #6b7280; }
+
+    .q-btn {
+      flex: 1;
+      min-width: 0;
+      height: 44px;
+      padding: 0;
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid #21262d;
+      border-radius: 3px;
+      cursor: pointer;
+      color: #c9d1d9;
+      background: rgba(13,17,23,0.8);
+      transition: transform 0.1s, background 0.1s, border-color 0.1s;
+    }
+    .q-btn:hover  { transform: scale(1.1); z-index: 1; position: relative; }
+    .q-btn.picked { transform: scale(1.18); z-index: 2; position: relative; }
+
+    .retake-btn {
+      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid #21262d;
+      border-radius: 3px;
+      color: #6b7280;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .retake-btn:hover { border-color: #00d4ff; color: #00d4ff; }
+
+    @media (max-width: 480px) {
+      .q-btn { height: 38px; font-size: 12px; }
+    }
+  </style>
+
+  <script define:vars={{ CAT_DATA, totalShort, totalFull }}>
+    // ── Color helpers (same as Training Partners) ──────────────────────────────
+    const SCORE_COLORS = [
+      '#7f0000', // 0
+      '#c62828', // 1
+      '#e53935', // 2
+      '#f4511e', // 3
+      '#fb8c00', // 4
+      '#fdd835', // 5
+      '#c0ca33', // 6
+      '#7cb342', // 7
+      '#26a69a', // 8
+      '#00acc1', // 9
+      '#00d4ff', // 10
+    ];
+    const ZONE_GRADIENT = 'linear-gradient(to right,rgba(198,40,40,0.18),rgba(253,216,53,0.12) 50%,rgba(0,212,255,0.18))';
+
+    function fillColor(v) {
+      return SCORE_COLORS[Math.max(0, Math.min(10, Math.round(v)))];
+    }
+    // Convert 1-10 score to 0-10 color index
+    function scoreToColor(s) {
+      return fillColor((s - 1) / 9 * 10);
+    }
+    // Convert 1-10 score to 0-100 pct
+    function scoreToPct(s) {
+      return Math.round((s - 1) / 9 * 100);
+    }
+
+    // ── State ──────────────────────────────────────────────────────────────────
+    let queue   = [];   // flat: [{id, text, level, weight, catId, catName}, ...]
+    let qIdx    = 0;
+    let answers = {};   // {qId: 1-10}
+
+    // ── Elements ───────────────────────────────────────────────────────────────
+    const vSetup   = document.getElementById('v-setup');
+    const vQuiz    = document.getElementById('v-quiz');
+    const vResults = document.getElementById('v-results');
+    const qCatEl   = document.getElementById('q-cat');
+    const qNumEl   = document.getElementById('q-num');
+    const qBarEl   = document.getElementById('q-bar');
+    const qLevelEl = document.getElementById('q-level');
+    const qTextEl  = document.getElementById('q-text');
+    const qBtnsEl  = document.getElementById('q-btns');
+
+    // ── Build 1-10 rating buttons once ────────────────────────────────────────
+    for (let i = 1; i <= 10; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'q-btn';
+      btn.textContent = String(i);
+      btn.style.borderColor = SCORE_COLORS[i] + '66';
+      btn.addEventListener('click', () => recordAnswer(i));
+      qBtnsEl.appendChild(btn);
+    }
+
+    // ── View helpers ───────────────────────────────────────────────────────────
+    function showView(id) {
+      vSetup.style.display   = id === 'v-setup'   ? '' : 'none';
+      vQuiz.style.display    = id === 'v-quiz'    ? '' : 'none';
+      vResults.style.display = id === 'v-results' ? '' : 'none';
+    }
+
+    // ── Quiz ───────────────────────────────────────────────────────────────────
+    function buildQueue(mode) {
+      return CAT_DATA.flatMap(cat =>
+        cat.questions
+          .filter(q => mode === 'full' || q.short)
+          .map(q => ({ id: q.id, text: q.text, level: q.level, weight: q.weight, catId: cat.id, catName: cat.name }))
+      );
+    }
+
+    function startQuiz(mode) {
+      queue   = buildQueue(mode);
+      qIdx    = 0;
+      answers = {};
+      showView('v-quiz');
+      renderQ();
+    }
+
+    function renderQ() {
+      if (qIdx >= queue.length) { showResults(); return; }
+
+      const q   = queue[qIdx];
+      const pct = (qIdx / queue.length) * 100;
+
+      qCatEl.textContent   = q.catName;
+      qNumEl.textContent   = `Q ${qIdx + 1} / ${queue.length}`;
+      qBarEl.style.width   = pct + '%';
+      qLevelEl.textContent = q.level;
+      qTextEl.textContent  = q.text;
+
+      // Reset buttons
+      document.querySelectorAll('.q-btn').forEach(b => {
+        b.classList.remove('picked');
+        b.style.background   = 'rgba(13,17,23,0.8)';
+        b.style.borderColor  = SCORE_COLORS[parseInt(b.textContent)] + '66';
+        b.style.color        = '#c9d1d9';
+      });
+    }
+
+    function recordAnswer(score) {
+      const btns = document.querySelectorAll('.q-btn');
+      btns[score - 1].classList.add('picked');
+      btns[score - 1].style.background  = SCORE_COLORS[score] + '33';
+      btns[score - 1].style.borderColor = SCORE_COLORS[score];
+
+      answers[queue[qIdx].id] = score;
+
+      setTimeout(() => { qIdx++; renderQ(); }, 220);
+    }
+
+    document.getElementById('q-skip')?.addEventListener('click', () => { qIdx++; renderQ(); });
+
+    // ── Results ────────────────────────────────────────────────────────────────
+    function showResults() {
+      showView('v-results');
+
+      // Per-category weighted scores
+      const catResults = CAT_DATA.map(cat => {
+        const answered = cat.questions.filter(q => answers[q.id] != null);
+        if (answered.length === 0) return { name: cat.name, score: null, pct: null };
+        const tw  = answered.reduce((s, q) => s + q.weight, 0);
+        const ws  = answered.reduce((s, q) => s + answers[q.id] * q.weight, 0);
+        const score = ws / tw;                 // 1–10 weighted avg
+        const pct   = scoreToPct(score);       // 0–100
+        return { name: cat.name, score, pct };
+      });
+
+      const valid   = catResults.filter(r => r.pct != null);
+      const overall = valid.length ? Math.round(valid.reduce((s, r) => s + r.pct, 0) / valid.length) : 0;
+
+      // Overall badge
+      const oc = fillColor(overall / 10);
+      document.getElementById('r-overall').innerHTML = `
+        <div style="font-size:52px;font-weight:800;color:${oc};line-height:1;letter-spacing:-0.02em;">${overall}<span style="font-size:22px;color:#6b7280;font-weight:400;">%</span></div>
+        <div>
+          <div style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">Overall Confidence</div>
+          <div style="font-size:11px;color:#8b949e;">${valid.length} of ${CAT_DATA.length} areas assessed</div>
+        </div>
+      `;
+      document.getElementById('r-overall').style.borderColor = oc + '44';
+
+      // Category bar chart
+      const barsEl = document.getElementById('r-bars');
+      barsEl.innerHTML = catResults.map(r => {
+        const na    = r.pct == null;
+        const pct   = na ? 0 : r.pct;
+        const color = na ? '#6b7280' : fillColor(pct / 10);
+        return `
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px;">
+            <div style="flex:0 0 clamp(90px,28%,170px);font-size:clamp(9px,2vw,10px);color:${color};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${r.name}">${r.name}</div>
+            <div style="flex:1;position:relative;height:16px;border-radius:2px;overflow:hidden;background:#0d1117;">
+              <div style="position:absolute;inset:0;background:${ZONE_GRADIENT};"></div>
+              ${na
+                ? `<div style="font-size:9px;color:#6b7280;line-height:16px;padding-left:8px;position:relative;z-index:1;">—</div>`
+                : `<div style="position:absolute;top:0;left:0;height:100%;width:${pct}%;background:${color};opacity:0.75;transition:width 0.7s;z-index:1;"></div>`
+              }
+            </div>
+            <div style="flex:0 0 36px;font-size:11px;font-weight:700;color:${color};text-align:right;">${na ? '—' : pct + '%'}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── Button wiring ──────────────────────────────────────────────────────────
+    document.getElementById('btn-short')?.addEventListener('click', () => startQuiz('short'));
+    document.getElementById('btn-full') ?.addEventListener('click', () => startQuiz('full'));
+    document.getElementById('btn-retake-short')?.addEventListener('click', () => startQuiz('short'));
+    document.getElementById('btn-retake-full') ?.addEventListener('click', () => startQuiz('full'));
+
+    // ── Deep link button ───────────────────────────────────────────────────────
+    document.getElementById('btn-deeplink')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(location.href).then(() => {
+        const btn = document.getElementById('btn-deeplink');
+        btn.textContent = 'Copied!';
+        btn.style.color = '#00d4ff';
+        btn.style.borderColor = '#00d4ff';
+        setTimeout(() => {
+          btn.textContent = 'Link';
+          btn.style.color = '#6b7280';
+          btn.style.borderColor = '#21262d';
+        }, 1500);
+      });
+    });
+  </script>
+
+</BaseLayout>
