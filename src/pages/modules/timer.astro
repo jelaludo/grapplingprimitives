@@ -1,0 +1,368 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout title="Grappling Timer — Grappling Primitives" fullscreen={true}>
+
+  <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
+  <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+    <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+    <span style="color:#21262d;">|</span>
+    <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Grappling Timer</span>
+    <div style="flex:1;"></div>
+    <button id="btn-deeplink" style="font-family:inherit;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:3px 9px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;">Link</button>
+  </div>
+
+  <!-- ── Main ─────────────────────────────────────────────────────────────────── -->
+  <div style="min-height:100vh;padding-top:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;font-family:'Courier New',Consolas,Monaco,monospace;background:#050509;padding-bottom:24px;">
+
+    <!-- Phase label -->
+    <div id="phase-label" style="font-family:'DS-Digital',monospace;font-size:clamp(16px,3.5vw,24px);font-weight:700;letter-spacing:0.12em;color:#6b7280;margin-bottom:8px;min-height:32px;transition:color 0.3s;">PAUSED</div>
+
+    <!-- Big clock -->
+    <div id="clock" style="font-family:'DS-Digital',monospace;font-size:clamp(88px,22vw,180px);font-weight:700;color:#c9d1d9;line-height:0.9;letter-spacing:0.04em;transition:color 0.3s;text-shadow:0 0 40px rgba(201,209,217,0.15);">05:00</div>
+
+    <!-- Progress bar -->
+    <div style="width:min(440px,88vw);height:2px;background:#1a1f2e;border-radius:2px;margin:20px 0 24px;">
+      <div id="progress-bar" style="height:100%;width:100%;background:#21262d;border-radius:2px;transition:width 0.9s linear,background 0.3s;"></div>
+    </div>
+
+    <!-- Controls -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px;">
+
+      <!-- Round duration -->
+      <div class="ctrl-group">
+        <span class="ctrl-label">Round</span>
+        <button id="round-minus" class="adj-btn">−</button>
+        <span id="round-display" class="ctrl-display">05:00</span>
+        <button id="round-plus"  class="adj-btn">+</button>
+      </div>
+
+      <!-- Rest -->
+      <div class="ctrl-group">
+        <span class="ctrl-label">Rest</span>
+        <button id="rest-minus" class="adj-btn">−</button>
+        <span id="rest-display" class="ctrl-display">00:20</span>
+        <button id="rest-plus"  class="adj-btn">+</button>
+      </div>
+
+      <!-- Rounds -->
+      <div class="ctrl-group">
+        <span class="ctrl-label">Rounds</span>
+        <button id="rounds-minus" class="adj-btn">−</button>
+        <span id="rounds-display" class="ctrl-display" style="min-width:28px;">5</span>
+        <button id="rounds-plus"  class="adj-btn">+</button>
+      </div>
+
+    </div>
+
+    <!-- Action buttons -->
+    <div style="display:flex;gap:10px;">
+      <button id="btn-start" style="font-family:inherit;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:10px 28px;border-radius:3px;cursor:pointer;border:1px solid #00d4ff;background:rgba(0,212,255,0.1);color:#00d4ff;transition:all 0.15s;" onmouseover="this.style.background='rgba(0,212,255,0.18)'" onmouseout="this.style.background='rgba(0,212,255,0.1)'">▶ START</button>
+      <button id="btn-reset" style="font-family:inherit;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:10px 20px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='#6b7280';this.style.color='#c9d1d9'" onmouseout="this.style.borderColor='#21262d';this.style.color='#6b7280'">↺ RESET</button>
+    </div>
+
+  </div>
+
+  <style>
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid #21262d;
+      border-radius: 4px;
+      padding: 8px 12px;
+    }
+    .ctrl-label {
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-right: 4px;
+    }
+    .adj-btn {
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1;
+      width: 26px;
+      height: 26px;
+      border: 1px solid #21262d;
+      border-radius: 3px;
+      background: transparent;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all 0.12s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .adj-btn:hover { border-color: #00d4ff; color: #00d4ff; }
+    .ctrl-display {
+      font-family: 'DS-Digital', monospace;
+      font-size: 20px;
+      font-weight: 700;
+      color: #c9d1d9;
+      min-width: 52px;
+      text-align: center;
+      transition: color 0.3s;
+    }
+  </style>
+
+  <script>
+    // ── State ─────────────────────────────────────────────────────────────────
+    let roundSecs  = 300;  // 5:00
+    let restSecs   = 20;   // 0:20
+    let totalRounds = 5;
+    let phase      = 'paused'; // countdown | round | rest | paused | finished
+    let currentRound = 1;
+    let remaining  = 0;
+    let phaseTotal = 0;
+    let tickId     = null;
+
+    // ── Colors ─────────────────────────────────────────────────────────────────
+    const COLORS = {
+      round:     '#66bb6a',
+      rest:      '#fdd835',
+      countdown: '#fdd835',
+      finished:  '#00d4ff',
+      paused:    '#c9d1d9',
+    };
+
+    // ── Elements ───────────────────────────────────────────────────────────────
+    const clockEl      = document.getElementById('clock');
+    const phaseEl      = document.getElementById('phase-label');
+    const progressEl   = document.getElementById('progress-bar');
+    const roundDisp    = document.getElementById('round-display');
+    const restDisp     = document.getElementById('rest-display');
+    const roundsDisp   = document.getElementById('rounds-display');
+    const btnStart     = document.getElementById('btn-start');
+
+    // ── Helpers ────────────────────────────────────────────────────────────────
+    function fmt(s) {
+      return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
+    }
+
+    function beep(freq=880, dur=120) {
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new Ctx();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.frequency.value = freq;
+        o.type = 'square';
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start();
+        setTimeout(() => { o.stop(); ctx.close(); }, dur);
+      } catch(e) {}
+    }
+
+    function clearTick() {
+      if (tickId) { clearInterval(tickId); tickId = null; }
+    }
+
+    function updateUI() {
+      const color = COLORS[phase] || '#c9d1d9';
+      clockEl.textContent = fmt(Math.max(remaining, 0));
+      clockEl.style.color = color;
+      clockEl.style.textShadow = `0 0 40px ${color}22`;
+      phaseEl.style.color = color;
+      progressEl.style.background = color;
+      progressEl.style.width = phaseTotal > 0 ? `${(remaining / phaseTotal) * 100}%` : '0%';
+
+      const labels = {
+        round:     `ROUND ${currentRound} / ${totalRounds}`,
+        rest:      'REST',
+        countdown: 'GET READY',
+        finished:  'FINISHED',
+        paused:    remaining > 0 ? `PAUSED — ROUND ${currentRound}` : 'PAUSED',
+      };
+      phaseEl.textContent = labels[phase] || phase.toUpperCase();
+    }
+
+    function updateSettings() {
+      roundDisp.textContent  = fmt(roundSecs);
+      restDisp.textContent   = fmt(restSecs);
+      roundsDisp.textContent = totalRounds;
+      if (phase === 'paused' && remaining === 0) {
+        clockEl.textContent = fmt(roundSecs);
+        clockEl.style.color = '#c9d1d9';
+        progressEl.style.width = '100%';
+        progressEl.style.background = '#21262d';
+      }
+      try {
+        localStorage.setItem('gp_timer_round',  roundSecs);
+        localStorage.setItem('gp_timer_rest',   restSecs);
+        localStorage.setItem('gp_timer_rounds', totalRounds);
+      } catch(e) {}
+    }
+
+    // ── Timer logic ────────────────────────────────────────────────────────────
+    function runRound() {
+      clearTick();
+      phase = 'round';
+      remaining = roundSecs;
+      phaseTotal = roundSecs;
+      beep(1200, 400);
+      updateUI();
+      tickId = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+          clearTick();
+          beep(500, 800);
+          if (currentRound >= totalRounds) {
+            phase = 'finished';
+            remaining = 0;
+            updateUI();
+            btnStart.textContent = '▶ START';
+          } else {
+            runRest();
+          }
+        } else {
+          updateUI();
+        }
+      }, 1000);
+    }
+
+    function runRest() {
+      clearTick();
+      phase = 'rest';
+      remaining = restSecs;
+      phaseTotal = restSecs;
+      updateUI();
+      tickId = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+          clearTick();
+          currentRound++;
+          startCountdown(runRound);
+        } else {
+          updateUI();
+        }
+      }, 1000);
+    }
+
+    function startCountdown(onDone) {
+      clearTick();
+      phase = 'countdown';
+      let count = 3;
+      remaining = count;
+      phaseTotal = 3;
+      beep(900, 120);
+      updateUI();
+      tickId = setInterval(() => {
+        count--;
+        remaining = count;
+        if (count > 0) {
+          beep(900, count === 2 ? 240 : 360);
+          updateUI();
+        } else {
+          beep(1200, 500);
+          clearTick();
+          onDone();
+        }
+      }, 1000);
+    }
+
+    function start() {
+      currentRound = 1;
+      startCountdown(runRound);
+      btnStart.textContent = '⏸ PAUSE';
+    }
+
+    function pause() {
+      phase = 'paused';
+      clearTick();
+      updateUI();
+      btnStart.textContent = '▶ RESUME';
+    }
+
+    function resume() {
+      // Re-enter whichever phase was active
+      btnStart.textContent = '⏸ PAUSE';
+      if (remaining <= 0) { start(); return; }
+      const prev = phase;
+      // restart interval for the paused phase
+      const onTick = prev === 'rest'
+        ? () => {
+            remaining--;
+            if (remaining <= 0) { clearTick(); currentRound++; startCountdown(runRound); }
+            else updateUI();
+          }
+        : () => {
+            remaining--;
+            if (remaining <= 0) {
+              clearTick(); beep(500, 800);
+              if (currentRound >= totalRounds) { phase='finished'; remaining=0; updateUI(); btnStart.textContent='▶ START'; }
+              else runRest();
+            } else updateUI();
+          };
+      phase = prev === 'paused' ? 'round' : prev;
+      // If we paused from paused (fresh state), just start
+      if (prev === 'paused') { start(); return; }
+      phaseTotal = Math.max(phaseTotal, remaining);
+      updateUI();
+      tickId = setInterval(onTick, 1000);
+    }
+
+    function reset() {
+      clearTick();
+      phase     = 'paused';
+      remaining = 0;
+      phaseTotal = 0;
+      currentRound = 1;
+      clockEl.textContent = fmt(roundSecs);
+      clockEl.style.color = '#c9d1d9';
+      clockEl.style.textShadow = '0 0 40px rgba(201,209,217,0.15)';
+      phaseEl.textContent = 'PAUSED';
+      phaseEl.style.color = '#6b7280';
+      progressEl.style.width = '100%';
+      progressEl.style.background = '#21262d';
+      btnStart.textContent = '▶ START';
+    }
+
+    // ── Button wiring ──────────────────────────────────────────────────────────
+    btnStart.addEventListener('click', () => {
+      if (phase === 'finished')            start();
+      else if (phase === 'paused')         { remaining > 0 ? resume() : start(); }
+      else                                 pause();
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', reset);
+
+    document.getElementById('round-minus') .addEventListener('click', () => { roundSecs  = Math.max(60,      roundSecs  - 60); updateSettings(); });
+    document.getElementById('round-plus')  .addEventListener('click', () => { roundSecs  = Math.min(99*60,   roundSecs  + 60); updateSettings(); });
+    document.getElementById('rest-minus')  .addEventListener('click', () => { restSecs   = Math.max(0,       restSecs   -  5); updateSettings(); });
+    document.getElementById('rest-plus')   .addEventListener('click', () => { restSecs   = Math.min(5*60,    restSecs   +  5); updateSettings(); });
+    document.getElementById('rounds-minus').addEventListener('click', () => { totalRounds = Math.max(1,      totalRounds - 1); updateSettings(); });
+    document.getElementById('rounds-plus') .addEventListener('click', () => { totalRounds = Math.min(99,    totalRounds + 1); updateSettings(); });
+
+    // ── Deep link ──────────────────────────────────────────────────────────────
+    document.getElementById('btn-deeplink').addEventListener('click', () => {
+      navigator.clipboard.writeText(location.href).then(() => {
+        const btn = document.getElementById('btn-deeplink');
+        btn.textContent = 'Copied!';
+        btn.style.color = '#00d4ff';
+        btn.style.borderColor = '#00d4ff';
+        setTimeout(() => { btn.textContent = 'Link'; btn.style.color = '#6b7280'; btn.style.borderColor = '#21262d'; }, 1500);
+      });
+    });
+
+    // ── Restore settings ───────────────────────────────────────────────────────
+    try {
+      const r  = localStorage.getItem('gp_timer_round');
+      const re = localStorage.getItem('gp_timer_rest');
+      const ro = localStorage.getItem('gp_timer_rounds');
+      if (r)  roundSecs   = parseInt(r);
+      if (re) restSecs    = parseInt(re);
+      if (ro) totalRounds = parseInt(ro);
+    } catch(e) {}
+
+    updateSettings();
+  </script>
+
+</BaseLayout>
