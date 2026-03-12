@@ -1,0 +1,1744 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const imgBase = base + '/images/ideal-partner/';
+---
+
+<BaseLayout title="Ideal Training Partner — Grappling Primitives" fullscreen={true}>
+
+<!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
+<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+  <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+  <span style="color:#21262d;">|</span>
+  <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Ideal Training Partner</span>
+  <div style="flex:1;"></div>
+  <button id="lang-toggle" style="font-family:inherit;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;">
+    <span class="lang-label" data-active="en">EN</span> / <span class="lang-label">JP</span>
+  </button>
+</div>
+
+<!-- ── Scrolling Content ───────────────────────────────────────────────────── -->
+<div style="padding-top:36px;">
+
+<!-- ACT 0 -->
+<section id="act-0" class="act" data-act="0">
+  <div class="act-inner">
+    <div class="body-mind-split">
+      <div class="split-panel panel-body">
+        <div class="split-icon"><img src={`${imgBase}icon_400x_0000_BodyUnderstimulated.png`} alt="Body — under-stimulated" class="split-icon-img" /></div>
+        <h3><span lang="en">Body</span><span lang="ja">身体</span></h3>
+        <div id="body-decline" class="body-decline-display">
+          <div class="body-decline-label" id="body-decline-label">Under-stimulated</div>
+          <canvas id="body-decline-canvas" class="body-decline-canvas"></canvas>
+          <div class="body-decline-legend">
+            <span class="body-legend-item" style="color:#34D399;">● Mobility</span>
+            <span class="body-legend-item" style="color:#4C8DFF;">● Strength</span>
+            <span class="body-legend-item" style="color:#F97316;">● Energy</span>
+          </div>
+        </div>
+      </div>
+      <div class="split-divider"></div>
+      <div class="split-panel panel-mind">
+        <div class="split-icon"><img src={`${imgBase}icon_400x_0001_MindOverstimulation162pct.png`} alt="Mind — over-stimulated" class="split-icon-img" /></div>
+        <h3><span lang="en">Mind</span><span lang="ja">精神</span></h3>
+        <div id="mind-overstim" class="overstim-display">
+          <div class="overstim-label" id="overstim-label">Stimulated</div>
+          <div class="overstim-pct" id="overstim-pct">0%</div>
+          <div class="overstim-bar-track">
+            <div class="overstim-bar-fill" id="overstim-fill"></div>
+          </div>
+          <div class="overstim-blocks" id="overstim-blocks"></div>
+        </div>
+      </div>
+    </div>
+    <p class="act-subtitle" style="margin-top:16px;">
+      <span lang="en">Training is the antidote. But <em>how</em> you train matters.</span>
+      <span lang="ja">トレーニングは解毒剤。しかし<em>どう</em>練習するかが重要。</span>
+    </p>
+    <blockquote class="hero-quote">
+      <p>
+        <span lang="en">"Give your partner puzzles to solve, not injuries."</span>
+        <span lang="ja">「パートナーには怪我ではなく、解くべきパズルを与えよ。」</span>
+      </p>
+    </blockquote>
+    <p class="thesis" style="margin-top:8px;">
+      <span lang="en">Intensity modulation is itself a grappling skill.</span>
+      <span lang="ja">強度の調節それ自体がグラップリングのスキルである。</span>
+    </p>
+  </div>
+</section>
+
+<!-- ACT 1 -->
+<section id="act-1" class="act" data-act="1">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">01</span><span lang="en">Understanding Intensity</span><span lang="ja">強度を理解する</span></h2>
+    <p class="act-lead"><span lang="en">Intensity is not on/off. It's like an analog volume knob, and we don't have to go to 11 all the time. Communicate with your partners, understand resistance levels, risk tolerance and competitive intent.</span><span lang="ja">強度は一つのダイヤルではない。抵抗、生理的負荷、リスク許容度、競技意図という複合的な制約の束である。</span></p>
+    <div id="viz-intensity" class="viz-container"></div>
+  </div>
+</section>
+
+<!-- ACT 2 -->
+<section id="act-2" class="act" data-act="2">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">02</span><span lang="en">The Danger of Mismatch</span><span lang="ja">ミスマッチの危険性</span></h2>
+    <p class="act-lead"><span lang="en">When partners are at different intensity levels, the result is higher risks of frustration, injury, or wasted training. Matched intensity makes for better learning, safer environment and more enjoyable rolls.</span><span lang="ja">パートナー間の強度が異なると、フラストレーション、怪我、無駄な練習につながる。強度の一致＝安全な成長。</span></p>
+    <div id="viz-mismatch" class="viz-container"></div>
+  </div>
+</section>
+
+<!-- ACT 3 -->
+<section id="act-3" class="act" data-act="3">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">03</span><span lang="en">Intensity Drift</span><span lang="ja">強度ドリフト</span></h2>
+    <p class="act-lead"><span lang="en">The "flow roll arms race". When the intensity creeps up mid-roll from 20% to 80% as the ego kicks in... 'oh yeah?! *I can go hard TOO'</span><span lang="ja">「フローロール軍拡競争」— エゴが介入すると、ロール中に強度が20%から80%へ徐々に上昇する。ミスマッチの時間的側面。</span></p>
+    <div class="drift-ego-icon"><img src={`${imgBase}icon_400x_0009_EgoTrigger.png`} alt="Ego trigger" class="drift-ego-img" /></div>
+    <div id="viz-drift" class="viz-container"></div>
+    <div style="margin-top:32px;text-align:center;">
+      <p class="act-lead" style="margin-bottom:8px;font-style:italic;"><span lang="en">"It's ok to tap in training"</span><span lang="ja">「練習でタップするのは大丈夫」</span></p>
+      <p class="act-lead" style="margin-bottom:8px;font-style:italic;"><span lang="en">"Training is training, go compete if you want war"</span><span lang="ja">「トレーニングはトレーニング、戦争がしたいなら試合に出ろ」</span></p>
+      <p class="act-lead" style="font-style:italic;"><span lang="en">"Comp training is only safe with trusted partners"</span><span lang="ja">「競技練習は信頼できるパートナーとだけ安全」</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ACT 4 -->
+<section id="act-4" class="act" data-act="4">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">04</span><span lang="en">Know the Trade-offs</span><span lang="ja">トレードオフを知る</span></h2>
+    <blockquote class="hero-quote" style="margin-bottom:24px;">
+      <p style="font-size:clamp(0.95rem,2.5vw,1.2rem);">
+        <span lang="en">"There are no solutions, only trade-offs."</span>
+        <span lang="ja">「解決策はない、トレードオフがあるだけだ。」</span>
+      </p>
+      <cite>— Thomas Sowell</cite>
+    </blockquote>
+    <p class="act-lead"><span lang="en">Every intensity level gives something and takes something. Tap a card to see both sides.</span><span lang="ja">すべての強度レベルは何かを与え、何かを奪う。カードをタップして両面を見よう。</span></p>
+    <div id="viz-tradeoffs" class="viz-container"></div>
+  </div>
+</section>
+
+<!-- ACT 5 -->
+<section id="act-5" class="act act--placeholder" data-act="5">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">05</span><span lang="en">How Training Works</span><span lang="ja">トレーニングの仕組み</span></h2>
+    <p class="act-lead"><span lang="en">"All models are wrong, some are useful." Multiple lenses to map the training landscape.</span><span lang="ja">「全てのモデルは間違っている。役に立つものもある。」トレーニング環境をマッピングする複数のレンズ。</span></p>
+    <div class="placeholder-card"><span lang="en">Training quadrant maps — coming in Phase 2</span><span lang="ja">トレーニング象限マップ — フェーズ2で公開</span></div>
+  </div>
+</section>
+
+<!-- ACT 6 -->
+<section id="act-6" class="act act--placeholder" data-act="6">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">06</span><span lang="en">The Learning Journey</span><span lang="ja">学びの旅路</span></h2>
+    <p class="act-lead"><span lang="en">Incompetence &rarr; Conscious &rarr; Competence &rarr; Flow. Your partner helps at each stage.</span><span lang="ja">無能 &rarr; 意識的 &rarr; 有能 &rarr; フロー。各段階でパートナーが助けになる。</span></p>
+    <div class="placeholder-card"><span lang="en">Skill acquisition path animation — coming in Phase 3</span><span lang="ja">スキル習得パスアニメーション — フェーズ3で公開</span></div>
+  </div>
+</section>
+
+<!-- ACT 7 -->
+<section id="act-7" class="act act--placeholder" data-act="7">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">07</span><span lang="en">The Full Picture</span><span lang="ja">全体像</span></h2>
+    <p class="act-lead"><span lang="en">From research to warzone. BJJ training lives in the Collaboration zone.</span><span lang="ja">研究から戦場まで。BJJトレーニングは協力ゾーンに位置する。</span></p>
+    <div class="placeholder-card"><span lang="en">Violence/intensity spectrum — coming in Phase 3</span><span lang="ja">暴力/強度スペクトラム — フェーズ3で公開</span></div>
+  </div>
+</section>
+
+<!-- ACT 8 — CTA -->
+<section id="act-8" class="act act--cta" data-act="8">
+  <div class="act-inner">
+    <div class="cta-hero-icon"><img src={`${imgBase}icon_400x_0010_BeThePartner.png`} alt="Be the partner" class="cta-hero-img" /></div>
+    <h2 class="cta-hero"><span lang="en">Be the Training Partner<br/>You Wish You Had</span><span lang="ja">あなたが望む<br/>トレーニングパートナーになれ</span></h2>
+    <a href={`${base}/modules/training-partner`} class="cta-button"><span lang="en">Explore Training Partner Archetypes &rarr;</span><span lang="ja">トレーニングパートナーのアーキタイプを探る &rarr;</span></a>
+  </div>
+</section>
+
+</div><!-- end scrolling content -->
+
+</BaseLayout>
+
+<style is:global>
+:root {
+  --bg:           #050509;
+  --surface:      #0E1014;
+  --border:       #1C1F26;
+  --accent:       #4C8DFF;
+  --accent-soft:  #A970FF;
+  --cyan:         #00FFFF;
+  --cyan-dim:     #00d4ff;
+  --green:        #34D399;
+  --amber:        #FBBF24;
+  --red:          #F87171;
+  --text-primary: #E5E7EB;
+  --text-muted:   #9CA3AF;
+  --text-dim:     #6B7280;
+  --font-mono:    'Courier New', Consolas, Monaco, monospace;
+  --glow-cyan:    0 0 12px #00FFFF88;
+  --glow-blue:    0 0 12px #4C8DFF88;
+  --glow-soft:    0 0 8px #A970FF66;
+}
+
+/* Hide JP by default */
+[lang="ja"] { display: none; }
+body.lang-ja [lang="ja"] { display: inline; }
+body.lang-ja [lang="en"] { display: none; }
+
+/* Toolbar lang toggle active state */
+.lang-label[data-active] { color: #00FFFF; text-shadow: 0 0 12px #00FFFF88; }
+
+/* ─── Acts ─── */
+.act {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.act.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.act-inner {
+  max-width: 780px;
+  width: 100%;
+}
+
+.act-number {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.act-title {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  text-shadow: var(--glow-blue);
+}
+.act-lead {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+.act-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 24px;
+  text-align: center;
+}
+.act-subtitle em {
+  color: var(--cyan);
+  font-style: normal;
+  text-shadow: var(--glow-cyan);
+}
+
+/* ─── Act 0 — Body/Mind Split ─── */
+.body-mind-split {
+  display: flex;
+  gap: 0;
+  margin-bottom: 48px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  align-items: stretch;
+}
+.split-panel {
+  flex: 1;
+  padding: 40px 24px;
+  text-align: center;
+  transition: opacity 0.6s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.panel-body {
+  background: var(--surface);
+  opacity: 0.5;
+}
+.panel-mind {
+  background: linear-gradient(135deg, #0E1014, #1a1025);
+  box-shadow: inset 0 0 40px rgba(169,112,255,0.08);
+}
+.split-divider {
+  width: 1px;
+  background: var(--border);
+}
+.split-icon {
+  margin-bottom: 12px;
+}
+.split-icon-img {
+  width: 400px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(0,212,255,0.15));
+  display: block;
+  margin: 0 auto;
+}
+.split-panel h3 {
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+.split-panel p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+.split-panel h3,
+.split-panel p,
+.split-panel .overstim-display,
+.split-panel .body-decline-display {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Body Decline Animation ─── */
+.body-decline-display {
+  text-align: center;
+}
+.body-decline-label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  transition: color 0.5s;
+  min-height: 1.4em;
+  margin-bottom: 6px;
+}
+.body-decline-canvas {
+  width: 100%;
+  max-width: 200px;
+  height: 80px;
+  display: block;
+  margin: 0 auto;
+}
+.body-decline-legend {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+.body-legend-item {
+  white-space: nowrap;
+}
+
+/* ─── Overstimulation Animation ─── */
+.overstim-display {
+  text-align: center;
+}
+.overstim-label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  transition: color 0.3s;
+  min-height: 1.4em;
+}
+.overstim-pct {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 4px 0;
+  transition: color 0.15s;
+}
+.overstim-bar-track {
+  width: 80%;
+  max-width: 200px;
+  height: 8px;
+  background: #1C1F26;
+  border-radius: 4px;
+  margin: 0 auto 6px;
+  overflow: hidden;
+}
+.overstim-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  background: #fff;
+  transition: width 0.08s linear, background 0.3s;
+}
+.overstim-blocks {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  min-height: 1.2em;
+}
+.act.visible .panel-body {
+  opacity: 0.6;
+}
+.act.visible .panel-mind {
+  animation: pulse-glow 3s ease-in-out infinite alternate;
+}
+@keyframes pulse-glow {
+  from { box-shadow: inset 0 0 40px rgba(169,112,255,0.08); }
+  to   { box-shadow: inset 0 0 60px rgba(169,112,255,0.15); }
+}
+
+/* ─── Hero Quote ─── */
+.hero-quote {
+  text-align: center;
+  padding: 32px 16px;
+  border-left: none;
+}
+.hero-quote p {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  color: var(--text-primary);
+  font-style: italic;
+  line-height: 1.5;
+  text-shadow: var(--glow-soft);
+}
+.hero-quote cite {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-style: normal;
+}
+
+/* ─── Viz Containers ─── */
+.viz-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 24px;
+  min-height: 200px;
+}
+
+/* ═══════════════════════════════════════════════ */
+/* ACT 1 — Intensity Slider                       */
+/* ═══════════════════════════════════════════════ */
+
+.intensity-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.intensity-track-wrap {
+  position: relative;
+  height: 56px;
+}
+.intensity-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+}
+.intensity-zone-bg {
+  transition: opacity 0.3s;
+  opacity: 0.25;
+}
+.intensity-zone-bg.active {
+  opacity: 0.6;
+}
+.intensity-zone-bg[data-zone="low"]  { flex: 5; background: linear-gradient(90deg, #065f46, #34D399); }
+.intensity-zone-bg[data-zone="med"]  { flex: 3; background: linear-gradient(90deg, #92400e, #FBBF24); }
+.intensity-zone-bg[data-zone="high"] { flex: 2; background: linear-gradient(90deg, #991b1b, #F87171); }
+
+.intensity-slider {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+}
+.intensity-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 52px;
+  border-radius: 4px;
+  background: var(--cyan);
+  border: 2px solid var(--bg);
+  box-shadow: var(--glow-cyan), 0 0 24px #00FFFF44;
+  cursor: grab;
+}
+.intensity-slider::-moz-range-thumb {
+  width: 28px;
+  height: 52px;
+  border-radius: 4px;
+  background: var(--cyan);
+  border: 2px solid var(--bg);
+  box-shadow: var(--glow-cyan);
+  cursor: grab;
+}
+
+.intensity-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.intensity-value {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--cyan);
+  text-shadow: var(--glow-cyan);
+  line-height: 1;
+}
+
+.intensity-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  transition: border-color 0.3s;
+}
+.intensity-card[data-zone="low"]  { border-color: #34D39966; }
+.intensity-card[data-zone="med"]  { border-color: #FBBF2466; }
+.intensity-card[data-zone="high"] { border-color: #F8717166; }
+
+.intensity-card-label {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.intensity-card[data-zone="low"]  .intensity-card-label { color: var(--green); }
+.intensity-card[data-zone="med"]  .intensity-card-label { color: var(--amber); }
+.intensity-card[data-zone="high"] .intensity-card-label { color: var(--red); }
+
+.intensity-card-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+.intensity-card-row:last-child { border-bottom: none; }
+.intensity-card-row .label { color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+.intensity-zone-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+/* ═══════════════════════════════════════════════ */
+/* ACT 2 — Mismatch Grid                          */
+/* ═══════════════════════════════════════════════ */
+
+.mismatch-grid-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mismatch-axis-label {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.mismatch-grid {
+  display: grid;
+  grid-template-columns: auto repeat(3, 1fr);
+  grid-template-rows: auto repeat(3, 1fr);
+  gap: 4px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.mismatch-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 6px;
+}
+.mismatch-corner { }
+
+.mismatch-cell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.3rem;
+  min-width: 80px;
+  min-height: 80px;
+}
+.mismatch-cell:hover {
+  border-color: var(--accent);
+  transform: scale(1.04);
+}
+.mismatch-cell.matched {
+  border-color: #34D39966;
+  background: rgba(52,211,153,0.06);
+}
+.mismatch-cell.mismatched {
+  border-color: #F8717133;
+  background: rgba(248,113,113,0.04);
+}
+.mismatch-cell.mild {
+  border-color: #FBBF2433;
+  background: rgba(251,191,36,0.04);
+}
+
+.mismatch-cell-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.mismatch-cell-label {
+  font-size: 9px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.mismatch-detail {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 20px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  min-height: 60px;
+  transition: border-color 0.3s;
+}
+.mismatch-detail.safe   { border-color: #34D39944; }
+.mismatch-detail.danger { border-color: #F8717144; }
+.mismatch-detail.warn   { border-color: #FBBF2444; }
+.mismatch-detail-title {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.mismatch-detail.safe   .mismatch-detail-title { color: var(--green); }
+.mismatch-detail.danger .mismatch-detail-title { color: var(--red); }
+.mismatch-detail.warn   .mismatch-detail-title { color: var(--amber); }
+
+/* ═══════════════════════════════════════════════ */
+/* ACT 4 — Trade-off Cards                        */
+/* ═══════════════════════════════════════════════ */
+
+.tradeoff-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 640px) {
+  .tradeoff-cards { grid-template-columns: 1fr; }
+}
+
+.tradeoff-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+  overflow: hidden;
+  position: relative;
+}
+.tradeoff-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.tradeoff-card[data-level="low"]  { border-color: #34D39933; }
+.tradeoff-card[data-level="med"]  { border-color: #FBBF2433; }
+.tradeoff-card[data-level="high"] { border-color: #F8717133; }
+.tradeoff-card.expanded[data-level="low"]  { border-color: #34D39966; }
+.tradeoff-card.expanded[data-level="med"]  { border-color: #FBBF2466; }
+.tradeoff-card.expanded[data-level="high"] { border-color: #F8717166; }
+
+.tradeoff-header {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tradeoff-header img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+.tradeoff-header-text {
+  flex: 1;
+}
+.tradeoff-level {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.tradeoff-card[data-level="low"]  .tradeoff-level { color: var(--green); }
+.tradeoff-card[data-level="med"]  .tradeoff-level { color: var(--amber); }
+.tradeoff-card[data-level="high"] .tradeoff-level { color: var(--red); }
+.tradeoff-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.tradeoff-toggle {
+  font-size: 12px;
+  color: var(--text-dim);
+  transition: transform 0.3s;
+}
+.tradeoff-card.expanded .tradeoff-toggle {
+  transform: rotate(180deg);
+}
+
+.tradeoff-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out;
+  padding: 0 16px;
+}
+.tradeoff-card.expanded .tradeoff-body {
+  max-height: 800px;
+  padding: 0 16px 16px;
+}
+
+.tradeoff-section {
+  margin-bottom: 12px;
+}
+.tradeoff-section:last-child {
+  margin-bottom: 0;
+}
+.tradeoff-section-label {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.tradeoff-section-label.gains { color: var(--green); }
+.tradeoff-section-label.costs { color: var(--red); }
+.tradeoff-section-label.best  { color: var(--cyan-dim); }
+
+.tradeoff-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tradeoff-list li {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 3px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.tradeoff-list li:last-child { border-bottom: none; }
+.tradeoff-list li::before {
+  content: '›';
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════ */
+/* ACT 3 — Intensity Drift                        */
+/* ═══════════════════════════════════════════════ */
+
+.drift-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.drift-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.drift-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.drift-legend {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.drift-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.drift-legend-swatch {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.drift-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.drift-btn {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.drift-btn:hover {
+  border-color: var(--cyan-dim);
+  color: var(--cyan-dim);
+}
+
+/* ─── Act 3 — Ego Trigger Icon ─── */
+.drift-ego-icon {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.drift-ego-img {
+  width: 160px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(248,113,113,0.2));
+  display: block;
+  margin: 0 auto;
+}
+
+.drift-pullquote {
+  text-align: center;
+  font-style: italic;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 8px 0;
+}
+
+/* ═══════════════════════════════════════════════ */
+/* ACT 8 — CTA                                    */
+/* ═══════════════════════════════════════════════ */
+
+.act--cta {
+  text-align: center;
+}
+.cta-quote {
+  margin-bottom: 32px;
+}
+.cta-quote p {
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  color: var(--cyan);
+  font-style: italic;
+  text-shadow: var(--glow-cyan);
+}
+.thesis {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 40px;
+}
+.cta-hero {
+  font-size: clamp(1.6rem, 5vw, 2.8rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  text-shadow: var(--glow-blue);
+  line-height: 1.3;
+  margin-bottom: 40px;
+}
+/* ─── Act 8 — CTA Hero Icon ─── */
+.cta-hero-icon {
+  margin-bottom: 32px;
+}
+.cta-hero-img {
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 16px rgba(0,212,255,0.2));
+  display: block;
+  margin: 0 auto;
+}
+
+.cta-button {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px 28px;
+  border: 1px solid var(--cyan-dim);
+  border-radius: 4px;
+  color: var(--cyan-dim);
+  background: rgba(0,212,255,0.06);
+  transition: all 0.2s;
+}
+.cta-button:hover {
+  background: rgba(0,212,255,0.14);
+  box-shadow: 0 0 20px rgba(0,212,255,0.15);
+}
+
+/* ─── Placeholders ─── */
+.placeholder-card {
+  text-align: center;
+  padding: 48px 24px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .body-mind-split { flex-direction: column; }
+  .split-divider { width: 100%; height: 1px; }
+  .split-panel { padding: 24px 16px; }
+  .act { padding: 60px 16px; }
+  .mismatch-cell { min-width: 60px; min-height: 60px; font-size: 1rem; }
+  .drift-canvas-wrap { height: 200px; }
+}
+</style>
+
+<script define:vars={{ imgBase }}>
+// ═══ Intensity Viz ═══
+function initIntensityViz(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const zones = [
+    {
+      key: 'low', range: [0, 2],
+      en: { label: 'Cooperative / Basic Patterns Learning', body: 'Relaxed, exploratory', mindset: 'Learning, experimenting', icon: imgBase + 'icon_400x_0002_FlowCooperative.png' },
+      ja: { label: '協力的 / 基本パターン学習', body: 'リラックス、探索的', mindset: '学習、実験', icon: imgBase + 'icon_400x_0002_FlowCooperative.png' }
+    },
+    {
+      key: 'low', range: [3, 5],
+      en: { label: 'Cooperative / Flow Rolling', body: 'Relaxed, slight resistance', mindset: 'Exploring, testing lightly', icon: imgBase + 'icon_400x_0002_FlowCooperative.png' },
+      ja: { label: '協力的 / フローロール', body: 'リラックス、軽い抵抗', mindset: '探索、軽いテスト', icon: imgBase + 'icon_400x_0002_FlowCooperative.png' }
+    },
+    {
+      key: 'med', range: [6, 8],
+      en: { label: 'Technical / Pressure-Testing', body: 'Elevated heart rate, focused', mindset: 'Problem-solving under resistance', icon: imgBase + 'icon_400x_0003_FlowWithIntensity.png' },
+      ja: { label: 'テクニカル / プレッシャーテスト', body: '心拍数上昇、集中', mindset: '抵抗下での問題解決', icon: imgBase + 'icon_400x_0003_FlowWithIntensity.png' }
+    },
+    {
+      key: 'high', range: [9, 10],
+      en: { label: 'Competitive / Almost Full Resistance', body: 'Max output, adrenaline', mindset: "Won't give you an inch", icon: imgBase + 'icon_400x_0005_FlowWithClash.png' },
+      ja: { label: '競技的 / ほぼ全力抵抗', body: '最大出力、アドレナリン', mindset: '一歩も譲らない', icon: imgBase + 'icon_400x_0005_FlowWithClash.png' }
+    }
+  ];
+
+  function getZone(val) {
+    const v = Math.round(val);
+    for (const z of zones) {
+      if (v >= z.range[0] && v <= z.range[1]) return z;
+    }
+    return zones[0];
+  }
+
+  container.innerHTML = `
+    <div class="intensity-wrap">
+      <div class="intensity-value" id="int-val">0</div>
+      <div class="intensity-track-wrap">
+        <div class="intensity-track">
+          <div class="intensity-zone-bg active" data-zone="low"></div>
+          <div class="intensity-zone-bg" data-zone="med"></div>
+          <div class="intensity-zone-bg" data-zone="high"></div>
+        </div>
+        <input type="range" class="intensity-slider" id="int-slider" min="0" max="10" step="1" value="0">
+      </div>
+      <div class="intensity-labels">
+        <span>0</span><span>5</span><span>10</span>
+      </div>
+      <div class="intensity-card" id="int-card" data-zone="low">
+        <div class="intensity-card-label" id="int-card-label"></div>
+        <div id="int-card-body"></div>
+      </div>
+    </div>
+  `;
+
+  const slider = document.getElementById('int-slider');
+  const valDisplay = document.getElementById('int-val');
+  const card = document.getElementById('int-card');
+  const cardLabel = document.getElementById('int-card-label');
+  const cardBody = document.getElementById('int-card-body');
+  const bgZones = container.querySelectorAll('.intensity-zone-bg');
+
+  function update() {
+    const v = parseInt(slider.value, 10);
+    const zone = getZone(v);
+    valDisplay.textContent = v;
+
+    // Color the value display
+    const colors = { low: '#34D399', med: '#FBBF24', high: '#F87171' };
+    valDisplay.style.color = colors[zone.key];
+    valDisplay.style.textShadow = `0 0 12px ${colors[zone.key]}88`;
+
+    // Highlight active zone background
+    bgZones.forEach((bg) => {
+      bg.classList.toggle('active', bg.dataset.zone === zone.key);
+    });
+
+    // Update card
+    card.dataset.zone = zone.key;
+    const isJa = document.body.classList.contains('lang-ja');
+    const d = isJa ? zone.ja : zone.en;
+    cardLabel.innerHTML = `<img src="${d.icon}" alt="" class="intensity-zone-icon"> ${d.label}`;
+    cardBody.innerHTML = `
+      <div class="intensity-card-row"><span class="label">${isJa ? '身体状態' : 'Body State'}</span><span>${d.body}</span></div>
+      <div class="intensity-card-row"><span class="label">${isJa ? 'マインドセット' : 'Mindset'}</span><span>${d.mindset}</span></div>
+    `;
+  }
+
+  slider.addEventListener('input', update);
+
+  // Re-render on language change
+  const langBtn = document.getElementById('lang-toggle');
+  if (langBtn) langBtn.addEventListener('click', () => setTimeout(update, 10));
+
+  update();
+}
+
+// ═══ Mismatch Viz ═══
+function initMismatchViz(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const levels = ['Low', 'Med', 'High'];
+  const levelsJa = ['\u4F4E', '\u4E2D', '\u9AD8'];
+
+  // Grid data: [yourIntensity][partnerIntensity]
+  const cells = [
+    // You=Low
+    [
+      { icon: imgBase + 'icon_400x_0006_SafeMatch.png', type: 'matched',
+        en: { title: 'Matched \u2014 Cooperative', desc: 'Both exploring at low intensity. Ideal for skill acquisition, flow rolling, and creative experimentation.' },
+        ja: { title: '\u4E00\u81F4 \u2014 \u5354\u529B\u7684', desc: '\u4E21\u8005\u304C\u4F4E\u5F37\u5EA6\u3067\u63A2\u7D22\u3002\u30B9\u30AD\u30EB\u7FD2\u5F97\u3001\u30D5\u30ED\u30FC\u30ED\u30FC\u30EA\u30F3\u30B0\u3001\u5275\u9020\u7684\u5B9F\u9A13\u306B\u6700\u9069\u3002' }
+      },
+      { icon: imgBase + 'icon_400x_0007_MildMismatch.png', type: 'mild',
+        en: { title: 'Mild Mismatch', desc: 'You\'re flowing, partner is pushing. You get overwhelmed; they don\'t get realistic reactions. Neither benefits fully.' },
+        ja: { title: '\u8EFD\u5EA6\u30DF\u30B9\u30DE\u30C3\u30C1', desc: '\u3042\u306A\u305F\u306F\u30D5\u30ED\u30FC\u3001\u30D1\u30FC\u30C8\u30CA\u30FC\u306F\u62BC\u3057\u3066\u3044\u308B\u3002\u3042\u306A\u305F\u306F\u5727\u5012\u3055\u308C\u3001\u76F8\u624B\u306F\u30EA\u30A2\u30EB\u306A\u53CD\u5FDC\u3092\u5F97\u3089\u308C\u306A\u3044\u3002' }
+      },
+      { icon: imgBase + 'icon_400x_0008_DangerousMismatch.png', type: 'mismatched',
+        en: { title: 'Dangerous Mismatch', desc: 'You\'re relaxed, partner is competing. High injury risk \u2014 unexpected explosions against a relaxed body. The #1 cause of training injuries.' },
+        ja: { title: '\u5371\u967A\u306A\u30DF\u30B9\u30DE\u30C3\u30C1', desc: '\u3042\u306A\u305F\u306F\u30EA\u30E9\u30C3\u30AF\u30B9\u3001\u30D1\u30FC\u30C8\u30CA\u30FC\u306F\u7AF6\u4E89\u3002\u30EA\u30E9\u30C3\u30AF\u30B9\u3057\u305F\u4F53\u3078\u306E\u4E88\u671F\u305B\u306C\u7206\u767A\u2014\u7DF4\u7FD2\u4E2D\u306E\u602A\u6211\u306E\u6700\u5927\u539F\u56E0\u3002' }
+      }
+    ],
+    // You=Med
+    [
+      { icon: imgBase + 'icon_400x_0007_MildMismatch.png', type: 'mild',
+        en: { title: 'Mild Mismatch', desc: 'You\'re pushing, partner is flowing. They feel bulldozed; you don\'t improve because there\'s no resistance to test against.' },
+        ja: { title: '\u8EFD\u5EA6\u30DF\u30B9\u30DE\u30C3\u30C1', desc: '\u3042\u306A\u305F\u306F\u62BC\u3057\u3001\u30D1\u30FC\u30C8\u30CA\u30FC\u306F\u30D5\u30ED\u30FC\u3002\u76F8\u624B\u306F\u5727\u5012\u3055\u308C\u3001\u3042\u306A\u305F\u306F\u30C6\u30B9\u30C8\u3059\u308B\u62B5\u6297\u304C\u306A\u304F\u6210\u9577\u3067\u304D\u306A\u3044\u3002' }
+      },
+      { icon: imgBase + 'icon_400x_0006_SafeMatch.png', type: 'matched',
+        en: { title: 'Matched \u2014 Technical', desc: 'Both at moderate intensity. The sweet spot: realistic enough to test technique, controlled enough to stay safe and learn.' },
+        ja: { title: '\u4E00\u81F4 \u2014 \u30C6\u30AF\u30CB\u30AB\u30EB', desc: '\u4E21\u8005\u304C\u4E2D\u7A0B\u5EA6\u306E\u5F37\u5EA6\u3002\u30B9\u30A4\u30FC\u30C8\u30B9\u30DD\u30C3\u30C8\uFF1A\u30C6\u30AF\u30CB\u30C3\u30AF\u3092\u30C6\u30B9\u30C8\u3067\u304D\u308B\u30EA\u30A2\u30EB\u3055\u3068\u5B89\u5168\u306B\u5B66\u3079\u308B\u30B3\u30F3\u30C8\u30ED\u30FC\u30EB\u3002' }
+      },
+      { icon: imgBase + 'icon_400x_0007_MildMismatch.png', type: 'mild',
+        en: { title: 'Mild Mismatch', desc: 'You\'re technical, partner is competing. You can\'t work your game \u2014 forced into survival mode. Frustrating but less dangerous than Low vs High.' },
+        ja: { title: '\u8EFD\u5EA6\u30DF\u30B9\u30DE\u30C3\u30C1', desc: '\u3042\u306A\u305F\u306F\u30C6\u30AF\u30CB\u30AB\u30EB\u3001\u30D1\u30FC\u30C8\u30CA\u30FC\u306F\u7AF6\u4E89\u3002\u81EA\u5206\u306E\u30B2\u30FC\u30E0\u304C\u3067\u304D\u305A\u30B5\u30D0\u30A4\u30D0\u30EB\u30E2\u30FC\u30C9\u306B\u3002\u30D5\u30E9\u30B9\u30C8\u30EC\u30FC\u30B7\u30E7\u30F3\u3060\u304C\u4F4E\u5BFE\u9AD8\u3088\u308A\u5371\u967A\u5C11\u306A\u3044\u3002' }
+      }
+    ],
+    // You=High
+    [
+      { icon: imgBase + 'icon_400x_0008_DangerousMismatch.png', type: 'mismatched',
+        en: { title: 'Dangerous Mismatch', desc: 'You\'re competing, partner is flowing. You\'re the "spaz" \u2014 applying full force against someone who isn\'t defending. This is how people get hurt.' },
+        ja: { title: '\u5371\u967A\u306A\u30DF\u30B9\u30DE\u30C3\u30C1', desc: '\u3042\u306A\u305F\u306F\u7AF6\u4E89\u3001\u30D1\u30FC\u30C8\u30CA\u30FC\u306F\u30D5\u30ED\u30FC\u3002\u5B88\u3063\u3066\u3044\u306A\u3044\u4EBA\u306B\u5168\u529B\u3092\u304B\u3051\u308B\u300C\u30B9\u30D1\u30BA\u300D\u2014\u602A\u6211\u306E\u539F\u56E0\u3002' }
+      },
+      { icon: imgBase + 'icon_400x_0007_MildMismatch.png', type: 'mild',
+        en: { title: 'Mild Mismatch', desc: 'You\'re competing, partner is technical. They\'re forced into survival; you\'re not testing yourself against equal intent. Ego boost, not real growth.' },
+        ja: { title: '\u8EFD\u5EA6\u30DF\u30B9\u30DE\u30C3\u30C1', desc: '\u3042\u306A\u305F\u306F\u7AF6\u4E89\u3001\u30D1\u30FC\u30C8\u30CA\u30FC\u306F\u30C6\u30AF\u30CB\u30AB\u30EB\u3002\u76F8\u624B\u306F\u30B5\u30D0\u30A4\u30D0\u30EB\u306B\u8FFD\u3044\u8FBC\u307E\u308C\u308B\u3002\u81EA\u5DF1\u6E80\u8DB3\u3060\u304C\u672C\u5F53\u306E\u6210\u9577\u3067\u306F\u306A\u3044\u3002' }
+      },
+      { icon: imgBase + 'icon_400x_0006_SafeMatch.png', type: 'matched',
+        en: { title: 'Matched \u2014 Competitive', desc: 'Both competing at full intensity. Appropriate for competition prep \u2014 but only with trust, control, and shared intent. Limited to 10-30% of training time.' },
+        ja: { title: '\u4E00\u81F4 \u2014 \u7AF6\u6280\u7684', desc: '\u4E21\u8005\u304C\u5168\u529B\u3067\u7AF6\u4E89\u3002\u7AF6\u6280\u6E96\u5099\u306B\u9069\u5207\u2014\u4FE1\u983C\u3001\u30B3\u30F3\u30C8\u30ED\u30FC\u30EB\u3001\u5171\u6709\u306E\u610F\u56F3\u304C\u5FC5\u8981\u3002\u7DF4\u7FD2\u6642\u9593\u306E10-30%\u306B\u9650\u5B9A\u3002' }
+      }
+    ]
+  ];
+
+  // Build grid HTML
+  const isJa = () => document.body.classList.contains('lang-ja');
+  const lvl = (i) => isJa() ? levelsJa[i] : levels[i];
+
+  function render() {
+    const ja = isJa();
+    let html = '<div class="mismatch-grid-wrap">';
+    html += `<div class="mismatch-axis-label">${ja ? '\u30D1\u30FC\u30C8\u30CA\u30FC\u306E\u5F37\u5EA6 \u2192' : "Partner's Intensity \u2192"}</div>`;
+    html += '<div class="mismatch-grid">';
+
+    // Header row
+    html += '<div class="mismatch-corner mismatch-header"></div>';
+    for (let c = 0; c < 3; c++) {
+      html += `<div class="mismatch-header">${lvl(c)}</div>`;
+    }
+
+    // Data rows
+    for (let r = 0; r < 3; r++) {
+      html += `<div class="mismatch-header" style="writing-mode:vertical-lr;transform:rotate(180deg);font-size:10px">${ja ? '\u3042\u306A\u305F' : 'You'}: ${lvl(r)}</div>`;
+      for (let c = 0; c < 3; c++) {
+        const cell = cells[r][c];
+        html += `<div class="mismatch-cell ${cell.type}" data-r="${r}" data-c="${c}"><img src="${cell.icon}" alt="" class="mismatch-cell-icon"><div class="mismatch-cell-label">${(ja ? cell.ja.title : cell.en.title).split(' \u2014 ').pop()}</div></div>`;
+      }
+    }
+
+    html += '</div>'; // grid
+    html += `<div class="mismatch-detail" id="mm-detail"><span style="color:var(--text-dim);font-size:0.82rem">${ja ? '\u30BB\u30EB\u3092\u30AF\u30EA\u30C3\u30AF\u3057\u3066\u8A73\u7D30\u3092\u898B\u308B' : 'Click a cell to see details'}</span></div>`;
+    html += '</div>';
+
+    container.innerHTML = html;
+
+    // Attach click handlers
+    container.querySelectorAll('.mismatch-cell').forEach((el) => {
+      el.addEventListener('click', () => {
+        const r = parseInt(el.dataset.r, 10);
+        const c = parseInt(el.dataset.c, 10);
+        const cell = cells[r][c];
+        const d = isJa() ? cell.ja : cell.en;
+        const detail = document.getElementById('mm-detail');
+        const cls = cell.type === 'matched' ? 'safe' : cell.type === 'mismatched' ? 'danger' : 'warn';
+        detail.className = `mismatch-detail ${cls}`;
+        detail.innerHTML = `<div class="mismatch-detail-title">${d.title}</div><p>${d.desc}</p>`;
+
+        // Highlight selected cell
+        container.querySelectorAll('.mismatch-cell').forEach((c2) => c2.style.outline = 'none');
+        el.style.outline = `2px solid var(--cyan-dim)`;
+      });
+    });
+  }
+
+  render();
+
+  // Re-render on language change
+  const langBtn = document.getElementById('lang-toggle');
+  if (langBtn) langBtn.addEventListener('click', () => setTimeout(render, 10));
+}
+
+// ═══ Drift Viz ═══
+function initDriftViz(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const isJa = () => document.body.classList.contains('lang-ja');
+
+  container.innerHTML = `
+    <div class="drift-wrap">
+      <div class="drift-canvas-wrap">
+        <canvas id="drift-canvas" class="drift-canvas"></canvas>
+      </div>
+      <div class="drift-legend">
+        <div class="drift-legend-item"><div class="drift-legend-swatch" style="background:#F87171"></div><span id="drift-leg-actual">${isJa() ? '\u5B9F\u969B\u306E\u5F37\u5EA6' : 'Actual Intensity'}</span></div>
+        <div class="drift-legend-item"><div class="drift-legend-swatch" style="background:#34D399"></div><span id="drift-leg-ideal">${isJa() ? '\u7406\u60F3\u7684\u306A\u5F37\u5EA6' : 'Ideal Intensity'}</span></div>
+      </div>
+      <div class="drift-controls">
+        <button class="drift-btn" id="drift-play">${isJa() ? '\u518D\u751F' : 'Play'}</button>
+        <button class="drift-btn" id="drift-reset">${isJa() ? '\u30EA\u30BB\u30C3\u30C8' : 'Reset'}</button>
+      </div>
+      <div class="drift-pullquote">
+        <span lang="en">"People start light but once they're about to get swept they ramp up and steamroll."</span>
+        <span lang="ja">\u300C\u307F\u3093\u306A\u8EFD\u304F\u59CB\u3081\u308B\u304C\u3001\u30B9\u30A4\u30FC\u30D7\u3055\u308C\u305D\u3046\u306B\u306A\u308B\u3068\u5F37\u5EA6\u3092\u4E0A\u3052\u3066\u62BC\u3057\u6F70\u3059\u3002\u300D</span>
+      </div>
+    </div>
+  `;
+
+  const canvas = document.getElementById('drift-canvas');
+  const ctx = canvas.getContext('2d');
+  const playBtn = document.getElementById('drift-play');
+  const resetBtn = document.getElementById('drift-reset');
+
+  // Drift data: normalized 0-1 time, 0-100 intensity
+  const actualPoints = [
+    [0, 20], [0.1, 22], [0.2, 25], [0.3, 30],
+    [0.38, 35],
+    [0.42, 55],
+    [0.48, 70],
+    [0.55, 78], [0.65, 82], [0.75, 80],
+    [0.85, 75], [0.95, 72], [1, 70]
+  ];
+
+  const idealPoints = [
+    [0, 25], [0.1, 28], [0.2, 30], [0.3, 28],
+    [0.4, 32], [0.5, 30], [0.6, 33], [0.7, 28],
+    [0.8, 30], [0.9, 27], [1, 25]
+  ];
+
+  let animProgress = 0;
+  let animId = null;
+  let playing = false;
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function lerp(points, t) {
+    for (let i = 0; i < points.length - 1; i++) {
+      const [t0, v0] = points[i];
+      const [t1, v1] = points[i + 1];
+      if (t >= t0 && t <= t1) {
+        const frac = (t - t0) / (t1 - t0);
+        return v0 + (v1 - v0) * frac;
+      }
+    }
+    return points[points.length - 1][1];
+  }
+
+  function draw() {
+    const w = canvas.width / (window.devicePixelRatio || 1);
+    const h = canvas.height / (window.devicePixelRatio || 1);
+    const pad = { top: 24, right: 16, bottom: 32, left: 44 };
+    const pw = w - pad.left - pad.right;
+    const ph = h - pad.top - pad.bottom;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Axes
+    ctx.strokeStyle = '#1C1F26';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, pad.top);
+    ctx.lineTo(pad.left, h - pad.bottom);
+    ctx.lineTo(w - pad.right, h - pad.bottom);
+    ctx.stroke();
+
+    // Y labels
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '10px Courier New';
+    ctx.textAlign = 'right';
+    for (let v = 0; v <= 100; v += 25) {
+      const y = pad.top + ph * (1 - v / 100);
+      ctx.fillText(v + '%', pad.left - 6, y + 3);
+      if (v > 0 && v < 100) {
+        ctx.strokeStyle = '#1C1F2633';
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(w - pad.right, y);
+        ctx.stroke();
+      }
+    }
+
+    // X label
+    ctx.fillStyle = '#6B7280';
+    ctx.textAlign = 'center';
+    ctx.fillText(isJa() ? '\u30E9\u30A6\u30F3\u30C9\u306E\u6642\u9593 \u2192' : 'Time in Round \u2192', w / 2, h - 6);
+
+    // Draw ego trigger zone
+    if (animProgress > 0.38) {
+      const triggerX = pad.left + 0.40 * pw;
+      ctx.fillStyle = 'rgba(248,113,113,0.06)';
+      ctx.fillRect(triggerX - 12, pad.top, 24, ph);
+      ctx.fillStyle = '#F8717166';
+      ctx.font = '9px Courier New';
+      ctx.textAlign = 'center';
+      ctx.fillText(isJa() ? '\u30A8\u30B4' : 'EGO', triggerX, pad.top + 14);
+      ctx.fillText('\u2193', triggerX, pad.top + 24);
+    }
+
+    function drawLine(points, color, maxT) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      const steps = 100;
+      let started = false;
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        if (t > maxT) break;
+        const x = pad.left + t * pw;
+        const v = lerp(points, t);
+        const y = pad.top + ph * (1 - v / 100);
+        if (!started) { ctx.moveTo(x, y); started = true; }
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    // Ideal line (full, dimmer)
+    drawLine(idealPoints, '#34D39988', animProgress);
+
+    // Actual line
+    drawLine(actualPoints, '#F87171', animProgress);
+  }
+
+  function animate() {
+    if (!playing) return;
+    animProgress += 0.006;
+    if (animProgress >= 1) {
+      animProgress = 1;
+      playing = false;
+    }
+    draw();
+    if (playing) animId = requestAnimationFrame(animate);
+  }
+
+  function play() {
+    if (playing) return;
+    if (animProgress >= 1) animProgress = 0;
+    playing = true;
+    animate();
+  }
+
+  function reset() {
+    playing = false;
+    if (animId) cancelAnimationFrame(animId);
+    animProgress = 0;
+    draw();
+  }
+
+  playBtn.addEventListener('click', play);
+  resetBtn.addEventListener('click', reset);
+
+  // Auto-play when section becomes visible
+  const section = document.getElementById('act-3');
+  if (section) {
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && animProgress === 0) {
+        setTimeout(play, 400);
+      }
+    }, { threshold: 0.3 });
+    obs.observe(section);
+  }
+
+  window.addEventListener('resize', () => { resize(); draw(); });
+  resize();
+  draw();
+
+  // Re-render on language change
+  const langBtn = document.getElementById('lang-toggle');
+  if (langBtn) langBtn.addEventListener('click', () => setTimeout(draw, 10));
+}
+
+// ═══ Scroll Reveal ═══
+(function() {
+  const acts = document.querySelectorAll('.act');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  acts.forEach((a) => observer.observe(a));
+})();
+
+// ═══ Language Toggle ═══
+(function() {
+  const btn = document.getElementById('lang-toggle');
+  if (!btn) return;
+  const labels = btn.querySelectorAll('.lang-label');
+  let lang = 'en';
+  btn.addEventListener('click', () => {
+    lang = lang === 'en' ? 'ja' : 'en';
+    document.body.classList.toggle('lang-ja', lang === 'ja');
+    labels.forEach((l) => {
+      if ((lang === 'en' && l.textContent === 'EN') || (lang === 'ja' && l.textContent === 'JP')) {
+        l.setAttribute('data-active', '');
+      } else {
+        l.removeAttribute('data-active');
+      }
+    });
+  });
+})();
+
+// ═══ Mind Overstimulation Animation ═══
+(function initOverstimAnim() {
+  const label = document.getElementById('overstim-label');
+  const pct = document.getElementById('overstim-pct');
+  const fill = document.getElementById('overstim-fill');
+  const blocks = document.getElementById('overstim-blocks');
+  if (!label || !pct || !fill) return;
+
+  const stages = [
+    { threshold: 0,   text: 'stimulated',      color: '#E5E7EB' },
+    { threshold: 30,  text: 'overstimulated',   color: '#00d4ff' },
+    { threshold: 60,  text: 'anxious...',        color: '#FBBF24' },
+    { threshold: 90,  text: 'fatigued...',       color: '#F97316' },
+    { threshold: 120, text: 'exhausted...',      color: '#F87171' },
+    { threshold: 150, text: 'UNSTABLE!',         color: '#FF3333' }
+  ];
+
+  let running = false;
+  let animId = null;
+
+  function getStage(v) {
+    let s = stages[0];
+    for (const st of stages) {
+      if (v >= st.threshold) s = st;
+    }
+    return s;
+  }
+
+  function buildBlocks(v, maxV) {
+    const total = 14;
+    const filled = Math.round((Math.min(v, maxV) / maxV) * total);
+    return '▣'.repeat(filled) + '□'.repeat(total - filled);
+  }
+
+  function cycle() {
+    const maxPct = 100 + Math.floor(Math.random() * 81); // 100–180%
+    let current = 0;
+    const step = 1.2;
+
+    function tick() {
+      current += step;
+      if (current > maxPct) {
+        // Hold at peak — longer pause if we reached UNSTABLE! territory
+        const peakPause = maxPct >= 150 ? 4000 : 1200;
+        setTimeout(() => {
+          // Quick fade down
+          let down = maxPct;
+          function fadeDown() {
+            down -= 4;
+            if (down <= 0) {
+              down = 0;
+              update(0, maxPct);
+              setTimeout(cycle, 800);
+              return;
+            }
+            update(down, maxPct);
+            requestAnimationFrame(fadeDown);
+          }
+          fadeDown();
+        }, peakPause);
+        return;
+      }
+      update(current, maxPct);
+      animId = requestAnimationFrame(tick);
+    }
+
+    function update(v, maxV) {
+      const stage = getStage(v);
+      const displayPct = Math.round(v);
+      pct.textContent = displayPct + '%';
+      pct.style.color = stage.color;
+      pct.style.textShadow = `0 0 12px ${stage.color}66`;
+      label.textContent = stage.text;
+      label.style.color = stage.color;
+      const barWidth = Math.min((v / maxV) * 100, 100);
+      fill.style.width = barWidth + '%';
+      fill.style.background = stage.color;
+      if (v > 100) {
+        fill.style.boxShadow = `0 0 8px ${stage.color}88, 0 0 16px ${stage.color}44`;
+      } else {
+        fill.style.boxShadow = 'none';
+      }
+      blocks.textContent = buildBlocks(v, maxV);
+      blocks.style.color = stage.color;
+    }
+
+    tick();
+  }
+
+  // Start when Act 0 is visible
+  const section = document.getElementById('act-0');
+  if (section) {
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !running) {
+        running = true;
+        setTimeout(cycle, 600);
+      }
+    }, { threshold: 0.3 });
+    obs.observe(section);
+  }
+})();
+
+// ═══ Body Decline Animation ═══
+(function initBodyDeclineAnim() {
+  const canvas = document.getElementById('body-decline-canvas');
+  const label = document.getElementById('body-decline-label');
+  if (!canvas || !label) return;
+
+  const ctx = canvas.getContext('2d');
+  let running = false;
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const w = Math.min(rect.width, 200);
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = w * dpr;
+    canvas.height = 80 * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = '80px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  const lines = [
+    { color: '#34D399', label: 'Mobility',  startY: 0.15, endY: 0.85, noise: 0.04 },
+    { color: '#4C8DFF', label: 'Strength',  startY: 0.10, endY: 0.90, noise: 0.05 },
+    { color: '#F97316', label: 'Energy',    startY: 0.20, endY: 0.80, noise: 0.06 }
+  ];
+
+  const stages = [
+    { threshold: 0,    text: 'Under-stimulated', color: '#9CA3AF' },
+    { threshold: 0.33, text: 'Weakening...',      color: '#FBBF24' },
+    { threshold: 0.66, text: 'Atrophying...',      color: '#F87171' }
+  ];
+
+  function getStage(t) {
+    let s = stages[0];
+    for (const st of stages) {
+      if (t >= st.threshold) s = st;
+    }
+    return s;
+  }
+
+  // Seeded noise for consistent wiggles
+  const seeds = lines.map(() => Array.from({length: 50}, () => Math.random() * 2 - 1));
+
+  function draw(progress) {
+    const w = canvas.width / (window.devicePixelRatio || 1);
+    const h = canvas.height / (window.devicePixelRatio || 1);
+    const pad = { top: 4, bottom: 4, left: 4, right: 4 };
+    const pw = w - pad.left - pad.right;
+    const ph = h - pad.top - pad.bottom;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Faint grid lines
+    ctx.strokeStyle = '#1C1F2644';
+    ctx.lineWidth = 0.5;
+    for (let y = 0.25; y < 1; y += 0.25) {
+      ctx.beginPath();
+      ctx.moveTo(pad.left, pad.top + ph * y);
+      ctx.lineTo(w - pad.right, pad.top + ph * y);
+      ctx.stroke();
+    }
+
+    // Draw each declining line
+    lines.forEach((line, li) => {
+      ctx.strokeStyle = line.color;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      const steps = 48;
+      let started = false;
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        if (t > progress) break;
+        const baseY = line.startY + (line.endY - line.startY) * t;
+        const noise = seeds[li][i % 50] * line.noise * (0.5 + t * 0.5);
+        const x = pad.left + t * pw;
+        const y = pad.top + (baseY + noise) * ph;
+        if (!started) { ctx.moveTo(x, y); started = true; }
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Dot at current position
+      if (progress > 0) {
+        const t = Math.min(progress, 1);
+        const baseY = line.startY + (line.endY - line.startY) * t;
+        const noise = seeds[li][Math.floor(t * steps) % 50] * line.noise * (0.5 + t * 0.5);
+        const x = pad.left + t * pw;
+        const y = pad.top + (baseY + noise) * ph;
+        ctx.fillStyle = line.color;
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+
+    // Update label
+    const stage = getStage(progress);
+    label.textContent = stage.text;
+    label.style.color = stage.color;
+  }
+
+  function cycle() {
+    let progress = 0;
+    const speed = 0.005;
+
+    function tick() {
+      progress += speed;
+      if (progress >= 1) {
+        progress = 1;
+        draw(progress);
+        // Pause 10 seconds at full decline, then restart
+        setTimeout(() => {
+          progress = 0;
+          draw(0);
+          setTimeout(cycle, 800);
+        }, 10000);
+        return;
+      }
+      draw(progress);
+      requestAnimationFrame(tick);
+    }
+
+    tick();
+  }
+
+  // Start when Act 0 is visible
+  const section = document.getElementById('act-0');
+  if (section) {
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !running) {
+        running = true;
+        resize();
+        draw(0);
+        setTimeout(cycle, 600);
+      }
+    }, { threshold: 0.3 });
+    obs.observe(section);
+  }
+
+  window.addEventListener('resize', () => { resize(); });
+  resize();
+  draw(0);
+})();
+
+// ═══ Trade-offs Viz ═══
+function initTradeoffsViz(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const isJa = () => document.body.classList.contains('lang-ja');
+
+  const cards = [
+    {
+      level: 'low',
+      icon: imgBase + 'icon_400x_0002_FlowCooperative.png',
+      en: {
+        title: 'Low Intensity',
+        subtitle: 'Cooperative / Flow',
+        gains: ['Technique exploration without fear', 'Pattern recognition development', 'Cardio recovery between hard sessions', 'Creative problem-solving space', 'Builds trust with training partners'],
+        costs: ['No pressure-testing of techniques', 'False confidence in untested moves', 'Doesn\'t prepare for adrenaline dump', 'Can become a comfort zone'],
+        best: 'New techniques, injury recovery, partner trust-building'
+      },
+      ja: {
+        title: '低強度',
+        subtitle: '協力的 / フロー',
+        gains: ['恐怖なしにテクニックを探索', 'パターン認識の発達', 'ハードセッション間の心肺回復', '創造的な問題解決の余地', 'トレーニングパートナーとの信頼構築'],
+        costs: ['テクニックのプレッシャーテストなし', '未テストの技への偽りの自信', 'アドレナリンダンプへの準備不足', 'コンフォートゾーンになりうる'],
+        best: '新しい技、怪我の回復、パートナーとの信頼構築'
+      }
+    },
+    {
+      level: 'med',
+      icon: imgBase + 'icon_400x_0003_FlowWithIntensity.png',
+      en: {
+        title: 'Medium Intensity',
+        subtitle: 'Technical / Pressure-Test',
+        gains: ['Realistic resistance reveals flaws', 'Develops timing under pressure', 'Builds problem-solving resilience', 'The "sweet spot" for learning'],
+        costs: ['Requires matched intent from both', 'Easy to drift into high intensity', 'Ego can push you past the line', 'Fatigue accumulates over the week'],
+        best: 'Refining known techniques, developing A-game'
+      },
+      ja: {
+        title: '中強度',
+        subtitle: 'テクニカル / プレッシャーテスト',
+        gains: ['リアルな抵抗が欠点を明らかに', 'プレッシャー下でのタイミング開発', '問題解決力の構築', '学習の「スイートスポット」'],
+        costs: ['両者の意図の一致が必要', '高強度へのドリフトが容易', 'エゴがラインを超えさせる', '週を通して疲労が蓄積'],
+        best: '既知の技の精錬、Aゲームの開発'
+      }
+    },
+    {
+      level: 'high',
+      icon: imgBase + 'icon_400x_0005_FlowWithClash.png',
+      en: {
+        title: 'High Intensity',
+        subtitle: 'Competitive / Match Sim',
+        gains: ['Tests techniques under real stress', 'Builds competition-day readiness', 'Reveals true skill level', 'Develops mental toughness'],
+        costs: ['Highest injury risk', 'Masks technical gaps with athleticism', 'Drains CNS — needs recovery time', 'Can erode training partnerships', 'Ego-driven, not learning-driven'],
+        best: 'Competition prep only — 10-20% of training time max'
+      },
+      ja: {
+        title: '高強度',
+        subtitle: '競技的 / 試合シミュレーション',
+        gains: ['リアルなストレス下でのテクニックテスト', '大会当日への準備', '真のスキルレベルを明らかに', 'メンタルタフネスの開発'],
+        costs: ['最高の怪我リスク', 'アスリート能力で技術的ギャップを隠す', 'CNSを消耗 — 回復時間が必要', 'トレーニングパートナーシップを損なう', 'エゴ主導、学習主導ではない'],
+        best: '大会準備のみ — トレーニング時間の最大10-20%'
+      }
+    }
+  ];
+
+  function render() {
+    const ja = isJa();
+    let html = '<div class="tradeoff-cards">';
+
+    cards.forEach((card, idx) => {
+      const d = ja ? card.ja : card.en;
+      html += `
+        <div class="tradeoff-card" data-level="${card.level}" data-idx="${idx}">
+          <div class="tradeoff-header">
+            <img src="${card.icon}" alt="">
+            <div class="tradeoff-header-text">
+              <div class="tradeoff-level">${d.title}</div>
+              <div class="tradeoff-subtitle">${d.subtitle}</div>
+            </div>
+            <div class="tradeoff-toggle">▼</div>
+          </div>
+          <div class="tradeoff-body">
+            <div class="tradeoff-section">
+              <div class="tradeoff-section-label gains">✦ ${ja ? '得られるもの' : 'What you gain'}</div>
+              <ul class="tradeoff-list">${d.gains.map(g => `<li>${g}</li>`).join('')}</ul>
+            </div>
+            <div class="tradeoff-section">
+              <div class="tradeoff-section-label costs">✦ ${ja ? '失うもの' : 'What it costs'}</div>
+              <ul class="tradeoff-list">${d.costs.map(c => `<li>${c}</li>`).join('')}</ul>
+            </div>
+            <div class="tradeoff-section">
+              <div class="tradeoff-section-label best">✦ ${ja ? '最適な場面' : 'Best for'}</div>
+              <p style="font-size:0.8rem;color:var(--cyan-dim);margin:0;">${d.best}</p>
+            </div>
+          </div>
+        </div>`;
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+
+    // Toggle expand/collapse
+    container.querySelectorAll('.tradeoff-card').forEach(el => {
+      el.addEventListener('click', () => {
+        el.classList.toggle('expanded');
+      });
+    });
+  }
+
+  render();
+
+  const langBtn = document.getElementById('lang-toggle');
+  if (langBtn) langBtn.addEventListener('click', () => setTimeout(render, 10));
+}
+
+// ═══ Initialize ═══
+initIntensityViz('viz-intensity');
+initMismatchViz('viz-mismatch');
+initDriftViz('viz-drift');
+initTradeoffsViz('viz-tradeoffs');
+</script>
