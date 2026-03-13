@@ -101,7 +101,8 @@
           },
           {
             "id": "td_010",
-            "text": "I can hit double-legs in live rolling against similar-skilled opponents",
+            "text": "I can hit double-legs in live rolling",
+            "input": "belt-curve",
             "type": "performance",
             "level": "intermediate",
             "category_id": "takedowns",
@@ -109,7 +110,8 @@
           },
           {
             "id": "td_011",
-            "text": "I can defend/counter common takedown attempts",
+            "text": "I can defend and counter takedown attempts",
+            "input": "belt-curve",
             "type": "defensive",
             "level": "intermediate",
             "category_id": "takedowns",
@@ -340,7 +342,8 @@
           },
           {
             "id": "gb_012",
-            "text": "I rarely get my guard passed by similar-skilled opponents",
+            "text": "I can prevent my guard from being passed",
+            "input": "belt-curve",
             "type": "performance",
             "level": "advanced",
             "category_id": "guard_bottom",
@@ -432,7 +435,8 @@
           },
           {
             "id": "cgt_010",
-            "text": "I rarely get swept from inside closed guard",
+            "text": "I can avoid being swept from inside closed guard",
+            "input": "belt-curve",
             "type": "performance",
             "level": "intermediate",
             "category_id": "closed_guard_top",
@@ -456,7 +460,8 @@
         "questions": [
           {
             "id": "cgb_001",
-            "text": "I can break posture consistently from closed guard",
+            "text": "I can break posture from closed guard",
+            "input": "belt-curve",
             "type": "technical",
             "level": "basic",
             "category_id": "closed_guard_bottom",
@@ -507,7 +512,8 @@
           },
           {
             "id": "cgb_007",
-            "text": "I can maintain closed guard against opponents trying to break it",
+            "text": "I can maintain closed guard against opponents",
+            "input": "belt-curve",
             "type": "defensive",
             "level": "intermediate",
             "category_id": "closed_guard_bottom",
@@ -547,7 +553,8 @@
           },
           {
             "id": "cgb_012",
-            "text": "I can finish submissions from closed guard against similar-skilled opponents",
+            "text": "I can finish submissions from closed guard",
+            "input": "belt-curve",
             "type": "performance",
             "level": "advanced",
             "category_id": "closed_guard_bottom",
@@ -572,7 +579,8 @@
           },
           {
             "id": "ogt_002",
-            "text": "I can pass butterfly guard consistently",
+            "text": "I can pass butterfly guard",
+            "input": "belt-curve",
             "type": "performance",
             "level": "basic",
             "category_id": "open_guard_top",
@@ -671,7 +679,8 @@
           },
           {
             "id": "ogb_002",
-            "text": "I can sweep from butterfly guard consistently",
+            "text": "I can sweep from butterfly guard",
+            "input": "belt-curve",
             "type": "performance",
             "level": "basic",
             "category_id": "open_guard_bottom",
@@ -903,7 +912,8 @@
           },
           {
             "id": "hgb_005",
-            "text": "I can sweep from half guard consistently",
+            "text": "I can sweep from half guard",
+            "input": "belt-curve",
             "type": "performance",
             "level": "intermediate",
             "category_id": "half_guard_bottom",
@@ -1004,7 +1014,8 @@
           },
           {
             "id": "mt_004",
-            "text": "I can finish submissions from mount against similar-skilled opponents",
+            "text": "I can finish submissions from mount",
+            "input": "belt-curve",
             "type": "performance",
             "level": "intermediate",
             "category_id": "mount_top",
@@ -1044,7 +1055,8 @@
           },
           {
             "id": "mt_009",
-            "text": "I can deal with opponent's mount escapes effectively",
+            "text": "I can counter mount escape attempts",
+            "input": "belt-curve",
             "type": "defensive",
             "level": "intermediate",
             "category_id": "mount_top",
@@ -1152,7 +1164,8 @@
           },
           {
             "id": "mb_009",
-            "text": "I rarely get mounted and stay mounted by similar-skilled opponents",
+            "text": "I can avoid getting stuck in mount",
+            "input": "belt-curve",
             "type": "performance",
             "level": "intermediate",
             "category_id": "mount_bottom",
@@ -1204,7 +1217,8 @@
           },
           {
             "id": "bmt_003",
-            "text": "I can finish rear naked chokes consistently",
+            "text": "I can finish rear naked chokes",
+            "input": "belt-curve",
             "type": "performance",
             "level": "intermediate",
             "category_id": "back_mount_top",
@@ -1312,7 +1326,8 @@
           },
           {
             "id": "bmb_004",
-            "text": "I rarely get submitted from back control by similar-skilled opponents",
+            "text": "I can defend submissions from back control",
+            "input": "belt-curve",
             "type": "performance",
             "level": "intermediate",
             "category_id": "back_mount_bottom",
@@ -1402,7 +1417,8 @@
           },
           {
             "id": "ll_003",
-            "text": "I can execute straight ankle locks with proper technique",
+            "text": "I can finish straight ankle locks",
+            "input": "belt-curve",
             "type": "technical",
             "level": "basic",
             "category_id": "leg_locks",

@@ -177,10 +177,11 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
       <!-- Per-category bars -->
       <div id="r-bars" style="margin-bottom:32px;"></div>
 
-      <!-- Retake -->
+      <!-- Retake / Download -->
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <button id="btn-retake-short" class="retake-btn">Retake Short ({totalShort}q)</button>
         <button id="btn-retake-full"  class="retake-btn">Retake Full ({totalFull}q)</button>
+        <button id="btn-download" class="retake-btn">Download Result</button>
       </div>
     </div>
 
@@ -258,7 +259,8 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
     // ── Belt-curve constants ─────────────────────────────────────────────────────
     const BELTS = ['W','B','P','Br','Bk'];
     const BELT_COLORS = ['#e0e0e0','#1565c0','#7b1fa2','#6d4c41','#212121'];
-    const BELT_SCORE_WEIGHTS = [0.5, 0.8, 1.0, 1.2, 1.5];
+    // Weights within plateau — emphasize harder belts you CAN handle
+    const PLATEAU_WEIGHTS = [0.6, 0.8, 1.0, 1.2, 1.4];
 
     // ── State ────────────────────────────────────────────────────────────────────
     let queue   = [];
@@ -419,13 +421,27 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
       bcTracking = false;
     });
 
-    function getBeltCurveScore() {
-      let wSum = 0, vSum = 0;
+    function inferLevel(vals) {
+      let plateau = 0;
       for (let i = 0; i < 5; i++) {
-        wSum += BELT_SCORE_WEIGHTS[i];
-        vSum += beltValues[i] * BELT_SCORE_WEIGHTS[i];
+        if (vals[i] >= 5) plateau = i;
       }
-      return vSum / wSum;
+      return plateau; // 0=W, 1=B, 2=P, 3=Br, 4=Bk
+    }
+
+    function getBeltCurveScore() {
+      const level = inferLevel(beltValues);
+      let wSum = 0, vSum = 0;
+      for (let i = 0; i <= level; i++) {
+        wSum += PLATEAU_WEIGHTS[i];
+        vSum += beltValues[i] * PLATEAU_WEIGHTS[i];
+      }
+      let score = wSum > 0 ? vSum / wSum : beltValues[0];
+      // Small bonus for above-plateau performance (max ~+1.0)
+      for (let i = level + 1; i < 5; i++) {
+        score += Math.min(beltValues[i], 5) * 0.05;
+      }
+      return Math.min(10, score);
     }
 
     bcConfirm.addEventListener('click', () => {
@@ -513,6 +529,9 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
     document.getElementById('q-skip')?.addEventListener('click', () => { qIdx++; renderQ(); });
 
     // ── Results ──────────────────────────────────────────────────────────────────
+    let lastCatResults = [];
+    let lastOverall = 0;
+
     function showResults() {
       showView('v-results');
 
@@ -530,6 +549,9 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
       const valid   = catResults.filter(r => r.pct != null);
       const totalWeight = valid.reduce((s, r) => s + r.catWeight, 0);
       const overall = valid.length ? Math.round(valid.reduce((s, r) => s + r.pct * r.catWeight, 0) / totalWeight) : 0;
+
+      lastCatResults = catResults;
+      lastOverall = overall;
 
       // Overall badge
       const oc = fillColor(overall / 10);
@@ -667,6 +689,152 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
     document.getElementById('btn-full') ?.addEventListener('click', () => startQuiz('full'));
     document.getElementById('btn-retake-short')?.addEventListener('click', () => startQuiz('short'));
     document.getElementById('btn-retake-full') ?.addEventListener('click', () => startQuiz('full'));
+
+    // ── Download result as JPG ────────────────────────────────────────────────────
+    document.getElementById('btn-download')?.addEventListener('click', () => {
+      const W = 800, PAD = 40;
+      const radarSize = 320;
+      const barH = 18, barGap = 6;
+      const barsTop = PAD + 80 + radarSize + 30;
+      const H = barsTop + lastCatResults.length * (barH + barGap) + PAD + 20;
+
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const ctx = c.getContext('2d');
+
+      // Background
+      ctx.fillStyle = '#0d1117';
+      ctx.fillRect(0, 0, W, H);
+
+      // Title
+      ctx.fillStyle = '#6b7280';
+      ctx.font = "10px 'Courier New', monospace";
+      ctx.letterSpacing = '3px';
+      ctx.textAlign = 'left';
+      ctx.fillText('SKILL ASSESSMENT', PAD, PAD + 12);
+      ctx.letterSpacing = '0px';
+
+      // Overall score
+      const oc = fillColor(lastOverall / 10);
+      ctx.fillStyle = oc;
+      ctx.font = "bold 52px 'Courier New', monospace";
+      ctx.fillText(lastOverall + '%', PAD, PAD + 62);
+
+      ctx.fillStyle = '#6b7280';
+      ctx.font = "10px 'Courier New', monospace";
+      const dlValid = lastCatResults.filter(r => r.pct != null);
+      ctx.fillText(dlValid.length + ' of ' + CAT_DATA.length + ' areas assessed', PAD + 140, PAD + 52);
+
+      // Radar chart
+      const rcx = W / 2, rcy = PAD + 80 + radarSize / 2;
+      const R = radarSize / 2 - 30;
+      const n = lastCatResults.length;
+      const step = (2 * Math.PI) / n;
+      const sa = -Math.PI / 2;
+
+      ctx.strokeStyle = '#21262d';
+      ctx.lineWidth = 0.5;
+      for (const frac of [0.25, 0.5, 0.75, 1.0]) {
+        ctx.beginPath();
+        for (let i = 0; i <= n; i++) {
+          const a = sa + (i % n) * step;
+          const x = rcx + Math.cos(a) * R * frac;
+          const y = rcy + Math.sin(a) * R * frac;
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.closePath(); ctx.stroke();
+      }
+
+      for (let i = 0; i < n; i++) {
+        const a = sa + i * step;
+        ctx.beginPath();
+        ctx.moveTo(rcx, rcy);
+        ctx.lineTo(rcx + Math.cos(a) * R, rcy + Math.sin(a) * R);
+        ctx.stroke();
+      }
+
+      const pts = [];
+      for (let i = 0; i < n; i++) {
+        const val = lastCatResults[i].pct != null ? lastCatResults[i].pct / 100 : 0;
+        const a = sa + i * step;
+        pts.push({ x: rcx + Math.cos(a) * R * val, y: rcy + Math.sin(a) * R * val, ans: lastCatResults[i].pct != null });
+      }
+      ctx.beginPath();
+      pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(0,212,255,0.15)';
+      ctx.fill();
+      ctx.strokeStyle = '#00d4ff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      pts.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = p.ans ? '#00d4ff' : '#6b7280';
+        ctx.fill();
+      });
+
+      ctx.font = "9px 'Courier New', monospace";
+      ctx.textBaseline = 'middle';
+      for (let i = 0; i < n; i++) {
+        const a = sa + i * step;
+        const lx = rcx + Math.cos(a) * (R + 18);
+        const ly = rcy + Math.sin(a) * (R + 18);
+        const label = i < RADAR_LABELS.length ? RADAR_LABELS[i] : lastCatResults[i].name;
+        ctx.fillStyle = lastCatResults[i].pct != null ? '#8b949e' : '#6b7280';
+        ctx.textAlign = Math.abs(Math.cos(a)) < 0.01 ? 'center' : Math.cos(a) > 0 ? 'left' : 'right';
+        ctx.fillText(label, lx, ly);
+      }
+
+      // Category bars
+      const barLeft = PAD, labelW = 120, barRight = W - PAD - 44;
+      ctx.textBaseline = 'top';
+      lastCatResults.forEach((r, i) => {
+        const y = barsTop + i * (barH + barGap);
+        const na = r.pct == null;
+        const pct = na ? 0 : r.pct;
+        const color = na ? '#6b7280' : fillColor(pct / 10);
+
+        ctx.fillStyle = color;
+        ctx.font = "10px 'Courier New', monospace";
+        ctx.textAlign = 'left';
+        ctx.fillText(r.name.length > 16 ? r.name.slice(0, 15) + '\u2026' : r.name, barLeft, y + 3);
+
+        const bx = barLeft + labelW + 8;
+        const bw = barRight - bx;
+        ctx.fillStyle = '#161b22';
+        ctx.fillRect(bx, y, bw, barH);
+
+        if (!na) {
+          ctx.fillStyle = color;
+          ctx.globalAlpha = 0.75;
+          ctx.fillRect(bx, y, bw * pct / 100, barH);
+          ctx.globalAlpha = 1.0;
+        }
+
+        ctx.fillStyle = color;
+        ctx.font = "bold 11px 'Courier New', monospace";
+        ctx.textAlign = 'right';
+        ctx.fillText(na ? '\u2014' : pct + '%', W - PAD, y + 3);
+      });
+
+      // Watermark
+      ctx.fillStyle = '#21262d';
+      ctx.font = "9px 'Courier New', monospace";
+      ctx.textAlign = 'right';
+      ctx.fillText('grapplingprimitives.com', W - PAD, H - PAD + 8);
+
+      // Export
+      c.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'skill-assessment.jpg';
+        a.click();
+        URL.revokeObjectURL(url);
+      }, 'image/jpeg', 0.92);
+    });
 
     // ── Deep link button ─────────────────────────────────────────────────────────
     document.getElementById('btn-deeplink')?.addEventListener('click', () => {
