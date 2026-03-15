@@ -1,0 +1,1557 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout title="自分を作れ — Build Yourself First — Grappling Primitives" fullscreen={true}>
+
+<!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
+<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+  <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">&larr; Home</a>
+  <span style="color:#21262d;">|</span>
+  <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">自分を作れ</span>
+  <div style="flex:1;"></div>
+  <button id="deeplink-btn" style="font-family:inherit;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
+  <button id="lang-toggle" style="font-family:inherit;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;">
+    <span class="lang-label" data-active="en">EN</span> / <span class="lang-label">JP</span>
+  </button>
+</div>
+
+<!-- ── Scrolling Content ───────────────────────────────────────────────────── -->
+<div style="padding-top:36px;">
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ACT 0 — Hero                                                              -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section id="act-0" class="act" data-act="0">
+  <div class="act-inner" style="text-align:center;">
+    <h1 class="hero-title">
+      <span lang="en" class="hero-ja-accent">自分を作れ</span>
+      <span lang="ja" class="hero-ja-accent">自分を作れ</span>
+    </h1>
+    <h2 class="hero-subtitle">
+      <span lang="en">Build Yourself First</span>
+      <span lang="ja">まず自分を作れ</span>
+    </h2>
+    <blockquote class="hero-quote">
+      <p>
+        <span lang="en">"If you could tell your white belt self one thing, what would it be?"</span>
+        <span lang="ja">「白帯の自分に一つだけ伝えられるとしたら、何を伝える？」</span>
+      </p>
+    </blockquote>
+    <p class="act-subtitle">
+      <span lang="en">The answer isn't a technique. It's about the <em>body</em> — the primary variable.</span>
+      <span lang="ja">答えは技ではない。<em>身体</em>こそが最も重要な変数。</span>
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ACT 1 — The Source: Kodokan                                               -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section id="act-1" class="act" data-act="1">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">01</span><span lang="en">The Source — 技の原理</span><span lang="ja">源流 — 技の原理</span></h2>
+    <p class="act-lead">
+      <span lang="en">Kano Jigoro, the founder of Judo, described the principle of technique (<em>waza no genri</em>) as two parts: <strong>Tsukuri</strong> (set-up) and <strong>Kake</strong> (execution). But buried inside Tsukuri is an instruction that gets lost in translation.</span>
+      <span lang="ja">柔道の創始者・嘉納治五郎は技の原理を「作り」と「掛け」の二部構成として説いた。しかし「作り」の中に、翻訳で失われがちな重要な指示が埋もれている。</span>
+    </p>
+
+    <div class="source-buttons">
+      <button class="source-btn" id="btn-kodokan" aria-label="View Kodokan original text">
+        <span class="source-btn-label">
+          <span lang="en">Kodokan Original Text</span>
+          <span lang="ja">講道館 原文</span>
+        </span>
+        <span class="source-btn-sub">kdkjudo.org — 技の原理</span>
+      </button>
+      <button class="source-btn source-btn--alt" id="btn-kuzushi-xyz" aria-label="View kuzushi.xyz translation">
+        <span class="source-btn-label">
+          <span lang="en">kuzushi.xyz Translation</span>
+          <span lang="ja">kuzushi.xyz 翻訳</span>
+        </span>
+        <span class="source-btn-sub">2019 alternative reading</span>
+      </button>
+    </div>
+
+    <div class="reframe-callout">
+      <div class="reframe-arrow">&darr;</div>
+      <div class="reframe-content">
+        <p class="reframe-from">
+          <span lang="en">"<s>holding oneself ready</s>"</span>
+          <span lang="ja">"<s>準備を整える</s>"</span>
+        </p>
+        <div class="reframe-arrow">&darr;</div>
+        <p class="reframe-to">
+          <span lang="en">"<strong>Building Oneself</strong>" — 自分を作る</span>
+          <span lang="ja">「<strong>自分を作る</strong>」— Jibun wo Tsukuru</span>
+        </p>
+      </div>
+    </div>
+
+    <p class="act-lead" style="margin-top:24px;">
+      <span lang="en">This is not passive waiting. It is <em>active construction</em>. And "posture" (姿勢) is so much more than standing upright — it is the full organization of your body as a force-generating, load-bearing, dynamically stable system.</span>
+      <span lang="ja">これは受動的な待機ではない。<em>能動的な構築</em>である。そして「姿勢」とは単に背筋を伸ばすことではない。力を生み出し、荷重を支え、動的に安定するシステムとして身体を組織化することである。</span>
+    </p>
+  </div>
+</section>
+
+<!-- ── Modal A1: Kodokan Text ────────────────────────────────────────────── -->
+<div id="modal-kodokan" class="modal-overlay" role="dialog" aria-label="Kodokan original text">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">技の原理 — The Principle of Technique</div>
+        <div class="modal-subtitle">Kodokan Judo — Official Source</div>
+      </div>
+      <button class="modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <h3 class="modal-section-title">原文 (Japanese Original)</h3>
+      <div class="modal-jp-text">
+「身体と精神を最も有効に働かせる」、これが柔道の根本原理で、この原理を技の上に生かしたのが「作り」と「掛け」の理論となります。
+
+「作り」は、相手の体を不安定にする「くずし」と、自分の体が技を施すのに最も良い位置と姿勢をとる「自分を作る」ことから成り立っています。「掛け」は、この作られた一瞬に最後の決め手を施すことをいいます。
+
+この「作り」と「掛け」は、柔道の根本原理に従った技術原理ということができます。
+
+互いに、精力善用・自他共栄の根本原理に即した作りと掛けを競い合う間に、自然とこの根本原理を理解し、体得して、社会百般の実生活に生かそうとしています。
+
+「技から道に入る」わけです。
+      </div>
+
+      <h3 class="modal-section-title" style="margin-top:24px;">Official English Translation (Kodokan)</h3>
+      <div class="modal-en-text">
+"Making the most effective use of body and mind" is the fundamental principle of Judo, and it is this principle applied to technique that gives us the theories of Tsukuri (set-up) and Kake (execution).
+
+Tsukuri consists of Kuzushi (breaking the opponent's balance) and positioning one's own body in the best posture and position for applying the technique — "holding oneself ready."
+
+Kake is the application of the decisive finishing move at that prepared instant.
+
+Tsukuri and Kake can be called the technical principles that follow the fundamental principles of Judo.
+      </div>
+
+      <div class="modal-attribution">
+        <a href="https://kodokanjudoinstitute.org/doctrine/" target="_blank" rel="noopener">kodokanjudoinstitute.org/doctrine/</a><br/>
+        <a href="https://www.kodokan.org/e_judo/GokPrin.html" target="_blank" rel="noopener">kodokan.org — Principles</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal A2: kuzushi.xyz Translation ────────────────────────────────── -->
+<div id="modal-kuzushi-xyz" class="modal-overlay" role="dialog" aria-label="kuzushi.xyz translation">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">The Principle of Waza</div>
+        <div class="modal-subtitle">www.kuzushi.xyz — 2019 Translation</div>
+      </div>
+      <button class="modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-vocab">
+        <div class="vocab-item"><strong>崩し</strong> Kuzushi — from 崩す (kuzusu): destroy, tear down, pull apart, lose balance</div>
+        <div class="vocab-item"><strong>作る</strong> Tsukuru — make, build, produce, establish, set-up, form</div>
+        <div class="vocab-item"><strong>掛ける</strong> Kakeru — start (an engine), catch (in a net/trap), put (a burden) on</div>
+      </div>
+
+      <div class="modal-translation-grid">
+        <div class="translation-row"><span class="tl-jp">「崩し」</span><span class="tl-action">Break | Disrupt</span><span class="tl-target">the opponent</span></div>
+        <div class="translation-row"><span class="tl-jp">「作り」</span><span class="tl-action">Set | Prepare</span><span class="tl-target">your own body</span></div>
+        <div class="translation-row"><span class="tl-jp">「掛け」</span><span class="tl-action">Do | Execute</span><span class="tl-target">the technique</span></div>
+      </div>
+
+      <h3 class="modal-section-title" style="margin-top:24px;">Translation</h3>
+      <div class="modal-en-text">
+The "optimal use of body and mind" is a foundational principle of Judo, which comes to life through the theories of Tsukuri (set-up) and Kake (performing the technique).
+
+<strong>Tsukuri is made of both breaking the balance of the other (Kuzushi) and setting up one's own body with the best position and posture (Jibun wo tsukuru — Building oneself).</strong>
+
+Kake (perform) is what we call the culmination of that one instant which we set-up.
+
+We can call Tsukuri and Kake the technical principles that follow the basic principles of Judo.
+      </div>
+
+      <div class="modal-mnemonic">
+        <span lang="en">Proposed mnemonics:</span>
+        <span lang="ja">提案する記憶法：</span>
+        <div class="mnemonic-list">
+          <div>break — set — catch</div>
+          <div>[break~set] — do</div>
+          <div>[set~break] — execute</div>
+          <div style="color:var(--text-dim);font-size:0.85em;margin-top:4px;">
+            <span lang="en">(the order of the first two is interchangeable)</span>
+            <span lang="ja">（最初の二つの順序は入れ替え可能）</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-attribution">
+        <a href={`${base}/modules/articles/kuzushi-tsukuri-kake-the-doctrine-and-purpose-of-judo`}>Read the full article &rarr;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ACT 2 — Build Yourself                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section id="act-2" class="act" data-act="2">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">02</span><span lang="en">自分を作れ — Build Yourself</span><span lang="ja">自分を作れ — Build Yourself</span></h2>
+    <p class="act-lead">
+      <span lang="en">Your own body state is the real variable. That is the key insight — the 閃き.</span>
+      <span lang="ja">あなた自身の身体の状態こそが真の変数。それが閃き — key insightである。</span>
+    </p>
+    <p class="act-lead">
+      <span lang="en">What separates an experienced grappler from a beginner isn't a larger catalog of techniques — it's an invisible quality of body. Some call it "invisible jiu-jitsu." We call it <em>self-organization</em>.</span>
+      <span lang="ja">経験者と初心者を分けるのは技のカタログの大きさではない — 目に見えない身体の質である。「見えない柔術」とも呼ばれるが、我々はそれを<em>身体の自己組織化</em>と呼ぶ。</span>
+    </p>
+
+    <div class="four-dimensions">
+      <div class="dimension-card">
+        <div class="dimension-number">1</div>
+        <h3><span lang="en">Tension Economy</span><span lang="ja">張力の経済性</span></h3>
+        <div class="dimension-jp">無駄を省く</div>
+        <p><span lang="en">Efficient vs parasitic tension. Concentrate force through the core, not the extremities.</span><span lang="ja">効率的な張力と寄生的な張力。力を末端ではなく体幹に集中させる。</span></p>
+      </div>
+      <div class="dimension-card">
+        <div class="dimension-number">2</div>
+        <h3><span lang="en">Internal Connections</span><span lang="ja">内部接続</span></h3>
+        <div class="dimension-jp">體の統一</div>
+        <p><span lang="en">Kinetic chains linked through the center of mass. The body moves as one unit.</span><span lang="ja">重心を通じて連結された運動連鎖。身体は一つの単位として動く。</span></p>
+      </div>
+      <div class="dimension-card">
+        <div class="dimension-number">3</div>
+        <h3><span lang="en">Force Flow</span><span lang="ja">力の流れ</span></h3>
+        <div class="dimension-jp">地面への道</div>
+        <p><span lang="en">Force transmission to ground. Clean pathways from contact point through skeleton to base.</span><span lang="ja">地面への力の伝達。接点から骨格を通じて基部へのクリーンな経路。</span></p>
+      </div>
+      <div class="dimension-card">
+        <div class="dimension-number">4</div>
+        <h3><span lang="en">Stacking Alignment</span><span lang="ja">積み重ね整列</span></h3>
+        <div class="dimension-jp">部位の整列</div>
+        <p><span lang="en">Skeletal load-bearing. Stack bones so muscles do less, structure does more.</span><span lang="ja">骨格による荷重支持。骨を積み重ね、筋肉の負担を減らし、構造に任せる。</span></p>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px;">
+      <a href={`${base}/modules/build-yourself`} class="cta-link">
+        <span lang="en">Explore the 4-Panel Body Visualization &rarr;</span>
+        <span lang="ja">4パネル身体ビジュアライゼーションを見る &rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ACT 3 — f(Tsukuri)                                                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section id="act-3" class="act" data-act="3">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">03</span><span lang="en">ƒ(Tsukuri) — The Building Blocks</span><span lang="ja">ƒ(作り) — 構築の要素</span></h2>
+    <p class="act-lead">
+      <span lang="en">In Tsukuri, <em>time is your ally</em>. It accumulates. The set-up grows stronger the longer you invest in building your position, your structure, your connection.</span>
+      <span lang="ja">作りにおいて、<em>時間は味方</em>である。蓄積する。ポジション、構造、接続の構築に投資すればするほど、セットアップは強くなる。</span>
+    </p>
+    <div id="viz-tsukuri" class="viz-container"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ACT 4 — f(Kuzushi)                                                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section id="act-4" class="act" data-act="4">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">04</span><span lang="en">ƒ(Kuzushi) — The Disruption</span><span lang="ja">ƒ(崩し) — 破壊の要素</span></h2>
+    <p class="act-lead">
+      <span lang="en">In Kuzushi, <em>time is the enemy</em>. It decays. The window of vulnerability slams shut as the nervous system recovers — you must act before it closes.</span>
+      <span lang="ja">崩しにおいて、<em>時間は敵</em>である。減衰する。神経系が回復するにつれ脆弱性の窓は閉じる — 閉じる前に動かなければならない。</span>
+    </p>
+    <div id="viz-kuzushi" class="viz-container"></div>
+
+    <div class="contrast-callout">
+      <div class="contrast-item contrast-grow">
+        <span class="contrast-arrow">&uarr;</span>
+        <span><span lang="en">Tsukuri <em>grows</em> with time</span><span lang="ja">作りは時間と共に<em>成長</em>する</span></span>
+      </div>
+      <div class="contrast-vs">vs</div>
+      <div class="contrast-item contrast-decay">
+        <span class="contrast-arrow">&darr;</span>
+        <span><span lang="en">Kuzushi <em>decays</em> with time</span><span lang="ja">崩しは時間と共に<em>減衰</em>する</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ACT 5 — How They Connect                                                  -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section id="act-5" class="act" data-act="5">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">05</span><span lang="en">How They Connect</span><span lang="ja">それらはどう繋がるか</span></h2>
+    <p class="act-lead">
+      <span lang="en">The classical sequence is Tsukuri → Kuzushi → Kake. But the order of the first two is interchangeable — what matters is that <em>self-organization comes first</em>.</span>
+      <span lang="ja">古典的な順序は 作り → 崩し → 掛け。しかし最初の二つの順序は入れ替え可能 — 重要なのは<em>自己組織化が先に来る</em>ということ。</span>
+    </p>
+    <div id="viz-flow" class="viz-container"></div>
+
+    <p class="act-lead" style="margin-top:24px;">
+      <span lang="en">Think of it as: <strong>[set~break] → execute</strong>. You build yourself and disrupt the opponent — in either order, often simultaneously — and <em>then</em> you perform the technique. The set-up creates the conditions; the execution harvests them.</span>
+      <span lang="ja">こう考えよう：<strong>[作り~崩し] → 掛け</strong>。自分を構築し、相手を崩す — どちらの順序でも、同時でもよい — そして技を実行する。セットアップが条件を作り、実行がそれを刈り取る。</span>
+    </p>
+
+    <div class="examples-box">
+      <h3><span lang="en">Theory → Practice</span><span lang="ja">理論 → 実践</span></h3>
+      <div class="example-item">
+        <span class="example-label"><span lang="en">Guard pass:</span><span lang="ja">パスガード：</span></span>
+        <span lang="en">Build your posture and grips (Tsukuri) → strip their frames and off-balance (Kuzushi) → pass (Kake)</span>
+        <span lang="ja">姿勢とグリップを構築（作り）→ フレームを剥がし崩す（崩し）→ パス（掛け）</span>
+      </div>
+      <div class="example-item">
+        <span class="example-label"><span lang="en">Sweep:</span><span lang="ja">スイープ：</span></span>
+        <span lang="en">Elevate their weight off their base (Kuzushi) → load your hips underneath (Tsukuri) → sweep (Kake)</span>
+        <span lang="ja">相手のベースから体重を浮かす（崩し）→ 腰を下に入れる（作り）→ スイープ（掛け）</span>
+      </div>
+      <div class="example-item">
+        <span class="example-label"><span lang="en">Armbar:</span><span lang="ja">腕十字：</span></span>
+        <span lang="en">Isolate the arm and break their posture (Kuzushi + Tsukuri simultaneously) → extend (Kake)</span>
+        <span lang="ja">腕を孤立させ姿勢を崩す（崩し＋作りを同時に）→ 伸ばす（掛け）</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- ACT 6 — The Multiplier Effect                                             -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section id="act-6" class="act act--cta" data-act="6">
+  <div class="act-inner" style="text-align:center;">
+    <h2 class="act-title"><span class="act-number">06</span><span lang="en">The Multiplier Effect</span><span lang="ja">乗数効果</span></h2>
+    <p class="act-lead" style="max-width:640px;margin:0 auto 24px;">
+      <span lang="en">A strong "Build Yourself" base is a multiplier for all techniques. Every sweep, pass, and submission works better when your body is organized first.</span>
+      <span lang="ja">強力な「自分を作る」基盤は全ての技の乗数となる。スイープもパスもサブミッションも、身体が先に組織化されていればより良く機能する。</span>
+    </p>
+    <blockquote class="hero-quote">
+      <p style="font-size:clamp(0.9rem,2.5vw,1.15rem);">
+        <span lang="en">"It is possible to break the arm of a beginner even with poor posture... but the path we pursue is towards a healthier, stronger and more efficient body."</span>
+        <span lang="ja">「初心者の腕は悪い姿勢でも折れるだろう…しかし我々が追求する道は、より健康で、より強く、より効率的な身体に向かうものだ。」</span>
+      </p>
+    </blockquote>
+
+    <div class="cta-grid">
+      <a href={`${base}/modules/build-yourself`} class="cta-card">
+        <div class="cta-card-title"><span lang="en">Build Yourself Viz</span><span lang="ja">自分を作れ 可視化</span></div>
+        <div class="cta-card-desc"><span lang="en">4-panel body organization</span><span lang="ja">4パネル身体組織化</span></div>
+      </a>
+      <a href={`${base}/modules/ideal-partner`} class="cta-card">
+        <div class="cta-card-title"><span lang="en">Ideal Training Partner</span><span lang="ja">理想のパートナー</span></div>
+        <div class="cta-card-desc"><span lang="en">Intensity modulation essay</span><span lang="ja">強度調節エッセイ</span></div>
+      </a>
+      <a href={`${base}/modules/quadtree`} class="cta-card">
+        <div class="cta-card-title"><span lang="en">QuadTree Map</span><span lang="ja">コンセプトマップ</span></div>
+        <div class="cta-card-desc"><span lang="en">Explore all concepts</span><span lang="ja">全コンセプトを探索</span></div>
+      </a>
+      <a href={`${base}/modules/skill-check`} class="cta-card">
+        <div class="cta-card-title"><span lang="en">Self-Assessment</span><span lang="ja">セルフチェック</span></div>
+        <div class="cta-card-desc"><span lang="en">Evaluate your game</span><span lang="ja">自分のゲームを評価</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+</div><!-- end scrolling content -->
+
+</BaseLayout>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- STYLES                                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<style is:global>
+:root {
+  --bg:           #050509;
+  --surface:      #0E1014;
+  --border:       #1C1F26;
+  --accent:       #4C8DFF;
+  --accent-soft:  #A970FF;
+  --cyan:         #00FFFF;
+  --cyan-dim:     #00d4ff;
+  --green:        #34D399;
+  --green-dim:    #16a34a;
+  --amber:        #FBBF24;
+  --orange:       #ea580c;
+  --orange-dim:   #f97316;
+  --red:          #F87171;
+  --text-primary: #E5E7EB;
+  --text-muted:   #9CA3AF;
+  --text-dim:     #6B7280;
+  --font-mono:    'Courier New', Consolas, Monaco, monospace;
+  --glow-cyan:    0 0 12px #00FFFF88;
+  --glow-blue:    0 0 12px #4C8DFF88;
+  --glow-soft:    0 0 8px #A970FF66;
+  --glow-green:   0 0 12px #34D39988;
+  --glow-orange:  0 0 12px #ea580c88;
+}
+
+/* Hide JP by default */
+[lang="ja"] { display: none; }
+body.lang-ja [lang="ja"] { display: inline; }
+body.lang-ja [lang="en"] { display: none; }
+
+/* Toolbar lang toggle active state */
+.lang-label[data-active] { color: #00FFFF; text-shadow: 0 0 12px #00FFFF88; }
+
+/* ─── Acts ─── */
+.act {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.act.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.act-inner {
+  max-width: 780px;
+  width: 100%;
+}
+.act-number {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.act-title {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  text-shadow: var(--glow-blue);
+}
+.act-lead {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 32px;
+  max-width: 600px;
+  line-height: 1.7;
+}
+.act-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 24px;
+}
+.act-subtitle em, .act-lead em {
+  color: var(--cyan);
+  font-style: normal;
+  text-shadow: var(--glow-cyan);
+}
+
+/* ─── Hero (Act 0) ─── */
+.hero-title {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 300;
+  color: var(--cyan-dim);
+  text-shadow: var(--glow-cyan);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+.hero-ja-accent {
+  display: inline;
+}
+.hero-subtitle {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ─── Hero Quote ─── */
+.hero-quote {
+  text-align: center;
+  padding: 32px 16px;
+  border-left: none;
+}
+.hero-quote p {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  color: var(--text-primary);
+  font-style: italic;
+  line-height: 1.5;
+  text-shadow: var(--glow-soft);
+}
+.hero-quote cite {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-style: normal;
+}
+
+/* ─── Source Buttons (Act 1) ─── */
+.source-buttons {
+  display: flex;
+  gap: 12px;
+  margin: 32px 0;
+  flex-wrap: wrap;
+}
+.source-btn {
+  flex: 1;
+  min-width: 220px;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-mono);
+  transition: all 0.2s;
+}
+.source-btn:hover {
+  border-color: var(--cyan-dim);
+  box-shadow: 0 0 16px rgba(0,212,255,0.1);
+}
+.source-btn--alt:hover {
+  border-color: var(--orange-dim);
+  box-shadow: 0 0 16px rgba(249,115,22,0.1);
+}
+.source-btn-label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.source-btn-sub {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+/* ─── Reframe Callout ─── */
+.reframe-callout {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 24px;
+  text-align: center;
+  margin: 32px 0;
+}
+.reframe-arrow {
+  color: var(--cyan-dim);
+  font-size: 1.5rem;
+  margin: 8px 0;
+}
+.reframe-from {
+  font-size: 1rem;
+  color: var(--text-dim);
+}
+.reframe-from s {
+  color: var(--red);
+}
+.reframe-to {
+  font-size: 1.1rem;
+  color: var(--cyan);
+  text-shadow: var(--glow-cyan);
+}
+
+/* ─── Modals ─── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0,0,0,0.80);
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.active {
+  display: flex;
+}
+.modal-panel {
+  width: 100%;
+  max-width: min(700px, 98vw);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  background: #000d18;
+  border: 1px solid rgba(132,138,148,0.53);
+  box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  border-radius: 4px;
+}
+.modal-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.modal-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #c9d1d9;
+  margin-bottom: 4px;
+}
+.modal-subtitle {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #848a94;
+}
+.modal-close {
+  font-family: inherit;
+  font-size: 18px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px 8px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.modal-close:hover { color: #fff; }
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  font-size: 13px;
+  color: #8b949e;
+  line-height: 1.7;
+}
+.modal-section-title {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cyan-dim);
+  margin-bottom: 12px;
+  font-weight: 400;
+}
+.modal-jp-text {
+  font-size: 14px;
+  line-height: 2;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  padding: 16px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 4px;
+  border-left: 2px solid var(--cyan-dim);
+}
+.modal-en-text {
+  line-height: 1.8;
+  color: #b0b8c4;
+  white-space: pre-wrap;
+}
+.modal-en-text strong {
+  color: var(--cyan);
+}
+.modal-attribution {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 11px;
+}
+.modal-attribution a {
+  color: var(--cyan-dim);
+  text-decoration: none;
+}
+.modal-attribution a:hover {
+  text-decoration: underline;
+}
+
+/* Modal vocab / translation grid */
+.modal-vocab {
+  margin-bottom: 20px;
+}
+.vocab-item {
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 13px;
+}
+.vocab-item strong {
+  color: var(--orange-dim);
+}
+.modal-translation-grid {
+  margin: 16px 0;
+}
+.translation-row {
+  display: flex;
+  gap: 12px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: center;
+}
+.tl-jp {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  min-width: 60px;
+}
+.tl-action {
+  color: var(--cyan);
+  font-weight: 600;
+  min-width: 120px;
+}
+.tl-target {
+  color: var(--text-dim);
+}
+.modal-mnemonic {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 4px;
+  border-left: 2px solid var(--orange-dim);
+}
+.mnemonic-list {
+  margin-top: 8px;
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* ─── Four Dimensions (Act 2) ─── */
+.four-dimensions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 32px 0;
+}
+.dimension-card {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  position: relative;
+}
+.dimension-card h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.dimension-jp {
+  font-size: 0.8rem;
+  color: var(--cyan-dim);
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+}
+.dimension-number {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgba(0,212,255,0.12);
+  line-height: 1;
+}
+.dimension-card p {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ─── CTA Link ─── */
+.cta-link {
+  display: inline-block;
+  padding: 12px 24px;
+  border: 1px solid var(--cyan-dim);
+  border-radius: 4px;
+  color: var(--cyan);
+  text-decoration: none;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+}
+.cta-link:hover {
+  background: rgba(0,212,255,0.08);
+  box-shadow: var(--glow-cyan);
+}
+
+/* ─── Viz Containers ─── */
+.viz-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 24px;
+  min-height: 200px;
+}
+
+/* ─── Contrast Callout (between Act 3 & 4) ─── */
+.contrast-callout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  flex-wrap: wrap;
+}
+.contrast-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+.contrast-grow {
+  color: var(--green);
+  text-shadow: var(--glow-green);
+}
+.contrast-decay {
+  color: var(--orange);
+  text-shadow: var(--glow-orange);
+}
+.contrast-arrow {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.contrast-vs {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ─── Examples Box (Act 5) ─── */
+.examples-box {
+  margin-top: 32px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  padding: 20px;
+}
+.examples-box h3 {
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.example-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.example-item:last-child { border-bottom: none; }
+.example-label {
+  display: block;
+  color: var(--cyan-dim);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+/* ─── CTA Grid (Act 6) ─── */
+.cta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 32px;
+}
+.cta-card {
+  display: block;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.cta-card:hover {
+  border-color: var(--cyan-dim);
+  box-shadow: 0 0 16px rgba(0,212,255,0.08);
+}
+.cta-card-title {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.cta-card-desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 600px) {
+  .four-dimensions { grid-template-columns: 1fr; }
+  .cta-grid { grid-template-columns: 1fr; }
+  .source-buttons { flex-direction: column; }
+  .act { padding: 60px 16px; }
+  .contrast-callout { flex-direction: column; gap: 8px; }
+  .translation-row { flex-direction: column; gap: 4px; }
+}
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- SCRIPTS                                                                   -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<script is:inline>
+
+// ═══ Scroll Reveal + Deep Link Hash Tracking ═══
+(function() {
+  const acts = document.querySelectorAll('.act');
+  let currentAct = null;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        const actId = e.target.id;
+        if (actId && actId !== currentAct) {
+          currentAct = actId;
+          history.replaceState(null, '', location.pathname + location.search + '#' + actId);
+        }
+      }
+    });
+  }, { threshold: 0.15 });
+  acts.forEach((a) => observer.observe(a));
+
+  const hash = location.hash.replace('#', '');
+  if (hash) {
+    const target = document.getElementById(hash);
+    if (target) {
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth' });
+        target.classList.add('visible');
+      }, 200);
+    }
+  }
+})();
+
+// ═══ Deep Link Button ═══
+(function() {
+  const btn = document.getElementById('deeplink-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    navigator.clipboard.writeText(location.href).then(() => {
+      btn.textContent = 'Copied!';
+      btn.style.color = '#00d4ff';
+      btn.style.borderColor = 'rgba(0,212,255,0.4)';
+      setTimeout(() => {
+        btn.textContent = 'Link';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 1500);
+    });
+  });
+})();
+
+// ═══ Language Toggle ═══
+(function() {
+  const btn = document.getElementById('lang-toggle');
+  if (!btn) return;
+  const labels = btn.querySelectorAll('.lang-label');
+  let lang = 'en';
+  btn.addEventListener('click', () => {
+    lang = lang === 'en' ? 'ja' : 'en';
+    document.body.classList.toggle('lang-ja', lang === 'ja');
+    labels.forEach((l) => {
+      if ((lang === 'en' && l.textContent === 'EN') || (lang === 'ja' && l.textContent === 'JP')) {
+        l.setAttribute('data-active', '');
+      } else {
+        l.removeAttribute('data-active');
+      }
+    });
+  });
+})();
+
+// ═══ Modal System ═══
+(function() {
+  function openModal(id) {
+    const m = document.getElementById(id);
+    if (m) m.classList.add('active');
+  }
+  function closeModal(m) {
+    m.classList.remove('active');
+  }
+
+  // Open buttons
+  const btnKodokan = document.getElementById('btn-kodokan');
+  const btnKuzushi = document.getElementById('btn-kuzushi-xyz');
+  if (btnKodokan) btnKodokan.addEventListener('click', () => openModal('modal-kodokan'));
+  if (btnKuzushi) btnKuzushi.addEventListener('click', () => openModal('modal-kuzushi-xyz'));
+
+  // Close buttons
+  document.querySelectorAll('.modal-close').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const overlay = btn.closest('.modal-overlay');
+      if (overlay) closeModal(overlay);
+    });
+  });
+
+  // Click outside
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal(overlay);
+    });
+  });
+
+  // Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(closeModal);
+    }
+  });
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// f(Tsukuri) / f(Kuzushi) Visualization Factory
+// Ported from FunctionOfEverything — SVG radial node graph with time slider
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const FUNCTION_DATA = {
+  Tsukuri: {
+    title: "Tsukuri",
+    titleJa: "作り",
+    subtitle: "The Accumulation of Advantage",
+    subtitleJa: "優位の蓄積",
+    description: "In Tsukuri, Time (t) is your ally. It accumulates.",
+    descriptionJa: "作りにおいて、時間は味方。蓄積する。",
+    timeEffect: "grow",
+    components: [
+      { id: "space", name: "Spatial Positioning", nameJa: "空間的位置取り", desc: "Closing distance, securing the angle, penetrating space.", sub: [
+        { id: "spa_dist", name: "Distance", nameJa: "距離" },
+        { id: "spa_angle", name: "Angle", nameJa: "角度" },
+        { id: "spa_level", name: "Level Change", nameJa: "レベル変化" }
+      ]},
+      { id: "align", name: "Structural Alignment", nameJa: "構造的整列", desc: "Stacking bones, engaging the core, Jibun wo Tsukuru.", sub: [
+        { id: "ali_stack", name: "Bone Stacking", nameJa: "骨の積み重ね" },
+        { id: "ali_core", name: "Core Engage", nameJa: "体幹の活性化" },
+        { id: "ali_post", name: "Posture", nameJa: "姿勢" }
+      ]},
+      { id: "anchor", name: "Connection", nameJa: "接続", desc: "Establishing friction, locking limbs to center of mass.", sub: [
+        { id: "anc_grip", name: "Grip", nameJa: "グリップ" },
+        { id: "anc_hook", name: "Hooks", nameJa: "フック" },
+        { id: "anc_press", name: "Pressure", nameJa: "プレッシャー" }
+      ]},
+      { id: "load", name: "Kinetic Loading", nameJa: "運動エネルギー蓄積", desc: "Dropping weight, coiling hips, storing potential energy.", sub: [
+        { id: "lod_drop", name: "Weight Drop", nameJa: "体重落とし" },
+        { id: "lod_coil", name: "Hip Coil", nameJa: "腰の巻き" },
+        { id: "lod_store", name: "Stored Energy", nameJa: "蓄積エネルギー" }
+      ]},
+      { id: "wedge", name: "Wedge Insertion", nameJa: "楔の挿入", desc: "Placing knees/elbows to block recovery or create fulcrums.", sub: [
+        { id: "wed_knee", name: "Knee Wedge", nameJa: "膝の楔" },
+        { id: "wed_elbow", name: "Elbow Frame", nameJa: "肘のフレーム" },
+        { id: "wed_hip", name: "Hip Block", nameJa: "腰のブロック" }
+      ]}
+    ],
+    theme: { main: "#16a34a", glow: "#86efac", sub: "#22c55e", bgDark: "#052e16", strokeDark: "#166534", bgNode: "#031c0a" }
+  },
+  Kuzushi: {
+    title: "Kuzushi",
+    titleJa: "崩し",
+    subtitle: "The Window of Vulnerability",
+    subtitleJa: "脆弱性の窓",
+    description: "In Kuzushi, Time (t) is the enemy. It decays.",
+    descriptionJa: "崩しにおいて、時間は敵。減衰する。",
+    timeEffect: "decay",
+    components: [
+      { id: "misalign", name: "Structural Misalignment", nameJa: "構造的不整列", desc: "Breaking the spinal line, folding frames, center of gravity shift.", sub: [
+        { id: "mis_spine", name: "Spinal Break", nameJa: "脊椎の折れ" },
+        { id: "mis_fold", name: "Frame Fold", nameJa: "フレームの崩壊" },
+        { id: "mis_cog", name: "CoG Shift", nameJa: "重心移動" }
+      ]},
+      { id: "base", name: "Base Removal", nameJa: "ベースの除去", desc: "Taking away a post, sweeping a foot, elevating hips.", sub: [
+        { id: "bas_post", name: "Post Removal", nameJa: "支柱の除去" },
+        { id: "bas_sweep", name: "Nose Over Toes", nameJa: "重心の逸脱" },
+        { id: "bas_elev", name: "Hip Elevation", nameJa: "腰の挙上" }
+      ]},
+      { id: "moment", name: "Momentum", nameJa: "運動量", desc: "Redirecting force, using kinetic energy against the source.", sub: [
+        { id: "mom_redir", name: "Redirection", nameJa: "方向転換" },
+        { id: "mom_chain", name: "Action-Reaction", nameJa: "作用・反作用" },
+        { id: "mom_inert", name: "Inertia", nameJa: "慣性" }
+      ]},
+      { id: "cog", name: "Cognitive Disruption", nameJa: "認知的撹乱", desc: "Attention misdirection, sensory overload, lag.", sub: [
+        { id: "cog_feint", name: "Feint", nameJa: "フェイント" },
+        { id: "cog_over", name: "Overload", nameJa: "過負荷" },
+        { id: "cog_tempo", name: "Tempo Break", nameJa: "テンポ崩し" }
+      ]},
+      { id: "iso", name: "Isolation", nameJa: "孤立化", desc: "Separating limbs from the core, denying connection.", sub: [
+        { id: "iso_limb", name: "Limb Separation", nameJa: "四肢の分離" },
+        { id: "iso_pin", name: "Pinning", nameJa: "ピニング" },
+        { id: "iso_deny", name: "Connection Denial", nameJa: "接続の遮断" }
+      ]}
+    ],
+    theme: { main: "#ea580c", glow: "#fdba74", sub: "#f97316", bgDark: "#431407", strokeDark: "#9a3412", bgNode: "#2c0b02" }
+  }
+};
+
+function initFunctionViz(containerId, dataKey, prefix) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const vizData = FUNCTION_DATA[dataKey];
+  const theme = vizData.theme;
+  const isJa = () => document.body.classList.contains('lang-ja');
+
+  // Component values (all start at 50)
+  const componentValues = {};
+  vizData.components.forEach(c => { componentValues[c.id] = 50; });
+  let timeValue = 50;
+  let hoveredNodeId = null;
+
+  // SVG dimensions
+  const svgW = 700, svgH = 500;
+  const cx = svgW / 2, cy = svgH / 2;
+
+  // Build DOM
+  container.innerHTML = '';
+
+  // Title
+  const titleDiv = document.createElement('div');
+  titleDiv.style.cssText = 'text-align:center;margin-bottom:16px;';
+  titleDiv.innerHTML = `
+    <div style="font-size:1.2rem;font-weight:600;color:${theme.main};letter-spacing:0.05em;">
+      <span lang="en">ƒ(${vizData.title})</span><span lang="ja">ƒ(${vizData.titleJa})</span>
+    </div>
+    <div style="font-size:0.8rem;color:${theme.glow};letter-spacing:0.1em;">
+      <span lang="en">${vizData.subtitle}</span><span lang="ja">${vizData.subtitleJa}</span>
+    </div>`;
+  container.appendChild(titleDiv);
+
+  // SVG
+  const svgNs = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNs, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${svgW} ${svgH}`);
+  svg.setAttribute('width', '100%');
+  svg.style.cssText = 'display:block;max-width:700px;margin:0 auto;';
+
+  // Glow filter
+  const defs = document.createElementNS(svgNs, 'defs');
+  defs.innerHTML = `<filter id="${prefix}-glow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>`;
+  svg.appendChild(defs);
+
+  const linesGroup = document.createElementNS(svgNs, 'g');
+  const nodesGroup = document.createElementNS(svgNs, 'g');
+  svg.appendChild(linesGroup);
+  svg.appendChild(nodesGroup);
+
+  // Center core
+  const centerCore = document.createElementNS(svgNs, 'circle');
+  centerCore.setAttribute('cx', cx);
+  centerCore.setAttribute('cy', cy);
+  centerCore.setAttribute('r', 40);
+  centerCore.setAttribute('fill', theme.bgDark);
+  centerCore.setAttribute('stroke', theme.main);
+  centerCore.setAttribute('stroke-width', '2');
+  svg.appendChild(centerCore);
+
+  const centerText = document.createElementNS(svgNs, 'text');
+  centerText.setAttribute('x', cx);
+  centerText.setAttribute('y', cy + 5);
+  centerText.setAttribute('text-anchor', 'middle');
+  centerText.setAttribute('fill', theme.glow);
+  centerText.setAttribute('font-size', '14px');
+  centerText.setAttribute('font-weight', 'bold');
+  centerText.textContent = `ƒ(${vizData.title})`;
+  svg.appendChild(centerText);
+
+  container.appendChild(svg);
+
+  // Tooltip
+  const tooltip = document.createElement('div');
+  tooltip.style.cssText = `min-height:40px;margin-top:8px;text-align:center;font-size:0.8rem;color:${theme.glow};opacity:0;transition:opacity 0.2s;`;
+  container.appendChild(tooltip);
+
+  // Time slider
+  const sliderWrap = document.createElement('div');
+  sliderWrap.style.cssText = 'display:flex;align-items:center;gap:8px;margin-top:8px;';
+  const sliderLabel = vizData.timeEffect === 'grow' ? 'Time (t) — grows' : 'Time (t) — decays';
+  const sliderLabelJa = vizData.timeEffect === 'grow' ? '時間 (t) — 成長' : '時間 (t) — 減衰';
+  sliderWrap.innerHTML = `
+    <span style="font-size:9px;color:${theme.sub};letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;">t=0</span>
+    <input type="range" min="0" max="100" value="50" style="flex:1;height:4px;cursor:pointer;accent-color:${theme.main};" aria-label="${sliderLabel}"/>
+    <span style="font-size:9px;color:${theme.sub};letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;">t=max</span>`;
+  container.appendChild(sliderWrap);
+
+  const timeSlider = sliderWrap.querySelector('input[type=range]');
+
+  // Output display
+  const outputDiv = document.createElement('div');
+  outputDiv.style.cssText = `text-align:center;margin-top:4px;font-size:0.75rem;color:${theme.sub};letter-spacing:0.08em;`;
+  container.appendChild(outputDiv);
+
+  function createSvgEl(tag) {
+    return document.createElementNS(svgNs, tag);
+  }
+
+  function buildSvgElements() {
+    linesGroup.innerHTML = '';
+    nodesGroup.innerHTML = '';
+    const numNodes = vizData.components.length;
+
+    vizData.components.forEach((comp, i) => {
+      const angle = (Math.PI * 2 * i) / numNodes - Math.PI / 2;
+      const nodeX = cx + Math.cos(angle) * 150;
+      const nodeY = cy + Math.sin(angle) * 150;
+
+      // Main line
+      const line = createSvgEl('line');
+      line.setAttribute('x1', cx);
+      line.setAttribute('y1', cy);
+      line.setAttribute('x2', nodeX);
+      line.setAttribute('y2', nodeY);
+      line.setAttribute('id', `${prefix}-line-${comp.id}`);
+      linesGroup.appendChild(line);
+
+      // Sub-nodes
+      if (comp.sub) {
+        const numSub = comp.sub.length;
+        const wedgeAngle = (Math.PI * 2) / numNodes;
+        const wedgeStart = angle - (wedgeAngle / 2);
+        const padding = wedgeAngle * 0.1;
+        const usableStart = wedgeStart + padding;
+        const usableAngle = wedgeAngle - (padding * 2);
+
+        comp.sub.forEach((subComp, j) => {
+          const subAngle = numSub > 1
+            ? usableStart + (usableAngle * (j / (numSub - 1)))
+            : angle;
+          const outerR = 230;
+          const subX = cx + Math.cos(subAngle) * outerR;
+          const subY = cy + Math.sin(subAngle) * outerR;
+
+          // Sub-line
+          const subLine = createSvgEl('line');
+          subLine.setAttribute('x1', nodeX);
+          subLine.setAttribute('y1', nodeY);
+          subLine.setAttribute('x2', subX);
+          subLine.setAttribute('y2', subY);
+          subLine.setAttribute('id', `${prefix}-line-${subComp.id}`);
+          subLine.setAttribute('stroke', theme.strokeDark);
+          subLine.setAttribute('stroke-dasharray', '2,2');
+          linesGroup.appendChild(subLine);
+
+          // Sub-circle
+          const subCircle = createSvgEl('circle');
+          subCircle.setAttribute('cx', subX);
+          subCircle.setAttribute('cy', subY);
+          subCircle.setAttribute('id', `${prefix}-circle-${subComp.id}`);
+          subCircle.setAttribute('r', '5');
+          subCircle.setAttribute('fill', theme.bgNode);
+          subCircle.setAttribute('stroke', theme.glow);
+          subCircle.setAttribute('stroke-width', '1');
+          nodesGroup.appendChild(subCircle);
+
+          // Sub-text
+          const subText = createSvgEl('text');
+          subText.setAttribute('x', subX);
+          subText.setAttribute('y', subY);
+          subText.setAttribute('id', `${prefix}-text-${subComp.id}`);
+          subText.setAttribute('text-anchor', 'middle');
+          subText.setAttribute('font-size', '10px');
+          subText.setAttribute('fill', '#ccc');
+          subText.textContent = isJa() ? (subComp.nameJa || subComp.name) : subComp.name;
+          nodesGroup.appendChild(subText);
+        });
+      }
+
+      // Node group (interactive)
+      const g = createSvgEl('g');
+      g.style.cursor = 'pointer';
+      g.addEventListener('mouseenter', () => setHover(comp.id));
+      g.addEventListener('mouseleave', () => setHover(null));
+      g.addEventListener('touchstart', (e) => { e.preventDefault(); setHover(hoveredNodeId === comp.id ? null : comp.id); }, { passive: false });
+
+      const circle = createSvgEl('circle');
+      circle.setAttribute('cx', nodeX);
+      circle.setAttribute('cy', nodeY);
+      circle.setAttribute('id', `${prefix}-circle-${comp.id}`);
+      circle.setAttribute('stroke-width', '2');
+
+      const text = createSvgEl('text');
+      text.setAttribute('x', nodeX);
+      text.setAttribute('id', `${prefix}-text-${comp.id}`);
+      text.setAttribute('text-anchor', 'middle');
+      text.textContent = isJa() ? (comp.nameJa || comp.name) : comp.name;
+
+      g.appendChild(circle);
+      g.appendChild(text);
+      nodesGroup.appendChild(g);
+    });
+  }
+
+  function setHover(id) {
+    hoveredNodeId = id;
+    if (id) {
+      const comp = vizData.components.find(c => c.id === id);
+      if (comp) {
+        tooltip.style.opacity = '1';
+        tooltip.innerHTML = `<strong>${isJa() ? (comp.nameJa || comp.name) : comp.name}</strong><br/><span style="color:#9CA3AF;font-size:0.75rem;">${comp.desc}</span>`;
+      }
+    } else {
+      tooltip.style.opacity = '0';
+    }
+    updateVisualization();
+  }
+
+  function updateVisualization() {
+    const numNodes = vizData.components.length;
+    const vals = Object.values(componentValues);
+    let baseOutput = vals.reduce((a, b) => a + b, 0) / vals.length;
+    let output = 0;
+
+    if (vizData.timeEffect === 'decay') {
+      output = baseOutput * Math.max(0, 100 - timeValue) / 100;
+    } else {
+      output = Math.min(100, baseOutput * (0.5 + (timeValue / 100)));
+    }
+
+    // Update center core
+    const coreR = Math.min(80, Math.max(20, 30 + (output / 2.5)));
+    centerCore.setAttribute('r', coreR);
+    centerCore.setAttribute('stroke', output > 80 ? theme.glow : theme.main);
+    centerCore.setAttribute('stroke-width', output > 80 ? '4' : '2');
+    centerCore.setAttribute('filter', output > 70 ? `url(#${prefix}-glow)` : 'none');
+    centerText.textContent = `ƒ(${isJa() ? vizData.titleJa : vizData.title})`;
+
+    // Output display
+    outputDiv.textContent = `Output: ${Math.round(output)}`;
+
+    vizData.components.forEach((comp, i) => {
+      const angle = (Math.PI * 2 * i) / numNodes - Math.PI / 2;
+      const isHovered = (hoveredNodeId === comp.id);
+      const val = componentValues[comp.id] || 0;
+      const nodeSize = 25 + (val / 4);
+      const currentRadius = coreR + nodeSize + 15;
+      const nodeX = cx + Math.cos(angle) * currentRadius;
+      const nodeY = cy + Math.sin(angle) * currentRadius;
+
+      const line = document.getElementById(`${prefix}-line-${comp.id}`);
+      if (line) {
+        line.setAttribute('x2', nodeX);
+        line.setAttribute('y2', nodeY);
+        line.setAttribute('stroke', isHovered ? theme.main : theme.strokeDark);
+        line.setAttribute('stroke-width', isHovered ? '3' : String(1 + val / 30));
+        line.setAttribute('stroke-dasharray', isHovered ? 'none' : '4,4');
+      }
+
+      const circle = document.getElementById(`${prefix}-circle-${comp.id}`);
+      if (circle) {
+        circle.setAttribute('cx', nodeX);
+        circle.setAttribute('cy', nodeY);
+        circle.setAttribute('r', nodeSize);
+        circle.setAttribute('fill', isHovered ? theme.main : theme.bgNode);
+        circle.setAttribute('stroke', isHovered ? theme.glow : theme.strokeDark);
+        circle.setAttribute('filter', (isHovered || val > 70) ? `url(#${prefix}-glow)` : 'none');
+      }
+
+      const text = document.getElementById(`${prefix}-text-${comp.id}`);
+      if (text) {
+        text.setAttribute('x', nodeX);
+        text.setAttribute('y', nodeY);
+        text.setAttribute('fill', isHovered ? '#fff' : '#e5e0d8');
+        text.setAttribute('font-size', isHovered ? '11px' : '9px');
+        text.setAttribute('font-weight', isHovered ? 'bold' : 'normal');
+        text.setAttribute('dominant-baseline', 'central');
+        text.textContent = isJa() ? (comp.nameJa || comp.name) : comp.name;
+      }
+
+      // Sub-nodes
+      if (comp.sub) {
+        const numSub = comp.sub.length;
+        const wedgeAngle = (Math.PI * 2) / numNodes;
+        const wedgeStart = angle - (wedgeAngle / 2);
+        const padding = wedgeAngle * 0.1;
+        const usableStart = wedgeStart + padding;
+        const usableAngle = wedgeAngle - (padding * 2);
+        const outerR = 200 + (val / 4);
+
+        comp.sub.forEach((sub, j) => {
+          const subAngle = numSub > 1
+            ? usableStart + (usableAngle * (j / (numSub - 1)))
+            : angle;
+          const subX = cx + Math.cos(subAngle) * outerR;
+          const subY = cy + Math.sin(subAngle) * outerR;
+          const subSize = 4 + (val / 25);
+
+          const subCircle = document.getElementById(`${prefix}-circle-${sub.id}`);
+          if (subCircle) {
+            subCircle.setAttribute('cx', subX);
+            subCircle.setAttribute('cy', subY);
+            subCircle.setAttribute('r', subSize);
+            subCircle.setAttribute('stroke', isHovered ? theme.glow : theme.strokeDark);
+            subCircle.setAttribute('fill', isHovered ? theme.main : theme.bgNode);
+          }
+          const subText = document.getElementById(`${prefix}-text-${sub.id}`);
+          if (subText) {
+            subText.setAttribute('fill', isHovered ? '#fff' : '#ccc');
+            subText.setAttribute('font-size', '10px');
+            const dx = subX - cx;
+            const dy = subY - cy;
+            const labelR = 14 + subSize;
+            const labelX = subX + (dx / outerR) * labelR;
+            const labelY = subY + (dy / outerR) * labelR;
+            let anchor = 'middle';
+            if (dx > 30) anchor = 'start';
+            else if (dx < -30) anchor = 'end';
+            subText.setAttribute('x', labelX);
+            subText.setAttribute('y', labelY);
+            subText.setAttribute('text-anchor', anchor);
+            subText.setAttribute('dominant-baseline', 'central');
+            subText.textContent = isJa() ? (sub.nameJa || sub.name) : sub.name;
+          }
+          const subLine = document.getElementById(`${prefix}-line-${sub.id}`);
+          if (subLine) {
+            subLine.setAttribute('x1', nodeX);
+            subLine.setAttribute('y1', nodeY);
+            subLine.setAttribute('x2', subX);
+            subLine.setAttribute('y2', subY);
+            subLine.setAttribute('stroke', isHovered ? theme.main : theme.strokeDark);
+          }
+        });
+      }
+    });
+  }
+
+  timeSlider.addEventListener('input', (e) => {
+    timeValue = parseInt(e.target.value);
+    updateVisualization();
+  });
+
+  // Re-render on language change
+  const langBtn = document.getElementById('lang-toggle');
+  if (langBtn) langBtn.addEventListener('click', () => {
+    setTimeout(() => { buildSvgElements(); updateVisualization(); }, 10);
+  });
+
+  buildSvgElements();
+  updateVisualization();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Act 5 — Flow Diagram: Tsukuri → Kuzushi → Kake
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function initFlowViz(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const isJa = () => document.body.classList.contains('lang-ja');
+
+  const phases = [
+    {
+      id: 'tsukuri', labelEn: 'Tsukuri', labelJa: '作り',
+      subEn: 'Set / Build', subJa: '構築',
+      color: '#16a34a', glow: '#86efac', bgDark: '#052e16',
+      descEn: 'Build yourself: posture, grips, structure, alignment',
+      descJa: '自分を作る：姿勢、グリップ、構造、整列',
+      /* TODO: QuadTree concept links — Spatial Positioning, Structural Alignment, Connection, Kinetic Loading, Wedge Insertion */
+    },
+    {
+      id: 'kuzushi', labelEn: 'Kuzushi', labelJa: '崩し',
+      subEn: 'Break / Disrupt', subJa: '崩壊',
+      color: '#ea580c', glow: '#fdba74', bgDark: '#431407',
+      descEn: 'Disrupt opponent: misalign, remove base, isolate',
+      descJa: '相手を崩す：不整列、ベース除去、孤立化',
+      /* TODO: QuadTree concept links — Structural Misalignment, Base Removal, Momentum, Cognitive Disruption, Isolation */
+    },
+    {
+      id: 'kake', labelEn: 'Kake', labelJa: '掛け',
+      subEn: 'Execute', subJa: '実行',
+      color: '#dc2626', glow: '#fca5a5', bgDark: '#450a0a',
+      descEn: 'Perform the technique at the moment of intersection',
+      descJa: '交差の瞬間に技を実行する',
+      /* TODO: QuadTree concept links — Commitment, Force Generation, Follow Through */
+    }
+  ];
+
+  function render() {
+    const ja = isJa();
+    container.innerHTML = '';
+
+    // Title
+    const title = document.createElement('div');
+    title.style.cssText = 'text-align:center;margin-bottom:20px;font-size:0.8rem;color:#6B7280;letter-spacing:0.15em;text-transform:uppercase;';
+    title.textContent = ja ? '[作り~崩し] → 掛け' : '[set~break] → execute';
+    container.appendChild(title);
+
+    // Flow container
+    const flow = document.createElement('div');
+    flow.style.cssText = 'display:flex;align-items:stretch;gap:0;justify-content:center;flex-wrap:wrap;';
+
+    phases.forEach((phase, i) => {
+      // Phase box
+      const box = document.createElement('div');
+      box.style.cssText = `flex:1;min-width:160px;max-width:220px;padding:20px 16px;border:1px solid ${phase.color}44;border-radius:6px;background:${phase.bgDark};text-align:center;position:relative;`;
+
+      const label = document.createElement('div');
+      label.style.cssText = `font-size:1.1rem;font-weight:700;color:${phase.color};margin-bottom:4px;`;
+      label.textContent = ja ? phase.labelJa : phase.labelEn;
+
+      const sub = document.createElement('div');
+      sub.style.cssText = `font-size:0.75rem;color:${phase.glow};letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;`;
+      sub.textContent = ja ? phase.subJa : phase.subEn;
+
+      const desc = document.createElement('div');
+      desc.style.cssText = 'font-size:0.75rem;color:#9CA3AF;line-height:1.5;';
+      desc.textContent = ja ? phase.descJa : phase.descEn;
+
+      box.appendChild(label);
+      box.appendChild(sub);
+      box.appendChild(desc);
+
+      // Interchangeable bracket for first two
+      if (i === 0) {
+        const bracket = document.createElement('div');
+        bracket.style.cssText = 'position:absolute;top:-16px;right:-28px;font-size:0.7rem;color:#6B7280;z-index:1;letter-spacing:0.05em;';
+        bracket.textContent = '~';
+        box.appendChild(bracket);
+      }
+
+      flow.appendChild(box);
+
+      // Arrow between phases
+      if (i < phases.length - 1) {
+        const arrow = document.createElement('div');
+        arrow.style.cssText = 'display:flex;align-items:center;padding:0 8px;font-size:1.2rem;color:#6B7280;flex-shrink:0;';
+        arrow.textContent = i === 1 ? '→' : '~';
+        flow.appendChild(arrow);
+      }
+    });
+
+    container.appendChild(flow);
+
+    // Key insight
+    const insight = document.createElement('div');
+    insight.style.cssText = 'text-align:center;margin-top:16px;font-size:0.8rem;color:#9CA3AF;';
+    insight.innerHTML = ja
+      ? '<span style="color:#00d4ff;">最初の二つの順序は入れ替え可能</span> — しかし自己組織化が先に来る'
+      : '<span style="color:#00d4ff;">The order of the first two is interchangeable</span> — but self-organization comes first';
+    container.appendChild(insight);
+  }
+
+  render();
+
+  const langBtn = document.getElementById('lang-toggle');
+  if (langBtn) langBtn.addEventListener('click', () => setTimeout(render, 10));
+}
+
+// ═══ Initialize All Visualizations ═══
+initFunctionViz('viz-tsukuri', 'Tsukuri', 'tsu');
+initFunctionViz('viz-kuzushi', 'Kuzushi', 'kuz');
+initFlowViz('viz-flow');
+
+</script>
