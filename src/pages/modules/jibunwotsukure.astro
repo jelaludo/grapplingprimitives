@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<BaseLayout title="自分を作れ — Build Yourself First — Grappling Primitives" fullscreen={true}>
+<BaseLayout title="自分を作れ / Build Yourself First / Grappling Primitives" fullscreen={true}>
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
 <div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
@@ -25,10 +25,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <!-- ═══════════════════════════════════════════════════════════════════════════ -->
 <section id="act-0" class="act" data-act="0">
   <div class="act-inner" style="text-align:center;">
-    <h1 class="hero-title">
-      <span lang="en" class="hero-ja-accent">自分を作れ</span>
-      <span lang="ja" class="hero-ja-accent">自分を作れ</span>
-    </h1>
+    <h1 class="hero-title hero-ja-accent">自分を作れ</h1>
     <h2 class="hero-subtitle">
       <span lang="en">Build Yourself First</span>
       <span lang="ja">まず自分を作れ</span>
@@ -40,8 +37,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </p>
     </blockquote>
     <p class="act-subtitle">
-      <span lang="en">The answer isn't a technique. It's about the <em>body</em> — the primary variable.</span>
-      <span lang="ja">答えは技ではない。<em>身体</em>こそが最も重要な変数。</span>
+      <span lang="en">The answer isn't more techniques. It's about your body state, it is the primary and essential variable.</span>
+      <span lang="ja">答えは技を増やすことではない。身体の状態こそが最も重要で本質的な変数。</span>
     </p>
   </div>
 </section>
@@ -51,10 +48,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <!-- ═══════════════════════════════════════════════════════════════════════════ -->
 <section id="act-1" class="act" data-act="1">
   <div class="act-inner">
-    <h2 class="act-title"><span class="act-number">01</span><span lang="en">The Source — 技の原理</span><span lang="ja">源流 — 技の原理</span></h2>
+    <h2 class="act-title"><span class="act-number">01</span><span lang="en">The Source / 技の原理</span><span lang="ja">源流 / 技の原理</span></h2>
     <p class="act-lead">
-      <span lang="en">Kano Jigoro, the founder of Judo, described the principle of technique (<em>waza no genri</em>) as two parts: <strong>Tsukuri</strong> (set-up) and <strong>Kake</strong> (execution). But buried inside Tsukuri is an instruction that gets lost in translation.</span>
-      <span lang="ja">柔道の創始者・嘉納治五郎は技の原理を「作り」と「掛け」の二部構成として説いた。しかし「作り」の中に、翻訳で失われがちな重要な指示が埋もれている。</span>
+      <span lang="en">Kano Jigoro, the founder of Judo, described the principle of technique (<em>waza no genri</em>) as two parts: <strong>Tsukuri</strong> (set-up) and <strong>Kake</strong> (execution). But buried inside Tsukuri is an instruction that gets lost in translation. Tsukuri itself is made up of two elements: "Kuzushi" and "Jibun wo Tsukuru". In my experience of beginners, and myself years ago, we tend to focus so much on off-balancing and disrupting the opponent that we do so at the expense of ourselves.</span>
+      <span lang="ja">柔道の創始者・嘉納治五郎は技の原理を「作り」と「掛け」の二部構成として説いた。しかし「作り」の中に、翻訳で失われがちな重要な指示が埋もれている。作りそのものは「崩し」と「自分を作る」の二つの要素からできている。初心者の頃、そして過去の自分自身を見ると、相手を崩すことに集中しすぎて、自分自身を犠牲にしてしまう傾向がある。</span>
     </p>
 
     <div class="source-buttons">
@@ -63,7 +60,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <span lang="en">Kodokan Original Text</span>
           <span lang="ja">講道館 原文</span>
         </span>
-        <span class="source-btn-sub">kdkjudo.org — 技の原理</span>
+        <span class="source-btn-sub">kdkjudo.org / 技の原理</span>
       </button>
       <button class="source-btn source-btn--alt" id="btn-kuzushi-xyz" aria-label="View kuzushi.xyz translation">
         <span class="source-btn-label">
@@ -83,15 +80,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         </p>
         <div class="reframe-arrow">&darr;</div>
         <p class="reframe-to">
-          <span lang="en">"<strong>Building Oneself</strong>" — 自分を作る</span>
-          <span lang="ja">「<strong>自分を作る</strong>」— Jibun wo Tsukuru</span>
+          <span lang="en">"<strong>Building Oneself</strong>" / 自分を作る</span>
+          <span lang="ja">「<strong>自分を作る</strong>」/ Jibun wo Tsukuru</span>
         </p>
       </div>
     </div>
 
     <p class="act-lead" style="margin-top:24px;">
-      <span lang="en">This is not passive waiting. It is <em>active construction</em>. And "posture" (姿勢) is so much more than standing upright — it is the full organization of your body as a force-generating, load-bearing, dynamically stable system.</span>
-      <span lang="ja">これは受動的な待機ではない。<em>能動的な構築</em>である。そして「姿勢」とは単に背筋を伸ばすことではない。力を生み出し、荷重を支え、動的に安定するシステムとして身体を組織化することである。</span>
+      <span lang="en">This is not passive waiting, and this is not simply "posture" either. It is <em>active construction</em>. And "posture" (姿勢) is so much more than standing upright, it is the full organization of your body as a force-generating, load-bearing, dynamically stable system.</span>
+      <span lang="ja">これは受動的な待機ではなく、単なる「姿勢」でもない。<em>能動的な構築</em>である。そして「姿勢」とは単に背筋を伸ばすことではなく、力を生み出し、荷重を支え、動的に安定するシステムとして身体を組織化することである。</span>
     </p>
   </div>
 </section>
@@ -101,8 +98,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <div class="modal-panel">
     <div class="modal-header">
       <div>
-        <div class="modal-title">技の原理 — The Principle of Technique</div>
-        <div class="modal-subtitle">Kodokan Judo — Official Source</div>
+        <div class="modal-title">技の原理 / The Principle of Technique</div>
+        <div class="modal-subtitle">Kodokan Judo / Official Source</div>
       </div>
       <button class="modal-close" aria-label="Close">&times;</button>
     </div>
@@ -124,16 +121,20 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <div class="modal-en-text">
 "Making the most effective use of body and mind" is the fundamental principle of Judo, and it is this principle applied to technique that gives us the theories of Tsukuri (set-up) and Kake (execution).
 
-Tsukuri consists of Kuzushi (breaking the opponent's balance) and positioning one's own body in the best posture and position for applying the technique — "holding oneself ready."
+Tsukuri consists of Kuzushi (breaking the opponent's balance) and positioning one's own body in the best posture and position for applying the technique, "holding oneself ready."
 
 Kake is the application of the decisive finishing move at that prepared instant.
 
 Tsukuri and Kake can be called the technical principles that follow the fundamental principles of Judo.
+
+As we compete with each other through Tsukuri and Kake in accordance with the fundamental principles of Seiryoku Zenyo (maximum efficiency) and Jita Kyoei (mutual welfare and benefit), we naturally come to understand and embody these principles, seeking to apply them in all aspects of daily life.
+
+"From technique, we enter the Way."
       </div>
 
       <div class="modal-attribution">
         <a href="https://kodokanjudoinstitute.org/doctrine/" target="_blank" rel="noopener">kodokanjudoinstitute.org/doctrine/</a><br/>
-        <a href="https://www.kodokan.org/e_judo/GokPrin.html" target="_blank" rel="noopener">kodokan.org — Principles</a>
+        <a href="https://www.kodokan.org/e_judo/GokPrin.html" target="_blank" rel="noopener">kodokan.org / Principles</a>
       </div>
     </div>
   </div>
@@ -145,15 +146,15 @@ Tsukuri and Kake can be called the technical principles that follow the fundamen
     <div class="modal-header">
       <div>
         <div class="modal-title">The Principle of Waza</div>
-        <div class="modal-subtitle">www.kuzushi.xyz — 2019 Translation</div>
+        <div class="modal-subtitle">www.kuzushi.xyz / 2019 Translation</div>
       </div>
       <button class="modal-close" aria-label="Close">&times;</button>
     </div>
     <div class="modal-body">
       <div class="modal-vocab">
-        <div class="vocab-item"><strong>崩し</strong> Kuzushi — from 崩す (kuzusu): destroy, tear down, pull apart, lose balance</div>
-        <div class="vocab-item"><strong>作る</strong> Tsukuru — make, build, produce, establish, set-up, form</div>
-        <div class="vocab-item"><strong>掛ける</strong> Kakeru — start (an engine), catch (in a net/trap), put (a burden) on</div>
+        <div class="vocab-item"><strong>崩し</strong> Kuzushi, from 崩す (kuzusu): destroy, tear down, pull apart, lose balance</div>
+        <div class="vocab-item"><strong>作る</strong> Tsukuru: make, build, produce, establish, set-up, form</div>
+        <div class="vocab-item"><strong>掛ける</strong> Kakeru: start (an engine), catch (in a net/trap), put (a burden) on</div>
       </div>
 
       <div class="modal-translation-grid">
@@ -166,7 +167,7 @@ Tsukuri and Kake can be called the technical principles that follow the fundamen
       <div class="modal-en-text">
 The "optimal use of body and mind" is a foundational principle of Judo, which comes to life through the theories of Tsukuri (set-up) and Kake (performing the technique).
 
-<strong>Tsukuri is made of both breaking the balance of the other (Kuzushi) and setting up one's own body with the best position and posture (Jibun wo tsukuru — Building oneself).</strong>
+<strong>Tsukuri is made of both breaking the balance of the other (Kuzushi) and setting up one's own body with the best position and posture (Jibun wo tsukuru, Building oneself).</strong>
 
 Kake (perform) is what we call the culmination of that one instant which we set-up.
 
@@ -177,9 +178,9 @@ We can call Tsukuri and Kake the technical principles that follow the basic prin
         <span lang="en">Proposed mnemonics:</span>
         <span lang="ja">提案する記憶法：</span>
         <div class="mnemonic-list">
-          <div>break — set — catch</div>
-          <div>[break~set] — do</div>
-          <div>[set~break] — execute</div>
+          <div>break – set – catch</div>
+          <div>[break~set] – do</div>
+          <div>[set~break] – execute</div>
           <div style="color:var(--text-dim);font-size:0.85em;margin-top:4px;">
             <span lang="en">(the order of the first two is interchangeable)</span>
             <span lang="ja">（最初の二つの順序は入れ替え可能）</span>
@@ -199,14 +200,14 @@ We can call Tsukuri and Kake the technical principles that follow the basic prin
 <!-- ═══════════════════════════════════════════════════════════════════════════ -->
 <section id="act-2" class="act" data-act="2">
   <div class="act-inner">
-    <h2 class="act-title"><span class="act-number">02</span><span lang="en">自分を作れ — Build Yourself</span><span lang="ja">自分を作れ — Build Yourself</span></h2>
+    <h2 class="act-title"><span class="act-number">02</span><span lang="en">自分を作れ / Build Yourself</span><span lang="ja">自分を作れ / Build Yourself</span></h2>
     <p class="act-lead">
-      <span lang="en">Your own body state is the real variable. That is the key insight — the 閃き.</span>
-      <span lang="ja">あなた自身の身体の状態こそが真の変数。それが閃き — key insightである。</span>
+      <span lang="en">Your own body state is the real variable. That is the key insight, the 閃き.</span>
+      <span lang="ja">あなた自身の身体の状態こそが真の変数。それが閃き、key insightである。</span>
     </p>
     <p class="act-lead">
-      <span lang="en">What separates an experienced grappler from a beginner isn't a larger catalog of techniques — it's an invisible quality of body. Some call it "invisible jiu-jitsu." We call it <em>self-organization</em>.</span>
-      <span lang="ja">経験者と初心者を分けるのは技のカタログの大きさではない — 目に見えない身体の質である。「見えない柔術」とも呼ばれるが、我々はそれを<em>身体の自己組織化</em>と呼ぶ。</span>
+      <span lang="en">What separates an experienced grappler from a beginner isn't a larger catalog of techniques, it's an invisible quality of body. Some call it "invisible jiu-jitsu." We call it <em>self-organization</em>.</span>
+      <span lang="ja">経験者と初心者を分けるのは技のカタログの大きさではなく、目に見えない身体の質である。「見えない柔術」とも呼ばれるが、我々はそれを<em>身体の自己組織化</em>と呼ぶ。</span>
     </p>
 
     <div class="four-dimensions">
@@ -236,11 +237,8 @@ We can call Tsukuri and Kake the technical principles that follow the basic prin
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:32px;">
-      <a href={`${base}/modules/build-yourself`} class="cta-link">
-        <span lang="en">Explore the 4-Panel Body Visualization &rarr;</span>
-        <span lang="ja">4パネル身体ビジュアライゼーションを見る &rarr;</span>
-      </a>
+    <div class="build-yourself-embed">
+      <iframe src={`${base}/modules/build-yourself`} title="Build Yourself 4-Panel Visualization" class="build-yourself-iframe" loading="lazy"></iframe>
     </div>
   </div>
 </section>
@@ -250,10 +248,10 @@ We can call Tsukuri and Kake the technical principles that follow the basic prin
 <!-- ═══════════════════════════════════════════════════════════════════════════ -->
 <section id="act-3" class="act" data-act="3">
   <div class="act-inner">
-    <h2 class="act-title"><span class="act-number">03</span><span lang="en">ƒ(Tsukuri) — The Building Blocks</span><span lang="ja">ƒ(作り) — 構築の要素</span></h2>
+    <h2 class="act-title"><span class="act-number">03</span><span lang="en">ƒ(Tsukuri) / The Building Blocks</span><span lang="ja">ƒ(作り) / 構築の要素</span></h2>
     <p class="act-lead">
-      <span lang="en">In Tsukuri, <em>time is your ally</em>. It accumulates. The set-up grows stronger the longer you invest in building your position, your structure, your connection.</span>
-      <span lang="ja">作りにおいて、<em>時間は味方</em>である。蓄積する。ポジション、構造、接続の構築に投資すればするほど、セットアップは強くなる。</span>
+      <span lang="en">"Tsukuri" can be unpacked into so many building blocks. Here's one model. "All models are wrong, some are useful."</span>
+      <span lang="ja">「作り」は多くの構成要素に分解できる。これは一つのモデル。「全てのモデルは間違っている。しかし有用なものもある。」</span>
     </p>
     <div id="viz-tsukuri" class="viz-container"></div>
   </div>
@@ -264,24 +262,13 @@ We can call Tsukuri and Kake the technical principles that follow the basic prin
 <!-- ═══════════════════════════════════════════════════════════════════════════ -->
 <section id="act-4" class="act" data-act="4">
   <div class="act-inner">
-    <h2 class="act-title"><span class="act-number">04</span><span lang="en">ƒ(Kuzushi) — The Disruption</span><span lang="ja">ƒ(崩し) — 破壊の要素</span></h2>
+    <h2 class="act-title"><span class="act-number">04</span><span lang="en">ƒ(Kuzushi) / The Disruption</span><span lang="ja">ƒ(崩し) / 破壊の要素</span></h2>
     <p class="act-lead">
-      <span lang="en">In Kuzushi, <em>time is the enemy</em>. It decays. The window of vulnerability slams shut as the nervous system recovers — you must act before it closes.</span>
-      <span lang="ja">崩しにおいて、<em>時間は敵</em>である。減衰する。神経系が回復するにつれ脆弱性の窓は閉じる — 閉じる前に動かなければならない。</span>
+      <span lang="en">Kuzushi is used in English as a shortcut for "imbalance" or "disrupting" the other grappler. But I also find it helpful to unpack what it is made of, to recognize the various elements that can create that destabilization. Some food for thought.</span>
+      <span lang="ja">崩しは英語では「不均衡」や「相手の撹乱」の略語として使われる。しかしその構成要素を分解し、不安定化を生み出す様々な要素を認識することも有用だと思う。考えるきっかけになれば。</span>
     </p>
     <div id="viz-kuzushi" class="viz-container"></div>
 
-    <div class="contrast-callout">
-      <div class="contrast-item contrast-grow">
-        <span class="contrast-arrow">&uarr;</span>
-        <span><span lang="en">Tsukuri <em>grows</em> with time</span><span lang="ja">作りは時間と共に<em>成長</em>する</span></span>
-      </div>
-      <div class="contrast-vs">vs</div>
-      <div class="contrast-item contrast-decay">
-        <span class="contrast-arrow">&darr;</span>
-        <span><span lang="en">Kuzushi <em>decays</em> with time</span><span lang="ja">崩しは時間と共に<em>減衰</em>する</span></span>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -292,14 +279,14 @@ We can call Tsukuri and Kake the technical principles that follow the basic prin
   <div class="act-inner">
     <h2 class="act-title"><span class="act-number">05</span><span lang="en">How They Connect</span><span lang="ja">それらはどう繋がるか</span></h2>
     <p class="act-lead">
-      <span lang="en">The classical sequence is Tsukuri → Kuzushi → Kake. But the order of the first two is interchangeable — what matters is that <em>self-organization comes first</em>.</span>
-      <span lang="ja">古典的な順序は 作り → 崩し → 掛け。しかし最初の二つの順序は入れ替え可能 — 重要なのは<em>自己組織化が先に来る</em>ということ。</span>
+      <span lang="en">The sequence most people focus on is Kuzushi → Tsukuri → Kake. imho you hear many more advocations to "break their posture!" and "kuzushi first before technique!" than "focus on building yourself". Perhaps it is taken as being obvious. I believe that explicitly focusing on it can enhance one's skills.</span>
+      <span lang="ja">多くの人が注目する順序は 崩し → 作り → 掛け。「姿勢を崩せ！」「技の前にまず崩し！」という声は「自分を作ることに集中しろ」よりもずっと多く聞こえる。おそらく自明と思われているのだろう。しかし意識的にそこに集中することで、技術を高められると私は信じている。</span>
     </p>
     <div id="viz-flow" class="viz-container"></div>
 
     <p class="act-lead" style="margin-top:24px;">
-      <span lang="en">Think of it as: <strong>[set~break] → execute</strong>. You build yourself and disrupt the opponent — in either order, often simultaneously — and <em>then</em> you perform the technique. The set-up creates the conditions; the execution harvests them.</span>
-      <span lang="ja">こう考えよう：<strong>[作り~崩し] → 掛け</strong>。自分を構築し、相手を崩す — どちらの順序でも、同時でもよい — そして技を実行する。セットアップが条件を作り、実行がそれを刈り取る。</span>
+      <span lang="en">Both Jibun wo Tsukuru (building yourself) and Kuzushi (disrupting the opponent) are components of <strong>Tsukuri</strong> (the set-up). When both pre-requisites are met, the conditions exist to attempt <strong>Kake</strong> (execution).</span>
+      <span lang="ja">自分を作る（自己構築）と崩し（相手の撹乱）は共に<strong>作り</strong>（セットアップ）の構成要素。両方の前提条件が揃った時、<strong>掛け</strong>（実行）を試みる条件が整う。</span>
     </p>
 
     <div class="examples-box">
@@ -316,8 +303,8 @@ We can call Tsukuri and Kake the technical principles that follow the basic prin
       </div>
       <div class="example-item">
         <span class="example-label"><span lang="en">Armbar:</span><span lang="ja">腕十字：</span></span>
-        <span lang="en">Isolate the arm and break their posture (Kuzushi + Tsukuri simultaneously) → extend (Kake)</span>
-        <span lang="ja">腕を孤立させ姿勢を崩す（崩し＋作りを同時に）→ 伸ばす（掛け）</span>
+        <span lang="en">Isolating the arm is part of Kuzushi. Breaking their posture is another part of Kuzushi, to prevent their recovery. Not overextending yourself while attacking is part of Jibun wo Tsukuru, Building Yourself. Together: 1) Kuzushi + 2) Jibun wo Tsukuru = 3) ready to execute the technique from a position of strength against an opponent structurally unable to defend.</span>
+        <span lang="ja">腕を孤立させることは崩しの一部。姿勢を崩すことも崩しの一部で、回復を防ぐため。攻撃中に自分を伸ばしすぎないことは自分を作るの一部。合わせて：1) 崩し + 2) 自分を作る = 3) 構造的に防御できない相手に対して、強い位置から技を実行する準備が整う。</span>
       </div>
     </div>
   </div>
@@ -328,36 +315,22 @@ We can call Tsukuri and Kake the technical principles that follow the basic prin
 <!-- ═══════════════════════════════════════════════════════════════════════════ -->
 <section id="act-6" class="act act--cta" data-act="6">
   <div class="act-inner" style="text-align:center;">
-    <h2 class="act-title"><span class="act-number">06</span><span lang="en">The Multiplier Effect</span><span lang="ja">乗数効果</span></h2>
+    <h2 class="act-title"><span class="act-number">06</span><span lang="en">The <span style="color:var(--cyan);text-shadow:var(--glow-cyan);">Multiplier</span> Effect</span><span lang="ja"><span style="color:var(--cyan);text-shadow:var(--glow-cyan);">乗数</span>効果</span></h2>
     <p class="act-lead" style="max-width:640px;margin:0 auto 24px;">
       <span lang="en">A strong "Build Yourself" base is a multiplier for all techniques. Every sweep, pass, and submission works better when your body is organized first.</span>
       <span lang="ja">強力な「自分を作る」基盤は全ての技の乗数となる。スイープもパスもサブミッションも、身体が先に組織化されていればより良く機能する。</span>
     </p>
     <blockquote class="hero-quote">
       <p style="font-size:clamp(0.9rem,2.5vw,1.15rem);">
-        <span lang="en">"It is possible to break the arm of a beginner even with poor posture... but the path we pursue is towards a healthier, stronger and more efficient body."</span>
-        <span lang="ja">「初心者の腕は悪い姿勢でも折れるだろう…しかし我々が追求する道は、より健康で、より強く、より効率的な身体に向かうものだ。」</span>
+        <span lang="en">"It is possible to break the arm or heel of a beginner even with poor base and structure... but ideally the path we pursue is towards a more efficient body."</span>
+        <span lang="ja">「初心者の腕や踵は、ベースや構造が悪くても折れるだろう…しかし理想的には、我々が追求する道はより効率的な身体に向かうものだ。」</span>
       </p>
     </blockquote>
 
-    <div class="cta-grid">
-      <a href={`${base}/modules/build-yourself`} class="cta-card">
-        <div class="cta-card-title"><span lang="en">Build Yourself Viz</span><span lang="ja">自分を作れ 可視化</span></div>
-        <div class="cta-card-desc"><span lang="en">4-panel body organization</span><span lang="ja">4パネル身体組織化</span></div>
-      </a>
-      <a href={`${base}/modules/ideal-partner`} class="cta-card">
-        <div class="cta-card-title"><span lang="en">Ideal Training Partner</span><span lang="ja">理想のパートナー</span></div>
-        <div class="cta-card-desc"><span lang="en">Intensity modulation essay</span><span lang="ja">強度調節エッセイ</span></div>
-      </a>
-      <a href={`${base}/modules/quadtree`} class="cta-card">
-        <div class="cta-card-title"><span lang="en">QuadTree Map</span><span lang="ja">コンセプトマップ</span></div>
-        <div class="cta-card-desc"><span lang="en">Explore all concepts</span><span lang="ja">全コンセプトを探索</span></div>
-      </a>
-      <a href={`${base}/modules/skill-check`} class="cta-card">
-        <div class="cta-card-title"><span lang="en">Self-Assessment</span><span lang="ja">セルフチェック</span></div>
-        <div class="cta-card-desc"><span lang="en">Evaluate your game</span><span lang="ja">自分のゲームを評価</span></div>
-      </a>
-    </div>
+    <p class="act-lead" style="max-width:640px;margin:24px auto 0;text-align:center;">
+      <span lang="en">One of the fastest ways to develop those skills is to have <a href={`${base}/modules/ideal-partner`} class="inline-link">ideal training partners</a> and to become one yourself. Another is to start filling your mind with the Grappling Primitives that underlie all techniques, with the building blocks of which every complex technique is made of. Explore these in the <a href={`${base}/modules/quadtree`} class="inline-link">QuadTree concept map</a>.</span>
+      <span lang="ja">これらのスキルを最速で身につける方法の一つは、<a href={`${base}/modules/ideal-partner`} class="inline-link">理想のトレーニングパートナー</a>を持ち、自分自身がそうなることだ。もう一つは、全ての技の根底にあるグラップリングの基本要素、あらゆる複雑な技を構成するビルディングブロックで頭を満たすこと。<a href={`${base}/modules/quadtree`} class="inline-link">QuadTreeコンセプトマップ</a>で探索しよう。</span>
+    </p>
   </div>
 </section>
 
@@ -764,21 +737,26 @@ body.lang-ja [lang="en"] { display: none; }
   margin: 0;
 }
 
-/* ─── CTA Link ─── */
-.cta-link {
-  display: inline-block;
-  padding: 12px 24px;
-  border: 1px solid var(--cyan-dim);
-  border-radius: 4px;
-  color: var(--cyan);
-  text-decoration: none;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-  transition: all 0.2s;
+/* ─── Build Yourself Embed (Act 2) ─── */
+.build-yourself-embed {
+  margin: 32px 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  max-width: min(90vw, 800px);
+  margin-left: auto;
+  margin-right: auto;
 }
-.cta-link:hover {
-  background: rgba(0,212,255,0.08);
-  box-shadow: var(--glow-cyan);
+.build-yourself-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #050509;
 }
 
 /* ─── Viz Containers ─── */
@@ -788,44 +766,6 @@ body.lang-ja [lang="en"] { display: none; }
   border-radius: 6px;
   padding: 24px;
   min-height: 200px;
-}
-
-/* ─── Contrast Callout (between Act 3 & 4) ─── */
-.contrast-callout {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 32px;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--surface);
-  flex-wrap: wrap;
-}
-.contrast-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-}
-.contrast-grow {
-  color: var(--green);
-  text-shadow: var(--glow-green);
-}
-.contrast-decay {
-  color: var(--orange);
-  text-shadow: var(--glow-orange);
-}
-.contrast-arrow {
-  font-size: 1.3rem;
-  font-weight: 700;
-}
-.contrast-vs {
-  color: var(--text-dim);
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
 }
 
 /* ─── Examples Box (Act 5) ─── */
@@ -860,41 +800,21 @@ body.lang-ja [lang="en"] { display: none; }
   margin-bottom: 4px;
 }
 
-/* ─── CTA Grid (Act 6) ─── */
-.cta-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 32px;
-}
-.cta-card {
-  display: block;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--surface);
+/* ─── Inline Links ─── */
+.inline-link {
+  color: var(--cyan);
   text-decoration: none;
+  border-bottom: 1px solid rgba(0,212,255,0.3);
   transition: all 0.2s;
 }
-.cta-card:hover {
-  border-color: var(--cyan-dim);
-  box-shadow: 0 0 16px rgba(0,212,255,0.08);
-}
-.cta-card-title {
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.cta-card-desc {
-  font-size: 0.75rem;
-  color: var(--text-dim);
+.inline-link:hover {
+  text-shadow: var(--glow-cyan);
+  border-bottom-color: var(--cyan);
 }
 
 /* ─── Mobile ─── */
 @media (max-width: 600px) {
   .four-dimensions { grid-template-columns: 1fr; }
-  .cta-grid { grid-template-columns: 1fr; }
   .source-buttons { flex-direction: column; }
   .act { padding: 60px 16px; }
   .contrast-callout { flex-direction: column; gap: 8px; }
@@ -1176,23 +1096,7 @@ function initFunctionViz(containerId, dataKey, prefix) {
   tooltip.style.cssText = `min-height:40px;margin-top:8px;text-align:center;font-size:0.8rem;color:${theme.glow};opacity:0;transition:opacity 0.2s;`;
   container.appendChild(tooltip);
 
-  // Time slider
-  const sliderWrap = document.createElement('div');
-  sliderWrap.style.cssText = 'display:flex;align-items:center;gap:8px;margin-top:8px;';
-  const sliderLabel = vizData.timeEffect === 'grow' ? 'Time (t) — grows' : 'Time (t) — decays';
-  const sliderLabelJa = vizData.timeEffect === 'grow' ? '時間 (t) — 成長' : '時間 (t) — 減衰';
-  sliderWrap.innerHTML = `
-    <span style="font-size:9px;color:${theme.sub};letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;">t=0</span>
-    <input type="range" min="0" max="100" value="50" style="flex:1;height:4px;cursor:pointer;accent-color:${theme.main};" aria-label="${sliderLabel}"/>
-    <span style="font-size:9px;color:${theme.sub};letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;">t=max</span>`;
-  container.appendChild(sliderWrap);
 
-  const timeSlider = sliderWrap.querySelector('input[type=range]');
-
-  // Output display
-  const outputDiv = document.createElement('div');
-  outputDiv.style.cssText = `text-align:center;margin-top:4px;font-size:0.75rem;color:${theme.sub};letter-spacing:0.08em;`;
-  container.appendChild(outputDiv);
 
   function createSvgEl(tag) {
     return document.createElementNS(svgNs, tag);
@@ -1328,8 +1232,6 @@ function initFunctionViz(containerId, dataKey, prefix) {
     centerCore.setAttribute('filter', output > 70 ? `url(#${prefix}-glow)` : 'none');
     centerText.textContent = `ƒ(${isJa() ? vizData.titleJa : vizData.title})`;
 
-    // Output display
-    outputDiv.textContent = `Output: ${Math.round(output)}`;
 
     vizData.components.forEach((comp, i) => {
       const angle = (Math.PI * 2 * i) / numNodes - Math.PI / 2;
@@ -1427,11 +1329,6 @@ function initFunctionViz(containerId, dataKey, prefix) {
     });
   }
 
-  timeSlider.addEventListener('input', (e) => {
-    timeValue = parseInt(e.target.value);
-    updateVisualization();
-  });
-
   // Re-render on language change
   const langBtn = document.getElementById('lang-toggle');
   if (langBtn) langBtn.addEventListener('click', () => {
@@ -1451,95 +1348,78 @@ function initFlowViz(containerId) {
   if (!container) return;
   const isJa = () => document.body.classList.contains('lang-ja');
 
-  const phases = [
-    {
-      id: 'tsukuri', labelEn: 'Tsukuri', labelJa: '作り',
-      subEn: 'Set / Build', subJa: '構築',
-      color: '#16a34a', glow: '#86efac', bgDark: '#052e16',
-      descEn: 'Build yourself: posture, grips, structure, alignment',
-      descJa: '自分を作る：姿勢、グリップ、構造、整列',
-      /* TODO: QuadTree concept links — Spatial Positioning, Structural Alignment, Connection, Kinetic Loading, Wedge Insertion */
-    },
-    {
-      id: 'kuzushi', labelEn: 'Kuzushi', labelJa: '崩し',
-      subEn: 'Break / Disrupt', subJa: '崩壊',
-      color: '#ea580c', glow: '#fdba74', bgDark: '#431407',
-      descEn: 'Disrupt opponent: misalign, remove base, isolate',
-      descJa: '相手を崩す：不整列、ベース除去、孤立化',
-      /* TODO: QuadTree concept links — Structural Misalignment, Base Removal, Momentum, Cognitive Disruption, Isolation */
-    },
-    {
-      id: 'kake', labelEn: 'Kake', labelJa: '掛け',
-      subEn: 'Execute', subJa: '実行',
-      color: '#dc2626', glow: '#fca5a5', bgDark: '#450a0a',
-      descEn: 'Perform the technique at the moment of intersection',
-      descJa: '交差の瞬間に技を実行する',
-      /* TODO: QuadTree concept links — Commitment, Force Generation, Follow Through */
-    }
-  ];
-
   function render() {
     const ja = isJa();
     container.innerHTML = '';
 
-    // Title
-    const title = document.createElement('div');
-    title.style.cssText = 'text-align:center;margin-bottom:20px;font-size:0.8rem;color:#6B7280;letter-spacing:0.15em;text-transform:uppercase;';
-    title.textContent = ja ? '[作り~崩し] → 掛け' : '[set~break] → execute';
-    container.appendChild(title);
-
-    // Flow container
+    // Main flow: [ Tsukuri frame [ Jibun wo Tsukuru + Kuzushi ] ] → Kake
     const flow = document.createElement('div');
-    flow.style.cssText = 'display:flex;align-items:stretch;gap:0;justify-content:center;flex-wrap:wrap;';
+    flow.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;';
 
-    phases.forEach((phase, i) => {
-      // Phase box
-      const box = document.createElement('div');
-      box.style.cssText = `flex:1;min-width:160px;max-width:220px;padding:20px 16px;border:1px solid ${phase.color}44;border-radius:6px;background:${phase.bgDark};text-align:center;position:relative;`;
+    // === Tsukuri outer frame ===
+    const tsukuriFrame = document.createElement('div');
+    tsukuriFrame.style.cssText = 'border:2px solid #4C8DFF44;border-radius:8px;padding:12px;background:rgba(76,141,255,0.03);position:relative;';
 
-      const label = document.createElement('div');
-      label.style.cssText = `font-size:1.1rem;font-weight:700;color:${phase.color};margin-bottom:4px;`;
-      label.textContent = ja ? phase.labelJa : phase.labelEn;
+    // Tsukuri label
+    const tsukuriLabel = document.createElement('div');
+    tsukuriLabel.style.cssText = 'position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#0E1014;padding:0 10px;font-size:0.8rem;font-weight:700;color:#4C8DFF;letter-spacing:0.1em;white-space:nowrap;';
+    tsukuriLabel.textContent = ja ? '作り / Tsukuri' : 'Tsukuri / 作り';
+    tsukuriFrame.appendChild(tsukuriLabel);
 
-      const sub = document.createElement('div');
-      sub.style.cssText = `font-size:0.75rem;color:${phase.glow};letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;`;
-      sub.textContent = ja ? phase.subJa : phase.subEn;
+    // Inner boxes container
+    const inner = document.createElement('div');
+    inner.style.cssText = 'display:flex;align-items:stretch;gap:12px;margin-top:8px;';
 
-      const desc = document.createElement('div');
-      desc.style.cssText = 'font-size:0.75rem;color:#9CA3AF;line-height:1.5;';
-      desc.textContent = ja ? phase.descJa : phase.descEn;
+    // Jibun wo Tsukuru box (green)
+    const jibunBox = document.createElement('div');
+    jibunBox.style.cssText = 'flex:1;min-width:150px;padding:16px 14px;border:1px solid #16a34a44;border-radius:6px;background:#052e16;text-align:center;';
+    jibunBox.innerHTML = `
+      <div style="font-size:1rem;font-weight:700;color:#16a34a;margin-bottom:4px;">${ja ? '自分を作る' : 'Jibun wo Tsukuru'}</div>
+      <div style="font-size:0.7rem;color:#86efac;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;">${ja ? '自分を構築する' : 'Build Yourself'}</div>
+      <div style="font-size:0.7rem;color:#9CA3AF;line-height:1.5;">${ja ? '姿勢、グリップ、構造、整列' : 'Posture, grips, structure, alignment'}</div>`;
+    inner.appendChild(jibunBox);
 
-      box.appendChild(label);
-      box.appendChild(sub);
-      box.appendChild(desc);
+    // + sign
+    const plus = document.createElement('div');
+    plus.style.cssText = 'display:flex;align-items:center;font-size:1.2rem;color:#6B7280;flex-shrink:0;';
+    plus.textContent = '+';
+    inner.appendChild(plus);
 
-      // Interchangeable bracket for first two
-      if (i === 0) {
-        const bracket = document.createElement('div');
-        bracket.style.cssText = 'position:absolute;top:-16px;right:-28px;font-size:0.7rem;color:#6B7280;z-index:1;letter-spacing:0.05em;';
-        bracket.textContent = '~';
-        box.appendChild(bracket);
-      }
+    // Kuzushi box (orange)
+    const kuzushiBox = document.createElement('div');
+    kuzushiBox.style.cssText = 'flex:1;min-width:150px;padding:16px 14px;border:1px solid #ea580c44;border-radius:6px;background:#431407;text-align:center;';
+    kuzushiBox.innerHTML = `
+      <div style="font-size:1rem;font-weight:700;color:#ea580c;margin-bottom:4px;">${ja ? '崩し' : 'Kuzushi'}</div>
+      <div style="font-size:0.7rem;color:#fdba74;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;">${ja ? '崩壊' : 'Break / Disrupt'}</div>
+      <div style="font-size:0.7rem;color:#9CA3AF;line-height:1.5;">${ja ? '不整列、ベース除去、孤立化' : 'Misalign, remove base, isolate'}</div>`;
+    inner.appendChild(kuzushiBox);
 
-      flow.appendChild(box);
+    tsukuriFrame.appendChild(inner);
+    flow.appendChild(tsukuriFrame);
 
-      // Arrow between phases
-      if (i < phases.length - 1) {
-        const arrow = document.createElement('div');
-        arrow.style.cssText = 'display:flex;align-items:center;padding:0 8px;font-size:1.2rem;color:#6B7280;flex-shrink:0;';
-        arrow.textContent = i === 1 ? '→' : '~';
-        flow.appendChild(arrow);
-      }
-    });
+    // Arrow → Kake
+    const arrow = document.createElement('div');
+    arrow.style.cssText = 'display:flex;align-items:center;padding:0 12px;font-size:1.4rem;color:#6B7280;flex-shrink:0;';
+    arrow.textContent = '→';
+    flow.appendChild(arrow);
+
+    // Kake box (red)
+    const kakeBox = document.createElement('div');
+    kakeBox.style.cssText = 'min-width:140px;max-width:180px;padding:20px 16px;border:1px solid #dc262644;border-radius:6px;background:#450a0a;text-align:center;align-self:stretch;display:flex;flex-direction:column;justify-content:center;';
+    kakeBox.innerHTML = `
+      <div style="font-size:1.1rem;font-weight:700;color:#dc2626;margin-bottom:4px;">${ja ? '掛け' : 'Kake'}</div>
+      <div style="font-size:0.7rem;color:#fca5a5;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;">${ja ? '実行' : 'Execute'}</div>
+      <div style="font-size:0.7rem;color:#9CA3AF;line-height:1.5;">${ja ? '条件が揃った時に技を実行' : 'Perform the technique when conditions are met'}</div>`;
+    flow.appendChild(kakeBox);
 
     container.appendChild(flow);
 
-    // Key insight
+    // Insight text
     const insight = document.createElement('div');
-    insight.style.cssText = 'text-align:center;margin-top:16px;font-size:0.8rem;color:#9CA3AF;';
+    insight.style.cssText = 'text-align:center;margin-top:16px;font-size:0.8rem;color:#9CA3AF;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto;';
     insight.innerHTML = ja
-      ? '<span style="color:#00d4ff;">最初の二つの順序は入れ替え可能</span> — しかし自己組織化が先に来る'
-      : '<span style="color:#00d4ff;">The order of the first two is interchangeable</span> — but self-organization comes first';
+      ? '最初の二つは入れ替え可能というよりも、どちらも前提条件である。相手を常に崩しの状態に置くことはできないが、自分の身体を常にレジリエントな状態に保つことはコントロールできるはずだ。「ベース」はこの概念に関連する用語で、<span style="color:#00d4ff;">「力を吸収し、力を生み出す能力」</span>と表現されることがある。'
+      : 'It\'s not really that the first two are interchangeable, more like they\'re both pre-requisites. While we cannot always have the other in a state of Kuzushi, we should be able to control our body to always be in a resilient state. "Base" is another term associated with this idea, I heard it described by Canadians as <span style="color:#00d4ff;">"the ability to absorb and generate force"</span>. Great definition.';
     container.appendChild(insight);
   }
 
