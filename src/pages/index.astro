@@ -12,10 +12,10 @@ const categoryCount = allCategories.length;
 
 const thumbBase = `${base}/images/thumbs`;
 
-const sections = [
+const coreSections = [
   {
-    id: 'featured',
-    label: 'FEATURED',
+    id: 'core',
+    label: '',
     featured: true,
     modules: [
       {
@@ -23,19 +23,30 @@ const sections = [
         description: 'An interactive essay on training intensity, mismatch danger, and ego drift. With watercolor illustrations.',
         href: `${base}/modules/ideal-partner`,
         status: 'live' as const,
-        tag: 'INTERACTIVE',
+        tag: 'INTERACTIVE ESSAY',
         thumb: `${thumbBase}/ideal-partner.webp`,
       },
       {
         title: 'QuadTree Map',
-        description: '4-quadrant treemap: THE MAT · THE MIND · THE DOJO · THE PATH. Category boxes sized by concept count — click to zoom into any category.',
+        description: `${conceptCount} concepts across ${categoryCount} categories. THE MAT · THE MIND · THE DOJO · THE PATH. Click to zoom into any category.`,
         href: `${base}/modules/quadtree`,
         status: 'live' as const,
-        tag: 'INTERACTIVE',
+        tag: 'CONCEPT MAP',
         thumb: `${thumbBase}/quadtree.webp`,
+      },
+      {
+        title: 'Build Yourself First',
+        description: '自分を作れ — Tsukuri is upstream of everything. An interactive essay on building your game before breaking theirs.',
+        href: `${base}/modules/build-yourself`,
+        status: 'live' as const,
+        tag: 'INTERACTIVE ESSAY',
+        thumb: `${thumbBase}/build-yourself.webp`,
       },
     ],
   },
+];
+
+const purgatorySections = [
   {
     id: 'learn',
     label: 'LEARN',
@@ -182,14 +193,6 @@ const sections = [
         status: 'soon' as const,
         tag: 'TOOLS',
       },
-      {
-        title: 'Build Yourself',
-        description: '自分を作れ',
-        href: `${base}/modules/build-yourself`,
-        thumb: `${thumbBase}/build-yourself.webp`,
-        status: 'live' as const,
-        tag: 'INTERACTIVE',
-      },
     ],
   },
 ];
@@ -199,43 +202,71 @@ const sections = [
   <div class="max-w-5xl mx-auto px-4 py-12">
 
     <!-- Header -->
-    <div class="mb-12 fade-up">
-      <p class="text-[9px] tracking-[4px] text-accent uppercase mb-3">v2.0 — Astro Build</p>
-      <h1 class="text-3xl font-bold tracking-tight text-text-primary mb-3 glow-blue">
+    <div class="mb-16 fade-up max-w-2xl">
+      {import.meta.env.DEV && (
+        <div class="text-[9px] tracking-[3px] text-yellow-500 bg-yellow-500/10 border border-yellow-500/30 px-3 py-1 mb-4 font-mono uppercase inline-block">
+          DEV MODE
+        </div>
+      )}
+      <h1 class="text-3xl font-bold tracking-tight text-text-primary mb-4 glow-blue">
         Grappling Primitives <span class="text-[#00ff41] text-2xl tracking-wide" style="text-shadow:0 0 16px rgba(0,255,65,0.5);">Work-in-Progress</span>
       </h1>
-      <p class="text-sm text-text-muted max-w-xl leading-relaxed">
-        A collection of thoughts over 12 years of training, organized into various visualizations.
-        The main dish is an interactive collection of <span class="text-accent font-semibold">{conceptCount}</span> concepts split into <span class="text-accent font-semibold">{categoryCount}</span> categories (<a href={`${base}/modules/quadtree`} class="text-accent underline hover:text-cyan transition-colors">Quadtree Map</a>) that this older black belt has accumulated from a starting point of <span class="italic">"there's gotta be more to BJJ than accumulating techniques!"</span> as a white belt.
-        I am trying to make sense of this passion of ours; grappling and pinning and escaping and counter-attacking and controlling and killing the space and submitting fellow enthusiasts.
-        Still very much a WIP, some modules are dead-ends, others are R&D.
-        <span class="italic text-text-dim">All models are wrong, some are useful. Same for modules I suppose.</span>
-        explore! ᕕ(ᐛ)ᕗ
+      <p class="text-sm text-text-muted leading-relaxed mb-4 italic">If you could tell your white belt self three things...</p>
+      <ol class="text-sm text-text-muted leading-relaxed list-decimal list-inside space-y-2 mb-4">
+        <li><span class="text-accent font-semibold">"Build Yourself"</span> is upstream of everything, paramount. It comes before focus on Kuzushi of the other in so many ways.</li>
+        <li><span class="text-accent font-semibold">"Be the training partner you wish you had"</span>. Not all training is equal, great training partners are rare. Being a good training partner is itself a trainable skill.</li>
+        <li><span class="text-accent font-semibold">"Concepts &gt; Techniques"</span>. Engrave concepts into your brain, rather than just collecting techniques.</li>
+      </ol>
+      <p class="text-sm text-text-muted leading-relaxed mb-4">
+        I am organizing decades of notes, including <span class="text-accent font-semibold">{conceptCount}</span> concepts organized in <span class="text-accent font-semibold">{categoryCount}</span> categories in a <a href={`${base}/modules/quadtree`} class="text-accent underline hover:text-cyan transition-colors">quad tree map</a>, and interactive essays that represent how I would typically introduce these concepts live to new students. Although so much of what we do is highly kinetic and has a "it-has-to-be-felt" quality that is difficult to convey digitally. Doesn't mean we cannot try.
+      </p>
+      <p class="text-sm text-text-muted leading-relaxed">
+        Start by reading the essays, <a href={`${base}/modules/build-yourself`} class="text-accent underline hover:text-cyan transition-colors">Build Yourself First</a> and <a href={`${base}/modules/ideal-partner`} class="text-accent underline hover:text-cyan transition-colors">Ideal Training Partner</a>, or take this <a href={`${base}/modules/skill-check`} class="text-accent underline hover:text-cyan transition-colors">self-assessment</a>, then explore the <a href={`${base}/modules/quadtree`} class="text-accent underline hover:text-cyan transition-colors">map</a>.
       </p>
     </div>
 
-    <!-- Module sections -->
-    {sections.map((section) => (
-      <section class="mb-10">
-        <!-- Section header -->
-        <div class="flex items-center gap-3 mb-4">
-          <span class="text-[10px] tracking-[4px] text-text-dim uppercase font-mono flex-shrink-0">{section.label}</span>
-          <div class="flex-1 h-px bg-border" />
-        </div>
-
-        <!-- Grid -->
-        <div class:list={[
-          'grid gap-3',
-          section.featured
-            ? 'grid-cols-1 sm:grid-cols-2'
-            : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-        ]}>
+    <!-- Core modules -->
+    {coreSections.map((section) => (
+      <section class="mb-16">
+        {section.label && (
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-[10px] tracking-[4px] text-text-dim uppercase font-mono flex-shrink-0">{section.label}</span>
+            <div class="flex-1 h-px bg-border" />
+          </div>
+        )}
+        <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {section.modules.map((m) => (
             <ModuleCard {...m} featured={section.featured || false} />
           ))}
         </div>
       </section>
     ))}
+
+    <!-- Purgatory: dev-only modules -->
+    {import.meta.env.DEV && (
+      <div class="mt-20 pt-8 border-t border-yellow-500/20">
+        <div class="flex items-center gap-3 mb-8">
+          <span class="text-[10px] tracking-[3px] text-yellow-500/70 uppercase font-mono flex-shrink-0">
+            PURGATORY — dev only
+          </span>
+          <div class="flex-1 h-px bg-yellow-500/20" />
+        </div>
+
+        {purgatorySections.map((section) => (
+          <section class="mb-10 opacity-70">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-[10px] tracking-[4px] text-text-dim uppercase font-mono flex-shrink-0">{section.label}</span>
+              <div class="flex-1 h-px bg-border" />
+            </div>
+            <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {section.modules.map((m) => (
+                <ModuleCard {...m} />
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    )}
 
   </div>
 
