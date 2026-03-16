@@ -9,14 +9,17 @@ const cardBody = (concept.body ?? '').replace(/\n---\nCategory:.*$/s, '').trim()
 
 <BaseLayout title="Build Yourself — Grappling Primitives" fullscreen={true}>
 
-<!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
+<script is:inline>
+// Detect iframe embed — must run before paint to avoid toolbar flash
+if (window.self !== window.top) document.body.classList.add('is-embedded');
+</script>
+
+<!-- ── Toolbar (hidden when embedded) ──────────────────────────────────────── -->
 <div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;">
   <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;white-space:nowrap;flex-shrink:0;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">&larr; Home</a>
   <span style="color:#21262d;flex-shrink:0;">|</span>
   <a href="#" id="title-link" style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;white-space:nowrap;flex-shrink:0;text-decoration:none;cursor:pointer;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'" title="Click for about info">BUILD YOURSELF</a>
   <div style="flex:1;min-width:4px;flex-shrink:1;"></div>
-  <button id="autoplay-btn" style="font-family:inherit;font-size:13px;padding:2px 8px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;white-space:nowrap;flex-shrink:0;line-height:1;" aria-label="Pause auto-advance"><span class="play-icon">⏸</span></button>
-  <span style="color:#21262d;flex-shrink:0;">|</span>
   <button id="btn-deeplink" style="font-family:inherit;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:3px 9px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;white-space:nowrap;flex-shrink:0;">Link</button>
 </div>
 <!-- Hidden scenario select (disabled for now) -->
@@ -26,11 +29,12 @@ const cardBody = (concept.body ?? '').replace(/\n---\nCategory:.*$/s, '').trim()
 
 <!-- ── Header ──────────────────────────────────────────────────────────────── -->
 <div id="header" style="position:fixed;top:36px;left:0;right:0;z-index:40;padding:6px 16px 0;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;text-align:center;">
-  <div style="display:flex;justify-content:center;align-items:baseline;gap:12px;">
+  <div style="display:flex;justify-content:center;align-items:center;gap:12px;">
     <a href="#" id="header-title-link" style="text-decoration:none;cursor:pointer;" title="Click for about info">
       <span style="font-size:16px;color:#00d4ff;letter-spacing:0.05em;" lang="ja">自分を作れ</span>
       <span style="font-size:13px;color:#c9d1d9;letter-spacing:0.12em;margin-left:4px;">Build Yourself</span>
     </a>
+    <button id="autoplay-btn" style="font-family:inherit;font-size:13px;padding:2px 8px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;white-space:nowrap;flex-shrink:0;line-height:1;" aria-label="Pause auto-advance"><span class="play-icon">⏸</span></button>
   </div>
   <div style="font-size:clamp(10px,1.5vw,13px);color:#6b7280;letter-spacing:0.06em;margin-top:1px;">Self-organization as the primary variable, four lenses, one body</div>
   <!-- Slider row -->
@@ -85,13 +89,6 @@ const cardBody = (concept.body ?? '').replace(/\n---\nCategory:.*$/s, '').trim()
 </div>
 
 <style>
-  /* When embedded in an iframe, hide toolbar and compact header */
-  .is-embedded #toolbar { display: none !important; }
-  .is-embedded #about-modal { display: none !important; }
-  .is-embedded #header { top: 0 !important; padding: 4px 12px 0 !important; }
-  .is-embedded #app-wrap { top: 120px !important; }
-  .is-embedded .step-btn { font-size: 11px !important; padding: 4px 12px !important; }
-
   .sr-only {
     position: absolute;
     width: 1px;
@@ -127,6 +124,12 @@ const cardBody = (concept.body ?? '').replace(/\n---\nCategory:.*$/s, '').trim()
 </style>
 
 <style is:global>
+  /* Embedded mode: body.is-embedded set by inline script when in iframe */
+  body.is-embedded #toolbar { display: none !important; }
+  body.is-embedded #about-modal { display: none !important; }
+  body.is-embedded #header { top: 0 !important; padding: 4px 12px 0 !important; }
+  body.is-embedded #app-wrap { top: 120px !important; }
+
   .step-btn {
     font-family: 'Courier New', Consolas, Monaco, monospace;
     font-size: clamp(9px, 1.4vw, 12px);
@@ -145,13 +148,6 @@ const cardBody = (concept.body ?? '').replace(/\n---\nCategory:.*$/s, '').trim()
   .step-btn.lit { box-shadow: 0 0 6px rgba(0,0,0,0.3); }
   .step-btn.active { box-shadow: 0 0 8px rgba(255,255,255,0.2); }
 </style>
-
-<script is:inline>
-// Detect if we're inside an iframe (embedded in jibunwotsukure)
-if (window.self !== window.top) {
-  document.body.classList.add('is-embedded');
-}
-</script>
 
 <script>
 (function(){
@@ -872,7 +868,7 @@ function renderStacking(ctx, state, w, h) {
       drawLine(ctx, pos, { x: ankleMid.x, y: pos.y }, color + '60', 1);
     }
     drawCircle(ctx, pos, 6 + normalizedDev * 4, color);
-    drawLabel(ctx, LANDMARK_LABELS[i], pos.x + (pos.x > w / 2 ? 30 : -30), pos.y + 4, Math.max(14, Math.round(14 * sc)), COLORS.textDim);
+    drawLabel(ctx, LANDMARK_LABELS[i], pos.x + (pos.x > w / 2 ? 30 : -30), pos.y + 4, Math.max(14, Math.round(14 * panelScale(w))), COLORS.textDim);
   }
 
   var totalDev = 0;
@@ -1120,7 +1116,7 @@ function updateScreenReaderDescriptions(state) {
 // --- Keyboard support ---
 document.addEventListener('keydown', function(e) {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-  if (!aboutModal.classList.contains('hidden')) return;
+  if (aboutModal && !aboutModal.classList.contains('hidden')) return;
 
   if (e.key === ' ' || e.key === 'Spacebar') {
     e.preventDefault();
@@ -1142,50 +1138,54 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// --- Deep link ---
+// --- Deep link (standalone only) ---
 var deeplinkBtn = document.getElementById('btn-deeplink');
-deeplinkBtn.addEventListener('click', function() {
-  var url = window.location.origin + window.location.pathname;
-  navigator.clipboard.writeText(url).then(function() {
-    deeplinkBtn.textContent = 'Copied!';
-    deeplinkBtn.style.color = '#00d4ff';
-    deeplinkBtn.style.borderColor = '#00d4ff';
-    setTimeout(function() {
-      deeplinkBtn.textContent = 'Link';
-      deeplinkBtn.style.color = '';
-      deeplinkBtn.style.borderColor = '';
-    }, 1500);
+if (deeplinkBtn) {
+  deeplinkBtn.addEventListener('click', function() {
+    var url = window.location.origin + window.location.pathname;
+    navigator.clipboard.writeText(url).then(function() {
+      deeplinkBtn.textContent = 'Copied!';
+      deeplinkBtn.style.color = '#00d4ff';
+      deeplinkBtn.style.borderColor = '#00d4ff';
+      setTimeout(function() {
+        deeplinkBtn.textContent = 'Link';
+        deeplinkBtn.style.color = '';
+        deeplinkBtn.style.borderColor = '';
+      }, 1500);
+    });
   });
-});
+}
 
-// --- About modal ---
+// --- About modal (standalone only) ---
 var titleLink = document.getElementById('title-link');
 var headerTitleLink = document.getElementById('header-title-link');
 var aboutModal = document.getElementById('about-modal');
 var modalClose = document.getElementById('modal-close');
 
-function openAboutModal(e) {
-  e.preventDefault();
-  aboutModal.classList.remove('hidden');
-  aboutModal.style.display = 'flex';
-  modalClose.focus();
-}
-
-function closeAboutModal() {
-  aboutModal.classList.add('hidden');
-  aboutModal.style.display = 'none';
-}
-
-titleLink.addEventListener('click', openAboutModal);
-headerTitleLink.addEventListener('click', openAboutModal);
-modalClose.addEventListener('click', closeAboutModal);
-aboutModal.addEventListener('click', function(e) { if (e.target === aboutModal) closeAboutModal(); });
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && !aboutModal.classList.contains('hidden')) {
-    closeAboutModal();
+if (aboutModal) {
+  function openAboutModal(e) {
+    e.preventDefault();
+    aboutModal.classList.remove('hidden');
+    aboutModal.style.display = 'flex';
+    modalClose.focus();
   }
-});
+
+  function closeAboutModal() {
+    aboutModal.classList.add('hidden');
+    aboutModal.style.display = 'none';
+  }
+
+  if (titleLink) titleLink.addEventListener('click', openAboutModal);
+  if (headerTitleLink) headerTitleLink.addEventListener('click', openAboutModal);
+  modalClose.addEventListener('click', closeAboutModal);
+  aboutModal.addEventListener('click', function(e) { if (e.target === aboutModal) closeAboutModal(); });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !aboutModal.classList.contains('hidden')) {
+      closeAboutModal();
+    }
+  });
+}
 
 // --- Render loop ---
 var startTime = performance.now();
