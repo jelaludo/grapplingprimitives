@@ -279,8 +279,8 @@ We can call Tsukuri and Kake the technical principles that follow the basic prin
   <div class="act-inner">
     <h2 class="act-title"><span class="act-number">05</span><span lang="en">How They Connect</span><span lang="ja">それらはどう繋がるか</span></h2>
     <p class="act-lead">
-      <span lang="en">The sequence most people focus on is Kuzushi → Tsukuri → Kake. imho you hear many more advocations to "break their posture!" and "kuzushi first before technique!" than "focus on building yourself". Perhaps it is taken as being obvious. I believe that explicitly focusing on it can enhance one's skills.</span>
-      <span lang="ja">多くの人が注目する順序は 崩し → 作り → 掛け。「姿勢を崩せ！」「技の前にまず崩し！」という声は「自分を作ることに集中しろ」よりもずっと多く聞こえる。おそらく自明と思われているのだろう。しかし意識的にそこに集中することで、技術を高められると私は信じている。</span>
+      <span lang="en">The sequence most people focus on is Kuzushi → Tsukuri → Kake. imho you hear many more advocations to "break their posture!" and "kuzushi first before technique!" than "focus on building yourself". Actually we hear it in the defensive sense; someone has a triangle set-up on you? "Posture up!". My take is that building-yourself is not defensive-only, it makes for a better base of offense too. I believe that explicitly focusing on it can enhance one's skills. Body-skills are a multiplier for both better defense and offense.</span>
+      <span lang="ja">多くの人が注目する順序は 崩し → 作り → 掛け。「姿勢を崩せ！」「技の前にまず崩し！」という声は「自分を作ることに集中しろ」よりもずっと多く聞こえる。実際、防御的な意味では聞く。三角絞めをセットアップされたら？「姿勢を正せ！」と。私の考えでは、自分を作ることは防御だけではなく、攻撃のより良い土台にもなる。意識的にそこに集中することで技術を高められると信じている。身体のスキルは防御と攻撃の両方の乗数となる。</span>
     </p>
     <div id="viz-flow" class="viz-container"></div>
 
@@ -392,7 +392,7 @@ body.lang-ja [lang="en"] { display: none; }
   transform: translateY(0);
 }
 .act-inner {
-  max-width: 780px;
+  max-width: 860px;
   width: 100%;
 }
 .act-number {
@@ -403,7 +403,7 @@ body.lang-ja [lang="en"] { display: none; }
   margin-bottom: 4px;
 }
 .act-title {
-  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
   font-weight: 400;
   color: var(--text-primary);
   margin-bottom: 16px;
@@ -411,10 +411,10 @@ body.lang-ja [lang="en"] { display: none; }
 }
 .act-lead {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
   margin-bottom: 32px;
-  max-width: 600px;
-  line-height: 1.7;
+  max-width: 680px;
+  line-height: 1.8;
 }
 .act-subtitle {
   color: var(--text-muted);
@@ -731,24 +731,21 @@ body.lang-ja [lang="en"] { display: none; }
   line-height: 1;
 }
 .dimension-card p {
-  font-size: 0.8rem;
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
   color: var(--text-dim);
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 0;
 }
 
 /* ─── Build Yourself Embed (Act 2) ─── */
 .build-yourself-embed {
-  margin: 32px 0;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
+  margin: 32px -24px;
   position: relative;
-  width: 100%;
-  aspect-ratio: 1/1;
-  max-width: min(90vw, 800px);
-  margin-left: auto;
-  margin-right: auto;
+  width: calc(100% + 48px);
+  height: min(85vh, 90vw);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
 }
 .build-yourself-iframe {
   position: absolute;
@@ -764,8 +761,11 @@ body.lang-ja [lang="en"] { display: none; }
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 24px;
+  padding: 16px 12px;
   min-height: 200px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y pinch-zoom;
 }
 
 /* ─── Examples Box (Act 5) ─── */
@@ -786,9 +786,9 @@ body.lang-ja [lang="en"] { display: none; }
 .example-item {
   padding: 12px 0;
   border-bottom: 1px solid rgba(255,255,255,0.04);
-  font-size: 0.85rem;
+  font-size: clamp(0.85rem, 1.6vw, 0.95rem);
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.7;
 }
 .example-item:last-child { border-bottom: none; }
 .example-label {
@@ -1054,7 +1054,7 @@ function initFunctionViz(containerId, dataKey, prefix) {
   const svg = document.createElementNS(svgNs, 'svg');
   svg.setAttribute('viewBox', `0 0 ${svgW} ${svgH}`);
   svg.setAttribute('width', '100%');
-  svg.style.cssText = 'display:block;max-width:700px;margin:0 auto;';
+  svg.style.cssText = 'display:block;width:100%;margin:0 auto;';
 
   // Glow filter
   const defs = document.createElementNS(svgNs, 'defs');
