@@ -1,0 +1,2308 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout title="Back Control — Grappling Primitives" fullscreen={true}>
+
+<!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
+<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+  <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+  <span style="color:#21262d;">|</span>
+  <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Control Their Rotation</span>
+  <div style="flex:1;"></div>
+  <button id="deeplink-btn" style="font-family:inherit;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
+  <button id="lang-toggle" style="font-family:inherit;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;">
+    <span class="lang-label" data-active="en">EN</span> / <span class="lang-label">JP</span>
+  </button>
+</div>
+
+<!-- ── Scrolling Content ───────────────────────────────────────────────────── -->
+<div style="padding-top:36px;">
+
+<!-- ACT 0 — The Asymmetry -->
+<section id="act-0" class="act" data-act="0">
+  <div class="act-inner">
+    <h1 class="hero-title">
+      <span lang="en">Back control can be twelve perfectly executed steps, or it can be abstracted to one: <em>control their rotation.</em></span>
+      <span lang="ja">バックコントロールは12の完璧なステップにもなりうるし、一つに抽象化もできる: <em>相手の回転を制御せよ。</em></span>
+    </h1>
+    <p class="act-lead" style="max-width:600px; margin:24px auto;">
+      <span lang="en">Grappling positions can be assymetric. Front-facing is symmetric: both can see, reach, and threaten equally. Back-facing breaks the symmetry entirely. The attacker gains vision, structure, and access to submissions. The defender loses all three (ymmv if you've got amazing subs from having your back taken, but ceteris paribus that won't fly vs good opponents).</span>
+      <span lang="ja">格闘のポジションには幾何学的な非対称性がある。正面対峙は対称的で、両者が等しく見え、届き、脅威を与える。背面では対称性が完全に崩れる。攻撃者は視界、構造、アクセスを得る。防御者はその全てを失う。</span>
+    </p>
+    <p class="key-insight">
+      <span lang="en">Every back escape is a rotation attempt.</span>
+      <span lang="ja">全てのバックエスケープは回転の試みである。</span>
+    </p>
+
+    <div style="max-width:560px; margin:32px auto;">
+      <img src="/images/back-control/StickFigures_BackAsymmetry.png" alt="Front-facing symmetric vs back-facing asymmetric" style="width:100%; filter:invert(1) brightness(0.85); border-radius:6px;" />
+    </div>
+  </div>
+</section>
+
+<!-- ACT 1 — The Primitive -->
+<section id="act-1" class="act" data-act="1">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">01</span><span lang="en">The Spine Rotates</span><span lang="ja">プリミティブ</span></h2>
+    <p class="act-lead">
+      <span lang="en">The spine can rotate around a vertical axis. Two horizontal reference lines capture the rotation: the hip line (pelvis) and the shoulder line (scapulae). When both lines stay parallel to your own, rotation is locked. When they diverge, the escape has begun.</span>
+      <span lang="ja">脊椎は垂直軸を中心に回転する。二本の水平基準線が回転を捕捉する: ヒップライン（骨盤）とショルダーライン（肩甲骨）。両方のラインが自分と平行なら回転はロックされている。ずれ始めたら、エスケープが始まっている。</span>
+    </p>
+    <div class="equation-display">
+      <span lang="en">Hip Line + Shoulder Line = Spinal Control = Locked Axis &gt; Opens Neck</span>
+      <span lang="ja">ヒップライン + ショルダーライン = 脊椎制御 = 軸ロック &gt; 首が開く</span>
+    </div>
+
+    <div style="max-width:360px; margin:32px auto;">
+      <img src="/images/back-control/StickFigures_HipLineShoulderLine.png" alt="Hip line and shoulder line defining spinal rotation" style="width:100%; filter:invert(1) brightness(0.85); border-radius:6px;" />
+    </div>
+  </div>
+</section>
+
+<!-- ACT 2 — Three Expressions -->
+<section id="act-2" class="act" data-act="2">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">02</span><span lang="en">Three Expressions</span><span lang="ja">三つの表現</span></h2>
+    <p class="act-lead">
+      <span lang="en">Same primitive, three strategies for controlling rotation.</span>
+      <span lang="ja">同じプリミティブ、回転を制御する三つの戦略。</span>
+    </p>
+
+    <div class="three-cards">
+      <!-- RIDE -->
+      <div class="expr-card expr-ride">
+        <h3 class="expr-header" style="color:var(--green);">
+          <span lang="en">RIDE</span><span lang="ja">ライド</span>
+        </h3>
+        <blockquote class="expr-quote">
+          <span lang="en">"If movement is inevitable. Stay attached, let each escape attempt reveal an opening."</span>
+          <span lang="ja">「動きは避けられない。密着し続け、エスケープの度に隙を見つけよ。」</span>
+        </blockquote>
+        <div class="expr-detail"><strong>Engine:</strong> <span lang="en">Chest adhesion + mobile hooks (hips&shoulders)</span><span lang="ja">胸の密着 + 可動フック</span></div>
+        <div class="expr-detail"><strong>When:</strong> <span lang="en">Fast, mobile opponent</span><span lang="ja">速く、動く相手</span></div>
+        <div class="expr-detail expr-breaks"><strong>Breaks:</strong> <span lang="en">If attachment lost under speed</span><span lang="ja">スピードで密着が切れた時</span></div>
+      </div>
+
+      <!-- FREEZE -->
+      <div class="expr-card expr-freeze">
+        <h3 class="expr-header" style="color:var(--amber);">
+          <span lang="en">FREEZE</span><span lang="ja">フリーズ</span>
+        </h3>
+        <blockquote class="expr-quote">
+          <span lang="en">"Remove the ability to initiate movement. The rotation never begins."</span>
+          <span lang="ja">「動きを起こす能力を奪え。回転は始まらない。」</span>
+        </blockquote>
+        <div class="expr-detail"><strong>Engine:</strong> <span lang="en">Body triangle + shoulder pin</span><span lang="ja">ボディトライアングル + 肩ピン</span></div>
+        <div class="expr-detail"><strong>When:</strong> <span lang="en">Bigger/stronger opponent</span><span lang="ja">大きく/強い相手</span></div>
+        <div class="expr-detail expr-breaks"><strong>Breaks:</strong> <span lang="en">High energy cost to maintain</span><span lang="ja">維持するエネルギーコストが高い</span></div>
+      </div>
+
+      <!-- SPIRAL -->
+      <div class="expr-card expr-spiral">
+        <h3 class="expr-header" style="color:#ea580c;">
+          <span lang="en">SPIRAL &#9733;</span><span lang="ja">スパイラル &#9733;</span>
+        </h3>
+        <blockquote class="expr-quote">
+          <span lang="en">"Control opposite corners. The diagonal creates torsion the spine cannot resist."</span>
+          <span lang="ja">「対角を制御せよ。斜めの力は脊椎が抵抗できないトルクを生む。」</span>
+        </blockquote>
+        <div class="expr-detail"><strong>Engine:</strong> <span lang="en">Far shoulder + near hip</span><span lang="ja">遠い肩 + 近いヒップ</span></div>
+        <div class="expr-detail"><strong>When:</strong> <span lang="en">Achievable = superior, easiest to maintain</span><span lang="ja">達成可能なら最善、維持が最も容易</span></div>
+        <div class="expr-detail expr-breaks"><strong>Breaks:</strong> <span lang="en">Requires precise angle</span><span lang="ja">正確な角度が必要</span></div>
+      </div>
+    </div>
+
+    <p class="nuance-text">
+      <span lang="en">Spiral is superior when achievable, easier to maintain, harder to escape. Ride and Freeze are what you have when the opponent is bigger, stronger, more mobile, or better at protecting their spine. Not a hierarchy of skill, a toolkit matched to circumstances.</span>
+      <span lang="ja">スパイラルは達成可能な時に最善で、維持しやすく、エスケープされにくい。ライドとフリーズは相手が大きく、強く、動きが速く、脊椎の保護が上手い時の選択肢。スキルの階層ではなく、状況に合わせたツールキット。</span>
+    </p>
+  </div>
+</section>
+
+<!-- ACT 3 — The Machine (Simulation) -->
+<section id="act-3" class="act sim-act" data-act="3">
+  <div class="act-inner" style="max-width:1100px;">
+    <h2 class="act-title"><span class="act-number">03</span><span lang="en">Simulation</span><span lang="ja">シミュレーション</span></h2>
+    <p class="act-lead">
+      <span lang="en">A simulation of back control dynamics. Attacker vs. defender, scored in real time. This is highly stylized, but this represents what it feels like to me; dynamic, constantly having to re-adjust upper and lower body, and some percentage probability of finishing or bailing out. Judgment call.</span>
+      <span lang="ja">バックコントロールのダイナミクスをシミュレーション。攻撃者対防御者、リアルタイムでスコアリング。</span>
+    </p>
+
+    <!-- Strategy Toggle -->
+    <div class="sim-strategy-toggle">
+      <button class="sim-strategy-btn active" data-strategy="ride" onclick="simSetStrategy('ride')">RIDE</button>
+      <button class="sim-strategy-btn" data-strategy="freeze" onclick="simSetStrategy('freeze')">FREEZE</button>
+      <button class="sim-strategy-btn" data-strategy="spiral" onclick="simSetStrategy('spiral')">SPIRAL</button>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="sim-controls-bar">
+      <button class="sim-header-btn" id="sim-btn-gear" onclick="simToggleSettings()">&#9881;</button>
+      <button class="sim-header-btn sim-btn-play" id="sim-btn-play" onclick="simState.running ? simStopSimulation() : simStartSimulation()">&#9654;</button>
+      <button class="sim-header-btn" id="sim-btn-step" onclick="simStepSimulation()">&#9197;</button>
+      <button class="sim-header-btn" id="sim-btn-reset" onclick="simResetSimulation()" style="display:none;">&#8634;</button>
+    </div>
+
+    <!-- Subtitle -->
+    <div class="sim-subtitle">
+      Back attacks are typically not linear - there's back and forth and mini-battles in multiple dimensions
+    </div>
+
+    <!-- Stages Container -->
+    <div id="sim-stages-container">
+      <div id="sim-heat-overlay"></div>
+
+      <!-- Stage 0: Grips -->
+      <div class="sim-stage-column" id="sim-stage-0">
+        <div class="sim-stage-name">1. Grips</div>
+        <div class="sim-stage-goal">Negate the hands</div>
+        <div class="sim-states-stack">
+          <div class="sim-state-label sim-state-active sim-state-controlled" id="sim-state-0-controlled">Controlled</div>
+          <div class="sim-state-arrow">&udarr;</div>
+          <div class="sim-state-label sim-state-dim" id="sim-state-0-contested">Contested</div>
+          <div class="sim-state-arrow">&udarr;</div>
+          <div class="sim-state-label sim-state-dim" id="sim-state-0-lost">Lost</div>
+        </div>
+        <div class="sim-tools-section">
+          <div class="sim-tools-wrap" id="sim-tools-0">
+            <span class="sim-tool">Dynamic grips</span>
+            <span class="sim-tool">Cross-grip</span>
+            <span class="sim-tool">Always a threat</span>
+            <span class="sim-tool">Leg to block arm</span>
+            <span class="sim-tool">Weight on arm</span>
+            <span class="sim-tool">"magic grip"</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 1: Hip Control -->
+      <div class="sim-stage-column" id="sim-stage-1">
+        <div class="sim-stage-name">2. Hip Control</div>
+        <div class="sim-stage-goal">Control opponent's hips,<br>don't let him cross<br>your ankle/knee</div>
+        <div class="sim-states-stack">
+          <div class="sim-state-label sim-state-active sim-state-controlled" id="sim-state-1-controlled">Controlled</div>
+          <div class="sim-state-arrow">&udarr;</div>
+          <div class="sim-state-label sim-state-dim" id="sim-state-1-contested">Contested</div>
+          <div class="sim-state-arrow">&udarr;</div>
+          <div class="sim-state-label sim-state-dim" id="sim-state-1-lost">Lost</div>
+        </div>
+        <div class="sim-tools-section">
+          <div class="sim-tools-wrap" id="sim-tools-1">
+            <span class="sim-tool">Dynamic hooks</span>
+            <span class="sim-tool">Switch left-right</span>
+            <span class="sim-tool">Body lock</span>
+            <span class="sim-tool">"single back"</span>
+            <span class="sim-tool">Leg Turk</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 2: Shoulder Control -->
+      <div class="sim-stage-column" id="sim-stage-2">
+        <div class="sim-stage-name">3. Shoulder Control</div>
+        <div class="sim-stage-goal">Anchor shoulder line,<br>block upper turn</div>
+        <div class="sim-states-stack">
+          <div class="sim-state-label sim-state-active sim-state-controlled" id="sim-state-2-controlled">Controlled</div>
+          <div class="sim-state-arrow">&udarr;</div>
+          <div class="sim-state-label sim-state-dim" id="sim-state-2-contested">Contested</div>
+          <div class="sim-state-arrow">&udarr;</div>
+          <div class="sim-state-label sim-state-dim" id="sim-state-2-lost">Lost</div>
+        </div>
+        <div class="sim-tools-section">
+          <div class="sim-tools-wrap" id="sim-tools-2">
+            <span class="sim-tool">Diagonal press</span>
+            <span class="sim-tool">Crossface</span>
+            <span class="sim-tool">Underhook control</span>
+            <span class="sim-tool">Chest-to-back adhesion</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 3: Head Control -->
+      <div class="sim-stage-column" id="sim-stage-3">
+        <div class="sim-stage-name">4. Head Control</div>
+        <div class="sim-stage-goal">Twist and expose neck</div>
+        <div class="sim-states-stack">
+          <div class="sim-state-label sim-state-active sim-state-controlled" id="sim-state-3-controlled">Controlled</div>
+          <div class="sim-state-arrow">&udarr;</div>
+          <div class="sim-state-label sim-state-dim" id="sim-state-3-contested">Contested</div>
+          <div class="sim-state-arrow">&udarr;</div>
+          <div class="sim-state-label sim-state-dim" id="sim-state-3-lost">Lost</div>
+        </div>
+        <div class="sim-tools-section">
+          <div class="sim-tools-wrap" id="sim-tools-3">
+            <span class="sim-tool">Use own head</span>
+            <span class="sim-tool">Hand on head</span>
+            <span class="sim-tool">Close the circle</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 4: Strangulation -->
+      <div class="sim-stage-column" id="sim-stage-4">
+        <div class="sim-stage-name">5. Strangulation</div>
+        <div class="sim-stage-goal">Carotids best, mandible works</div>
+        <div class="sim-states-stack">
+          <div class="sim-state-label sim-state-active sim-state-controlled" id="sim-state-4-controlled">Controlled</div>
+          <div class="sim-state-arrow">&udarr;</div>
+          <div class="sim-state-label sim-state-dim" id="sim-state-4-contested">Contested</div>
+          <div class="sim-state-arrow">&udarr;</div>
+          <div class="sim-state-label sim-state-dim" id="sim-state-4-lost">Lost</div>
+        </div>
+        <div class="sim-tools-section">
+          <div class="sim-tools-wrap" id="sim-tools-4">
+            <span class="sim-tool">Attack up-down</span>
+            <span class="sim-tool">Flat fist</span>
+            <span class="sim-tool">Switch left-right</span>
+            <span class="sim-tool">Finger crawl</span>
+            <span class="sim-tool">Mixed tempo</span>
+            <span class="sim-tool">Hide the hand</span>
+            <span class="sim-tool">Below eyes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finish Meter -->
+      <div class="sim-finish-column">
+        <div class="sim-finish-label">FINISH</div>
+        <div class="sim-finish-meter-container">
+          <div id="sim-finish-bar"></div>
+          <div id="sim-finish-threshold"></div>
+        </div>
+        <div id="sim-finish-pct">100%</div>
+        <div class="sim-finish-detail" id="sim-finish-detail">5 ctrl</div>
+        <div class="sim-terminal-label sim-submission-label-text" id="sim-label-finish">SUBMISSION</div>
+        <div class="sim-terminal-label sim-escaped-label-text" id="sim-label-bail">ESCAPED</div>
+      </div>
+
+    </div>
+
+    <!-- Spinal Bridge -->
+    <div id="sim-spinal-bridge">
+      <span class="sim-bridge-label">SPINAL CONTROL</span>
+      <div class="sim-bridge-bar-container">
+        <div class="sim-bridge-bar" id="sim-spinal-bar"></div>
+      </div>
+      <span class="sim-bridge-value" id="sim-spinal-value">100%</span>
+    </div>
+
+    <!-- Auxiliary Footer -->
+    <div class="sim-auxiliary-footer" id="sim-auxiliary-footer">
+      <div class="sim-aux-name">6. Switch to Auxiliary</div>
+      <div class="sim-aux-desc">Below threshold: accept back attack failed, gain tempo on next position</div>
+      <div class="sim-aux-tools">
+        <span class="sim-tool">Kimura grip</span>
+        <span class="sim-tool">Shoulder control</span>
+        <span class="sim-tool">Lockdown</span>
+        <span class="sim-tool">Gift Wrap</span>
+        <span class="sim-tool">Race to base</span>
+        <span class="sim-tool">Triangle</span>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="sim-legend">
+      <span><span class="sim-legend-dot sim-ctrl"></span> Controlled (decays)</span>
+      <span><span class="sim-legend-dot sim-cont"></span> Contested</span>
+      <span><span class="sim-legend-dot sim-lost"></span> Lost</span>
+      <span><span class="sim-tool sim-tool-active" style="font-size:9px;">tool</span> Active</span>
+    </div>
+
+    <!-- Event Log -->
+    <div class="sim-event-log-container" id="sim-event-log"></div>
+
+    <!-- Toolbox Overview (below simulation) -->
+    <div class="toolbox-overview">
+      <p class="toolbox-intro">
+        <span lang="en">Back control is not a sequence. It is five simultaneous battles, each with its own intermediary goal and its own <em>toolbox</em> of options. The attacker juggles all five at once, investing attention where control is slipping.</span>
+        <span lang="ja">バックコントロールはシーケンスではない。5つの同時バトルであり、それぞれに中間目標と独自の<em>ツールボックス</em>がある。攻撃者は5つ全てを同時にこなし、コントロールが崩れている箇所に注意を振り向ける。</span>
+      </p>
+      <div class="toolbox-grid">
+        <div class="toolbox-card">
+          <div class="toolbox-stage">1. Grips</div>
+          <div class="toolbox-goal">Negate the hands</div>
+          <div class="toolbox-tools">
+            <span>Dynamic grips</span><span>Cross-grip</span><span>Always a threat</span><span>Leg to block arm</span><span>Weight on arm</span><span>"magic grip"</span>
+          </div>
+        </div>
+        <div class="toolbox-card toolbox-spinal">
+          <div class="toolbox-stage">2. Hip Control</div>
+          <div class="toolbox-goal">Anchor the rotation base</div>
+          <div class="toolbox-tools">
+            <span>Dynamic hooks</span><span>Switch left-right</span><span>Body lock</span><span>"single back"</span><span>Leg Turk</span>
+          </div>
+          <div class="toolbox-spinal-tag">SPINAL AXIS</div>
+        </div>
+        <div class="toolbox-card toolbox-spinal">
+          <div class="toolbox-stage">3. Shoulder Control</div>
+          <div class="toolbox-goal">Anchor the rotation top</div>
+          <div class="toolbox-tools">
+            <span>Diagonal press</span><span>Crossface</span><span>Underhook control</span><span>Chest-to-back adhesion</span>
+          </div>
+          <div class="toolbox-spinal-tag">SPINAL AXIS</div>
+        </div>
+        <div class="toolbox-card">
+          <div class="toolbox-stage">4. Head Control</div>
+          <div class="toolbox-goal">Twist and expose neck</div>
+          <div class="toolbox-tools">
+            <span>Use own head</span><span>Hand on head</span><span>Close the circle</span>
+          </div>
+        </div>
+        <div class="toolbox-card">
+          <div class="toolbox-stage">5. Strangulation</div>
+          <div class="toolbox-goal">Carotids best, mandible works</div>
+          <div class="toolbox-tools">
+            <span>Attack up-down</span><span>Flat fist</span><span>Switch left-right</span><span>Finger crawl</span><span>Mixed tempo</span><span>Hide the hand</span><span>Below eyes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Settings Modal -->
+<div id="sim-settings-modal" onclick="if(event.target===this)simToggleSettings()">
+  <div class="sim-settings-panel" onclick="event.stopPropagation()">
+    <h2>Settings</h2>
+
+    <div class="sim-setting-row">
+      <div class="sim-setting-header">
+        <span>Simulation Speed</span>
+        <span class="sim-setting-value" id="sim-val-speed">3x</span>
+      </div>
+      <input type="range" id="sim-slider-speed" min="0.5" max="8" step="0.5" value="3"
+        oninput="simUpdateSetting('speed', this.value, document.getElementById('sim-val-speed'))">
+    </div>
+
+    <div class="sim-setting-row">
+      <div class="sim-setting-header">
+        <span>Attacker Skill</span>
+        <span class="sim-setting-value" id="sim-val-attacker">6</span>
+      </div>
+      <input type="range" id="sim-slider-attacker" min="1" max="10" step="1" value="6"
+        oninput="simUpdateSetting('attackerSkill', this.value, document.getElementById('sim-val-attacker'))">
+    </div>
+
+    <div class="sim-setting-row">
+      <div class="sim-setting-header">
+        <span>Defender Skill</span>
+        <span class="sim-setting-value" id="sim-val-defender">9</span>
+      </div>
+      <input type="range" id="sim-slider-defender" min="1" max="10" step="1" value="9"
+        oninput="simUpdateSetting('defenderSkill', this.value, document.getElementById('sim-val-defender'))">
+    </div>
+
+    <div class="sim-setting-row">
+      <div class="sim-setting-header">
+        <span>Cascade Strength</span>
+        <span class="sim-setting-value" id="sim-val-cascade">0.06</span>
+      </div>
+      <input type="range" id="sim-slider-cascade" min="0" max="0.3" step="0.02" value="0.06"
+        oninput="simUpdateSetting('cascadeStrength', this.value, document.getElementById('sim-val-cascade'))">
+    </div>
+
+    <div class="sim-setting-row">
+      <div class="sim-setting-header">
+        <span>Bail Threshold</span>
+        <span class="sim-setting-value" id="sim-val-bail">10%</span>
+      </div>
+      <input type="range" id="sim-slider-bail" min="0.02" max="0.30" step="0.02" value="0.10"
+        oninput="simUpdateSetting('bailThreshold', this.value, document.getElementById('sim-val-bail'))">
+    </div>
+  </div>
+</div>
+
+<!-- Hover tooltip for simulation -->
+<div class="sim-hover-tooltip" id="sim-hover-tooltip">
+  <div class="tt-name"></div>
+  <div class="tt-goal"></div>
+  <div class="tt-state"></div>
+  <div class="tt-tools"></div>
+</div>
+
+<!-- ACT 4 — The Primitive Card -->
+<section id="act-4" class="act" data-act="4">
+  <div class="act-inner">
+    <h2 class="act-title"><span class="act-number">04</span><span lang="en">Rotational Control</span><span lang="ja">プリミティブ</span></h2>
+    <p class="act-lead">
+      <span lang="en">This is a basic building block, a 'primitive'.  Now there are many ways to apply this primitive, not all four sides of the hips and shoulders need be controled simultaneously.  Two points of control can be plenty.  The hip can also be controled one step lower by turking a leg, or a joint above the shoulder by rotating an elbow.</span>
+      <span lang="ja">グラップリングプリミティブ分類への新しいエントリー。</span>
+    </p>
+
+    <div class="primitive-card" id="primitive-card-link" style="cursor:pointer;" title="Click to explore in QuadTree">
+      <div class="primitive-id">BJJ-261</div>
+      <h3 class="primitive-name">Rotational Control</h3>
+      <p class="primitive-category">Grappling Primitives</p>
+      <p class="primitive-description">
+        <span lang="en">Preventing spinal rotation by controlling both the hip line (rotation base) and shoulder line (rotation top). The fundamental mechanism beneath all back control systems.</span>
+        <span lang="ja">ヒップライン（回転の基盤）とショルダーライン（回転の頂点）の両方を制御することで脊椎の回転を防ぐ。全てのバックコントロールシステムの根底にある基本メカニズム。</span>
+      </p>
+      <div class="primitive-related">
+        <span class="related-tag">6DoF</span>
+        <span class="related-tag">Axis Awareness</span>
+        <span class="related-tag">Form Tension</span>
+        <span class="related-tag">Stay Connected</span>
+      </div>
+    </div>
+
+    <!-- Quadrant SVG -->
+    <div style="max-width:340px; margin:32px auto;">
+      <svg viewBox="0 0 340 340" style="width:100%;">
+        <!-- Quadrant backgrounds -->
+        <rect x="10" y="10" width="160" height="160" fill="rgba(76,141,255,0.03)" rx="4"/>
+        <rect x="170" y="10" width="160" height="160" fill="rgba(169,112,255,0.03)" rx="4"/>
+        <rect x="10" y="170" width="160" height="160" fill="rgba(52,211,153,0.03)" rx="4"/>
+        <rect x="170" y="170" width="160" height="160" fill="rgba(234,88,12,0.03)" rx="4"/>
+        <!-- Axes -->
+        <line x1="170" y1="15" x2="170" y2="325" stroke="#1C1F26" stroke-width="1"/>
+        <line x1="15" y1="170" x2="325" y2="170" stroke="#1C1F26" stroke-width="1"/>
+        <!-- Labels -->
+        <text x="22" y="164" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace" font-size="12">Self</text>
+        <text x="280" y="164" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace" font-size="12">Opponent</text>
+        <text x="176" y="28" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace" font-size="12">Mental</text>
+        <text x="176" y="322" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace" font-size="12">Physical</text>
+        <!-- Concept dot: opponent-focused (-0.3 => x=219), physical (-0.7 => y=282) -->
+        <circle cx="219" cy="282" r="7" fill="#ea580c" opacity="0.9"/>
+        <circle cx="219" cy="282" r="14" fill="none" stroke="#ea580c" stroke-width="0.8" opacity="0.4"/>
+        <text x="219" y="262" text-anchor="middle" fill="#9CA3AF" font-family="'Courier New',Consolas,Monaco,monospace" font-size="12" font-weight="bold">Rotational Control</text>
+      </svg>
+    </div>
+
+    <div class="cta-row">
+      <a href={`${base}/modules/quadtree`} class="cta-link"><span lang="en">Explore the Map &rarr;</span><span lang="ja">マップを探る &rarr;</span></a>
+      <a href={`${base}/modules/jibunwotsukure`} class="cta-link"><span lang="en">Build Yourself First &rarr;</span><span lang="ja">まず自分を作れ &rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- QuadTree navigation modal -->
+<div id="quadtree-modal" class="qt-modal-overlay" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+  <div class="qt-modal-panel">
+    <p class="qt-modal-text">Explore <strong>Rotational Control</strong> in the QuadTree Primitives Map?</p>
+    <div class="qt-modal-actions">
+      <a id="qt-modal-go" class="qt-modal-btn qt-modal-go">Go to QuadTree</a>
+      <button class="qt-modal-btn qt-modal-cancel" onclick="document.getElementById('quadtree-modal').style.display='none'">Cancel</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end scrolling content -->
+
+</BaseLayout>
+
+<style is:global>
+:root {
+  --bg:           #050509;
+  --surface:      #0E1014;
+  --border:       #1C1F26;
+  --accent:       #4C8DFF;
+  --accent-soft:  #A970FF;
+  --cyan:         #00FFFF;
+  --cyan-dim:     #00d4ff;
+  --green:        #34D399;
+  --amber:        #FBBF24;
+  --red:          #F87171;
+  --text-primary: #E5E7EB;
+  --text-muted:   #9CA3AF;
+  --text-dim:     #6B7280;
+  --font-mono:    'Courier New', Consolas, Monaco, monospace;
+  --glow-cyan:    0 0 12px #00FFFF88;
+  --glow-blue:    0 0 12px #4C8DFF88;
+  --glow-soft:    0 0 8px #A970FF66;
+}
+
+/* Hide JP by default */
+[lang="ja"] { display: none; }
+body.lang-ja [lang="ja"] { display: inline; }
+body.lang-ja [lang="en"] { display: none; }
+
+/* Toolbar lang toggle active state */
+.lang-label[data-active] { color: #00FFFF; text-shadow: 0 0 12px #00FFFF88; }
+
+/* ─── Acts ─── */
+.act {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.act.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.act-inner {
+  max-width: 780px;
+  width: 100%;
+}
+.sim-act .act-inner {
+  max-width: 1100px;
+}
+
+.act-number {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.act-title {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  text-shadow: var(--glow-blue);
+}
+.act-lead {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+
+/* ─── Act 0 — Hero ─── */
+.hero-title {
+  font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.5;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.hero-title em {
+  color: var(--cyan);
+  font-style: normal;
+  text-shadow: var(--glow-cyan);
+}
+.key-insight {
+  text-align: center;
+  font-size: var(--text-base);
+  color: var(--amber);
+  letter-spacing: 0.05em;
+  margin: 24px 0;
+  padding: 12px 20px;
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 4px;
+  background: rgba(251,191,36,0.03);
+}
+
+/* ─── Act 1 — Equation ─── */
+.equation-display {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--cyan-dim);
+  text-align: center;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  margin-bottom: 24px;
+  letter-spacing: 0.04em;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/* ─── Act 2 — Three Cards ─── */
+.three-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+@media (max-width: 700px) {
+  .three-cards {
+    grid-template-columns: 1fr;
+  }
+}
+.expr-card {
+  padding: 20px;
+  border-radius: 6px;
+  background: var(--surface);
+}
+.expr-ride {
+  border: 2px dashed var(--green);
+  animation: ride-pulse 3s ease-in-out infinite;
+}
+.expr-freeze {
+  border: 2px solid var(--amber);
+}
+.expr-spiral {
+  border: 2px dotted #ea580c;
+  animation: spiral-oscillate 4s ease-in-out infinite;
+}
+@keyframes ride-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(52,211,153,0); }
+  50% { box-shadow: 0 0 12px rgba(52,211,153,0.15); }
+}
+@keyframes spiral-oscillate {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(0.5deg); }
+  75% { transform: rotate(-0.5deg); }
+}
+.expr-header {
+  font-size: var(--text-base);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.expr-quote {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-style: italic;
+  border-left: 2px solid var(--border);
+  padding-left: 12px;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+.expr-detail {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.expr-detail strong {
+  color: var(--text-muted);
+}
+.expr-breaks {
+  color: var(--red);
+  opacity: 0.7;
+}
+.nuance-text {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 1.6;
+  padding: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── Act 3 — Toolbox Overview ─── */
+.toolbox-overview {
+  margin: 32px 0;
+}
+.toolbox-intro {
+  color: var(--text-muted);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  max-width: 740px;
+  margin: 0 auto 28px;
+  text-align: center;
+}
+.toolbox-intro em {
+  color: var(--cyan);
+  font-style: normal;
+  text-shadow: var(--glow-cyan);
+}
+.toolbox-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+@media (max-width: 900px) {
+  .toolbox-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .toolbox-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.toolbox-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  background: var(--surface);
+  position: relative;
+}
+.toolbox-card.toolbox-spinal {
+  border-color: rgba(251,191,36,0.25);
+  background: rgba(251,191,36,0.02);
+}
+.toolbox-stage {
+  font-size: var(--text-base);
+  font-weight: bold;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+.toolbox-goal {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.toolbox-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.toolbox-tools span {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 3px;
+  padding: 3px 8px;
+  line-height: 1.4;
+}
+.toolbox-spinal-tag {
+  position: absolute;
+  top: -9px;
+  right: 10px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--amber);
+  background: var(--surface);
+  padding: 2px 8px;
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 3px;
+}
+
+/* ─── Act 3 — Simulation ─── */
+
+/* Strategy Toggle */
+.sim-strategy-toggle {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  padding: 6px 0 2px;
+}
+.sim-strategy-btn {
+  background: none;
+  border: 2px dashed var(--border);
+  color: var(--text-dim);
+  padding: 4px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+.sim-strategy-btn:hover { color: var(--text-muted); border-color: var(--text-dim); }
+.sim-strategy-btn.active[data-strategy="ride"] {
+  border: 2px dashed #6abf6a;
+  color: var(--text-primary);
+}
+.sim-strategy-btn.active[data-strategy="freeze"] {
+  border: 2px solid #bfa64a;
+  color: var(--text-primary);
+}
+.sim-strategy-btn.active[data-strategy="spiral"] {
+  border: 2px dotted #bf7a4a;
+  color: var(--text-primary);
+}
+
+/* Controls Bar */
+.sim-controls-bar {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0;
+}
+.sim-header-btn {
+  background: none;
+  border: 1px solid #444;
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--font-mono);
+  transition: all 0.3s;
+}
+.sim-header-btn:hover { border-color: #888; color: #fff; }
+.sim-btn-play {
+  border: 1px solid #888;
+  color: var(--text-primary);
+  padding: 6px 16px;
+}
+.sim-btn-play:hover { border-color: #bbb; color: #fff; }
+
+/* Subtitle */
+.sim-subtitle {
+  text-align: center;
+  padding: 4px 0 10px;
+  color: var(--text-dim);
+  font-size: 12px;
+  font-style: italic;
+  letter-spacing: 0.5px;
+}
+
+/* Stages Container */
+#sim-stages-container {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  flex: 1;
+  position: relative;
+  min-height: 300px;
+}
+
+/* Heat Map Overlay */
+#sim-heat-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 5;
+  border-radius: 6px;
+  transition: background 0.4s ease;
+  mix-blend-mode: screen;
+}
+
+/* Stage Columns */
+.sim-stage-column {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.5s, box-shadow 0.5s;
+}
+.sim-stage-column.sim-stage-active {
+  border-color: #444;
+  box-shadow: 0 0 8px rgba(255,255,255,0.03);
+}
+.sim-stage-name {
+  text-align: center;
+  font-weight: bold;
+  color: var(--text-primary);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+.sim-stage-goal {
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+
+/* State Labels */
+.sim-states-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+.sim-state-label {
+  padding: 7px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  width: 88%;
+  text-align: center;
+  transition: all 0.3s;
+}
+.sim-state-dim {
+  background: #151515;
+  border: 1px solid #252525;
+  color: #444;
+}
+.sim-state-active.sim-state-controlled {
+  background: #1a2e1a;
+  border: 1px solid #4a8a4a;
+  color: #6abf6a;
+  font-weight: bold;
+}
+.sim-state-active.sim-state-contested {
+  background: #1e1e1e;
+  border: 1px solid #666;
+  color: #bbb;
+  font-weight: bold;
+}
+.sim-state-active.sim-state-lost {
+  background: #2e1a1a;
+  border: 1px solid #8a4a4a;
+  color: #bf6a6a;
+  font-weight: bold;
+}
+.sim-state-arrow {
+  color: var(--border);
+  font-size: 9px;
+}
+
+/* Tools */
+.sim-tools-section {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  margin-top: auto;
+}
+.sim-tools-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.sim-tool {
+  border: 1px solid #282828;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  color: #444;
+  transition: all 0.3s;
+}
+.sim-tool-active {
+  border-color: #666;
+  color: var(--text-primary);
+  background: #252525;
+  box-shadow: 0 0 4px rgba(255,255,255,0.06);
+}
+
+/* Spinal Bridge */
+#sim-spinal-bridge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  margin-top: 12px;
+}
+.sim-bridge-label {
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.sim-bridge-bar-container {
+  flex: 1;
+  height: 8px;
+  background: #1a1a1a;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #252525;
+}
+.sim-bridge-bar {
+  height: 100%;
+  width: 100%;
+  border-radius: 3px;
+  transition: width 0.3s, background 0.3s;
+  background: #6abf6a;
+}
+.sim-bridge-value {
+  font-size: 12px;
+  font-weight: bold;
+  color: #888;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Finish Meter */
+.sim-finish-column {
+  width: 80px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 8px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.sim-finish-label {
+  text-align: center;
+  font-weight: bold;
+  color: #888;
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.sim-finish-meter-container {
+  flex: 1;
+  width: 30px;
+  background: var(--bg);
+  border-radius: 3px;
+  position: relative;
+  border: 1px solid #252525;
+  min-height: 170px;
+}
+#sim-finish-bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, #8b2020, #8b7020, #2d7a2d);
+  border-radius: 0 0 2px 2px;
+  transition: height 0.3s;
+}
+#sim-finish-threshold {
+  position: absolute;
+  bottom: 25%;
+  width: 120%;
+  left: -10%;
+  border-top: 1px dashed #555;
+  transition: bottom 0.3s;
+}
+#sim-finish-pct {
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+.sim-finish-detail {
+  font-size: 8px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  text-align: center;
+}
+
+/* Terminal Animations */
+@keyframes sim-pulse-green {
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: 0 0 20px rgba(106, 191, 106, 0.4); }
+}
+@keyframes sim-pulse-red {
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: 0 0 20px rgba(191, 106, 106, 0.4); }
+}
+@keyframes sim-glow-green {
+  0%, 100% { text-shadow: 0 0 4px rgba(106, 191, 106, 0.3); }
+  50% { text-shadow: 0 0 12px rgba(106, 191, 106, 0.7); }
+}
+@keyframes sim-glow-red {
+  0%, 100% { text-shadow: 0 0 4px rgba(191, 106, 106, 0.3); }
+  50% { text-shadow: 0 0 12px rgba(191, 106, 106, 0.7); }
+}
+.sim-terminal-finish { animation: sim-pulse-green 1s ease-in-out 3; }
+.sim-terminal-bail { animation: sim-pulse-red 1s ease-in-out 3; }
+
+.sim-terminal-label {
+  display: none;
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 6px;
+  text-align: center;
+}
+.sim-terminal-label.sim-visible { display: block; }
+.sim-terminal-label.sim-submission-label-text {
+  color: #6abf6a;
+  animation: sim-glow-green 1s ease-in-out infinite;
+}
+.sim-terminal-label.sim-escaped-label-text {
+  color: #bf6a6a;
+  animation: sim-glow-red 1s ease-in-out infinite;
+}
+
+/* Hover tooltip for small sim elements */
+.sim-stage-column {
+  position: relative;
+}
+.sim-hover-tooltip {
+  display: none;
+  position: fixed;
+  z-index: 200;
+  background: #1a1d25;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 14px 18px;
+  min-width: 200px;
+  max-width: 280px;
+  pointer-events: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+.sim-hover-tooltip.visible { display: block; }
+.sim-hover-tooltip .tt-name {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.sim-hover-tooltip .tt-goal {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.sim-hover-tooltip .tt-state {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+.sim-hover-tooltip .tt-tools {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.sim-hover-tooltip .tt-tools span {
+  display: inline-block;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 3px;
+  padding: 2px 6px;
+  margin: 2px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Auxiliary Footer */
+.sim-auxiliary-footer {
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s;
+  margin-top: 12px;
+}
+.sim-auxiliary-footer .sim-aux-name {
+  color: var(--text-dim);
+  font-weight: bold;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.sim-auxiliary-footer .sim-aux-desc {
+  font-size: 10px;
+  color: #444;
+}
+.sim-auxiliary-footer .sim-aux-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-left: auto;
+}
+.sim-auxiliary-footer .sim-tool {
+  font-size: 8px;
+}
+.sim-auxiliary-warning {
+  border-color: #888;
+}
+.sim-auxiliary-warning .sim-aux-name { color: var(--text-muted); }
+.sim-auxiliary-warning .sim-aux-desc { color: #888; }
+.sim-auxiliary-active {
+  border-style: solid;
+  border-color: var(--text-primary);
+}
+.sim-auxiliary-active .sim-aux-name { color: var(--text-primary); }
+.sim-auxiliary-active .sim-aux-desc { color: #bbb; }
+.sim-auxiliary-active .sim-tool { color: var(--text-primary); border-color: #555; background: #222; }
+
+/* Event Log */
+.sim-event-log-container {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  height: 140px;
+  overflow-y: auto;
+  padding: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  margin-top: 12px;
+}
+.sim-event-log-container::-webkit-scrollbar { width: 6px; }
+.sim-event-log-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.sim-log-entry {
+  padding: 2px 0;
+  border-bottom: 1px dashed #1a1a1a;
+  color: #888;
+}
+.sim-log-entry.sim-log-finish { color: #6abf6a; font-weight: bold; }
+.sim-log-entry.sim-log-bail { color: #bf6a6a; font-weight: bold; }
+.sim-log-entry.sim-log-prob { color: var(--text-dim); }
+.sim-log-entry.sim-log-cascade { font-style: italic; }
+
+/* Color Legend */
+.sim-legend {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--text-dim);
+  padding: 4px 0;
+  margin-top: 12px;
+}
+.sim-legend span { display: flex; align-items: center; gap: 4px; }
+.sim-legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+.sim-legend-dot.sim-ctrl { background: #6abf6a; }
+.sim-legend-dot.sim-cont { background: #bbb; }
+.sim-legend-dot.sim-lost { background: #bf6a6a; }
+
+/* Settings Modal */
+#sim-settings-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+.sim-settings-panel {
+  background: #151515;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 25px;
+  min-width: 350px;
+  max-width: 400px;
+}
+.sim-settings-panel h2 {
+  font-size: 16px;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+.sim-setting-row {
+  margin-bottom: 15px;
+}
+.sim-setting-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.sim-setting-value {
+  color: #fff;
+  font-weight: bold;
+}
+.sim-settings-panel input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  outline: none;
+}
+.sim-settings-panel input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+
+/* ─── Simulation Mobile Responsive ─── */
+@media (max-width: 700px) {
+  #sim-stages-container {
+    flex-wrap: wrap;
+  }
+  .sim-stage-column {
+    flex: 0 0 calc(50% - 5px);
+    min-width: 0;
+  }
+  .sim-finish-column {
+    flex: 0 0 100%;
+    flex-direction: row;
+    height: auto;
+    width: auto;
+    gap: 12px;
+    padding: 12px;
+  }
+  .sim-finish-meter-container {
+    min-height: 60px;
+    flex: 1;
+    width: auto;
+    height: 30px;
+  }
+  #sim-finish-bar {
+    height: 100%;
+    width: 100%;
+  }
+  .sim-auxiliary-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .sim-auxiliary-footer .sim-aux-tools {
+    margin-left: 0;
+  }
+  .sim-legend {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+/* ─── Act 4 — Primitive Card ─── */
+.primitive-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px 24px;
+  background: var(--surface);
+  max-width: 480px;
+  margin: 24px auto;
+}
+.primitive-id {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.primitive-name {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  font-weight: 400;
+  color: var(--cyan);
+  text-shadow: var(--glow-cyan);
+  margin-bottom: 4px;
+}
+.primitive-category {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.primitive-description {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.primitive-related {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.related-tag {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  border: 1px solid rgba(76,141,255,0.3);
+  border-radius: 3px;
+  padding: 3px 8px;
+  background: rgba(76,141,255,0.05);
+}
+
+/* ─── CTA Row ─── */
+.cta-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.cta-link {
+  font-size: var(--text-sm);
+  color: var(--cyan-dim);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  padding: 8px 16px;
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.cta-link:hover {
+  border-color: rgba(0,212,255,0.5);
+  background: rgba(0,212,255,0.05);
+  color: var(--cyan);
+}
+
+/* ─── QuadTree Modal ─── */
+.qt-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.qt-modal-panel {
+  background: #151518;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px 32px;
+  max-width: 380px;
+  text-align: center;
+}
+.qt-modal-text {
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.qt-modal-text strong {
+  color: var(--cyan);
+}
+.qt-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.qt-modal-btn {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.qt-modal-go {
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.4);
+  color: var(--cyan);
+}
+.qt-modal-go:hover {
+  background: rgba(0,212,255,0.2);
+}
+.qt-modal-cancel {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+.qt-modal-cancel:hover {
+  border-color: #444;
+  color: var(--text-muted);
+}
+.primitive-card:hover {
+  border-color: rgba(0,212,255,0.3);
+  transition: border-color 0.2s;
+}
+</style>
+
+<script>
+// ═══ Scroll Reveal + Deep Link Hash Tracking ═══
+(function() {
+  const acts = document.querySelectorAll('.act');
+  let currentAct = null;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        const actId = e.target.id;
+        if (actId && actId !== currentAct) {
+          currentAct = actId;
+          history.replaceState(null, '', location.pathname + location.search + '#' + actId);
+        }
+      }
+    });
+  }, { threshold: 0.15 });
+  acts.forEach((a) => observer.observe(a));
+
+  // Restore scroll position from hash on load
+  const hash = location.hash.replace('#', '');
+  if (hash) {
+    const target = document.getElementById(hash);
+    if (target) {
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: 'smooth' });
+        target.classList.add('visible');
+      }, 200);
+    }
+  }
+})();
+
+// ═══ Deep Link Button ═══
+(function() {
+  const btn = document.getElementById('deeplink-btn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    navigator.clipboard.writeText(location.href).then(() => {
+      btn.textContent = 'Copied!';
+      btn.style.color = '#00d4ff';
+      btn.style.borderColor = 'rgba(0,212,255,0.4)';
+      setTimeout(() => {
+        btn.textContent = 'Link';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 1500);
+    });
+  });
+})();
+
+// ═══ Language Toggle ═══
+(function() {
+  const btn = document.getElementById('lang-toggle');
+  if (!btn) return;
+  const labels = btn.querySelectorAll('.lang-label');
+  let lang = 'en';
+  btn.addEventListener('click', () => {
+    lang = lang === 'en' ? 'ja' : 'en';
+    document.body.classList.toggle('lang-ja', lang === 'ja');
+    labels.forEach((l) => {
+      if ((lang === 'en' && l.textContent === 'EN') || (lang === 'ja' && l.textContent === 'JP')) {
+        l.setAttribute('data-active', '');
+      } else {
+        l.removeAttribute('data-active');
+      }
+    });
+  });
+})();
+
+// ═══ ACT 3 — Back Attacks Simulation ═══
+(function() {
+
+// ===== Strategy Presets =====
+const SIM_STRATEGY_PRESETS = {
+  ride: {
+    label: 'RIDE',
+    modifiers: {
+      controlled_to_contested_mult: 1.3,
+      contested_to_controlled_mult: 1.4,
+      lost_to_contested_mult: 1.3,
+      contested_to_lost_mult: 0.9,
+      cascadeStrengthMult: 0.5,
+      controlDecayTicksMult: 0.85,
+      spinalBonus: 0.10
+    }
+  },
+  freeze: {
+    label: 'FREEZE',
+    modifiers: {
+      controlled_to_contested_mult: 0.6,
+      contested_to_controlled_mult: 0.7,
+      lost_to_contested_mult: 0.5,
+      contested_to_lost_mult: 1.3,
+      cascadeStrengthMult: 2.5,
+      controlDecayTicksMult: 1.5,
+      spinalBonus: 0.15
+    }
+  },
+  spiral: {
+    label: 'SPIRAL',
+    modifiers: {
+      controlled_to_contested_mult: 0.45,
+      contested_to_controlled_mult: 1.1,
+      lost_to_contested_mult: 0.85,
+      contested_to_lost_mult: 0.7,
+      cascadeStrengthMult: 0.3,
+      controlDecayTicksMult: 1.2,
+      spinalBonus: 0.25
+    }
+  }
+};
+
+// ===== Position Data =====
+const simPositions = {
+  backAttacks: {
+    title: "BJJ Back Attacks",
+    subtitle: "V20190507 by Gerald",
+    source: "J Danaher",
+    stages: [
+      {
+        name: "Grips",
+        goal: "Negate the hands",
+        tools: ["Dynamic grips", "Cross-grip", "Always a threat", "Leg to block arm", "Weight on arm", "\"magic grip\""],
+        transitions: {
+          controlled_to_contested: 0.14,
+          contested_to_controlled: 0.28,
+          contested_to_lost: 0.08,
+          lost_to_contested: 0.20
+        },
+        cascadesTo: [1, 2]
+      },
+      {
+        name: "Hip Control",
+        goal: "Control opponent's hips, don't let him cross your ankle/knee",
+        tools: ["Dynamic hooks", "Switch left-right", "Body lock", "\"single back\"", "Leg Turk"],
+        transitions: {
+          controlled_to_contested: 0.12,
+          contested_to_controlled: 0.25,
+          contested_to_lost: 0.10,
+          lost_to_contested: 0.18
+        },
+        cascadesTo: [2, 3]
+      },
+      {
+        name: "Shoulder Control",
+        goal: "Anchor shoulder line, block upper turn",
+        tools: ["Diagonal press", "Crossface", "Underhook control", "Chest-to-back adhesion"],
+        transitions: {
+          controlled_to_contested: 0.13,
+          contested_to_controlled: 0.24,
+          contested_to_lost: 0.09,
+          lost_to_contested: 0.17
+        },
+        cascadesTo: [3, 4]
+      },
+      {
+        name: "Head Control",
+        goal: "Twist and expose neck",
+        tools: ["Use own head", "Hand on head", "Close the circle"],
+        transitions: {
+          controlled_to_contested: 0.16,
+          contested_to_controlled: 0.22,
+          contested_to_lost: 0.10,
+          lost_to_contested: 0.15
+        },
+        cascadesTo: [4]
+      },
+      {
+        name: "Strangulation",
+        goal: "Carotids best, mandible works",
+        tools: ["Attack up-down", "Flat fist", "Switch left-right", "Finger crawl", "Mixed tempo", "Hide the hand", "Below eyes"],
+        transitions: {
+          controlled_to_contested: 0.10,
+          contested_to_controlled: 0.20,
+          contested_to_lost: 0.12,
+          lost_to_contested: 0.14
+        },
+        cascadesTo: []
+      }
+    ],
+    auxiliary: {
+      name: "Switch to Auxiliary",
+      description: "Accept back attack didn't work, gain tempo on next position",
+      tools: ["Kimura grip", "Shoulder control", "Lockdown", "Gift Wrap", "Race to base", "Triangle"],
+      threshold: 0.10
+    },
+    cascadeStrength: 0.06,
+    finishWeights: {
+      controlled: 1.0,
+      contested: 0.5,
+      lost: 0.15
+    },
+    controlDecayTicks: 30
+  }
+};
+
+// ===== Simulation State =====
+const simState = {
+  stages: [],
+  tickCount: 0,
+  finishProb: 1.0,
+  consecutiveFinishTicks: 0,
+  running: false,
+  terminated: false,
+  intervalId: null,
+  strategy: 'ride',
+  settings: {
+    speed: 3,
+    attackerSkill: 6,
+    defenderSkill: 9,
+    cascadeStrength: 0.06,
+    bailThreshold: 0.10
+  }
+};
+
+// Expose to global for inline onclick handlers
+window.simState = simState;
+
+// ===== Strategy Toggle =====
+function simSetStrategy(s) {
+  simState.strategy = s;
+  document.querySelectorAll('.sim-strategy-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-strategy') === s);
+  });
+}
+window.simSetStrategy = simSetStrategy;
+
+// ===== Decay Color Interpolation =====
+function simGetDecayColor(t) {
+  t = Math.max(0, Math.min(1, t));
+  let r, g, b;
+  if (t < 0.5) {
+    const s = t * 2;
+    r = Math.round(106 + (191 - 106) * s);
+    g = Math.round(191 + (154 - 191) * s);
+    b = Math.round(106 + (74 - 106) * s);
+  } else {
+    const s = (t - 0.5) * 2;
+    r = Math.round(191 + (191 - 191) * s);
+    g = Math.round(154 + (106 - 154) * s);
+    b = Math.round(74 + (106 - 74) * s);
+  }
+  return { r, g, b };
+}
+
+function simGetDecayBg(t) {
+  const c = simGetDecayColor(t);
+  return `rgb(${Math.round(c.r * 0.15)}, ${Math.round(c.g * 0.15)}, ${Math.round(c.b * 0.15)})`;
+}
+
+function simGetDecayBorder(t) {
+  const c = simGetDecayColor(t);
+  return `rgb(${Math.round(c.r * 0.55)}, ${Math.round(c.g * 0.55)}, ${Math.round(c.b * 0.55)})`;
+}
+
+function simGetDecayText(t) {
+  const c = simGetDecayColor(t);
+  return `rgb(${c.r}, ${c.g}, ${c.b})`;
+}
+
+// ===== Urgency & Heat Map =====
+const simUrgencyState = {
+  scores: [0, 0, 0, 0, 0],
+  transitionAge: [Infinity, Infinity, Infinity, Infinity, Infinity]
+};
+
+function simCalculateUrgency(position, state) {
+  const N = position.stages.length;
+  for (let i = 0; i < N; i++) {
+    let u = 0;
+    const s = state.stages[i];
+
+    if (s.current === 'contested') u += 0.4;
+    if (s.current === 'lost') u += 0.7;
+
+    if (s.current === 'controlled') {
+      const effectiveDecayTicks = (position.controlDecayTicks || 30) * (SIM_STRATEGY_PRESETS[state.strategy].modifiers.controlDecayTicksMult || 1);
+      u += Math.min(s.controlledTicks / effectiveDecayTicks, 1) * 0.35;
+    }
+
+    for (let j = 0; j < N; j++) {
+      if (j === i) continue;
+      const up = position.stages[j];
+      const upState = state.stages[j].current;
+      if ((upState === 'contested' || upState === 'lost') && up.cascadesTo.includes(i)) {
+        u += 0.2;
+      }
+    }
+
+    simUrgencyState.transitionAge[i]++;
+    const recency = Math.max(0, 1 - simUrgencyState.transitionAge[i] / 6);
+    u += recency * 0.5;
+
+    simUrgencyState.scores[i] = Math.min(u, 1.0);
+  }
+}
+
+function simUpdateHeatMap(position, state) {
+  simCalculateUrgency(position, state);
+  const overlay = document.getElementById('sim-heat-overlay');
+  if (state.terminated) {
+    overlay.style.background = 'none';
+    return;
+  }
+
+  const centers = [10, 25, 40, 55, 70];
+  const gradients = [];
+
+  for (let i = 0; i < 5; i++) {
+    const u = simUrgencyState.scores[i];
+    if (u < 0.05) continue;
+
+    const r = Math.round(180 + u * 75);
+    const g = Math.round(120 - u * 60);
+    const b = Math.round(40 - u * 30);
+    const alpha = u * 0.12;
+    const size = 16 + u * 20;
+
+    gradients.push(
+      `radial-gradient(ellipse ${size}% 80% at ${centers[i]}% 50%, rgba(${r},${g},${b},${alpha}) 0%, transparent 100%)`
+    );
+  }
+
+  overlay.style.background = gradients.length > 0 ? gradients.join(', ') : 'none';
+}
+
+// ===== Spinal Control =====
+function simGetStateScore(stateStr) {
+  if (stateStr === 'controlled') return 1.0;
+  if (stateStr === 'contested') return 0.5;
+  return 0.15;
+}
+
+function simCalculateSpinalControl(state) {
+  const hipScore = simGetStateScore(state.stages[1].current);
+  const shoulderScore = simGetStateScore(state.stages[2].current);
+  return (hipScore * 0.55) + (shoulderScore * 0.45);
+}
+
+function simUpdateSpinalBridge(state) {
+  const spinal = simCalculateSpinalControl(state);
+  const pct = Math.round(spinal * 100);
+  const bar = document.getElementById('sim-spinal-bar');
+  const val = document.getElementById('sim-spinal-value');
+
+  bar.style.width = pct + '%';
+  val.textContent = pct + '%';
+
+  if (spinal >= 0.75) {
+    bar.style.background = '#6abf6a';
+    val.style.color = '#6abf6a';
+  } else if (spinal >= 0.4) {
+    bar.style.background = '#bfa64a';
+    val.style.color = '#bfa64a';
+  } else {
+    bar.style.background = '#bf6a6a';
+    val.style.color = '#bf6a6a';
+  }
+}
+
+// ===== Render =====
+function simRender(position, state) {
+  for (let i = 0; i < position.stages.length; i++) {
+    const stageState = state.stages[i];
+    const states = ['controlled', 'contested', 'lost'];
+    const colEl = document.getElementById(`sim-stage-${i}`);
+
+    if (stageState.activeTools.length > 0 && !state.terminated) {
+      colEl.classList.add('sim-stage-active');
+    } else {
+      colEl.classList.remove('sim-stage-active');
+    }
+
+    for (const s of states) {
+      const el = document.getElementById(`sim-state-${i}-${s}`);
+
+      if (s === stageState.current) {
+        if (s === 'controlled') {
+          const effectiveDecayTicks = (position.controlDecayTicks || 12) * (SIM_STRATEGY_PRESETS[state.strategy].modifiers.controlDecayTicksMult || 1);
+          const decayT = stageState.controlledTicks / effectiveDecayTicks;
+          el.className = 'sim-state-label sim-state-active';
+          el.style.background = simGetDecayBg(decayT);
+          el.style.borderColor = simGetDecayBorder(decayT);
+          el.style.color = simGetDecayText(decayT);
+          el.style.fontWeight = 'bold';
+        } else {
+          el.className = 'sim-state-label sim-state-active sim-state-' + s;
+          el.style.background = '';
+          el.style.borderColor = '';
+          el.style.color = '';
+          el.style.fontWeight = '';
+        }
+      } else {
+        el.className = 'sim-state-label sim-state-dim';
+        el.style.background = '';
+        el.style.borderColor = '';
+        el.style.color = '';
+        el.style.fontWeight = '';
+      }
+    }
+
+    // Update tools
+    const toolsContainer = document.getElementById(`sim-tools-${i}`);
+    const toolEls = toolsContainer.querySelectorAll('.sim-tool');
+    toolEls.forEach(el => {
+      const isActive = stageState.activeTools.includes(el.textContent);
+      el.className = 'sim-tool' + (isActive ? ' sim-tool-active' : '');
+    });
+  }
+
+  // Heat map overlay
+  simUpdateHeatMap(position, state);
+
+  // Spinal bridge
+  simUpdateSpinalBridge(state);
+
+  // Finish meter
+  const pct = state.finishProb * 100;
+  document.getElementById('sim-finish-bar').style.height = pct + '%';
+  document.getElementById('sim-finish-pct').textContent = pct.toFixed(0) + '%';
+
+  // Threshold line
+  const threshPct = state.settings.bailThreshold * 100;
+  document.getElementById('sim-finish-threshold').style.bottom = threshPct + '%';
+
+  // Finish detail
+  const counts = { controlled: 0, contested: 0, lost: 0 };
+  state.stages.forEach(s => counts[s.current]++);
+  const parts = [];
+  if (counts.controlled) parts.push(counts.controlled + ' ctrl');
+  if (counts.contested) parts.push(counts.contested + ' cont');
+  if (counts.lost) parts.push(counts.lost + ' lost');
+  document.getElementById('sim-finish-detail').textContent = parts.join(' / ');
+
+  // Stage 6 footer
+  const auxEl = document.getElementById('sim-auxiliary-footer');
+  auxEl.className = 'sim-auxiliary-footer';
+  if (state.terminated && state.finishProb <= state.settings.bailThreshold) {
+    auxEl.classList.add('sim-auxiliary-active');
+  } else if (state.finishProb <= state.settings.bailThreshold * 1.5) {
+    auxEl.classList.add('sim-auxiliary-warning');
+  }
+
+  // Reset button
+  document.getElementById('sim-btn-reset').style.display = state.terminated ? 'inline-block' : 'none';
+
+  // Terminal visuals
+  const meterEl = document.getElementById('sim-finish-bar').parentElement;
+  meterEl.classList.remove('sim-terminal-finish', 'sim-terminal-bail');
+  document.getElementById('sim-label-finish').classList.remove('sim-visible');
+  document.getElementById('sim-label-bail').classList.remove('sim-visible');
+
+  if (state.terminated) {
+    if (state.finishProb >= 0.90) {
+      meterEl.classList.add('sim-terminal-finish');
+      document.getElementById('sim-label-finish').classList.add('sim-visible');
+    } else {
+      meterEl.classList.add('sim-terminal-bail');
+      document.getElementById('sim-label-bail').classList.add('sim-visible');
+    }
+  }
+}
+
+// ===== Core Functions =====
+function simCalculateFinishProb(position, state) {
+  let prob = 1.0;
+  for (const stage of state.stages) {
+    if (stage.current === 'controlled') {
+      const effectiveDecayTicks = (position.controlDecayTicks || 12) * (SIM_STRATEGY_PRESETS[state.strategy].modifiers.controlDecayTicksMult || 1);
+      const decayT = stage.controlledTicks / effectiveDecayTicks;
+      prob *= 1.0 - (0.15 * Math.min(decayT, 1));
+    } else {
+      prob *= position.finishWeights[stage.current];
+    }
+  }
+
+  // Spinal bonus
+  if (state.stages[1].current === 'controlled' && state.stages[2].current === 'controlled') {
+    const bonus = SIM_STRATEGY_PRESETS[state.strategy].modifiers.spinalBonus || 0;
+    prob = Math.min(1.0, prob + bonus);
+  }
+
+  state.finishProb = prob;
+  return prob;
+}
+
+function simInit(position) {
+  simState.stages = position.stages.map(() => ({
+    current: 'controlled',
+    activeTools: [],
+    controlledTicks: 0
+  }));
+  simState.tickCount = 0;
+  simState.finishProb = 1.0;
+  simState.consecutiveFinishTicks = 0;
+  simState.terminated = false;
+  // Reset urgency
+  simUrgencyState.scores = new Array(position.stages.length).fill(0);
+  simUrgencyState.transitionAge = new Array(position.stages.length).fill(Infinity);
+  simCalculateFinishProb(position, simState);
+  simRender(position, simState);
+}
+
+// ===== Simulation Engine =====
+function simGetEffectiveTransitions(position, stageIndex, state) {
+  const stage = position.stages[stageIndex];
+  const base = { ...stage.transitions };
+  const strat = SIM_STRATEGY_PRESETS[state.strategy].modifiers;
+
+  base.controlled_to_contested *= (strat.controlled_to_contested_mult || 1);
+  base.contested_to_controlled *= (strat.contested_to_controlled_mult || 1);
+  base.contested_to_lost *= (strat.contested_to_lost_mult || 1);
+  base.lost_to_contested *= (strat.lost_to_contested_mult || 1);
+
+  const skillMod = (state.settings.attackerSkill - 5) * 0.012;
+  const defMod = (state.settings.defenderSkill - 5) * 0.012;
+
+  base.contested_to_controlled = Math.min(0.95, Math.max(0.05, base.contested_to_controlled + skillMod));
+  base.lost_to_contested = Math.min(0.95, Math.max(0.05, base.lost_to_contested + skillMod));
+  base.controlled_to_contested = Math.min(0.95, Math.max(0.05, base.controlled_to_contested - skillMod));
+  base.contested_to_lost = Math.min(0.95, Math.max(0.05, base.contested_to_lost - skillMod));
+
+  base.controlled_to_contested = Math.min(0.95, Math.max(0.05, base.controlled_to_contested + defMod));
+  base.contested_to_lost = Math.min(0.95, Math.max(0.05, base.contested_to_lost + defMod));
+  base.contested_to_controlled = Math.min(0.95, Math.max(0.05, base.contested_to_controlled - defMod));
+  base.lost_to_contested = Math.min(0.95, Math.max(0.05, base.lost_to_contested - defMod));
+
+  let cascadeMod = 0;
+  const effectiveCascadeStrength = state.settings.cascadeStrength * (strat.cascadeStrengthMult || 1);
+  for (let i = 0; i < position.stages.length; i++) {
+    if (i === stageIndex) continue;
+    const upstream = position.stages[i];
+    const upstreamState = state.stages[i].current;
+    if ((upstreamState === 'contested' || upstreamState === 'lost') &&
+        upstream.cascadesTo.includes(stageIndex)) {
+      cascadeMod += effectiveCascadeStrength;
+    }
+  }
+
+  const stageState = state.stages[stageIndex];
+  if (stageState.current === 'controlled') {
+    const decayPressure = Math.min(stageState.controlledTicks * 0.005, 0.15);
+    base.controlled_to_contested = Math.min(0.95, base.controlled_to_contested + cascadeMod + decayPressure);
+  } else if (stageState.current === 'contested') {
+    base.contested_to_lost = Math.min(0.95, base.contested_to_lost + cascadeMod);
+  }
+
+  return { transitions: base, cascadeMod };
+}
+
+function simRollTransition(position, stageIndex, state) {
+  const { transitions, cascadeMod } = simGetEffectiveTransitions(position, stageIndex, state);
+  const currentState = state.stages[stageIndex].current;
+  const roll = Math.random();
+  let newState = currentState;
+  let cascadeSource = null;
+
+  if (currentState === 'controlled') {
+    if (roll < transitions.controlled_to_contested) newState = 'contested';
+  } else if (currentState === 'contested') {
+    const pRecover = transitions.contested_to_controlled;
+    const pDegrade = Math.min(transitions.contested_to_lost, 1.0 - pRecover);
+    if (roll < pRecover) {
+      newState = 'controlled';
+    } else if (roll < pRecover + pDegrade) {
+      newState = 'lost';
+    }
+  } else if (currentState === 'lost') {
+    if (roll < transitions.lost_to_contested) newState = 'contested';
+  }
+
+  if (cascadeMod > 0 && (
+    (currentState === 'controlled' && newState === 'contested') ||
+    (currentState === 'contested' && newState === 'lost')
+  )) {
+    for (let i = 0; i < position.stages.length; i++) {
+      const upstream = position.stages[i];
+      const upState = state.stages[i].current;
+      if ((upState === 'contested' || upState === 'lost') &&
+          upstream.cascadesTo.includes(stageIndex)) {
+        cascadeSource = position.stages[i].name;
+        break;
+      }
+    }
+  }
+
+  return { previousState: currentState, newState, cascadeSource };
+}
+
+function simTick(position, state) {
+  if (state.terminated) return;
+  state.tickCount++;
+  const prevProb = state.finishProb;
+  const logEntries = [];
+
+  for (let i = 0; i < position.stages.length; i++) {
+    const result = simRollTransition(position, i, state);
+
+    if (result.newState !== result.previousState) {
+      state.stages[i].current = result.newState;
+      simUrgencyState.transitionAge[i] = 0;
+
+      if (result.newState === 'controlled') {
+        state.stages[i].controlledTicks = 0;
+      }
+
+      const tools = position.stages[i].tools;
+      const toolCount = Math.random() < 0.5 ? 1 : 2;
+      const shuffled = [...tools].sort(() => Math.random() - 0.5);
+      state.stages[i].activeTools = shuffled.slice(0, Math.min(toolCount, tools.length));
+
+      let entry = `[tick ${state.tickCount}] ${position.stages[i].name}: ${result.previousState} > ${result.newState} (using: ${state.stages[i].activeTools.join(', ')})`;
+      if (result.cascadeSource) {
+        entry += ` [cascade from ${result.cascadeSource}]`;
+      }
+      logEntries.push(entry);
+    } else {
+      if (Math.random() < 0.5) {
+        const tools = position.stages[i].tools;
+        const toolCount = Math.random() < 0.5 ? 1 : 2;
+        const shuffled = [...tools].sort(() => Math.random() - 0.5);
+        state.stages[i].activeTools = shuffled.slice(0, Math.min(toolCount, tools.length));
+      }
+    }
+
+    if (state.stages[i].current === 'controlled') {
+      state.stages[i].controlledTicks++;
+    }
+  }
+
+  simCalculateFinishProb(position, state);
+
+  if (Math.abs(state.finishProb - prevProb) > 0.001) {
+    logEntries.push(`[tick ${state.tickCount}] Finish probability: ${(prevProb * 100).toFixed(0)}% > ${(state.finishProb * 100).toFixed(0)}%`);
+  }
+
+  if (state.finishProb >= 0.90) {
+    state.consecutiveFinishTicks++;
+    if (state.consecutiveFinishTicks >= 5) {
+      state.terminated = true;
+      simStopSimulation();
+      logEntries.push(`[tick ${state.tickCount}] SUBMISSION - Submission complete!`);
+      simScheduleAutoReset();
+    }
+  } else {
+    state.consecutiveFinishTicks = 0;
+  }
+
+  if (!state.terminated && state.finishProb <= state.settings.bailThreshold) {
+    state.terminated = true;
+    simStopSimulation();
+    logEntries.push(`[tick ${state.tickCount}] ESCAPED - Switch to auxiliary (finish prob ${(state.finishProb * 100).toFixed(0)}% below ${(state.settings.bailThreshold * 100).toFixed(0)}%)`);
+    simScheduleAutoReset();
+  }
+
+  simAppendLog(logEntries);
+  simRender(position, state);
+}
+
+// ===== Event Log =====
+function simAppendLog(entries) {
+  const logEl = document.getElementById('sim-event-log');
+  for (const entry of entries) {
+    const div = document.createElement('div');
+    div.className = 'sim-log-entry';
+    if (entry.includes('SUBMISSION')) div.classList.add('sim-log-finish');
+    else if (entry.includes('ESCAPED')) div.classList.add('sim-log-bail');
+    else if (entry.includes('Finish probability:')) div.classList.add('sim-log-prob');
+    else if (entry.includes('[cascade from')) div.classList.add('sim-log-cascade');
+    div.textContent = entry;
+    logEl.insertBefore(div, logEl.firstChild);
+  }
+}
+
+// ===== Controls =====
+function simStartSimulation() {
+  if (simState.terminated || simState.running) return;
+  simState.running = true;
+  const interval = 1000 / simState.settings.speed;
+  simState.intervalId = setInterval(() => simTick(simPositions.backAttacks, simState), interval);
+  simUpdateControlButtons();
+}
+window.simStartSimulation = simStartSimulation;
+
+function simStopSimulation() {
+  simState.running = false;
+  if (simState.intervalId) {
+    clearInterval(simState.intervalId);
+    simState.intervalId = null;
+  }
+  simUpdateControlButtons();
+}
+window.simStopSimulation = simStopSimulation;
+
+function simStepSimulation() {
+  if (simState.terminated) return;
+  if (simState.running) simStopSimulation();
+  simTick(simPositions.backAttacks, simState);
+}
+window.simStepSimulation = simStepSimulation;
+
+let simAutoResetTimeout = null;
+
+function simScheduleAutoReset() {
+  if (simAutoResetTimeout) clearTimeout(simAutoResetTimeout);
+  simAutoResetTimeout = setTimeout(() => {
+    simResetSimulation();
+  }, 3000);
+}
+
+function simResetSimulation() {
+  if (simAutoResetTimeout) { clearTimeout(simAutoResetTimeout); simAutoResetTimeout = null; }
+  simStopSimulation();
+  simInit(simPositions.backAttacks);
+  document.getElementById('sim-event-log').innerHTML = '';
+  simAppendLog(['- New round -']);
+  simStartSimulation();
+}
+window.simResetSimulation = simResetSimulation;
+
+function simUpdateControlButtons() {
+  const playBtn = document.getElementById('sim-btn-play');
+  playBtn.textContent = simState.running ? '\u23F8' : '\u25B6';
+  document.getElementById('sim-btn-reset').style.display = simState.terminated ? 'inline-block' : 'none';
+}
+
+// ===== Settings =====
+function simToggleSettings() {
+  const modal = document.getElementById('sim-settings-modal');
+  modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+}
+window.simToggleSettings = simToggleSettings;
+
+function simUpdateSetting(key, value, displayEl) {
+  if (key === 'speed') {
+    simState.settings.speed = parseFloat(value);
+    displayEl.textContent = value + 'x';
+    if (simState.running) {
+      clearInterval(simState.intervalId);
+      simState.intervalId = setInterval(() => simTick(simPositions.backAttacks, simState), 1000 / simState.settings.speed);
+    }
+  } else if (key === 'attackerSkill' || key === 'defenderSkill') {
+    simState.settings[key] = parseInt(value);
+    displayEl.textContent = value;
+  } else if (key === 'cascadeStrength') {
+    simState.settings.cascadeStrength = parseFloat(value);
+    displayEl.textContent = value;
+  } else if (key === 'bailThreshold') {
+    simState.settings.bailThreshold = parseFloat(value);
+    displayEl.textContent = (parseFloat(value) * 100).toFixed(0) + '%';
+    simRender(simPositions.backAttacks, simState);
+  }
+}
+window.simUpdateSetting = simUpdateSetting;
+
+// ===== Start simulation when ACT 3 becomes visible =====
+const simAct = document.getElementById('act-3');
+let simStarted = false;
+const simObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !simStarted) {
+      simStarted = true;
+      simInit(simPositions.backAttacks);
+      simStartSimulation();
+    }
+  });
+}, { threshold: 0.15 });
+simObserver.observe(simAct);
+
+})();
+
+// ═══ Simulation Hover Tooltip ═══
+(function() {
+  const tooltip = document.getElementById('sim-hover-tooltip');
+  if (!tooltip) return;
+  const cols = document.querySelectorAll('.sim-stage-column');
+
+  cols.forEach((col, i) => {
+    col.addEventListener('mouseenter', (e) => {
+      const name = col.querySelector('.sim-stage-name');
+      const goal = col.querySelector('.sim-stage-goal');
+      const activeState = col.querySelector('.sim-state-active');
+      const activeTools = col.querySelectorAll('.sim-tool-active');
+
+      tooltip.querySelector('.tt-name').textContent = name ? name.textContent : '';
+      tooltip.querySelector('.tt-goal').innerHTML = goal ? goal.innerHTML.replace(/<br\s*\/?>/g, ' ') : '';
+
+      const stateEl = tooltip.querySelector('.tt-state');
+      if (activeState) {
+        stateEl.textContent = activeState.textContent;
+        if (activeState.classList.contains('sim-state-controlled')) {
+          stateEl.style.color = '#6abf6a';
+        } else if (activeState.classList.contains('sim-state-contested')) {
+          stateEl.style.color = '#bbb';
+        } else if (activeState.classList.contains('sim-state-lost')) {
+          stateEl.style.color = '#bf6a6a';
+        } else {
+          stateEl.style.color = activeState.style.color || '#6abf6a';
+        }
+      }
+
+      const toolsHtml = Array.from(activeTools).map(t => '<span>' + t.textContent + '</span>').join('');
+      tooltip.querySelector('.tt-tools').innerHTML = toolsHtml || '<span style="color:#444;">no active tools</span>';
+
+      tooltip.classList.add('visible');
+    });
+
+    col.addEventListener('mousemove', (e) => {
+      const x = e.clientX + 16;
+      const y = e.clientY - 10;
+      const maxX = window.innerWidth - 300;
+      tooltip.style.left = Math.min(x, maxX) + 'px';
+      tooltip.style.top = y + 'px';
+    });
+
+    col.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('visible');
+    });
+  });
+})();
+
+// ═══ Primitive Card -> QuadTree Modal ═══
+(function() {
+  const card = document.getElementById('primitive-card-link');
+  const modal = document.getElementById('quadtree-modal');
+  const goBtn = document.getElementById('qt-modal-go');
+  if (!card || !modal || !goBtn) return;
+
+  goBtn.href = '/modules/quadtree#BJJ-261';
+
+  card.addEventListener('click', () => {
+    modal.style.display = 'flex';
+  });
+})();
+</script>
