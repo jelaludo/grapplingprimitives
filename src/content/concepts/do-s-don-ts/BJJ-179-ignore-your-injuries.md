@@ -7,7 +7,8 @@ axis_mental_physical: -0.6307
 color: "#b26b2a"
 short_description: "Recovery time is crucial for longevity."
 tags: []
-related: []
+related:
+  - "BJJ-041-always-protect-yourself" # ignoring injuries = not protecting yourself
 ---
 
 Recovery time is crucial for longevity.

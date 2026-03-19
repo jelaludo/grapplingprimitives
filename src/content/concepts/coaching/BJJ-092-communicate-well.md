@@ -6,7 +6,8 @@ axis_self_opponent: 0.42
 axis_mental_physical: 0.46
 color: "#6b6d70"
 tags: []
-related: []
+related:
+  - "BJJ-093-different-learning-patterns" # communication adapts to learning patterns
 ---
 
 _No description yet._

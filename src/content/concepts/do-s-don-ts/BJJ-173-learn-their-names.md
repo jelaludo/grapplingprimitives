@@ -7,7 +7,8 @@ axis_mental_physical: 0.1858
 color: "#b26b2a"
 short_description: "Teammates, coaches, students... it's important in human interactions to remember names.  “Remember that a person’s name is to that person, the sweetest and most important sound in any language” --Dale Carnegie"
 tags: []
-related: []
+related:
+  - "BJJ-099-remember-names"   # same principle from coaching perspective
 ---
 
 Teammates, coaches, students... it's important in human interactions to remember names.  “Remember that a person’s name is to that person, the sweetest and most important sound in any language” --Dale Carnegie

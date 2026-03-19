@@ -7,7 +7,8 @@ axis_mental_physical: 0.98
 color: "#4f7e16"
 short_description: "$200 to $500+/h\n\nGreat if you can afford it.  Some Champions make for fantastic coaches (they adapt their teachings to you) others not so much (they'll just teach their same go-to to everyone)."
 tags: []
-related: []
+related:
+  - "BJJ-271-shu-ha-ri"        # learning from masters = Shu
 ---
 
 $200 to $500+/h

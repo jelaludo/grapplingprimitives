@@ -7,7 +7,9 @@ axis_mental_physical: 0
 color: "#FFD700"
 short_description: "Create opportunities, be proactive and not just reactive."
 tags: []
-related: []
+related:
+  - "BJJ-238-initiate-movement" # create opportunities by initiating
+  - "BJJ-036-bait-trap"         # create traps
 ---
 
 Create opportunities, be proactive and not just reactive.

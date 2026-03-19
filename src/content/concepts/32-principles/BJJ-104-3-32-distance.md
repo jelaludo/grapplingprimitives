@@ -7,7 +7,8 @@ axis_mental_physical: 0
 color: "#FFD700"
 short_description: "see distance management"
 tags: []
-related: []
+related:
+  - "BJJ-102-distance-management" # same concept in primitives
 ---
 
 see distance management

@@ -7,7 +7,8 @@ axis_mental_physical: -0.9
 color: "#ff00d4"
 short_description: "Old School GOAT"
 tags: []
-related: []
+related:
+  - "BJJ-022-14-21-basics-shiny" # known for perfected basics
 ---
 
 Old School GOAT

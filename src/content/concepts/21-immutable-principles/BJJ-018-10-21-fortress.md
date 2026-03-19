@@ -7,7 +7,9 @@ axis_mental_physical: 0.04
 color: "#FFD700"
 short_description: "Think of your body in layers of defense.  Wrestlers talk about \"climbing the ladder\".  This is similar, rebuild your defenses; feet, knees, hands, elbow.  If compromised, rebuild the fortress."
 tags: []
-related: []
+related:
+  - "BJJ-002-collapse-frames" # fortress is layered frames
+  - "BJJ-083-knee-elbow"      # knee-elbow is a fortress wall
 ---
 
 Think of your body in layers of defense.  Wrestlers talk about "climbing the ladder".  This is similar, rebuild your defenses; feet, knees, hands, elbow.  If compromised, rebuild the fortress.

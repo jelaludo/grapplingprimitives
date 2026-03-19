@@ -7,7 +7,9 @@ axis_mental_physical: 0.62
 color: "#1b4b01"
 short_description: "been there, done that.  Ok to tap, playful, just want to keep moving and learning new fancy spinning shit, even if it is not the highest-percentage meta."
 tags: []
-related: []
+related:
+  - "BJJ-267-tension-economy"  # chill veterans have mastered tension economy
+  - "BJJ-129-suffocating-comfort" # relaxed but effective
 ---
 
 been there, done that.  Ok to tap, playful, just want to keep moving and learning new fancy spinning shit, even if it is not the highest-percentage meta.

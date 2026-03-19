@@ -7,7 +7,9 @@ axis_mental_physical: 0.36
 color: "#4F8EF7"
 short_description: "Rickson Gracie, Henry Akins... Miyamoto Musashi before them.\n\"第六に、あらゆることについて、ものごとの本質を見分ける力を養うこと。\n第七に、目に見えぬ本質をさとること。\"\n6. In everything, develop the ability to see the essence.\n7. Become aware of the essence the eyes cannot see.\n\nit's mostly weight distribution and proprioception shutting down even attempts at adjusting.\n\nyeah, it's micro-adjusments.\n\nmicro-adjustements done by a white belt : Bullshit\nmicro-adjustments done by a legend : invisible jiu jitsu magic"
 tags: []
-related: []
+related:
+  - "BJJ-260-build-yourself"   # invisible JJ IS the built body
+  - "BJJ-267-tension-economy"   # the invisible part is efficient tension
 ---
 
 Rickson Gracie, Henry Akins... Miyamoto Musashi before them.

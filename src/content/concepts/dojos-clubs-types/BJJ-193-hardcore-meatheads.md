@@ -7,7 +7,9 @@ axis_mental_physical: 0.8
 color: "#958c09"
 short_description: "Dirty Warehouse, fuck money, let's SMESH BRO!\n\nMight include training on concrete with broken glass, syringes and weapons for realism, because they're just Alpha like that."
 tags: []
-related: []
+related:
+  - "BJJ-191-hardcore-porrada-competition" # intensity spectrum
+  - "BJJ-263-intensity-drift"  # meathead culture enables drift
 ---
 
 Dirty Warehouse, fuck money, let's SMESH BRO!

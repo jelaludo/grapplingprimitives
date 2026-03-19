@@ -7,7 +7,8 @@ axis_mental_physical: 0.2133
 color: "#b26b2a"
 short_description: "not for everything, but it helps.  It can also be disorienting for some have a good knee-slice on the side they're not used to defend."
 tags: []
-related: []
+related:
+  - "BJJ-265-explore-vs-exploit" # training both sides is exploration
 ---
 
 not for everything, but it helps.  It can also be disorienting for some have a good knee-slice on the side they're not used to defend.

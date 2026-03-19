@@ -7,7 +7,9 @@ axis_mental_physical: 0.86
 color: "#FFD700"
 short_description: "Your gas tank is not infinite.  Maybe enough energy for a few bursts.  Don't redline all the time."
 tags: []
-related: []
+related:
+  - "BJJ-267-tension-economy"       # energy management IS tension economy over a full match
+  - "BJJ-144-diaphragm-breathing"   # breathing manages energy
 ---
 
 Your gas tank is not infinite.  Maybe enough energy for a few bursts.  Don't redline all the time.

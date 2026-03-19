@@ -7,7 +7,8 @@ axis_mental_physical: -0.6972
 color: "#b26b2a"
 short_description: "Don't.  it's poor sportsmanship, it's bad control.\nif you can't get a submission slowly, you haven't fully mastered it.\n\nDon't be like the infamous Paul Harris, who iirc actually got kicked out of the UFC for repeatedly holding submissions until after the ref called it."
 tags: []
-related: []
+related:
+  - "BJJ-165-tap-early-tap-often" # cranking is why tapping early matters
 ---
 
 Don't.  it's poor sportsmanship, it's bad control.

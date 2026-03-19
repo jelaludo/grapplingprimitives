@@ -7,7 +7,8 @@ axis_mental_physical: 0.7
 color: "#edeff2"
 short_description: "Wash your feet at least a little bit before you offer someone a toe-hold.   Full shower, body wipes, some water a towel, some disinfecting alcohol... something."
 tags: []
-related: []
+related:
+  - "BJJ-094-cut-your-nails"   # hygiene cluster
 ---
 
 Wash your feet at least a little bit before you offer someone a toe-hold.   Full shower, body wipes, some water a towel, some disinfecting alcohol... something.

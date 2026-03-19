@@ -7,7 +7,9 @@ axis_mental_physical: 0.92
 color: "#FFD700"
 short_description: "Yield when necessary, if resistance is futile or too energy-intensive, go around, accept the force, work around it, use their force against them."
 tags: []
-related: []
+related:
+  - "BJJ-043-2-32-detachment"       # acceptance and detachment are paired
+  - "BJJ-013-5-21-flow-like-water"  # accept and flow
 ---
 
 Yield when necessary, if resistance is futile or too energy-intensive, go around, accept the force, work around it, use their force against them.

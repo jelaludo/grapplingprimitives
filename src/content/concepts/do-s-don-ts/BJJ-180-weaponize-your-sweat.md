@@ -7,7 +7,8 @@ axis_mental_physical: -0.3739
 color: "#b26b2a"
 short_description: "it's gross.  don't.  We're primitives and savages, not monsters."
 tags: []
-related: []
+related:
+  - "BJJ-204-friction"         # sweat changes friction dynamics (humor)
 ---
 
 it's gross.  don't.  We're primitives and savages, not monsters.

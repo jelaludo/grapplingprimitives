@@ -7,7 +7,8 @@ axis_mental_physical: -0.32
 color: "#8A2BE2"
 short_description: "White Belt Spaz\nBlue Belt Blues\nPurple Belt Skips warm-ups\nBrown Belt gets fat (from not having to try hard anymore)\nBlack Belt dates the new girl\n\nStereotypes often have some bits of validity behind.\n\n"
 tags: []
-related: []
+related:
+  - "BJJ-248-local-maximum"    # blue belt blues = hitting local max
 ---
 
 White Belt Spaz

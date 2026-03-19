@@ -7,7 +7,8 @@ axis_mental_physical: -0.58
 color: "#4f7e16"
 short_description: "a cool community, an open-source alternative to the IBJJF.  Register, join the discussions, find new people to visit when traveling worldwide.  Linked with the Globetrotters.\nbjjglobetrotters.com"
 tags: []
-related: []
+related:
+  - "BJJ-167-show-up-consistently" # belt tracking = consistency tracking
 ---
 
 a cool community, an open-source alternative to the IBJJF.  Register, join the discussions, find new people to visit when traveling worldwide.  Linked with the Globetrotters.

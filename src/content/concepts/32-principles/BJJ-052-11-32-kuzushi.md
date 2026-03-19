@@ -7,7 +7,9 @@ axis_mental_physical: -0.82
 color: "#FFD700"
 short_description: "I feel like this deserves more than to be #11.  it's one of the key concepts of Judo.  Kuzushi|Tsukuri|Kake.  In this list of 32 it's defined as the Opposite the Pyramid.  They have a base? you want to disrupt it.  Endless area of research."
 tags: []
-related: []
+related:
+  - "BJJ-110-kuzushi-tsukuri-kake" # kuzushi in full context
+  - "BJJ-002-collapse-frames"      # kuzushi includes collapsing frames
 ---
 
 I feel like this deserves more than to be #11.  it's one of the key concepts of Judo.  Kuzushi|Tsukuri|Kake.  In this list of 32 it's defined as the Opposite the Pyramid.  They have a base? you want to disrupt it.  Endless area of research.

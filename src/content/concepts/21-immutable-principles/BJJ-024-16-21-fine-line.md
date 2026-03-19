@@ -7,7 +7,8 @@ axis_mental_physical: -0.12
 color: "#FFD700"
 short_description: "Switch modes, get a head start on the next move.  There's a fine line between something you can still use and something that will soon become detrimental."
 tags: []
-related: []
+related:
+  - "BJJ-033-real-time-learning" # recognizing the fine line requires real-time awareness
 ---
 
 Switch modes, get a head start on the next move.  There's a fine line between something you can still use and something that will soon become detrimental.

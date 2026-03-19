@@ -7,7 +7,9 @@ axis_mental_physical: 0.8
 color: "#FFD700"
 short_description: "Pick a side, pick a spot, hand/feet to add/redirect force.  Firm not stiff. Don't leak pressure where it does not affect them."
 tags: []
-related: []
+related:
+  - "BJJ-200-overlapping-pressure" # max pressure through overlapping points
+  - "BJJ-267-tension-economy"      # firm not stiff
 ---
 
 Pick a side, pick a spot, hand/feet to add/redirect force.  Firm not stiff. Don't leak pressure where it does not affect them.

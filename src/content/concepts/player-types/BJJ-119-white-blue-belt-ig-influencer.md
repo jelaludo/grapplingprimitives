@@ -7,7 +7,8 @@ axis_mental_physical: 0.44
 color: "#1b4b01"
 short_description: "more in it for the vibes? still chill, all good."
 tags: []
-related: []
+related:
+  - "BJJ-162-social-media-identity" # social media identity
 ---
 
 more in it for the vibes? still chill, all good.

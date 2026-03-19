@@ -7,7 +7,9 @@ axis_mental_physical: 0.9
 color: "#FFD700"
 short_description: "Stable base, triangles everywhere, what's not to love about a pyramid analogy!?"
 tags: []
-related: []
+related:
+  - "BJJ-203-base"            # pyramid = stable base
+  - "BJJ-057-16-32-posture"   # pyramid posture
 ---
 
 Stable base, triangles everywhere, what's not to love about a pyramid analogy!?

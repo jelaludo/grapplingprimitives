@@ -7,7 +7,8 @@ axis_mental_physical: -0.94
 color: "#4f7e16"
 short_description: "a bjj community... 866k members (Summer 2025)\nsome great discussions, some silly memes."
 tags: []
-related: []
+related:
+  - "BJJ-155-tribe-belonging"  # community resource
 ---
 
 a bjj community... 866k members (Summer 2025)

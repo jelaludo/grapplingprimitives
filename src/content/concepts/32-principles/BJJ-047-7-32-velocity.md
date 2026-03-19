@@ -7,7 +7,9 @@ axis_mental_physical: 0.28
 color: "#FFD700"
 short_description: "Control the speed, decelerate with weight and pressure or accelerate with disengagement, be on  your terms.  Keenan would call it Tempo."
 tags: []
-related: []
+related:
+  - "BJJ-211-acceleration"       # velocity change = acceleration
+  - "BJJ-049-8-32-clock-timing"  # speed without timing is wasted
 ---
 
 Control the speed, decelerate with weight and pressure or accelerate with disengagement, be on  your terms.  Keenan would call it Tempo.

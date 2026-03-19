@@ -7,7 +7,9 @@ axis_mental_physical: 0
 color: "#FFD700"
 short_description: "\"location, location, location\".  Make them pay dearly for access to the good locations.  Elbows to knees, elbow to pelvis. head control."
 tags: []
-related: []
+related:
+  - "BJJ-128-passing-definition"   # passing is claiming real estate past their legs
+  - "BJJ-111-positional-dominance" # dominant position = prime real estate
 ---
 
 "location, location, location".  Make them pay dearly for access to the good locations.  Elbows to knees, elbow to pelvis. head control.

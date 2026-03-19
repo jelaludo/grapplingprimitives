@@ -7,7 +7,8 @@ axis_mental_physical: 0.8
 color: "#6c9aea"
 short_description: "Building toward pro athlete status or coaching roles.  There's not much money to be made, yet, but the sports is growing."
 tags: []
-related: []
+related:
+  - "BJJ-149-coaching-fullfilment" # career in BJJ often means coaching
 ---
 
 Building toward pro athlete status or coaching roles.  There's not much money to be made, yet, but the sports is growing.

@@ -7,7 +7,8 @@ axis_mental_physical: -0.88
 color: "#4f7e16"
 short_description: "Great IG follow.  Concise and valuable tips."
 tags: []
-related: []
+related:
+  - "BJJ-101-invisible-jiu-jitsu" # known for invisible JJ concepts
 ---
 
 Great IG follow.  Concise and valuable tips.

@@ -7,7 +7,9 @@ axis_mental_physical: 0.8
 color: "#958c09"
 short_description: "Survival of the Fittest and PEDs + we'll milk you on private lessons were upper belts just beat you up lol because that's how we learned.  \n\nGrit > Flow\nHeart > Techniques\n\nMedals for the Glory of the Team!"
 tags: []
-related: []
+related:
+  - "BJJ-190-professional-competitive-gym" # intensity spectrum
+  - "BJJ-193-hardcore-meatheads" # intensity overlap
 ---
 
 Survival of the Fittest and PEDs + we'll milk you on private lessons were upper belts just beat you up lol because that's how we learned.  

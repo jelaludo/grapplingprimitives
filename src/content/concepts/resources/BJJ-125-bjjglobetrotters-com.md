@@ -7,7 +7,8 @@ axis_mental_physical: 0.74
 color: "#4f7e16"
 short_description: "www.bjjglobetrotters.com/bjjcamps\n\ndays or weeklongs camps in beautiful venues.\nHundreds to thousands of $\n\nlooks like so much fun.  One day I shall make the time."
 tags: []
-related: []
+related:
+  - "BJJ-126-yt-bjjglobetrotters" # same org, different medium
 ---
 
 www.bjjglobetrotters.com/bjjcamps

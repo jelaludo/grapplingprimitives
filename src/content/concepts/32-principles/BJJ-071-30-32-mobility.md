@@ -7,7 +7,9 @@ axis_mental_physical: 0.7
 color: "#FFD700"
 short_description: "\"move yourself when you cannot move your opponent\".  Move around the obstacles."
 tags: []
-related: []
+related:
+  - "BJJ-030-6dof"              # mobility through 6 degrees of freedom
+  - "BJJ-102-distance-management" # move yourself when you can't move them
 ---
 
 "move yourself when you cannot move your opponent".  Move around the obstacles.

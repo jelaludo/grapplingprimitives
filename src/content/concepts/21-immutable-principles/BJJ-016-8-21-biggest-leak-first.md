@@ -7,7 +7,8 @@ axis_mental_physical: 0.04
 color: "#FFD700"
 short_description: "Address your biggest problem first. Typically what is giving your opponent the most leverage right now? adress that.  In practice, what's your biggest weakness? identify and address."
 tags: []
-related: []
+related:
+  - "BJJ-229-fix-biggest-leak" # same concept in learning-methods
 ---
 
 Address your biggest problem first. Typically what is giving your opponent the most leverage right now? adress that.  In practice, what's your biggest weakness? identify and address.

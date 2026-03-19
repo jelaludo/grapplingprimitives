@@ -7,7 +7,9 @@ axis_mental_physical: -0.66
 color: "#FFD700"
 short_description: "Where the head goes, the body follows.  The human head is heavy and destabilizes the entire body when brought outside the base of support.  use it to your advantage, keep your own head from being controlled."
 tags: []
-related: []
+related:
+  - "BJJ-261-rotational-control" # head control is part of rotation control
+  - "BJJ-137-inion"              # occiput is the lever for head control
 ---
 
 Where the head goes, the body follows.  The human head is heavy and destabilizes the entire body when brought outside the base of support.  use it to your advantage, keep your own head from being controlled.

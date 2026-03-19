@@ -7,7 +7,9 @@ axis_mental_physical: 0.74
 color: "#FFD700"
 short_description: "Apply multiple resources (like both hands, or one hand and knee, etc.) to control a single part of your opponent, overwhelming their defenses."
 tags: []
-related: []
+related:
+  - "BJJ-028-20-21-limb-vs-limb"    # 2-on-1 overloading
+  - "BJJ-035-overload-their-system"  # overload their processing
 ---
 
 Apply multiple resources (like both hands, or one hand and knee, etc.) to control a single part of your opponent, overwhelming their defenses.

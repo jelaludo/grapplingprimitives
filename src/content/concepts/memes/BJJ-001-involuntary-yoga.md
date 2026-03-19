@@ -7,7 +7,8 @@ axis_mental_physical: 0.52
 color: "#8A2BE2"
 short_description: "Somewhat funny.  BJJ is involuntary yoga, because we put you in funky twisted positions! AHAHA, ahah. ah."
 tags: []
-related: []
+related:
+  - "BJJ-039-puzzle-solving"   # humor about the reality of grappling
 ---
 
 Somewhat funny.  BJJ is involuntary yoga, because we put you in funky twisted positions! AHAHA, ahah. ah.

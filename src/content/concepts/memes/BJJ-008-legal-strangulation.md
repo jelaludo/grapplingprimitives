@@ -7,7 +7,8 @@ axis_mental_physical: 0.3
 color: "#8A2BE2"
 short_description: "Where the dojo becomes a place where consenting adults can legally strangle each other for their personal fullfilment."
 tags: []
-related: []
+related:
+  - "BJJ-242-submission-requirements" # what strangulation actually requires
 ---
 
 Where the dojo becomes a place where consenting adults can legally strangle each other for their personal fullfilment.

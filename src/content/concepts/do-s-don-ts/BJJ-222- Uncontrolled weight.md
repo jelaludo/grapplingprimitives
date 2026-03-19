@@ -7,7 +7,8 @@ axis_mental_physical: -0.9587
 color: "#b26b2a"
 short_description: Dangers of uncontrolled weight in throws and jumps
 tags: []
-related: []
+related:
+  - "BJJ-263-intensity-drift"  # uncontrolled weight is a form of intensity drift
 ---
 
 Uncontrolled Weight

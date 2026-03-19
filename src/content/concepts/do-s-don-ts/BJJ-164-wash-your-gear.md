@@ -7,7 +7,8 @@ axis_mental_physical: 0.6
 color: "#b26b2a"
 short_description: "Your Gi, your rashguard and shorts.  Just come in clean.   It's polite and a health hazard not to do."
 tags: []
-related: []
+related:
+  - "BJJ-094-cut-your-nails"   # basic hygiene cluster
 ---
 
 Your Gi, your rashguard and shorts.  Just come in clean.   It's polite and a health hazard not to do.

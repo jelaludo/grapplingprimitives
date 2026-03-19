@@ -7,7 +7,8 @@ axis_mental_physical: 0.76
 color: "#b26b2a"
 short_description: "Scratchy scratch training partner no good.\ndangerous, unhygienic, may lead to divorces.\n\nYeah, toenails too."
 tags: []
-related: []
+related:
+  - "BJJ-095-clean-feet"       # basic hygiene cluster
 ---
 
 Scratchy scratch training partner no good.

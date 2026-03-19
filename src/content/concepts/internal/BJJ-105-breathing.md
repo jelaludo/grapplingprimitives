@@ -7,7 +7,9 @@ axis_mental_physical: 0.98
 color: "#4F8EF7"
 short_description: "Physiological control, panic, oxygenation and exhaustion, out of breath as a key indicator for the opponent, faking fatigue or calmness... so many elements to breath.\n\nManage panic during escapes\nOptimize frames under pressure\nConserve energy\nTime explosing movements\nMask fatigue\nCreate deception"
 tags: []
-related: []
+related:
+  - "BJJ-144-diaphragm-breathing" # same concept, anatomy angle
+  - "BJJ-267-tension-economy"   # breathing manages tension
 ---
 
 Physiological control, panic, oxygenation and exhaustion, out of breath as a key indicator for the opponent, faking fatigue or calmness... so many elements to breath.

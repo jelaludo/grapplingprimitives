@@ -7,7 +7,9 @@ axis_mental_physical: -0.64
 color: "#FFD700"
 short_description: "Divide and conquer.  Apes together strong, ape alone weak.  Isolate a limb and start attacking it with overwhelming force, preventing reinforcement from coming to the rescue."
 tags: []
-related: []
+related:
+  - "BJJ-262-secondary-limb-control" # isolate from the secondary limb
+  - "BJJ-085-joint-above"            # isolate the joint to attack it
 ---
 
 Divide and conquer.  Apes together strong, ape alone weak.  Isolate a limb and start attacking it with overwhelming force, preventing reinforcement from coming to the rescue.

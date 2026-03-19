@@ -7,7 +7,9 @@ axis_mental_physical: 0.52
 color: "#FFD700"
 short_description: "They mean this one as \"bubbles of water always find a way to the surface\", and similarly when you're on the bottom you need to find ways for varies parts of your body to naturally evade the pressure and come back up.  Find the cracks, get back on top."
 tags: []
-related: []
+related:
+  - "BJJ-077-loading-unloading" # buoyancy = unloading to surface
+  - "BJJ-210-redirection"       # redirect around obstacles like water
 ---
 
 They mean this one as "bubbles of water always find a way to the surface", and similarly when you're on the bottom you need to find ways for varies parts of your body to naturally evade the pressure and come back up.  Find the cracks, get back on top.

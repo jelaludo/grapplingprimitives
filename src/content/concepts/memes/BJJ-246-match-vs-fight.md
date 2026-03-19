@@ -7,7 +7,8 @@ axis_mental_physical: -0.52
 color: "#8A2BE2"
 short_description: "Is double pull guard to advantage really a \"fight\"? more of a match though, right?\n\nbut Palhares vs Tonon, that felt more fighty\n\nit's a spectrum, and not just the autism."
 tags: []
-related: []
+related:
+  - "BJJ-120-unmoved-in-mind"  # competition vs real context
 ---
 
 Is double pull guard to advantage really a "fight"? more of a match though, right?

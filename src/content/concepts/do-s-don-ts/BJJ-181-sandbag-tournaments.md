@@ -7,7 +7,8 @@ axis_mental_physical: -0.8784
 color: "#b26b2a"
 short_description: "why... go up to blue belt or purple belt already.\n\n\"winning without peril, one triumphs without glory\""
 tags: []
-related: []
+related:
+  - "BJJ-120-unmoved-in-mind"  # competition integrity
 ---
 
 why... go up to blue belt or purple belt already.

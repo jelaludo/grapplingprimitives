@@ -7,7 +7,9 @@ axis_mental_physical: 0.42
 color: "#9e1010"
 short_description: "\"[...] learn to be unmoved in mind even in the heat of battle.\"\n   Miyamoto Musashi\n\nand a competition is not even a real battle... ^^\n\nEveryone has some nerves before a competition, I'd reckon.  Some elevated heartbeat, some anticipation.\n\nLet's learn to calm the anxious mind, breathe, face competition as just another hard training round.\n"
 tags: []
-related: []
+related:
+  - "BJJ-012-4-21-zen"         # zen composure under pressure
+  - "BJJ-267-tension-economy"   # mental tension economy
 ---
 
 "[...] learn to be unmoved in mind even in the heat of battle."

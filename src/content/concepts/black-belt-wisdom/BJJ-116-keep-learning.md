@@ -7,7 +7,9 @@ axis_mental_physical: 0.5
 color: "#FF6B35"
 short_description: "Advice for each belt : \nWhite : Relax\nBlue : Relax\nPurple : Relax\nBrown : Relax\nBlack : Keep Learning\n-- Jocko?\n\nnot a bad model ^^\nkeep learning, it never stops!"
 tags: []
-related: []
+related:
+  - "BJJ-269-insight-accumulation" # never stop accumulating
+  - "BJJ-265-explore-vs-exploit" # keep exploring
 ---
 
 Advice for each belt : 

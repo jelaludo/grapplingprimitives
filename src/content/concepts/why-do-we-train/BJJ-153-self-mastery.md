@@ -7,7 +7,9 @@ axis_mental_physical: 0.78
 color: "#6c9aea"
 short_description: "You definitely learn about yourself under pressure.  You learn to handle various types of people and your own emotions, be it in the day-to-day struggle to get better, or when entering competition and the clash of egos and skills."
 tags: []
-related: []
+related:
+  - "BJJ-271-shu-ha-ri"        # mastery progression
+  - "BJJ-260-build-yourself"    # build yourself is self-mastery
 ---
 
 You definitely learn about yourself under pressure.  You learn to handle various types of people and your own emotions, be it in the day-to-day struggle to get better, or when entering competition and the clash of egos and skills.

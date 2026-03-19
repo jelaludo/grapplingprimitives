@@ -7,7 +7,9 @@ axis_mental_physical: 0.94
 color: "#FFD700"
 short_description: "This is this model's take on constant kaizen.  Constantly applying and building on all the principles to improve your art.  Always seeking efficiency."
 tags: []
-related: []
+related:
+  - "BJJ-271-shu-ha-ri"           # grandmaster = Ri stage
+  - "BJJ-269-insight-accumulation" # grandmaster level requires compounded insights
 ---
 
 This is this model's take on constant kaizen.  Constantly applying and building on all the principles to improve your art.  Always seeking efficiency.

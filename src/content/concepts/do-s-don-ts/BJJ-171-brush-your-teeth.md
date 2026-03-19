@@ -6,7 +6,8 @@ axis_self_opponent: -0.4212
 axis_mental_physical: 0.9794
 color: "#b26b2a"
 tags: []
-related: []
+related:
+  - "BJJ-094-cut-your-nails"   # basic hygiene cluster
 ---
 
 _No description yet._

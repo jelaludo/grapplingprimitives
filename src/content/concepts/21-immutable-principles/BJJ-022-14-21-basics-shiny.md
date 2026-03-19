@@ -7,7 +7,9 @@ axis_mental_physical: 0.6
 color: "#FFD700"
 short_description: "in general, extremely honed basics will serve you better than flashy shiny new techniques.  "
 tags: []
-related: []
+related:
+  - "BJJ-271-shu-ha-ri"          # basics = Shu phase
+  - "BJJ-265-explore-vs-exploit" # basics = exploit your fundamentals
 ---
 
 in general, extremely honed basics will serve you better than flashy shiny new techniques.  

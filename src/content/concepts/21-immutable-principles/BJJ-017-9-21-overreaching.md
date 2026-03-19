@@ -7,7 +7,9 @@ axis_mental_physical: 0.04
 color: "#FFD700"
 short_description: "Avoid overreaching (grab too far, maintain a grip that is compromised, try to finish a submission that is now too low percentage, etc.)"
 tags: []
-related: []
+related:
+  - "BJJ-214-proximity-stability" # overreaching = extending limbs = instability
+  - "BJJ-267-tension-economy"     # overreaching wastes tension
 ---
 
 Avoid overreaching (grab too far, maintain a grip that is compromised, try to finish a submission that is now too low percentage, etc.)

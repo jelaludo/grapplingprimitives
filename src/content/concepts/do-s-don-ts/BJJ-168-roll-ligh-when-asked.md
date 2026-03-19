@@ -7,7 +7,9 @@ axis_mental_physical: 0.3922
 color: "#b26b2a"
 short_description: "it might take a while for you to be able to modulate.  What you think is your 20% might be perceived as 80%.  But it's crucial to adapt to the other's intensity."
 tags: []
-related: []
+related:
+  - "BJJ-263-intensity-drift"  # prevents drift
+  - "BJJ-090-catch-release"    # rolling light uses catch and release
 ---
 
 it might take a while for you to be able to modulate.  What you think is your 20% might be perceived as 80%.  But it's crucial to adapt to the other's intensity.
