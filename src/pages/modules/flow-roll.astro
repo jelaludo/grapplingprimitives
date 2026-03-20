@@ -23,7 +23,248 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <!-- ── Tab Content ─────────────────────────────────────────────────────────── -->
 <div class="fr-content">
   <div id="tab-sparring" class="fr-panel active">
-    <p style="color:var(--fr-muted);padding:2rem;">Sparring content will go here.</p>
+
+    <!-- ── Header ──────────────────────────────────────────────────────────── -->
+    <header class="fr-section" style="border-bottom:2px solid var(--fr-border);position:relative;">
+      <button onclick="activateTab('research')" style="font-family:inherit;font-size:var(--text-xs);color:var(--fr-dim);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;display:inline-block;margin-bottom:2rem;border:none;border-bottom:1px solid var(--fr-border);padding:0 0 0.15rem;background:transparent;cursor:pointer;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='var(--fr-accent)';this.style.borderColor='var(--fr-accent)'" onmouseout="this.style.color='var(--fr-dim)';this.style.borderColor='var(--fr-border)'">&larr; The Research tab</button>
+      <div style="font-size:var(--text-xs);letter-spacing:0.14em;color:var(--fr-accent);text-transform:uppercase;margin-bottom:1rem;">Working Document &mdash; BJJ Application Layer</div>
+      <h1 class="fr-hero-title">Flow in <em>Sparring</em></h1>
+      <p class="fr-hero-sub">How does the pop-psychology flow model apply in BJJ sparring? TLDR;realize it's not ONLY about <strong> modulating intensity</strong>, but also about <strong>'problem density'</strong>, e.g. feeding each other real puzzles to solve, not just "hey let's roll light bro". see section 05.</p>
+      <div style="position:absolute;top:2rem;right:8vw;font-size:var(--text-xs);color:var(--fr-dim);letter-spacing:0.08em;text-align:right;line-height:1.8;">
+        STATUS: <span style="color:var(--fr-accent);">DRAFT</span><br>
+        NOT peer-reviewed, just musings<br>
+        PRACTITIONER theory
+      </div>
+    </header>
+
+    <!-- ── S01 -- The Core Problem ─────────────────────────────────────────── -->
+    <section class="fr-section">
+      <div class="fr-eyebrow">01 &mdash; The Core Problem</div>
+      <h2 class="fr-heading">The model assumes a static challenge</h2>
+      <div class="fr-two-col">
+        <div>
+          <p>Every activity Csikszentmihalyi studied (rock climbing, chess, surgery, music) has a challenge level set by <strong>the environment or the task</strong>. The rock face doesn't recalibrate when you're climbing well. The chess puzzle doesn't get harder when it senses your confidence. The score doesn't change tempo to frustrate you.</p>
+          <p>This is why the channel model works for those activities. You can locate yourself on the grid (perceived skill vs. perceived challenge) and <em>stay there long enough</em> for the absorption state to emerge. The challenge is a fixed input.</p>
+          <p>In sparring, the challenge is set by a <strong>live, reading, adapting opponent</strong>. A good training partner unconsciously calibrates resistance to what you're offering. Move well and they press harder. Hesitate and they wait. Panic and they can feel it; and either hunt it or back off, depending on who they are and what the session is.</p>
+          <p>This isn't a minor complication. It breaks the model's core operating assumption at the root. You cannot locate yourself on a static challenge-skill grid because one axis is changing in real time in response to the other.</p>
+        </div>
+        <div>
+          <div class="fr-problem-grid">
+            <div class="fr-problem-cell">
+              <div class="label">Csikszentmihalyi's world</div>
+              <p>Challenge = fixed input. Skill grows over time. You navigate toward the flow zone by improving until skill meets a given task level.</p>
+            </div>
+            <div class="fr-problem-cell">
+              <div class="label">Sparring's world</div>
+              <p>Challenge = live output of opponent's reading of you. The harder you push, the harder they push. The better you get, the better the puzzle gets.</p>
+            </div>
+            <div class="fr-problem-cell">
+              <div class="label">Implication for the model</div>
+              <p>Flow zone in sparring is not a position on the map. It's a quality of the negotiated exchange; a property of the <em>relationship</em>, not the individual.</p>
+            </div>
+            <div class="fr-problem-cell">
+              <div class="label">What this means for coaching</div>
+              <p>You can't engineer flow by prescribing a difficulty level. You engineer the <em>conditions</em> for it; partner selection, ego management, problem-setting intention.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── S02 -- The Aliveness Condition ───────────────────────────────────── -->
+    <section class="fr-section">
+      <div class="fr-eyebrow">02 &mdash; The Aliveness Condition</div>
+      <h2 class="fr-heading">&#x6D3B;&#x4EBA;&#x7DF4;&#x6D3B;&#x6B7B;&#x529F;&#x592B;</h2>
+
+      <div class="fr-callout">
+        <div class="fr-callout-zh">&#x6D3B;&#x4EBA;&#x7DF4;&#x6D3B;&#x6B7B;&#x529F;&#x592B;</div>
+        <div class="fr-callout-pinyin">hu&oacute; r&eacute;n li&agrave;n hu&oacute; sǐ gōngfū</div>
+        <p style="font-style:italic;color:var(--fr-muted);margin:0;">"The living man, through live training, gives life to dead kung-fu."</p>
+      </div>
+
+      <div class="fr-two-col">
+        <div>
+          <p>"Dead kung-fu" (<em>sǐ gōngfū</em>) is a term I encountered in Taiwan around 2000, when I briefly (four months total) trained Wing Chun with Lo Man Kam. It described the idea that other arts with pre-agreed sequences where missing a key component of aliveness. Beautiful movement that would evaporate on contact with a real person.</p>
+          <p>The diss wasn't about the techniques themselves. It was about the training methodology; specifically the absence of <strong>training vs resistance</strong>: a partner who reads, resists, and surprises you. The "life" in live training is precisely the opponent's capacity to respond to you in real time. That responsiveness is not a feature Csikszentmihalyi's model has a variable for.</p>
+          <p>This cuts against the dominant interpretation of flow rolling. If "flow rolling" means low resistance, cooperative, both partners accommodating each other; it risks being <em>sǐ gōngfū</em> with better vocabulary. Comfortable. Aesthetically satisfying. Not particularly useful for developing the kind of automaticity that the model's own neuroscience (Dietrich's implicit system) requires.</p>
+        </div>
+        <div>
+          <h3>What aliveness actually gives you</h3>
+          <p>Aliveness imho is not the same as high intensity. A skilled partner should be able to provide maximal informational challenge (a good 'look', a realistic attack) at very low physical intensity. Every position they offer you is a real puzzle with a real answer. Every escape they allow has real constraints. The resistance is genuine but <em>modulated.</em></p>
+          <p>This is the distinction that most "flow rolling" discourse misses. The axis that matters for learning is not <em>how hard</em> but <em>how real</em>. A partner who moves at 30% intensity but never gives you a fake position, never allows a fake pass, never forgives a broken posture; that partner is providing more aliveness than someone going 70% with sloppy mechanics and no puzzle-setting intention. The difference is night and day.</p>
+          <p>The model for BJJ flow needs an aliveness axis that Csikszentmihalyi simply didn't need for chess.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── S03 -- Disambiguating ────────────────────────────────────────────── -->
+    <section class="fr-section">
+      <div class="fr-eyebrow">03 &mdash; Disambiguating</div>
+      <h2 class="fr-heading">Three things called "flow" in BJJ</h2>
+      <p style="max-width:60ch;">The community uses one word for three distinct phenomena. This can cause the worst kind of confusion, e.g. the illusion of a shared understanding. (A bit geeky perhaps, but I think this disambiguation matters.)</p>
+
+      <div class="fr-problem-grid" style="grid-template-columns:repeat(3,1fr);margin-top:1.5rem">
+        <div class="fr-problem-cell">
+          <div class="label">&#9312; Flow Rolling</div>
+          <p>A <strong>training modality</strong>. Refers to an agreed intensity level and cooperative intent. Defined by what both partners are trying not to do (submit at all costs, muscle through) rather than a psychological state. The most common usage.</p>
+        </div>
+        <div class="fr-problem-cell">
+          <div class="label">&#9313; Flow State</div>
+          <p>A <strong>cognitive/phenomenological state</strong>. Being "in the zone".  Absorption, loss of self-monitoring, effortless execution, time distortion. Csikszentmihalyi's construct. <em>May</em> arise during flow rolling, but is not guaranteed by it; can also arise in hard rolling for experienced practitioners.</p>
+        </div>
+        <div class="fr-problem-cell">
+          <div class="label">&#9314; Flowing / Flow Quality</div>
+          <p>A <strong>movement and attention quality</strong>. "Moving like water." Continuous, adaptive, non-staccato response to the opponent. No dead points, no freezing, no brute-force resolution of positions. Closest to the Taoist/mushin concept. Independent of intensity.</p>
+        </div>
+      </div>
+
+      <div class="fr-musing" data-n="Musing">
+        <p>These three can come apart completely. You can flow roll (modality) while neither flowing (quality) nor in flow state (cognition); this is the person who goes light but freezes in unfamiliar positions, or who is constantly evaluating themselves. You can be in flow state during a hard competitive roll. You can have flow quality at full intensity. The conflation of all three under one word can be confusing. Use your words, talk with training partners about training goals.</p>
+      </div>
+    </section>
+
+    <!-- ── S04 -- The Intensity Spectrum (Interactive Slider) ────────────── -->
+    <section class="fr-section" id="slider-section">
+      <div class="fr-eyebrow">04 &mdash; The Intensity Spectrum</div>
+      <h2 class="fr-heading">A working model for the rolling spectrum</h2>
+      <p style="color:var(--fr-dim);max-width:58ch;font-size:var(--text-sm);">Move the slider. Each zone is not just an intensity level; it's a different type of cognitive engagement.</p>
+
+      <div class="fr-slider-container">
+        <div style="position:relative;padding:0 0 2rem;">
+          <div class="fr-slider-labels">
+            <span>No resistance</span>
+            <span>Threshold</span>
+            <span>Full intensity</span>
+          </div>
+          <input type="range" id="intensitySlider" min="0" max="100" value="40" step="1">
+          <div class="fr-threshold-marks">
+            <div class="fr-t-mark" style="left:18%">
+              <div class="tick"></div>
+              <div class="t-label">Aliveness<br>threshold</div>
+            </div>
+            <div class="fr-t-mark" style="left:52%">
+              <div class="tick"></div>
+              <div class="t-label">Ego<br>threshold</div>
+            </div>
+            <div class="fr-t-mark" style="left:78%">
+              <div class="tick"></div>
+              <div class="t-label">Threat<br>threshold</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fr-zone-display" id="zoneDisplay">
+          <div class="fr-zone-meter">
+            <div class="fr-meter-bar">
+              <div class="fr-meter-fill" id="meterFill"></div>
+            </div>
+            <div class="fr-meter-pct" id="meterPct">40%</div>
+          </div>
+          <div id="zoneContent">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── S05 -- The Two Axes ──────────────────────────────────────────────── -->
+    <section class="fr-section">
+      <div class="fr-eyebrow">05 &mdash; The Two Axes</div>
+      <h2 class="fr-heading">Intensity is not the only variable</h2>
+      <p style="max-width:60ch;">The intensity slider is one axis (by now you know I can't help but map stuff on axis...). The other (and the one the community almost entirely ignores) is <strong>problem density</strong>: whether the partner is genuinely setting puzzles, or just moving.</p>
+
+      <div class="fr-axis-wrap">
+        <div class="fr-axis-title">Intensity &times; Problem Density &mdash; where learning and flow live</div>
+        <svg viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <defs>
+            <marker id="ax" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0,0 7,3.5 0,7" fill="#6B7280"/></marker>
+            <marker id="ay" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0,0 7,3.5 0,7" fill="#6B7280"/></marker>
+          </defs>
+
+          <!-- Quadrant fills -->
+          <rect x="60" y="180" width="240" height="130" fill="rgba(107,114,128,0.1)"/>
+          <rect x="60" y="30" width="240" height="150" fill="rgba(0,255,255,0.12)"/>
+          <rect x="300" y="180" width="290" height="130" fill="rgba(239,68,68,0.08)"/>
+          <rect x="300" y="30" width="290" height="150" fill="rgba(76,141,255,0.1)"/>
+
+          <!-- Axis lines -->
+          <line x1="60" y1="310" x2="60" y2="20" stroke="#6B7280" stroke-width="1.5" marker-end="url(#ay)"/>
+          <line x1="54" y1="310" x2="600" y2="310" stroke="#6B7280" stroke-width="1.5" marker-end="url(#ax)"/>
+          <!-- Dividers -->
+          <line x1="60" y1="180" x2="590" y2="180" stroke="rgba(229,231,235,0.1)" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="300" y1="30"  x2="300" y2="310" stroke="rgba(229,231,235,0.1)" stroke-width="1" stroke-dasharray="4,3"/>
+
+          <!-- Bottom-left: passive -->
+          <text x="175" y="234" font-family="'Courier New',Consolas,Monaco,monospace" font-style="italic" font-size="13" fill="rgba(107,114,128,0.65)" text-anchor="middle">Passive comfort zone</text>
+          <text x="175" y="252" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(107,114,128,0.5)" text-anchor="middle">"flow rolling" as commonly practiced</text>
+          <text x="175" y="268" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(107,114,128,0.5)" text-anchor="middle">low transfer / feels good</text>
+
+          <!-- Top-left: technical flow (cyan) -->
+          <text x="175" y="90" font-family="'Courier New',Consolas,Monaco,monospace" font-style="italic" font-size="14.5" fill="rgba(0,255,255,0.9)" text-anchor="middle">Technical Flow Zone</text>
+          <text x="175" y="109" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(0,255,255,0.7)" text-anchor="middle">real puzzles &middot; modulated resistance</text>
+          <text x="175" y="124" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(0,255,255,0.7)" text-anchor="middle">highest flow state accessibility</text>
+          <text x="175" y="139" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(0,255,255,0.65)" text-anchor="middle">&#x6D3B;&#x4EBA;&#x7DF4;&#x6D3B;&#x6B7B;&#x529F;&#x592B; &mdash; alive</text>
+
+          <!-- Bottom-right: muscling (red-ish) -->
+          <text x="442" y="234" font-family="'Courier New',Consolas,Monaco,monospace" font-style="italic" font-size="13" fill="rgba(239,68,68,0.65)" text-anchor="middle">Muscling Through</text>
+          <text x="442" y="252" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(239,68,68,0.5)" text-anchor="middle">high intensity &middot; low technique</text>
+          <text x="442" y="268" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(239,68,68,0.5)" text-anchor="middle">&#x6B7B;&#x529F;&#x592B; with cardio</text>
+
+          <!-- Top-right: hard technical (accent blue) -->
+          <text x="442" y="90" font-family="'Courier New',Consolas,Monaco,monospace" font-style="italic" font-size="14.5" fill="rgba(76,141,255,0.85)" text-anchor="middle">Hard Technical Rolling</text>
+          <text x="442" y="109" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(76,141,255,0.65)" text-anchor="middle">competition / elite training</text>
+          <text x="442" y="124" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(76,141,255,0.65)" text-anchor="middle">flow state: rarer, different quality</text>
+          <text x="442" y="139" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(76,141,255,0.55)" text-anchor="middle">threat response active</text>
+
+          <!-- Axis labels -->
+          <text x="325" y="328" font-family="'Courier New',Consolas,Monaco,monospace" font-size="9" fill="#6B7280" text-anchor="middle" letter-spacing="0.06em">INTENSITY &rarr;</text>
+          <text transform="translate(18,170) rotate(-90)" font-family="'Courier New',Consolas,Monaco,monospace" font-size="9" fill="#6B7280" text-anchor="middle" letter-spacing="0.05em">PROBLEM DENSITY &uarr;</text>
+
+          <!-- Low/High markers -->
+          <text x="66" y="323" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280">LOW</text>
+          <text x="567" y="323" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280">HIGH</text>
+          <text x="46" y="316" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle">LOW</text>
+          <text x="46" y="38"  font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle">HIGH</text>
+        </svg>
+      </div>
+
+      <div class="fr-musing" data-n="Core Observation">
+        <p>The most common form of "flow rolling" sits in the bottom-left quadrant: low intensity, low problem density. It <strong>feels</strong> like flow because it's comfortable and continuous. It rarely <em>produces</em> flow state because there's insufficient challenge to drive absorption. And it produces limited skill transfer because the puzzles aren't real. It might the most popular training modality in many academies but probably not the most efficient use of mat time.</p>
+      </div>
+
+      <div class="fr-musing" data-n="What to pursue instead">
+        <p>The high-value zone is top-left: <strong>low-to-medium intensity, high problem density</strong>. A partner who moves at 40% effort but never gives you a fake position, never forgives a posture break, never telegraphs. The puzzles are real. The intensity is manageable enough that you can actually process what's happening. This is where technical automaticity builds, where Dietrich's implicit system actually gets loaded with real patterns. And this is where Csikszentmihalyi-style flow is most consistently accessible in grappling.</p>
+      </div>
+    </section>
+
+    <!-- ── S06 -- Open Questions ────────────────────────────────────────────── -->
+    <section class="fr-section">
+      <div class="fr-eyebrow">06 &mdash; Open Questions</div>
+      <h2 class="fr-heading">What the model doesn't resolve yet</h2>
+
+      <div class="fr-musing" data-n="Question 1">
+        <p><strong>Is flow state in hard rolling the same phenomenon as flow state in technical rolling?</strong> The phenomenology (absorption, time distortion, effortlessness) feels similar, but the neural substrate may be different. Hard rolling under threat activates sympathetic response. Dietrich's transient hypofrontality hypothesis was developed for activities without acute threat. I don't know the answer here; does threat-modulated flow have the same relationship to skill development and automaticity?</p>
+      </div>
+
+      <div class="fr-musing" data-n="Question 2">
+        <p><strong>The opponent-as-challenge-modulator problem.</strong> If the challenge is set by the opponent reading you, can a practitioner learn to use this deliberately? A skilled coach might pace the challenge; pressing when the student is handling it, backing off when genuine shutdown approaches. This is not standard "flow rolling." It requires a level of sensitivity and intention most training culture doesn't teach explicitly. Worth naming.</p>
+      </div>
+
+      <div class="fr-musing" data-n="Question 3">
+        <p><strong>Ego and the ego threshold.</strong> Around 55-65% intensity (see slider), something qualitative shifts. Submission-at-all-cost intention enters. This changes the cognitive mode of both partners. Flow rolling above this threshold is possible but requires explicit mutual agreement and a certain maturity level. Below the threshold it can emerge more organically. The threshold is not a fixed intensity level; it moves with context, relationship, belt level, ego state. It's real but it's individual. How do we coach around it?</p>
+      </div>
+
+      <div class="fr-musing" data-n="Question 4">
+        <p><strong>Skill fragmentation.</strong> BJJ skill is not a single scalar. You can be black-belt level in closed guard and blue-belt level in take-downs. ('avg' Black Belt may feel personally attacked by this observation.) The channel model places you at one point on one grid. In a real roll you occupy multiple points on multiple grids simultaneously, switching between them as the fight moves through phases. The "flow zone" may be accessible in one position and completely out of reach two seconds later when the scramble hits your worst area. A grappling-specific model needs to account for positional skill variance, not just overall level.</p>
+      </div>
+    </section>
+
+    <!-- ── Footer ───────────────────────────────────────────────────────────── -->
+    <div class="fr-footer">
+      <span>Working document &middot; practitioner theory &middot; Have fun!</span>
+      <span>Companion to: The Research tab &middot; Cheers, Gerald</span>
+    </div>
+
   </div>
   <div id="tab-research" class="fr-panel">
     <p style="color:var(--fr-muted);padding:2rem;">Research content will go here.</p>
@@ -86,6 +327,352 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .fr-content {
     padding-top: 72px;
   }
+
+  /* ── Section & Typography ───────────────────────────────────────────────── */
+  .fr-section {
+    padding: 3rem 8vw;
+    border-bottom: 1px solid var(--fr-border);
+  }
+  .fr-eyebrow {
+    font-size: var(--text-xs);
+    color: var(--fr-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.8rem;
+  }
+  .fr-heading {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--fr-text);
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+  }
+  .fr-hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--fr-text);
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+  }
+  .fr-hero-title em {
+    color: var(--fr-accent);
+    font-style: italic;
+  }
+  .fr-hero-sub {
+    font-size: var(--text-base);
+    color: var(--fr-muted);
+    max-width: 56ch;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* ── Text styling inside panels ─────────────────────────────────────────── */
+  .fr-panel p {
+    font-size: var(--text-base);
+    color: var(--fr-muted);
+    line-height: 1.7;
+    margin-bottom: 1.1rem;
+  }
+  .fr-panel p:last-child { margin-bottom: 0; }
+  .fr-panel strong { color: var(--fr-text); font-weight: 600; }
+  .fr-panel em { color: var(--fr-text); font-style: italic; }
+  .fr-panel h3 {
+    font-size: var(--text-base);
+    color: var(--fr-text);
+    margin: 1.8rem 0 0.6rem;
+  }
+
+  /* ── Two-column layout ──────────────────────────────────────────────────── */
+  .fr-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  @media (max-width: 760px) {
+    .fr-two-col { grid-template-columns: 1fr; gap: 2rem; }
+  }
+
+  /* ── Problem grid ───────────────────────────────────────────────────────── */
+  .fr-problem-grid {
+    display: grid;
+    gap: 1px;
+    background: var(--fr-border);
+    border: 1px solid var(--fr-border);
+  }
+  .fr-problem-cell {
+    background: var(--fr-surface);
+    padding: 1.2rem 1.3rem;
+  }
+  .fr-problem-cell .label {
+    font-size: var(--text-xs);
+    color: var(--fr-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+  .fr-problem-cell p { font-size: 0.88rem; margin: 0; }
+
+  /* ── Callout box ────────────────────────────────────────────────────────── */
+  .fr-callout {
+    background: var(--fr-surface);
+    border-left: 3px solid var(--fr-accent);
+    padding: 1.4rem 1.6rem;
+    margin: 1.8rem 0;
+  }
+  .fr-callout-zh {
+    font-size: 1.5rem;
+    color: var(--fr-text);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+  }
+  .fr-callout-pinyin {
+    font-size: var(--text-xs);
+    color: var(--fr-dim);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.7rem;
+  }
+
+  /* ── Musing boxes ───────────────────────────────────────────────────────── */
+  .fr-musing {
+    background: var(--fr-surface);
+    border: 1px solid var(--fr-border);
+    padding: 1.4rem 1.6rem;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+  .fr-musing::before {
+    content: attr(data-n);
+    position: absolute;
+    top: -0.75rem;
+    left: 1.2rem;
+    font-size: var(--text-xs);
+    color: var(--fr-accent);
+    background: var(--fr-surface);
+    padding: 0 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .fr-musing p { font-size: 0.92rem; }
+  .fr-musing p strong { color: var(--fr-accent); }
+
+  /* ── Axis diagram wrap ──────────────────────────────────────────────────── */
+  .fr-axis-wrap {
+    background: var(--fr-surface);
+    border: 1px solid var(--fr-border);
+    padding: 1.5rem;
+    margin: 1.8rem 0;
+  }
+  .fr-axis-title {
+    font-size: var(--text-xs);
+    color: var(--fr-dim);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── Footer ─────────────────────────────────────────────────────────────── */
+  .fr-footer {
+    padding: 2.5rem 8vw;
+    border-top: 1px solid var(--fr-border);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: var(--text-xs);
+    color: var(--fr-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Slider ─────────────────────────────────────────────────────────────── */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 3px;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 3px;
+    background: rgba(229,231,235,0.15);
+    border-radius: 0;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--fr-text);
+    margin-top: -9.5px;
+    cursor: pointer;
+    border: 3px solid var(--fr-bg);
+    box-shadow: 0 0 0 1px rgba(229,231,235,0.3);
+    transition: background 0.3s;
+  }
+  input[type="range"]::-moz-range-track {
+    height: 3px;
+    background: rgba(229,231,235,0.15);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--fr-text);
+    border: 3px solid var(--fr-bg);
+    cursor: pointer;
+  }
+
+  .fr-slider-container {
+    margin: 2.5rem 0 0;
+    position: relative;
+  }
+  .fr-slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+  }
+  .fr-slider-labels span {
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    color: var(--fr-dim);
+    text-transform: uppercase;
+  }
+  .fr-threshold-marks {
+    position: relative;
+    height: 28px;
+    margin-top: 0.5rem;
+  }
+  .fr-t-mark {
+    position: absolute;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .fr-t-mark .tick {
+    width: 1px;
+    height: 8px;
+    background: rgba(229,231,235,0.25);
+  }
+  .fr-t-mark .t-label {
+    font-size: 0.52rem;
+    color: var(--fr-dim);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    font-family: inherit;
+  }
+
+  /* ── Zone display ───────────────────────────────────────────────────────── */
+  .fr-zone-display {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    margin-top: 2.5rem;
+    align-items: start;
+    min-height: 260px;
+  }
+  @media (max-width: 680px) {
+    .fr-zone-display { grid-template-columns: 1fr; }
+  }
+  .fr-zone-meter {
+    width: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding-top: 0.2rem;
+  }
+  .fr-meter-bar {
+    width: 6px;
+    height: 180px;
+    background: rgba(229,231,235,0.1);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+  }
+  .fr-meter-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 3px;
+    transition: height 0.4s cubic-bezier(0.4,0,0.2,1), background 0.4s;
+  }
+  .fr-meter-pct {
+    font-size: var(--text-xs);
+    color: rgba(229,231,235,0.5);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Zone content (rendered by JS) ──────────────────────────────────────── */
+  .fr-zone-name {
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    transition: color 0.4s;
+  }
+  .fr-zone-subtitle {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.2rem;
+    opacity: 0.55;
+  }
+  .fr-zone-desc {
+    font-size: var(--text-sm);
+    color: var(--fr-muted);
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+    max-width: 58ch;
+  }
+  .fr-zone-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(229,231,235,0.08);
+    border: 1px solid rgba(229,231,235,0.08);
+    margin-top: 0.5rem;
+  }
+  @media (max-width: 600px) {
+    .fr-zone-details { grid-template-columns: 1fr; }
+  }
+  .fr-detail-cell {
+    background: rgba(5,5,9,0.4);
+    padding: 0.85rem 1rem;
+    transition: background 0.3s;
+  }
+  .fr-d-label {
+    font-size: var(--text-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(229,231,235,0.35);
+    margin-bottom: 0.35rem;
+  }
+  .fr-d-value {
+    font-size: var(--text-sm);
+    color: rgba(229,231,235,0.8);
+    line-height: 1.45;
+  }
+  .fr-threshold-alert {
+    margin-top: 1.2rem;
+    padding: 0.7rem 1rem;
+    border-left: 2px solid;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+    opacity: 0;
+    transition: opacity 0.3s;
+    max-width: 58ch;
+    font-family: inherit;
+  }
+  .fr-threshold-alert.visible { opacity: 1; }
 </style>
 
 <script>
@@ -133,5 +720,118 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         }, 1500);
       });
     });
+  }
+
+  /* ── Intensity Slider ───────────────────────────────────────────────────── */
+  const zones = [
+    {
+      min: 0, max: 17,
+      name: 'Dead Drilling',
+      subtitle: 'No resistance \u00b7 No opponent',
+      desc: 'Solo movement, shadow drilling, pre-agreed sequences with no real feedback. Technically useful for motor patterning. Produces no aliveness. The \u6B7B\u529F\u592B condition; the technique may be beautiful and completely fragile on contact with reality.',
+      challenge: 'None; environment is fully controlled',
+      flow: 'Inaccessible; no challenge to absorb into',
+      cognitive: 'Procedural rehearsal',
+      color: '#6B7280',
+      alert: null
+    },
+    {
+      min: 18, max: 34,
+      name: 'Soft Flow Roll',
+      subtitle: 'Low resistance \u00b7 Cooperative',
+      desc: 'Both partners accommodating. Continuous movement, low stakes. Feels pleasant. Risk: if problem density is also low, this is the comfort zone masquerading as training. Useful for beginners learning movement vocabulary and for injury recovery.',
+      challenge: 'Set by partner intention; can be real or fake',
+      flow: 'Possible if problem density is maintained',
+      cognitive: 'Pattern recognition, low stakes',
+      color: '#34D399',
+      alert: '\u26a0 ALIVENESS THRESHOLD; below here, resistance is effectively absent. Technique runs on imagined opponents. Useful for beginners. Limited transfer for experienced grapplers without explicit problem-setting intention.'
+    },
+    {
+      min: 35, max: 52,
+      name: 'Technical Flow Zone',
+      subtitle: 'Modulated resistance \u00b7 Real puzzles',
+      desc: 'The highest-value zone for skill development and flow state accessibility. Resistance is genuine but modulated. Partner sets real positional problems (no fake positions, no forgiven posture breaks) at an intensity low enough that the frontal cortex isn\'t saturated by threat response. This is where implicit patterns actually load.',
+      challenge: 'Actively set by partner; real, not cooperative fiction',
+      flow: 'Most accessible; challenge real, threat absent',
+      cognitive: 'Problem-solving \u2192 absorption \u2192 flow state',
+      color: '#00FFFF',
+      alert: null
+    },
+    {
+      min: 53, max: 67,
+      name: 'Ego Threshold Zone',
+      subtitle: 'Submission intent enters \u00b7 Cognitive mode shifts',
+      desc: 'A qualitative shift, not just a quantitative one. Submission-at-all-cost intention begins to emerge. Both partners start protecting their ego investment. Flow quality often degrades here; movement becomes reactive rather than adaptive. Can still be technically rich, but requires explicit mutual agreement and emotional maturity to maintain problem-density.',
+      challenge: 'Opponent is now partly predator, not just puzzle-setter',
+      flow: 'Unstable; ego monitors interrupt absorption',
+      cognitive: 'Mixed: tactical + threat + self-monitoring',
+      color: '#F59E0B',
+      alert: '\u26a0 EGO THRESHOLD; submission intent changes the interaction qualitatively. Flow rolling above this line requires explicit mutual agreement. Without it, both partners drift into a different mode. The threshold location is individual and context-dependent.'
+    },
+    {
+      min: 68, max: 79,
+      name: 'Hard Flow / Competition Simulation',
+      subtitle: 'High resistance \u00b7 Technical intent maintained',
+      desc: 'Full-intensity rolling with technical intent preserved. The best competition preparation. Flow state is less accessible but possible for experienced practitioners who have sufficient implicit pattern library to operate without explicit monitoring. Requires significant skill base. Flow here has a different quality; faster, more reactive, less serene.',
+      challenge: 'High; opponent fully committed',
+      flow: 'Rare; different phenomenology when it occurs',
+      cognitive: 'Fast implicit pattern-matching under stress',
+      color: '#4C8DFF',
+      alert: null
+    },
+    {
+      min: 80, max: 100,
+      name: 'Survival Mode',
+      subtitle: 'Full threat activation \u00b7 Sympathetic response',
+      desc: 'Acute physical threat activates sympathetic nervous system. The context is fundamentally different from the absorption model. Amygdala is triggered, fear-mediated, not flow-mediated. "In the zone" experiences at this level can still be reported retrospectively and have different qualities. Necessary for competition preparation; limited flow state research applies directly.',
+      challenge: 'Maximum; survival-oriented',
+      flow: 'Different phenomenon; not Csikszentmihalyi\'s model',
+      cognitive: 'Threat response dominant',
+      color: '#EF4444',
+      alert: '\u26a0 THREAT THRESHOLD; sympathetic activation changes what "flow" means. The absorption state described by Csikszentmihalyi was not studied under acute physical threat. Treat reports of "flow" at this level as phenomenologically distinct. Relevant to competition prep; apply the model cautiously.'
+    }
+  ];
+
+  function getZone(val: number) {
+    return zones.find(z => val >= z.min && val <= z.max) || zones[0];
+  }
+
+  function render(val: number) {
+    const z = getZone(val);
+    const fill = document.getElementById('meterFill');
+    const pct  = document.getElementById('meterPct');
+    const cont = document.getElementById('zoneContent');
+    if (!fill || !pct || !cont) return;
+
+    fill.style.height = val + '%';
+    fill.style.background = z.color;
+    pct.textContent = val + '%';
+
+    cont.innerHTML = `
+      <div class="fr-zone-name" style="color:${z.color}">${z.name}</div>
+      <div class="fr-zone-subtitle">${z.subtitle}</div>
+      <div class="fr-zone-desc">${z.desc}</div>
+      <div class="fr-zone-details">
+        <div class="fr-detail-cell">
+          <div class="fr-d-label">Challenge dynamic</div>
+          <div class="fr-d-value">${z.challenge}</div>
+        </div>
+        <div class="fr-detail-cell">
+          <div class="fr-d-label">Flow state accessibility</div>
+          <div class="fr-d-value">${z.flow}</div>
+        </div>
+        <div class="fr-detail-cell">
+          <div class="fr-d-label">Cognitive mode</div>
+          <div class="fr-d-value">${z.cognitive}</div>
+        </div>
+      </div>
+      ${z.alert ? `<div class="fr-threshold-alert visible" style="border-color:${z.color};color:${z.color}">${z.alert}</div>` : ''}
+    `;
+  }
+
+  const slider = document.getElementById('intensitySlider') as HTMLInputElement;
+  if (slider) {
+    slider.addEventListener('input', (e) => render(+(e.target as HTMLInputElement).value));
+    render(40);
   }
 </script>
