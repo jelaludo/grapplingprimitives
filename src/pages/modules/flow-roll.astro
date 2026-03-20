@@ -1,0 +1,137 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout title="Flow & Roll — Grappling Primitives" fullscreen={true}>
+
+<!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
+<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+  <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+  <span style="color:#21262d;">|</span>
+  <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Flow &amp; Roll</span>
+  <div style="flex:1;"></div>
+  <button id="deeplink-btn" style="font-family:inherit;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
+</div>
+
+<!-- ── Tab Bar ──────────────────────────────────────────────────────────────── -->
+<div class="fr-tab-bar">
+  <button class="fr-tab active" data-tab="sparring">Flow in Sparring</button>
+  <button class="fr-tab" data-tab="research">The Research</button>
+</div>
+
+<!-- ── Tab Content ─────────────────────────────────────────────────────────── -->
+<div class="fr-content">
+  <div id="tab-sparring" class="fr-panel active">
+    <p style="color:var(--fr-muted);padding:2rem;">Sparring content will go here.</p>
+  </div>
+  <div id="tab-research" class="fr-panel">
+    <p style="color:var(--fr-muted);padding:2rem;">Research content will go here.</p>
+  </div>
+</div>
+
+</BaseLayout>
+
+<style>
+  :root {
+    --fr-bg: #050509;
+    --fr-surface: #0E1014;
+    --fr-border: #1C1F26;
+    --fr-accent: #4C8DFF;
+    --fr-cyan: #00FFFF;
+    --fr-accent-soft: #A970FF;
+    --fr-text: #E5E7EB;
+    --fr-muted: #9CA3AF;
+    --fr-dim: #6B7280;
+  }
+
+  .fr-tab-bar {
+    position: sticky;
+    top: 36px;
+    z-index: 49;
+    display: flex;
+    flex-direction: row;
+    background: rgba(14, 16, 20, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--fr-border);
+  }
+
+  .fr-tab {
+    font-family: 'Courier New', Consolas, Monaco, monospace;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 8px 16px;
+    color: var(--fr-dim);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .fr-tab.active {
+    color: var(--fr-accent);
+    border-bottom: 2px solid var(--fr-accent);
+  }
+
+  .fr-panel {
+    display: none;
+  }
+
+  .fr-panel.active {
+    display: block;
+  }
+
+  .fr-content {
+    padding-top: 72px;
+  }
+</style>
+
+<script>
+  /* ── Tab switching ────────────────────────────────────────────────────────── */
+  const tabs = document.querySelectorAll('.fr-tab');
+  const panels = document.querySelectorAll('.fr-panel');
+
+  function activateTab(tabName: string) {
+    tabs.forEach(t => t.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    const targetTab = document.querySelector(`.fr-tab[data-tab="${tabName}"]`);
+    const targetPanel = document.getElementById(`tab-${tabName}`);
+    if (targetTab) targetTab.classList.add('active');
+    if (targetPanel) targetPanel.classList.add('active');
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const tabName = (tab as HTMLElement).dataset.tab;
+      if (tabName) {
+        activateTab(tabName);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+    });
+  });
+
+  /* ── Hash support ────────────────────────────────────────────────────────── */
+  const hash = location.hash.replace('#', '');
+  if (hash === 'research') {
+    activateTab('research');
+  } else if (hash === 'sparring') {
+    activateTab('sparring');
+  }
+
+  /* ── Deeplink button ─────────────────────────────────────────────────────── */
+  const deeplinkBtn = document.getElementById('deeplink-btn');
+  if (deeplinkBtn) {
+    deeplinkBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        deeplinkBtn.textContent = 'Copied!';
+        setTimeout(() => {
+          deeplinkBtn.textContent = 'Link';
+          deeplinkBtn.style.borderColor = '#21262d';
+          deeplinkBtn.style.color = '#6b7280';
+        }, 1500);
+      });
+    });
+  }
+</script>
