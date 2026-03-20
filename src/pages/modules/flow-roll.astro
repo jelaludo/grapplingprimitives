@@ -267,7 +267,561 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   </div>
   <div id="tab-research" class="fr-panel">
-    <p style="color:var(--fr-muted);padding:2rem;">Research content will go here.</p>
+
+    <!-- ── Hero ────────────────────────────────────────────────────────────────── -->
+    <div class="fr-hero">
+      <div class="fr-hero-label">Down the Rabbit Hole — Psychology of Optimal Experience</div>
+      <h1>The '<em>Science</em>' of <em>Flow</em></h1>
+      <p style="max-width:56ch;font-size:var(--text-base);color:var(--fr-muted);line-height:1.6;margin-bottom:1.2rem;">I kept seeing that Flow diagram everywhere; the neat diagonal band, three colored zones. So I went looking for the actual papers. What I found was messier, more honest, and way more interesting than the pop version.</p>
+      <div class="fr-hero-meta">A LITERATURE REVIEW, NOT POP PSYCHOLOGY. &nbsp;&middot;&nbsp; PEER-REVIEWED SOURCES ONLY</div>
+    </div>
+
+    <!-- ── Section Nav ─────────────────────────────────────────────────────────── -->
+    <nav class="fr-section-nav">
+      <a href="#r-history">History</a>
+      <a href="#r-model">Original Model</a>
+      <a href="#r-visuals">Representations</a>
+      <a href="#r-method">Method</a>
+      <a href="#r-neuroscience">Neuroscience</a>
+      <a href="#r-replication">Replication</a>
+      <a href="#r-verdict">Verdict</a>
+      <a href="#r-papers">Papers</a>
+    </nav>
+
+    <!-- ── S01 -- Origins ──────────────────────────────────────────────────────── -->
+    <section id="r-history" class="fr-section">
+      <div class="fr-eyebrow">01 &mdash; Origins</div>
+      <h2 class="fr-heading">Before the word existed</h2>
+      <div class="fr-two-col">
+        <div>
+          <p>The phenomenon had been noticed long before it had a name. Abraham Maslow described something adjacent in 1964; "peak experiences," moments of profound joy and wholeness during which self-consciousness temporarily dissolves. Interesting, but Maslow was working phenomenologically; he had no systematic method for studying when or why these states arose.</p>
+          <p>What changed in 1971 was methodology. Mihály Csíkszentmihályi, then at the University of Chicago, began asking a deceptively simple question with his colleague Stith Bennet: why is play intrinsically enjoyable? Not what play produces, not what it teaches; just <em>why does it feel the way it does?</em> They theorized that the key ingredient was a match between a person's capability and the activity's demands: action becoming self-generating, flowing from one moment to the next.</p>
+          <p>To test this, Csikszentmihalyi assembled a methodologically unusual study: structured qualitative interviews with chess players, rock climbers, modern dancers, composers, basketball players, surgeons, and schoolteachers. The groups spanned intrinsic and professional contexts. The interviews were conducted by graduate students who were themselves practitioners in each domain; a smart ecological validity measure. Published in 1975 as <em>Beyond Boredom and Anxiety</em>, the results gave the phenomenon its name.</p>
+        </div>
+        <div>
+          <div class="fr-timeline">
+            <div class="fr-timeline-item">
+              <div class="fr-year">1964</div>
+              <h4>Maslow — Peak Experiences</h4>
+              <p>Phenomenological precursor: moments of profound absorption and self-dissolution. No systematic methodology for induction or measurement.</p>
+            </div>
+            <div class="fr-timeline-item">
+              <div class="fr-year">1971</div>
+              <h4>Csikszentmihalyi &amp; Bennet — Play Theory</h4>
+              <p>"Action generating action: a unified experience flowing from one moment to the next." The core skill-challenge hypothesis is first articulated.</p>
+            </div>
+            <div class="fr-timeline-item key">
+              <div class="fr-year">1975</div>
+              <h4>Beyond Boredom and Anxiety</h4>
+              <p>The foundational book. 55 chess players, 30 dancers, 30 climbers, 30 composers, 30 basketball players. Qualitative interview methodology. "Flow" is named.</p>
+            </div>
+            <div class="fr-timeline-item">
+              <div class="fr-year">1982</div>
+              <h4>First Peer-Reviewed Journal Article</h4>
+              <p>Csikszentmihalyi introduces flow to higher education research — the first appearance in academic journals.</p>
+            </div>
+            <div class="fr-timeline-item">
+              <div class="fr-year">1988</div>
+              <h4>Massimini &amp; Carli — 8-Channel Model</h4>
+              <p>The original 3-zone sketch is expanded into the full 8-channel model. ESM studies begin with Italian populations.</p>
+            </div>
+            <div class="fr-timeline-item key">
+              <div class="fr-year">1990</div>
+              <h4>Flow: The Psychology of Optimal Experience</h4>
+              <p>The popular book. Reaches mainstream audiences but also begins the simplification problem — the 8-channel model collapses to 3 zones in public discourse.</p>
+            </div>
+            <div class="fr-timeline-item">
+              <div class="fr-year">2000</div>
+              <h4>Positive Psychology movement</h4>
+              <p>Seligman &amp; Csikszentmihalyi reframe flow within positive psychology. Research volume explodes — but so does methodological fragmentation.</p>
+            </div>
+            <div class="fr-timeline-item">
+              <div class="fr-year">2021</div>
+              <h4>Norsworthy et al. — Scoping Review</h4>
+              <p><em>Psychological Bulletin</em>: comprehensive audit of 2,622 flow publications. Measurement inconsistency identified as the field's central problem.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── S02 -- The Original Model (Interactive) ─────────────────────────────── -->
+    <section id="r-model" class="fr-section">
+      <div class="fr-eyebrow">02 &mdash; The Original Model</div>
+      <h2 class="fr-heading">What Csikszentmihalyi actually proposed</h2>
+      <p style="max-width:62ch;">The pop-science version has exactly three zones: boredom, anxiety, and flow. That's it.
+
+  The original published model has <strong>eight channels</strong>, later expanded to nine phenomenological components. Quite a difference. Click any region below to explore them.</p>
+
+      <div class="fr-two-col" style="margin-top:2rem;align-items:start;">
+        <div>
+          <div class="fr-diagram-wrap">
+            <div class="fr-diagram-title">THE 8-CHANNEL MODEL — Massimini &amp; Carli (1988) / Csikszentmihalyi (1990)</div>
+            <canvas id="channelCanvas" width="420" height="380"></canvas>
+            <div class="fr-axis-labels">
+              <span>LOW SKILL</span>
+              <span>HIGH SKILL &rarr;</span>
+            </div>
+            <div class="fr-diagram-hint">&uarr; CLICK A ZONE TO EXPLORE IT</div>
+            <div class="fr-channel-info" id="channelInfo">
+              <div class="ch-name">Select a channel</div>
+              <div>Hover or tap any of the eight regions to see descriptions and associated subjective states.</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3>The Nine Components of Flow</h3>
+          <p style="font-size:var(--text-sm);">Independent of channel position, Csikszentmihalyi described <strong>nine phenomenological components</strong>; distinguishing what flow <em>feels like</em> from what <em>produces</em> it. This distinction between conditions and characteristics is often collapsed in popular accounts. That collapsing is where most of the confusion comes from.</p>
+
+          <div class="fr-tab-row" style="margin-top:1.5rem;">
+            <button class="fr-tab-btn active" data-tab="r-conditions">Conditions</button>
+            <button class="fr-tab-btn" data-tab="r-characteristics">Characteristics</button>
+            <button class="fr-tab-btn" data-tab="r-consequence">Consequence</button>
+          </div>
+
+          <div class="fr-tab-content active" id="r-conditions">
+            <p style="font-size:var(--text-sm);color:var(--fr-dim);margin-bottom:1rem;">Prerequisites — what must be present for flow to emerge:</p>
+            <p style="font-size:var(--text-sm);"><strong>Challenge-skill balance</strong> ; perceived demands match perceived capabilities.</p>
+            <p style="font-size:var(--text-sm);"><strong>Clear goals</strong> ; activity structure provides unambiguous direction.</p>
+            <p style="font-size:var(--text-sm);"><strong>Unambiguous feedback</strong> ; performance information is immediate and legible.</p>
+            <p style="font-size:var(--text-sm);color:var(--fr-dim);font-style:italic;margin-top:1rem;">These are conditions, not guarantees. You can set the table perfectly and flow still might not show up.</p>
+          </div>
+          <div class="fr-tab-content" id="r-characteristics">
+            <p style="font-size:var(--text-sm);color:var(--fr-dim);margin-bottom:1rem;">Phenomenology — what the experience consists of during flow:</p>
+            <p style="font-size:var(--text-sm);"><strong>Action-awareness merging</strong> — doing and observing the doing collapse into one.</p>
+            <p style="font-size:var(--text-sm);"><strong>Concentration on task</strong> — complete absorption, irrelevant stimuli filtered out.</p>
+            <p style="font-size:var(--text-sm);"><strong>Sense of control</strong> — not effortful control, but effortless appropriateness.</p>
+            <p style="font-size:var(--text-sm);"><strong>Loss of self-consciousness</strong> — the reflective observer temporarily absent.</p>
+            <p style="font-size:var(--text-sm);"><strong>Transformation of time</strong> — time appears to compress or expand.</p>
+          </div>
+          <div class="fr-tab-content" id="r-consequence">
+            <p style="font-size:var(--text-sm);color:var(--fr-dim);margin-bottom:1rem;">Aftermath — what follows flow:</p>
+            <p style="font-size:var(--text-sm);"><strong>Autotelic experience</strong> — the activity becomes intrinsically rewarding; the person will seek to repeat it for its own sake, not for external reward.</p>
+            <p style="font-size:var(--text-sm);margin-top:1rem;color:var(--fr-dim);font-style:italic;">Csikszentmihalyi argued this is why flow is growth-producing: people are pulled toward activities that produce it, and those activities tend to develop capability. A self-reinforcing loop.</p>
+          </div>
+
+          <div class="fr-pull-quote" style="margin-top:2rem;">
+            "The state in which people are so involved in an activity that nothing seems to matter; the experience itself is so enjoyable they will do it even at great cost, for the sheer sake of doing it."
+            <cite>— Csikszentmihalyi, Beyond Boredom and Anxiety, 1975</cite>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── S02b -- Pop Science ──────────────────────────────────────────────────── -->
+    <section id="r-visuals" class="fr-section">
+      <div class="fr-eyebrow">02b &mdash; Pop Science</div>
+      <h2 class="fr-heading">Three common ways the model gets drawn</h2>
+      <p style="max-width:62ch;">Below are three widely circulated visualizations of flow theory. The more complex ones embellish elements not really shown in data. The original is the most honest; it shows what the early interviews actually supported.</p>
+
+      <div class="fr-vis-grid">
+
+        <!-- Card 1: 1975 Original -->
+        <div class="fr-vis-card">
+          <div class="fr-vis-label">1975 — The Original</div>
+          <p class="fr-vis-caption"><span class="fr-vis-tag">Csikszentmihalyi</span>Beyond Boredom and Anxiety &middot; from the book itself</p>
+          <svg viewBox="0 0 370 290" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0.2rem 0">
+            <defs>
+              <marker id="a1x" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0,0 7,3.5 0,7" fill="#6B7280"/></marker>
+              <marker id="a1y" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0,0 7,3.5 0,7" fill="#6B7280"/></marker>
+            </defs>
+            <polygon points="55,18 345,18 55,232" fill="rgba(175,60,55,0.18)"/>
+            <polygon points="55,232 345,18 360,32 90,265" fill="rgba(76,141,255,0.17)"/>
+            <polygon points="90,265 360,32 360,265" fill="rgba(55,60,84,0.2)"/>
+            <line x1="55" y1="232" x2="345" y2="18" stroke="rgba(76,141,255,0.42)" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="90" y1="265" x2="360" y2="32" stroke="rgba(76,141,255,0.42)" stroke-width="1" stroke-dasharray="4,3"/>
+            <line x1="55" y1="267" x2="55" y2="12" stroke="#6B7280" stroke-width="1.5" marker-end="url(#a1y)"/>
+            <line x1="49" y1="265" x2="367" y2="265" stroke="#6B7280" stroke-width="1.5" marker-end="url(#a1x)"/>
+            <text x="92" y="86" font-family="Georgia,serif" font-style="italic" font-size="15" fill="rgba(210,108,92,0.9)">Anxiety</text>
+            <text x="255" y="250" font-family="Georgia,serif" font-style="italic" font-size="15" fill="rgba(128,128,162,0.85)">Boredom</text>
+            <text transform="translate(202,146) rotate(-44)" font-family="Georgia,serif" font-size="10.5" fill="rgba(76,141,255,0.88)" text-anchor="middle">Flow (play, creativity, and so on)</text>
+            <text x="196" y="281" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle" letter-spacing="0.04em">ACTION CAPABILITIES (SKILLS)</text>
+            <text transform="translate(17,150) rotate(-90)" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7" fill="#6B7280" text-anchor="middle" letter-spacing="0.03em">ACTION OPPORTUNITIES</text>
+          </svg>
+          <p class="fr-vis-note">Three zones only. No sub-division of the non-flow space. The 1975 book diagram is more honest than its successors about the limits of the evidence.</p>
+        </div>
+
+        <!-- Card 2: Radial 8-channel -->
+        <div class="fr-vis-card">
+          <div class="fr-vis-label">1988 / 1990 — Eight Channels</div>
+          <p class="fr-vis-caption"><span class="fr-vis-tag">Massimini &amp; Carli / Csikszentmihalyi</span>Optimal Experience &middot; what academic papers actually cite</p>
+          <svg viewBox="0 0 420 388" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0.2rem 0">
+            <polygon points="210,194 365,194 320,84"  fill="rgba(76,141,255,0.32)" stroke="rgba(76,141,255,0.55)" stroke-width="1.2" stroke-linejoin="round"/>
+            <polygon points="210,194 320,84  210,39"  fill="rgba(245,158,11,0.2)"  stroke="rgba(245,158,11,0.28)" stroke-width="0.6"/>
+            <polygon points="210,194 210,39  100,84"  fill="rgba(239,68,68,0.2)"   stroke="rgba(239,68,68,0.28)" stroke-width="0.6"/>
+            <polygon points="210,194 100,84  55,194"  fill="rgba(239,68,68,0.15)"  stroke="rgba(239,68,68,0.22)" stroke-width="0.6"/>
+            <polygon points="210,194 55,194  100,304" fill="rgba(107,114,128,0.27)" stroke="rgba(107,114,128,0.28)" stroke-width="0.6"/>
+            <polygon points="210,194 100,304 210,349" fill="rgba(107,114,128,0.24)" stroke="rgba(107,114,128,0.28)" stroke-width="0.6"/>
+            <polygon points="210,194 210,349 320,304" fill="rgba(52,211,153,0.22)"  stroke="rgba(52,211,153,0.28)" stroke-width="0.6"/>
+            <polygon points="210,194 320,304 365,194" fill="rgba(76,141,255,0.22)"  stroke="rgba(76,141,255,0.28)" stroke-width="0.6"/>
+            <line x1="210" y1="194" x2="365" y2="194" stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
+            <line x1="210" y1="194" x2="320" y2="84"  stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
+            <line x1="210" y1="194" x2="210" y2="39"  stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
+            <line x1="210" y1="194" x2="100" y2="84"  stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
+            <line x1="210" y1="194" x2="55"  y2="194" stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
+            <line x1="210" y1="194" x2="100" y2="304" stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
+            <line x1="210" y1="194" x2="210" y2="349" stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
+            <line x1="210" y1="194" x2="320" y2="304" stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
+            <text x="372" y="197" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280">SKILLS&rarr;</text>
+            <text x="210" y="28" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle">&uarr; CHALLENGE</text>
+            <text x="289" y="157" font-family="Georgia,serif" font-style="italic" font-size="13.5" fill="rgba(76,141,255,0.95)" text-anchor="middle">Flow</text>
+            <text x="244" y="110" font-family="Georgia,serif" font-style="italic" font-size="11" fill="rgba(245,158,11,0.85)" text-anchor="middle">Arousal</text>
+            <text x="174" y="110" font-family="Georgia,serif" font-style="italic" font-size="11" fill="rgba(239,68,68,0.85)" text-anchor="middle">Anxiety</text>
+            <text x="126" y="158" font-family="Georgia,serif" font-style="italic" font-size="11" fill="rgba(239,68,68,0.75)" text-anchor="middle">Worry</text>
+            <text x="126" y="226" font-family="Georgia,serif" font-style="italic" font-size="11" fill="rgba(107,114,128,0.8)" text-anchor="middle">Apathy</text>
+            <text x="174" y="273" font-family="Georgia,serif" font-style="italic" font-size="11" fill="rgba(107,114,128,0.8)" text-anchor="middle">Boredom</text>
+            <text x="244" y="273" font-family="Georgia,serif" font-style="italic" font-size="11" fill="rgba(52,211,153,0.82)" text-anchor="middle">Relaxation</text>
+            <text x="289" y="226" font-family="Georgia,serif" font-style="italic" font-size="11" fill="rgba(76,141,255,0.82)" text-anchor="middle">Control</text>
+          </svg>
+          <p class="fr-vis-note">8 channels, equally spaced radially. The channel boundaries are not empirically sharp, they are a conceptual grid. Studies have failed to cleanly replicate the specific channel assignments.</p>
+        </div>
+
+        <!-- Card 3: Modern diagonal band -->
+        <div class="fr-vis-card">
+          <div class="fr-vis-label">2000s &rarr; Present — Pop Science Version</div>
+          <p class="fr-vis-caption"><span class="fr-vis-tag">Ubiquitous</span>Every productivity blog, slide deck, and TED talk</p>
+          <svg viewBox="0 0 400 290" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0.2rem 0">
+            <defs>
+              <marker id="a3x" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0,0 7,3.5 0,7" fill="#6B7280"/></marker>
+              <marker id="a3y" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0,0 7,3.5 0,7" fill="#6B7280"/></marker>
+            </defs>
+            <polygon points="50,20 165,20 165,166 50,242" fill="rgba(175,55,50,0.27)"/>
+            <polygon points="165,20 385,20 165,166" fill="rgba(160,116,40,0.24)"/>
+            <polygon points="50,242 385,20 385,50 90,275" fill="rgba(76,141,255,0.18)" stroke="rgba(76,141,255,0.38)" stroke-width="1"/>
+            <polygon points="50,242 50,275 90,275" fill="rgba(44,44,66,0.32)"/>
+            <polygon points="90,275 200,275 200,191" fill="rgba(50,60,94,0.27)"/>
+            <polygon points="200,275 310,275 310,107 200,191" fill="rgba(40,84,118,0.25)"/>
+            <polygon points="310,275 385,275 385,50 310,107" fill="rgba(42,98,78,0.27)"/>
+            <line x1="165" y1="20"  x2="165" y2="166" stroke="rgba(107,114,128,0.38)" stroke-width="0.8"/>
+            <line x1="200" y1="191" x2="200" y2="275" stroke="rgba(107,114,128,0.38)" stroke-width="0.8"/>
+            <line x1="310" y1="107" x2="310" y2="275" stroke="rgba(107,114,128,0.38)" stroke-width="0.8"/>
+            <line x1="50" y1="277" x2="50" y2="13" stroke="#6B7280" stroke-width="1.5" marker-end="url(#a3y)"/>
+            <line x1="44" y1="275" x2="393" y2="275" stroke="#6B7280" stroke-width="1.5" marker-end="url(#a3x)"/>
+            <text transform="translate(212,155) rotate(-34)" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.8" fill="rgba(76,141,255,0.75)" text-anchor="middle" letter-spacing="0.08em">FLOW CHANNEL</text>
+            <text x="92"  y="122" font-family="Georgia,serif" font-style="italic" font-size="13.5" fill="rgba(210,106,90,0.9)">Anxiety</text>
+            <text x="268" y="50"  font-family="Georgia,serif" font-style="italic" font-size="13" fill="rgba(192,146,60,0.88)">Arousal</text>
+            <text x="52"  y="263" font-family="Georgia,serif" font-style="italic" font-size="8.5" fill="rgba(112,112,152,0.75)">Apathy</text>
+            <text x="108" y="262" font-family="Georgia,serif" font-style="italic" font-size="11.5" fill="rgba(102,116,162,0.85)">Boredom</text>
+            <text x="216" y="258" font-family="Georgia,serif" font-style="italic" font-size="12" fill="rgba(62,122,175,0.85)">Relaxation</text>
+            <text x="322" y="208" font-family="Georgia,serif" font-style="italic" font-size="12" fill="rgba(58,138,106,0.85)">Control</text>
+            <text x="214" y="287" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle" letter-spacing="0.04em">SKILLS &rarr;</text>
+            <text transform="translate(17,150) rotate(-90)" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle" letter-spacing="0.03em">CHALLENGE &uarr;</text>
+          </svg>
+          <p class="fr-vis-note">The clean zone boundaries imply empirical precision the literature does not really support.</p>
+        </div>
+
+      </div><!-- /fr-vis-grid -->
+
+      <div class="fr-pull-quote" style="margin-top:2.5rem;">
+        "These are directionally correct designer's interpretations, not diagrams derived from data."
+        <cite>Synthesis note &middot; see Norsworthy et al. (2021) on operationalization drift &middot; The original sketch had perhaps more epistemic humility than its successors. All models are wrong, some can be useful.</cite>
+      </div>
+    </section>
+
+    <!-- ── S03 -- Methodology ──────────────────────────────────────────────────── -->
+    <section id="r-method" class="fr-section">
+      <div class="fr-eyebrow">03 &mdash; Methodology</div>
+      <h2 class="fr-heading">Why the original method was serious</h2>
+      <p style="max-width:62ch;">Flow research, along with 99% of psychology 'science' is often dismissed as soft because it studies subjective experience, and typically the results cannot be reproduced. let's dig for the FLOW research.  The primary empirical method (ESM) turns out to be methodologically more rigorous than most lab paradigms in psychology. Understanding it is essential to reading the replication literature correctly.</p>
+
+      <div class="fr-method-box">
+        <h4>Experience Sampling Method (ESM)</h4>
+        <p>Participants carry paging devices (originally beepers; now smartphones). At random intervals throughout the day they get pinged and immediately fill out brief questionnaires capturing: current activity, perceived challenge, perceived skill, affect, and concentration. Studies typically span one to two weeks, generating 40-100 data points per participant.</p>
+        <p style="margin-top:0.8rem;"><strong>Ecological validity</strong>; unlike lab studies, ESM captures experience during real activities. <strong>Temporal density</strong>; repeated within-person measurements allow idiographic (person-level) analysis that between-person surveys cannot. <strong>Reactivity concerns</strong>; and here's the catch: stopping to fill out a questionnaire can itself disrupt flow. The instrument interferes with the thing it's measuring.</p>
+      </div>
+
+      <div class="fr-two-col" style="margin-top:1.5rem;">
+        <div>
+          <h3>Strengths of ESM evidence</h3>
+          <p>The challenge-skill balance finding emerged consistently across independent ESM studies conducted in the US, Italy, Germany, Korea, and Japan. People report qualitatively different, preferred states when perceived challenge and perceived skill are matched at high levels. It held up.</p>
+          <p>ESM also revealed what became the "paradox of work": people report flow more frequently during work than leisure, yet prefer to be at leisure. I find this genuinely fascinating. This counterintuitive finding was replicated independently and was only detectable through ESM.</p>
+        </div>
+        <div>
+          <h3>Limitations that matter</h3>
+          <p><strong>Perceived, not objective:</strong> The model runs on <em>perceived</em> challenge and <em>perceived</em> skill; not objective difficulty or measured ability. Two people doing the same task can be in entirely different channels.</p>
+          <p><strong>Self-report confound:</strong> Flow involves reduced self-monitoring. But ESM requires self-monitoring at the moment of measurement. There is an irreducible tension here. You can't observe your own flow without disrupting it.</p>
+          <p><strong>Reference level problem:</strong> The model requires comparing perceived challenge to perceived skill, but what counts as "high" or "low" is individual-relative. The absolute position in the space matters less than the ratio; and the ratio is person-specific and context-specific.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── S04 -- Neural Basis ─────────────────────────────────────────────────── -->
+    <section id="r-neuroscience" class="fr-section">
+      <div class="fr-eyebrow">04 &mdash; Neural Basis</div>
+      <h2 class="fr-heading">What neuroscience can and cannot say</h2>
+
+      <div class="fr-two-col">
+        <div>
+          <h3>Transient Hypofrontality</h3>
+          <p>In 2003, Arne Dietrich proposed the <strong>transient hypofrontality hypothesis</strong>; that flow states involve a temporary reduction of prefrontal cortex (PFC) activity. The reasoning: the PFC governs explicit processing, self-referential thought, and executive monitoring. Flow's defining features (loss of self-consciousness, action-awareness merging, effortless concentration) are consistent with reduced PFC engagement during high-skill automatic processing. This one clicked for me immediately.</p>
+          <p>In a 2004 follow-up, Dietrich extended this to a framework distinguishing the <strong>explicit system</strong> (flexible, PFC-dependent, effortful) from the <strong>implicit system</strong> (efficient, basal ganglia-based, automatic). His model: flow is when highly practiced skills, represented implicitly, execute without interference from the explicit system. In other words; <em>conscious competence</em> vs. <em>unconscious competence</em>. Flow lives in that fourth stage.</p>
+          <p>The framework is coherent and consistent with behavioral data. The direct neural evidence? Weaker. Inducing flow in an fMRI scanner is methodologically brutal (the scanner environment itself disrupts naturalistic cognition), and results have been all over the place.</p>
+        </div>
+        <div>
+          <div class="fr-brain-diagram">
+            <div class="fr-brain-svg-wrap">
+              <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="60" cy="58" rx="46" ry="42" fill="#0E1014" stroke="#3a3a50" stroke-width="1.5"/>
+                <path d="M20 40 Q30 22 55 20 Q70 18 78 28 Q68 35 55 36 Q38 37 20 40Z" fill="rgba(239,68,68,0.25)" stroke="#EF4444" stroke-width="1"/>
+                <text x="46" y="33" font-size="7" fill="#EF4444" font-family="'Courier New',Consolas,Monaco,monospace" text-anchor="middle">PFC</text>
+                <ellipse cx="58" cy="64" rx="16" ry="12" fill="rgba(52,211,153,0.2)" stroke="#34D399" stroke-width="1"/>
+                <text x="58" y="67" font-size="5.5" fill="#34D399" font-family="'Courier New',Consolas,Monaco,monospace" text-anchor="middle">BASAL</text>
+                <text x="58" y="74" font-size="5.5" fill="#34D399" font-family="'Courier New',Consolas,Monaco,monospace" text-anchor="middle">GANGLIA</text>
+                <ellipse cx="60" cy="93" rx="22" ry="10" fill="#0E1014" stroke="#3a3a50" stroke-width="1.5"/>
+                <text x="25" y="65" font-size="5" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace">EXPLICIT</text>
+                <text x="25" y="72" font-size="5" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace">FLEXIBLE</text>
+                <text x="80" y="65" font-size="5" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace">IMPLICIT</text>
+                <text x="80" y="72" font-size="5" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace">EFFICIENT</text>
+                <defs>
+                  <marker id="brainArr" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+                    <path d="M0,0 L4,2 L0,4Z" fill="#6B7280"/>
+                  </marker>
+                </defs>
+                <path d="M55 50 L55 56" stroke="#6B7280" stroke-width="1" marker-end="url(#brainArr)"/>
+              </svg>
+            </div>
+            <div class="fr-brain-text">
+              <p>During flow, highly practiced skills (basal ganglia — implicit, efficient) execute without the monitoring overhead of the prefrontal cortex (explicit, flexible).</p>
+              <p style="margin-top:0.7rem;font-size:var(--text-xs);color:var(--fr-dim);font-style:italic;">Red = suppressed during flow hypothesis. Green = active during flow hypothesis. fMRI confirmation remains partial.</p>
+            </div>
+          </div>
+
+          <h3>EEG findings</h3>
+          <p>EEG is more promising (portable, non-disruptive). A pattern has emerged: <strong>frontal theta increase</strong> combined with <strong>moderate frontocentral alpha</strong> during self-reported flow states. Katahira et al. (2018) found this combination in a mental arithmetic task. But EEG can't resolve the big question; is this pattern <em>producing</em> flow, or is it just a correlate of engaged, automatic processing? Correlation is not causation. We're still early.  afaik we don't even have a fully accepted "theory of mind" yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── S05 -- Replication & Failure ─────────────────────────────────────────── -->
+    <section id="r-replication" class="fr-section">
+      <div class="fr-eyebrow">05 &mdash; Replication &amp; Failure</div>
+      <h2 class="fr-heading">What held, what didn't, and why it matters</h2>
+
+      <div class="fr-stat-callout">
+        <div class="fr-stat-item">
+          <div class="fr-stat-num">24</div>
+          <div class="fr-stat-label">distinct operationalizations<br>across 42 studies reviewed<br>(Jackman et al., 2020)</div>
+        </div>
+        <div class="fr-stat-item">
+          <div class="fr-stat-num">2,622</div>
+          <div class="fr-stat-label">peer-reviewed flow publications<br>between 1982 and 2021<br>(Norsworthy et al., 2021)</div>
+        </div>
+        <div class="fr-stat-item">
+          <div class="fr-stat-num">r=0.31</div>
+          <div class="fr-stat-label">flow-performance correlation<br>small-to-moderate effect<br>(Harris et al., 2021 &middot; 22 studies)</div>
+        </div>
+      </div>
+
+      <p style="max-width:62ch;margin-bottom:2rem;">One problem in flow research is not that the core finding failed to replicate; it's that there is no stable consensus on what "flow" even <em>means</em> operationally. Across 42 studies reviewed by Jackman et al. (2020), researchers used <strong>24 distinct measurement approaches</strong>. Some measured flow as a continuous dimension; others as a categorical state. Some required 'autotelic'(done for it's own sake) experience as a necessary component; others excluded it.
+
+  Not as much a replication crisis as construct crisis.  We can't expect the same results from different definitions and metrics.</p>
+
+      <div class="fr-evidence-grid">
+        <div class="fr-evidence-card">
+          <span class="fr-status replicated">Replicated &#10003;</span>
+          <h4>Challenge-skill balance &rarr; preferred states</h4>
+          <p>The general finding that matched challenge and skill produces qualitatively better subjective states has replicated across ESM studies in multiple cultures and activity types. This is the most robust claim in the literature.</p>
+        </div>
+        <div class="fr-evidence-card">
+          <span class="fr-status replicated">Replicated &#10003;</span>
+          <h4>Flow more common during work than leisure</h4>
+          <p>The "paradox of work" — higher flow frequency at work, higher preference for leisure — has been replicated in multiple independent ESM datasets (Csikszentmihalyi &amp; LeFevre, 1989; Engeser &amp; Baumann, 2016).</p>
+        </div>
+        <div class="fr-evidence-card">
+          <span class="fr-status partial">Partial &asymp;</span>
+          <h4>Flow-performance relationship</h4>
+          <p>Harris et al. (2021) meta-analysis of 22 sports/gaming studies found a small-to-moderate positive relationship (r &asymp; .28). But direction of causation is unclear; high performance may produce flow, not only the reverse. Engeser &amp; Rheinberg (2008) found no flow-performance link in their creative task studies; marathon research has been similarly inconclusive.</p>
+        </div>
+        <div class="fr-evidence-card">
+          <span class="fr-status partial">Partial &asymp;</span>
+          <h4>The 8-channel model geometry</h4>
+          <p>Individual channel boundaries have not replicated cleanly. Keller et al. (2013) challenged the four-channel model directly. The specific predictions — that "relaxation" and "control" are meaningfully distinct regions — are not consistently supported. The general shape holds. The precise map does not.</p>
+        </div>
+        <div class="fr-evidence-card">
+          <span class="fr-status failed">Not supported &#10007;</span>
+          <h4>Low-challenge = boredom, regardless of skill</h4>
+          <p>Abuhamdeh (2020) and Keller et al. (2013) both found that low-challenge situations where skill exceeded demands were associated with enjoyment, relaxation, and happiness; not boredom, as the original channel model predicted. The boredom zone is empirically leaky.</p>
+        </div>
+        <div class="fr-evidence-card">
+          <span class="fr-status failed">Not supported &#10007;</span>
+          <h4>Flow is a discrete, binary state</h4>
+          <p>Csikszentmihalyi originally framed flow as a qualitatively distinct state; "you are in flow, or not." Norsworthy et al.'s (2021) scoping review found that measurement studies consistently support a continuous model better than a categorical one. Flow appears to have degrees, not a threshold.</p>
+        </div>
+        <div class="fr-evidence-card">
+          <span class="fr-status open">Open question &#8709;</span>
+          <h4>Flow can be reliably induced</h4>
+          <p>Jackson (1995): 71% of elite athletes believed flow was under volitional control. Csikszentmihalyi disagreed. Current literature remains divided. No intervention study has demonstrated reliable, clinically significant induction across individuals and contexts.</p>
+        </div>
+        <div class="fr-evidence-card">
+          <span class="fr-status open">Open question &#8709;</span>
+          <h4>The neural substrate</h4>
+          <p>Transient hypofrontality is a coherent hypothesis supported by indirect evidence, but direct fMRI confirmation is sparse. EEG theta/alpha patterns are promising correlates, not confirmed mechanisms. The neuroscience remains in a pre-paradigmatic state.</p>
+        </div>
+      </div>
+
+      <div class="fr-pull-quote" style="margin-top:3rem;">
+        "Across 42 reviewed studies, flow was operationalized in 24 distinct ways... progress within the field has been impeded by a lack of consistency in how flow is operationalized."
+        <cite>— Jackman et al., Frontiers in Psychology, 2020 &middot; doi:10.3389/fpsyg.2020.00158</cite>
+      </div>
+    </section>
+
+    <!-- ── S06 -- Summary Verdict ──────────────────────────────────────────────── -->
+    <section id="r-verdict" class="fr-section">
+      <div class="fr-eyebrow">06 &mdash; Summary Verdict</div>
+      <h2 class="fr-heading">The honest accounting</h2>
+
+      <table class="fr-verdict-table">
+        <thead>
+          <tr>
+            <th style="width:35%">Claim</th>
+            <th style="width:15%">Status</th>
+            <th>Assessment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Matching challenge to skill produces preferred subjective states</td>
+            <td><span class="fr-dot yes"></span>Supported</td>
+            <td>Core finding. Consistent across ESM studies, cultures, and activity domains. The mechanism is unclear, but the association is robust.</td>
+          </tr>
+          <tr>
+            <td>Flow is a distinct, qualitatively different state (not just "engaged")</td>
+            <td><span class="fr-dot partial"></span>Contested</td>
+            <td>Hard to verify empirically. The phenomenological reports are consistent. Whether this constitutes a categorically distinct state vs. a region on a continuous dimension is unresolved.</td>
+          </tr>
+          <tr>
+            <td>The 8-channel model maps accurately to subjective experience</td>
+            <td><span class="fr-dot partial"></span>Partial</td>
+            <td>General topology holds. Specific channel boundaries — which states appear in which quadrants — do not replicate consistently.</td>
+          </tr>
+          <tr>
+            <td>Flow causes performance enhancement</td>
+            <td><span class="fr-dot partial"></span>Weak</td>
+            <td>Small-moderate association exists. Causation direction unestablished. Performance may produce flow at least as much as flow produces performance.</td>
+          </tr>
+          <tr>
+            <td>Transient hypofrontality explains flow mechanistically</td>
+            <td><span class="fr-dot partial"></span>Plausible</td>
+            <td>Conceptually coherent and consistent with behavioral data. Direct neural confirmation remains thin. Worth taking seriously as a hypothesis, not a finding.</td>
+          </tr>
+          <tr>
+            <td>Flow can be reliably induced via skill-challenge manipulation</td>
+            <td><span class="fr-dot no"></span>Overclaiming</td>
+            <td>The conditions can be set up. The state cannot be guaranteed. Individual variability in flow threshold is large and poorly characterized.</td>
+          </tr>
+          <tr>
+            <td>Low challenge always produces boredom</td>
+            <td><span class="fr-dot no"></span>Not supported</td>
+            <td>Multiple studies find enjoyment, relaxation, and satisfaction in low-challenge high-skill conditions. The model is not symmetric in this way.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:2.5rem;">Bottom line</h3>
+      <p style="max-width:62ch;">Flow theory is <em> not entirely </em> pop psychology. The core construct is empirically grounded, methodologically serious, and cross-culturally consistent at its most general level.
+
+  But the specific architecture of the pop-science model; three clean zones, reliable induction, neat diagonal band; is not supported by the evidence.
+
+  The real finding is more honest: humans tend to report distinctive, preferred cognitive states when they are engaged in activities that demand roughly as much as they can give. The specific geometry, the thresholds, and the causal mechanisms remain genuinely open.
+
+  <em>"All models are wrong, but some are useful."</em></p>
+    </section>
+
+    <!-- ── S07 -- Source Literature ─────────────────────────────────────────────── -->
+    <section id="r-papers" class="fr-section">
+      <div class="fr-eyebrow">07 &mdash; Source Literature</div>
+      <h2 class="fr-heading">Key peer-reviewed papers</h2>
+      <p style="max-width:62ch;margin-bottom:1rem;">Primary sources referenced throughout. All links go to journal DOIs or PubMed; not Wikipedia or secondary summaries.</p>
+
+      <div class="fr-paper-list">
+        <div class="fr-paper-item">
+          <div class="fr-paper-num">[1]</div>
+          <div>
+            <span class="fr-paper-title">Functional neuroanatomy of altered states of consciousness: The transient hypofrontality hypothesis</span>
+            <span class="fr-paper-meta">Dietrich, A. (2003) &middot; Consciousness and Cognition, 12(2), 231-256 &middot; PMID: 12763007 &#10003; verified</span>
+          </div>
+          <a class="fr-paper-link" href="https://pubmed.ncbi.nlm.nih.gov/12763007/" target="_blank">PubMed &rarr;</a>
+        </div>
+        <div class="fr-paper-item">
+          <div class="fr-paper-num">[2]</div>
+          <div>
+            <span class="fr-paper-title">Neurocognitive mechanisms underlying the experience of flow</span>
+            <span class="fr-paper-meta">Dietrich, A. (2004) &middot; Consciousness and Cognition, 13(4), 746-761 &middot; PMID: 15522630</span>
+          </div>
+          <a class="fr-paper-link" href="https://pubmed.ncbi.nlm.nih.gov/15522630/" target="_blank">PubMed &rarr;</a>
+        </div>
+        <div class="fr-paper-item">
+          <div class="fr-paper-num">[3]</div>
+          <div>
+            <span class="fr-paper-title">Flow, performance and moderators of challenge-skill balance</span>
+            <span class="fr-paper-meta">Engeser, S. &amp; Rheinberg, F. (2008) &middot; Motivation and Emotion, 32(3), 158-172 &middot; PDF via author's institution</span>
+          </div>
+          <a class="fr-paper-link" href="https://www.uni-trier.de/fileadmin/fb1/prof/PSY/PGA/bilder/Engeser___Rheinberg_2008.pdf" target="_blank">PDF &rarr;</a>
+        </div>
+        <div class="fr-paper-item">
+          <div class="fr-paper-num">[4]</div>
+          <div>
+            <span class="fr-paper-title">Flow and regulatory compatibility: An experimental approach to the flow model of intrinsic motivation</span>
+            <span class="fr-paper-meta">Keller, J. &amp; Bless, H. (2008) &middot; Personality and Social Psychology Bulletin, 34(2), 196-209</span>
+          </div>
+          <a class="fr-paper-link" href="https://journals.sagepub.com/doi/10.1177/0146167207310026" target="_blank">Sage &rarr;</a>
+        </div>
+        <div class="fr-paper-item">
+          <div class="fr-paper-num">[5]</div>
+          <div>
+            <span class="fr-paper-title">Investigating the "Flow" Experience: Key Conceptual and Operational Issues</span>
+            <span class="fr-paper-meta">Abuhamdeh, S. (2020) &middot; Frontiers in Psychology, 11:158 &middot; doi:10.3389/fpsyg.2020.00158 &#10003; verified open access</span>
+          </div>
+          <a class="fr-paper-link" href="https://www.frontiersin.org/articles/10.3389/fpsyg.2020.00158/full" target="_blank">Full text &rarr;</a>
+        </div>
+        <div class="fr-paper-item">
+          <div class="fr-paper-num">[6]</div>
+          <div>
+            <span class="fr-paper-title">Advancing our understanding of psychological flow: A scoping review of conceptualizations, measurements and applications</span>
+            <span class="fr-paper-meta">Norsworthy, C. et al. (2021) &middot; Psychological Bulletin, 147(8), 806-827 &middot; doi:10.1037/bul0000337</span>
+          </div>
+          <a class="fr-paper-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9022035/" target="_blank">PMC &rarr;</a>
+        </div>
+        <div class="fr-paper-item">
+          <div class="fr-paper-num">[7]</div>
+          <div>
+            <span class="fr-paper-title">A systematic review and meta-analysis of the relationship between flow states and performance (r=0.31, 95% CI [0.24, 0.38])</span>
+            <span class="fr-paper-meta">Harris, D.J., Allen, K.L., Vine, S.J. &amp; Wilson, M.R. (2021) &middot; Int. Review of Sport and Exercise Psychology, 16, 693-721 &#10003; verified</span>
+          </div>
+          <a class="fr-paper-link" href="https://www.researchgate.net/publication/351941582" target="_blank">ResearchGate &rarr;</a>
+        </div>
+        <div class="fr-paper-item">
+          <div class="fr-paper-num">[8]</div>
+          <div>
+            <span class="fr-paper-title">Factors influencing the occurrence of flow state in elite athletes</span>
+            <span class="fr-paper-meta">Jackson, S.A. (1995) &middot; Journal of Applied Sport Psychology, 7(2), 138-166 &middot; doi:10.1080/10413209508406962</span>
+          </div>
+          <a class="fr-paper-link" href="https://www.tandfonline.com/doi/abs/10.1080/10413209508406962" target="_blank">Taylor &amp; Francis &rarr;</a>
+        </div>
+        <div class="fr-paper-item">
+          <div class="fr-paper-num">[9]</div>
+          <div>
+            <span class="fr-paper-title">Challenges to the four-channel model of flow: Primary assumption of flow support the moderate challenging control channel</span>
+            <span class="fr-paper-meta">Keller, J. et al. (2013) &middot; The Journal of Positive Psychology, 8(5) &middot; doi:10.1080/17439760.2013.809138</span>
+          </div>
+          <a class="fr-paper-link" href="https://www.tandfonline.com/doi/abs/10.1080/17439760.2013.809138" target="_blank">Taylor &amp; Francis &rarr;</a>
+        </div>
+        <div class="fr-paper-item">
+          <div class="fr-paper-num">[10]</div>
+          <div>
+            <span class="fr-paper-title">Developments and trends in flow research over 40 years: A bibliometric analysis</span>
+            <span class="fr-paper-meta">Collabra: Psychology (2024) &middot; University of California Press &middot; Open access</span>
+          </div>
+          <a class="fr-paper-link" href="https://online.ucpress.edu/collabra/article/10/1/92948/200116" target="_blank">Full text &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Footer ──────────────────────────────────────────────────────────────── -->
+    <div class="fr-footer" style="justify-content:center;text-align:center;">
+      Research synthesis; sources link to primary peer-reviewed literature only &nbsp;&middot;&nbsp; Have fun! &nbsp;&middot;&nbsp; Cheers, Gerald
+    </div>
+
   </div>
 </div>
 
@@ -673,6 +1227,116 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-family: inherit;
   }
   .fr-threshold-alert.visible { opacity: 1; }
+
+  /* ── Tab 2: Research — Section Animation ─────────────────────────────────── */
+  #tab-research .fr-section { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  #tab-research .fr-section.visible { opacity: 1; transform: none; }
+
+  /* Hero */
+  .fr-hero { padding: 4rem 8vw; border-bottom: 1px solid var(--fr-border); }
+  .fr-hero-label { font-size: var(--text-xs); color: var(--fr-accent); text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 1.5rem; }
+  .fr-hero h1 { font-size: clamp(2.5rem, 6vw, 5rem); color: var(--fr-text); line-height: 1.05; margin-bottom: 1rem; max-width: 14ch; }
+  .fr-hero h1 em { color: var(--fr-cyan); font-style: italic; }
+  .fr-hero-meta { font-size: var(--text-xs); color: var(--fr-dim); letter-spacing: 0.05em; }
+
+  /* Section nav */
+  .fr-section-nav { display: flex; overflow-x: auto; border-bottom: 1px solid var(--fr-border); }
+  .fr-section-nav a { color: var(--fr-dim); text-decoration: none; font-size: var(--text-xs); letter-spacing: 0.08em; padding: 0 1.1rem; height: 40px; display: flex; align-items: center; border-right: 1px solid var(--fr-border); white-space: nowrap; transition: color 0.2s; text-transform: uppercase; }
+  .fr-section-nav a:first-child { border-left: 1px solid var(--fr-border); }
+  .fr-section-nav a:hover { color: var(--fr-accent); }
+
+  /* Timeline */
+  .fr-timeline { position: relative; padding-left: 2rem; }
+  .fr-timeline::before { content: ''; position: absolute; left: 0; top: 0.6rem; bottom: 0.6rem; width: 1px; background: linear-gradient(to bottom, var(--fr-dim), transparent); }
+  .fr-timeline-item { position: relative; margin-bottom: 2rem; padding-left: 1.5rem; }
+  .fr-timeline-item::before { content: ''; position: absolute; left: -2rem; top: 0.55em; width: 8px; height: 8px; border-radius: 50%; background: var(--fr-dim); border: 1px solid var(--fr-accent); }
+  .fr-timeline-item.key::before { background: var(--fr-accent); box-shadow: 0 0 10px rgba(76,141,255,0.4); }
+  .fr-year { font-size: var(--text-xs); color: var(--fr-accent); letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+  .fr-timeline-item h4 { font-size: var(--text-sm); color: var(--fr-text); margin-bottom: 0.3rem; }
+  .fr-timeline-item p { font-size: var(--text-xs); color: var(--fr-muted); margin-bottom: 0; }
+
+  /* Diagram wrap */
+  .fr-diagram-wrap { background: var(--fr-surface); border: 1px solid var(--fr-border); border-radius: 2px; padding: 2rem; position: relative; }
+  .fr-diagram-title { font-size: var(--text-xs); color: var(--fr-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.2rem; text-align: center; }
+  #channelCanvas { display: block; width: 100%; cursor: pointer; }
+  .fr-channel-info { margin-top: 1.2rem; min-height: 4rem; padding: 1rem 1.2rem; background: rgba(14,16,20,0.8); border-left: 2px solid var(--fr-accent); font-size: var(--text-sm); transition: opacity 0.25s; }
+  .fr-channel-info .ch-name { font-size: var(--text-xs); color: var(--fr-accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .fr-diagram-hint { font-size: var(--text-xs); color: var(--fr-dim); text-align: center; margin-top: 0.8rem; letter-spacing: 0.06em; }
+  .fr-axis-labels { display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--fr-muted); margin-top: 0.4rem; padding: 0 0.2rem; }
+
+  /* Tab toggles (within research tab) */
+  .fr-tab-row { display: flex; gap: 0; border: 1px solid var(--fr-border); overflow: hidden; margin-bottom: 2rem; flex-wrap: wrap; }
+  .fr-tab-btn { flex: 1; padding: 0.7rem 1rem; background: none; border: none; border-right: 1px solid var(--fr-border); color: var(--fr-dim); font-family: 'Courier New', Consolas, Monaco, monospace; font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, color 0.2s; }
+  .fr-tab-btn:last-child { border-right: none; }
+  .fr-tab-btn:hover { background: rgba(14,16,20,0.8); color: var(--fr-muted); }
+  .fr-tab-btn.active { background: rgba(76,141,255,0.1); color: var(--fr-accent); }
+  .fr-tab-content { display: none; }
+  .fr-tab-content.active { display: block; }
+
+  /* Pull quote */
+  .fr-pull-quote { border-left: 3px solid var(--fr-accent); margin: 2rem 0; padding: 1rem 1.5rem; font-style: italic; font-size: clamp(1rem, 2vw, 1.25rem); color: var(--fr-text); line-height: 1.5; }
+  .fr-pull-quote cite { display: block; margin-top: 0.6rem; font-size: var(--text-xs); font-style: normal; color: var(--fr-dim); letter-spacing: 0.05em; }
+
+  /* Vis cards */
+  .fr-vis-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; align-items: start; }
+  @media (max-width: 900px) { .fr-vis-grid { grid-template-columns: 1fr; } }
+  .fr-vis-card { background: var(--fr-surface); border: 1px solid var(--fr-border); padding: 1.2rem 1.4rem 1rem; transition: border-color 0.2s; }
+  .fr-vis-card:hover { border-color: var(--fr-accent); }
+  .fr-vis-label { font-size: var(--text-xs); color: var(--fr-accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .fr-vis-caption { font-size: var(--text-xs); color: var(--fr-muted); margin-bottom: 0.9rem; font-style: italic; }
+  .fr-vis-tag { font-size: var(--text-xs); color: var(--fr-dim); margin-right: 0.4rem; font-style: normal; }
+  .fr-vis-note { font-size: var(--text-xs); color: var(--fr-muted); margin-top: 0.7rem; font-style: italic; border-top: 1px solid var(--fr-border); padding-top: 0.6rem; line-height: 1.5; }
+
+  /* Method box */
+  .fr-method-box { background: var(--fr-surface); border: 1px solid rgba(76,141,255,0.2); padding: 2rem; margin: 2rem 0; position: relative; }
+  .fr-method-box::before { content: 'METHOD'; position: absolute; top: -0.7rem; left: 1.5rem; font-size: var(--text-xs); letter-spacing: 0.12em; color: var(--fr-accent); background: var(--fr-surface); padding: 0 0.5rem; }
+  .fr-method-box h4 { font-size: var(--text-base); color: var(--fr-text); margin-bottom: 0.8rem; }
+  .fr-method-box p { font-size: var(--text-sm); }
+
+  /* Brain diagram */
+  .fr-brain-diagram { background: var(--fr-surface); border: 1px solid var(--fr-border); padding: 2rem; display: flex; align-items: center; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; }
+  .fr-brain-svg-wrap { flex: 0 0 140px; }
+  .fr-brain-text { flex: 1; min-width: 200px; font-size: var(--text-sm); }
+
+  /* Stat callouts */
+  .fr-stat-callout { display: flex; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; }
+  .fr-stat-item { flex: 1; min-width: 140px; border-left: 2px solid var(--fr-accent); padding-left: 1rem; }
+  .fr-stat-num { font-size: clamp(2rem, 4vw, 3rem); color: var(--fr-accent); line-height: 1; }
+  .fr-stat-label { font-size: var(--text-xs); color: var(--fr-muted); letter-spacing: 0.06em; margin-top: 0.3rem; }
+
+  /* Evidence cards */
+  .fr-evidence-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; margin-top: 2rem; }
+  .fr-evidence-card { background: var(--fr-surface); border: 1px solid var(--fr-border); padding: 1.4rem; position: relative; transition: border-color 0.2s, background 0.2s; }
+  .fr-evidence-card:hover { border-color: var(--fr-accent); background: rgba(14,16,20,0.8); }
+  .fr-evidence-card h4 { font-size: var(--text-base); color: var(--fr-text); margin-bottom: 0.5rem; }
+  .fr-evidence-card p { font-size: var(--text-sm); color: var(--fr-muted); margin-bottom: 0.8rem; }
+  .fr-status { font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 1px; margin-bottom: 0.8rem; display: inline-block; }
+  .fr-status.replicated { background: rgba(52,211,153,0.15); color: #34D399; border: 1px solid rgba(52,211,153,0.3); }
+  .fr-status.partial { background: rgba(245,158,11,0.12); color: #F59E0B; border: 1px solid rgba(245,158,11,0.25); }
+  .fr-status.failed { background: rgba(239,68,68,0.12); color: #EF4444; border: 1px solid rgba(239,68,68,0.25); }
+  .fr-status.open { background: rgba(76,141,255,0.12); color: #4C8DFF; border: 1px solid rgba(76,141,255,0.25); }
+
+  /* Verdict table */
+  .fr-verdict-table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: var(--text-sm); }
+  .fr-verdict-table th { font-size: var(--text-xs); letter-spacing: 0.1em; color: var(--fr-accent); text-align: left; padding: 0.8rem 1rem; border-bottom: 1px solid rgba(76,141,255,0.35); text-transform: uppercase; }
+  .fr-verdict-table td { padding: 0.9rem 1rem; border-bottom: 1px solid var(--fr-border); color: var(--fr-muted); vertical-align: top; }
+  .fr-verdict-table tr:last-child td { border-bottom: none; }
+  .fr-verdict-table td:first-child { color: var(--fr-text); font-style: italic; }
+  .fr-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.5rem; vertical-align: middle; }
+  .fr-dot.yes { background: #34D399; }
+  .fr-dot.partial { background: #F59E0B; }
+  .fr-dot.no { background: #EF4444; }
+
+  /* Paper list */
+  .fr-paper-list { margin-top: 2rem; border: 1px solid var(--fr-border); overflow: hidden; }
+  .fr-paper-item { padding: 1.2rem 1.4rem; border-bottom: 1px solid var(--fr-border); display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: start; transition: background 0.2s; }
+  .fr-paper-item:last-child { border-bottom: none; }
+  .fr-paper-item:hover { background: rgba(14,16,20,0.8); }
+  .fr-paper-num { font-size: var(--text-xs); color: var(--fr-dim); padding-top: 0.15em; white-space: nowrap; }
+  .fr-paper-title { font-size: var(--text-sm); color: var(--fr-text); font-style: italic; display: block; margin-bottom: 0.2rem; }
+  .fr-paper-meta { font-size: var(--text-xs); color: var(--fr-muted); }
+  .fr-paper-link { font-size: var(--text-xs); color: var(--fr-accent); text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid var(--fr-dim); white-space: nowrap; transition: background 0.2s, color 0.2s; }
+  .fr-paper-link:hover { background: var(--fr-accent); color: var(--fr-bg); }
 </style>
 
 <script>
@@ -833,5 +1497,187 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   if (slider) {
     slider.addEventListener('input', (e) => render(+(e.target as HTMLInputElement).value));
     render(40);
+  }
+
+  /* ── Tab 2: Intersection Observer for section fade-in ─────────────────────── */
+  const researchSections = document.querySelectorAll('#tab-research .fr-section');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  researchSections.forEach(s => sectionObserver.observe(s));
+
+  /* ── Tab 2: Condition/Characteristic/Consequence tab toggle ──────────────── */
+  document.querySelectorAll('#tab-research .fr-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabId = (btn as HTMLElement).dataset.tab;
+      document.querySelectorAll('#tab-research .fr-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tab-research .fr-tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      if (tabId) document.getElementById(tabId)?.classList.add('active');
+    });
+  });
+
+  /* ── Tab 2: 8-Channel Canvas Diagram ─────────────────────────────────────── */
+  const channelCanvas = document.getElementById('channelCanvas') as HTMLCanvasElement;
+  if (channelCanvas) {
+    const cCtx = channelCanvas.getContext('2d')!;
+    const cW = channelCanvas.width, cH = channelCanvas.height;
+
+    const channelData = [
+      {
+        name: 'APATHY',
+        desc: 'Low challenge, low skill. The most disengaged state: neither demands nor capabilities are activated. Associated with passivity, lack of interest, and low arousal. Common during passive leisure (TV, waiting).',
+        x: 0, y: 2, w: 2, h: 2,
+        fill: 'rgba(107,114,128,0.5)', hoverFill: 'rgba(107,114,128,0.7)', stroke: '#4a4a5a'
+      },
+      {
+        name: 'BOREDOM',
+        desc: "Low challenge, medium-high skill. The person's capabilities exceed what the task demands. The model predicts dissatisfaction. However, studies have found some individuals report enjoyment and relaxation here \u2014 a key empirical failure of the original channel boundaries.",
+        x: 2, y: 2, w: 2, h: 1,
+        fill: 'rgba(107,114,128,0.4)', hoverFill: 'rgba(107,114,128,0.6)', stroke: '#4a4a5a'
+      },
+      {
+        name: 'RELAXATION',
+        desc: 'Low challenge, high skill. A skilled person doing an easy task. Often comfortable and pleasant \u2014 not the distress the model sometimes implies. Empirically, this channel is frequently conflated with boredom in measurement studies.',
+        x: 2, y: 3, w: 2, h: 1,
+        fill: 'rgba(52,211,153,0.2)', hoverFill: 'rgba(52,211,153,0.4)', stroke: '#2a6a4a'
+      },
+      {
+        name: 'WORRY',
+        desc: 'Medium challenge, low skill. Demands slightly exceed skill but the gap is not extreme. Produces low-level anxiety and self-doubt without the acute distress of the anxiety channel. Often associated with rumination.',
+        x: 0, y: 1, w: 1, h: 1,
+        fill: 'rgba(239,68,68,0.25)', hoverFill: 'rgba(239,68,68,0.45)', stroke: '#6a3030'
+      },
+      {
+        name: 'ANXIETY',
+        desc: 'High challenge, low-medium skill. The largest and most studied non-flow channel. Challenge substantially exceeds skill. Produces distress, performance degradation, and avoidance. The pop model often reduces the entire non-flow space to just this channel.',
+        x: 0, y: 0, w: 2, h: 1,
+        fill: 'rgba(239,68,68,0.35)', hoverFill: 'rgba(239,68,68,0.55)', stroke: '#8a3030'
+      },
+      {
+        name: 'AROUSAL',
+        desc: 'High challenge, medium skill. Demands push beyond current skill but not catastrophically. Associated with heightened attention, mild positive stress, and engagement. Often a precursor to flow as skill develops to meet the challenge.',
+        x: 2, y: 0, w: 1, h: 1,
+        fill: 'rgba(245,158,11,0.35)', hoverFill: 'rgba(245,158,11,0.55)', stroke: '#7a6020'
+      },
+      {
+        name: 'CONTROL',
+        desc: 'Medium-high challenge, high skill. Skill clearly exceeds challenge but the task is still substantive. Produces a sense of mastery and competence. Distinguished from flow by reduced absorption \u2014 the person is competent but not consumed.',
+        x: 1, y: 1, w: 2, h: 1,
+        fill: 'rgba(76,141,255,0.25)', hoverFill: 'rgba(76,141,255,0.45)', stroke: '#2a4a7a'
+      },
+      {
+        name: 'FLOW',
+        desc: 'High challenge, high skill \u2014 balanced. The zone of optimal experience. Challenge and perceived skill are both elevated and matched. Associated with absorption, action-awareness merging, loss of self-consciousness, and transformation of time. The most empirically consistent finding in the literature.',
+        x: 3, y: 0, w: 1, h: 2,
+        fill: 'rgba(0,255,255,0.3)', hoverFill: 'rgba(0,255,255,0.5)', stroke: '#00FFFF'
+      },
+    ];
+
+    const COLS = 4, ROWS = 4;
+    const cellW = cW / COLS, cellH = cH / ROWS;
+    let hoveredChannel: number | null = null;
+
+    function drawCanvasLabels() {
+      cCtx.save();
+      cCtx.font = '9px "Courier New", Consolas, Monaco, monospace';
+      cCtx.fillStyle = '#6B7280';
+
+      cCtx.save();
+      cCtx.translate(12, cH / 2);
+      cCtx.rotate(-Math.PI / 2);
+      cCtx.fillText('CHALLENGE \u2192', -30, 0);
+      cCtx.restore();
+
+      cCtx.fillStyle = '#4a4a5a';
+      cCtx.fillText('LOW', 18, cH - 6);
+      cCtx.fillText('HIGH', 18, 14);
+      cCtx.restore();
+    }
+
+    function drawCanvas() {
+      cCtx.clearRect(0, 0, cW, cH);
+
+      channelData.forEach((ch, i) => {
+        const px = ch.x * cellW, py = ch.y * cellH;
+        const pw = ch.w * cellW, ph = ch.h * cellH;
+        const isHov = hoveredChannel === i;
+
+        cCtx.save();
+        cCtx.fillStyle = isHov ? ch.hoverFill : ch.fill;
+        cCtx.fillRect(px + 1, py + 1, pw - 2, ph - 2);
+
+        cCtx.strokeStyle = isHov ? '#4C8DFF' : ch.stroke;
+        cCtx.lineWidth = isHov ? 1.5 : 0.5;
+        cCtx.strokeRect(px + 1, py + 1, pw - 2, ph - 2);
+
+        cCtx.font = `${isHov ? '700' : '400'} 9px "Courier New", Consolas, Monaco, monospace`;
+        cCtx.fillStyle = isHov ? '#00FFFF' : '#9CA3AF';
+        cCtx.textAlign = 'center';
+        cCtx.textBaseline = 'middle';
+        cCtx.fillText(ch.name, px + pw / 2, py + ph / 2);
+
+        cCtx.restore();
+      });
+
+      // Flow label decoration
+      const fc = channelData[7];
+      cCtx.save();
+      cCtx.strokeStyle = 'rgba(0,255,255,0.3)';
+      cCtx.lineWidth = 1;
+      const fx = fc.x * cellW, fy = fc.y * cellH;
+      const fw = fc.w * cellW, fh = fc.h * cellH;
+      cCtx.strokeRect(fx + 3, fy + 3, fw - 6, fh - 6);
+      cCtx.restore();
+
+      drawCanvasLabels();
+    }
+
+    function getChannelAt(e: MouseEvent) {
+      const rect = channelCanvas.getBoundingClientRect();
+      const scaleX = cW / rect.width, scaleY = cH / rect.height;
+      const mx = (e.clientX - rect.left) * scaleX;
+      const my = (e.clientY - rect.top) * scaleY;
+      const col = Math.floor(mx / cellW), row = Math.floor(my / cellH);
+      let found: number | null = null;
+      channelData.forEach((ch, i) => {
+        if (col >= ch.x && col < ch.x + ch.w && row >= ch.y && row < ch.y + ch.h) found = i;
+      });
+      return found;
+    }
+
+    function updateChannelInfo(idx: number | null) {
+      const info = document.getElementById('channelInfo');
+      if (!info) return;
+      if (idx !== null) {
+        info.innerHTML = `<div class="ch-name">${channelData[idx].name}</div><div>${channelData[idx].desc}</div>`;
+      } else {
+        info.innerHTML = '<div class="ch-name">Hover a zone</div><div>Each region represents a distinct psychological state in the original 8-channel model.</div>';
+      }
+    }
+
+    channelCanvas.addEventListener('mousemove', (e) => {
+      const found = getChannelAt(e);
+      if (found !== hoveredChannel) {
+        hoveredChannel = found;
+        drawCanvas();
+        updateChannelInfo(found);
+      }
+    });
+
+    channelCanvas.addEventListener('click', (e) => {
+      const found = getChannelAt(e);
+      hoveredChannel = found;
+      drawCanvas();
+      updateChannelInfo(found);
+    });
+
+    channelCanvas.addEventListener('mouseleave', () => {
+      hoveredChannel = null;
+      drawCanvas();
+      updateChannelInfo(null);
+    });
+
+    drawCanvas();
   }
 </script>
