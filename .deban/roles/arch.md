@@ -29,6 +29,8 @@ System structure, module patterns, data model, component boundaries, and cross-m
 | 2026-03-23 | `mdInline` utility over Astro's built-in markdown rendering for frontmatter strings | Astro's `<Content />` component only renders the markdown body. Frontmatter strings need separate inline parsing. `marked.parseInline()` handles bold/italic/links without `<p>` wrapping. Lightweight (35kb). | [[dev]] |
 | 2026-03-23 | `resolve()` helper for content blocks with dynamic values | Chains: placeholder replacement (`{{conceptCount}}`) → relative link resolution (`](/` → `](${base}/`) → `mdInline()`. Keeps .md files clean of build-time concerns. | [[dev]] |
 | 2026-03-23 | Shared calligraphy assets at `public/images/calligraphy/`, module-specific at `public/images/{module}/` | Landing page calligraphy (used across the site) lives in shared directory. Module-specific artwork (enso circle, shingitai painting) stays scoped to its module directory. | [[dev]], [[ux]] |
+| 2026-03-23 | Shared essay `.act-*` CSS in `global.css`, modules override only what differs | Base pattern: .act (100vh flex center, opacity animation, border), .act-inner (780px), .act-number, .act-title, .act-lead, .act-subtitle + em styling. Modules override max-width, font-size, text-align as needed. Alternative rejected: keep duplicated per-module (accumulates drift as modules evolve independently). | [[dev]], [[ux]] |
+| 2026-03-23 | Toolbar component extraction deferred | 14 modules have near-identical toolbars with minor variations (gap, extra buttons). Abstracting requires flexible slot pattern. Risk of edge cases outweighs immediate benefit. Revisit in dedicated session. | [[dev]] |
 
 ## Dead Ends
 <!-- APPEND ONLY. Never delete. -->
@@ -51,6 +53,7 @@ Feeds into: [[dev]], [[pm]]
 
 ## Session Log
 <!-- One line per session, newest first -->
+2026-03-23 (session 5 audit) — Shared .act-* CSS extracted to global.css. Toolbar extraction evaluated and deferred (14 modules, too many variations for safe abstraction now). Audit baseline captured: 19216 lines, 669 inline styles, 432 hardcoded colors — deferred items logged.
 2026-03-23 (session 5) — module-text content collection: frontmatter-as-content for Obsidian editability. mdInline utility for inline markdown in YAML strings. resolve() helper for dynamic placeholders + link resolution. Shared vs module-specific asset directory convention. :global() pattern for set:html content styling.
 2026-03-20 (session 4) — Two-tab module pattern for companion articles. CSS variable scoping with --fr- prefix. Inner tab JS scoping to avoid page-level tab conflicts.
 2026-03-19 (session 3) — Pure SVG architecture for CLD diagram resolved long-standing hybrid layout failures. Purgatory->experiments promotion lifecycle formalized.

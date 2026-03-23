@@ -32,6 +32,8 @@ Implementation of modules, primitives, visualizations, and interactive elements.
 | 2026-03-23 | Back-control orange dot (Rotational Control) made clickable, links to QuadTree `#cat=Grappling%20Primitives` | SVG `<a>` wrapping the dot + label + invisible hit area circle. Hover glow via CSS `filter: drop-shadow`. | [[ux]] |
 | 2026-03-23 | Landing page text blocks extracted to `src/content/module-text/` (6 files) | tagline, principle-1/2/3, intro (with `{{conceptCount}}`/`{{categoryCount}}` placeholders), cta (with markdown links). `resolve()` helper does placeholder replacement + link path resolution + mdInline. | [[arch]], [[ux]] |
 | 2026-03-23 | `:global()` required for CSS selectors targeting `set:html` injected elements | Astro scoped styles add `data-astro-cid` attributes, but `set:html` content lacks them. Parent selector is scoped, child selectors use `:global()`. | [[arch]] |
+| 2026-03-23 | Site-wide font size sweep: 13 modules fixed (7→10, 8→11, 9→12px) | Batch `replace_all` per file for DOM inline styles + canvas ctx.font. Toolbar chrome (10-11px tracking-heavy uppercase) left intentionally small. No modules remain with sub-10px readable text. | [[ux]] |
+| 2026-03-23 | Shared `.act-*` CSS extracted from 4 modules to `global.css` | .act, .act.visible, .act-inner, .act-number, .act-title, .act-lead, .act-subtitle, .act-subtitle em defined once. Modules keep only overrides (max-width, font-size, text-align). Removed ~120 duplicate lines. | [[arch]], [[ux]] |
 
 ## Dead Ends
 <!-- APPEND ONLY. Never delete. -->
@@ -57,6 +59,7 @@ Feeds into: [[ux]], [[qa]]
 
 ## Session Log
 <!-- One line per session, newest first -->
+2026-03-23 (session 5 audit) — Site-wide font size sweep: 13 modules fixed, zero remain with sub-10px text. Shared .act-* CSS extracted to global.css from 4 essay modules (-317 source lines, -1.8KB JS+CSS). Baseline metrics captured before/after.
 2026-03-23 (session 5) — Content collection system: `module-text` collection + `mdInline` utility for Obsidian-editable text blocks with inline markdown. TLDRs for jibunwotsukure + ideal-partner. Landing page text (6 blocks) extracted. Calligraphy assets reorganized. Landing page: 3 principles with flanking calligraphy, module reorder, clickable principle links. Back-control orange dot linked to QuadTree. Vault README at `src/content/README.md`.
 2026-03-20 (session 4) — Flow-Roll module: ported two standalone HTML articles (flow-bjj + flow-theory) into single tabbed Astro page. 1683 lines. Interactive slider (6 zones), 8-channel canvas diagram, 3 SVG vis-cards, evidence cards, verdict table, 10 paper references. All content preserved, visual identity adapted to site terminal palette. Registered in experiments page.
 2026-03-19 (session 3) — CLD diagram rebuilt as pure SVG (baked coordinates, no runtime DOM dependency). where-to-start promoted to experiments tab with thumbnail. Purgatory->experiments promotion rule established.

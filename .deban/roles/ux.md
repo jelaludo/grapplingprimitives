@@ -43,6 +43,7 @@ Readability, interaction design, responsive behavior, visual hierarchy, and info
 - For diagrams with connecting lines, use pure SVG with a fixed viewBox. Edit coordinates in an external tool, not in code. The trade-off (manual pixel work) is worth the reliability. — from dead end on 2026-03-19
 - Never animate border-width or any box-model property that causes reflow. Use transforms, opacity, or box-shadow instead. — from dead end on 2026-03-19
 - Monospace fonts need 20-30% larger pixel sizes than sans-serif to achieve equivalent readability. Compare against real sites (claude.ai, submeta.io) not just "looks OK on my screen." — from dead end on 2026-03-19
+- Font size sweep is safe as batch replace_all when rules are clear (7→10, 8→11, 9→12). Toolbar chrome (tracking-heavy uppercase) is the exception — intentionally small at 10-11px. — from audit on 2026-03-23
 
 ## Open Questions
 - [ ] Mobile (iPhone) readability not yet tested. Simulation 5-column layout may need further work. — owner: Gerald — since: 2026-03-18
@@ -57,6 +58,7 @@ Feeds into: [[dev]], [[qa]]
 
 ## Session Log
 <!-- One line per session, newest first -->
+2026-03-23 (session 5 audit) — Site-wide font size sweep completed: 13 modules fixed, zero remain with sub-10px readable text. Rules: 7-8→10-11 (labels), 9→12 (body), toolbar chrome stays 10-11px. Audit found 669 inline styles and 432 hardcoded colors across 17 modules — deferred to incremental cleanup.
 2026-03-23 (session 5) — Landing page: calligraphy-flanked principles layout, module reorder, clickable principle links. TLDRs moved to page top. Jibunwotsukure hero text repositioned top-left. "Basic Components" dropped from title rotation (now 3 words).
 2026-03-20 (session 4) — Flow-Roll module visual adaptation: two articles with distinct themes (paper-light, dark-amber) unified under site terminal palette. Slider zones mapped to 6 distinguishable colors (dim/green/cyan/amber/accent/red). Cyan used for Tab 2 hero em to visually differentiate research tab from sparring tab. Chinese characters use system CJK fallback (platform-dependent rendering, accepted).
 2026-03-19 (session 3) — CLD diagram resolved via pure SVG. Animated border-width rejected (reflow jitter). Title changed from "Confidence Creates a Fork" to "Confidence Creates Options" (Gerald's correction: confidence opens possibilities, not a binary choice). explore/exploit labels color-coded and linked to BJJ-265.
