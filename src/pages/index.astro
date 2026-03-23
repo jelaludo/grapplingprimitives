@@ -20,6 +20,14 @@ const coreSections = [
     featured: true,
     modules: [
       {
+        title: 'Build Yourself First',
+        description: '自分を作れ — Tsukuri is upstream of everything. An interactive essay on building your game before breaking theirs.',
+        href: `${base}/modules/jibunwotsukure`,
+        status: 'live' as const,
+        tag: 'INTERACTIVE ESSAY',
+        thumb: `${thumbBase}/build-yourself.webp`,
+      },
+      {
         title: 'Ideal Training Partner',
         description: 'An interactive essay on training intensity, mismatch danger, and ego drift. With watercolor illustrations.',
         href: `${base}/modules/ideal-partner`,
@@ -34,14 +42,6 @@ const coreSections = [
         status: 'live' as const,
         tag: 'CONCEPT MAP',
         thumb: `${thumbBase}/quadtree.webp`,
-      },
-      {
-        title: 'Build Yourself First',
-        description: '自分を作れ — Tsukuri is upstream of everything. An interactive essay on building your game before breaking theirs.',
-        href: `${base}/modules/jibunwotsukure`,
-        status: 'live' as const,
-        tag: 'INTERACTIVE ESSAY',
-        thumb: `${thumbBase}/build-yourself.webp`,
       },
     ],
   },
@@ -165,11 +165,41 @@ const purgatorySections = [
         Grappling <span id="cycling-word" style="position:relative;display:inline;">Primitives</span><span id="cursor-blink" style="color:#00ff41;font-weight:400;animation:blink-cursor 0.8s step-end infinite;">|</span>
       </h1>
       <p class="text-sm text-text-muted leading-relaxed mb-4 italic">If you could tell your white belt self three things...</p>
-      <ol class="text-sm text-text-muted leading-relaxed list-decimal list-inside space-y-2 mb-4">
-        <li><span class="text-accent font-semibold">"Build Yourself"</span> is upstream of everything, paramount. It comes before focus on Kuzushi of the other in so many ways.</li>
-        <li><span class="text-accent font-semibold">"Be the training partner you wish you had"</span>. Not all training is equal, great training partners are rare. Being a good training partner is itself a trainable skill.</li>
-        <li><span class="text-accent font-semibold">"Concepts &gt; Techniques"</span>. Engrave concepts into your brain, rather than just collecting techniques.</li>
-      </ol>
+    </div>
+
+    <!-- Three Principles with Calligraphy -->
+    <div class="principles-section mb-16">
+
+      <!-- Principle 1: Build Yourself — calligraphy LEFT -->
+      <div class="principle principle--left fade-up">
+        <img class="principle__calligraphy" src={`${base}/images/calligraphy/calligraphy_jibunwotsukure.png`} alt="自分を作れ" />
+        <div class="principle__text">
+          <span class="principle__number">1.</span>
+          <p><a href={`${base}/modules/jibunwotsukure`} class="text-accent font-semibold hover:text-cyan transition-colors">"Build Yourself"</a> is upstream of everything. It comes before the focus on Kuzushi/disrupting of the other in so many ways.</p>
+        </div>
+      </div>
+
+      <!-- Principle 2: Training Partner — calligraphy RIGHT -->
+      <div class="principle principle--right fade-up" style="animation-delay:0.12s;">
+        <div class="principle__text principle__text--right">
+          <span class="principle__number">2.</span>
+          <p><a href={`${base}/modules/ideal-partner`} class="text-accent font-semibold hover:text-cyan transition-colors">"Be the training partner you wish you had"</a>. Not all training is equal, great training partners are rare. Being a good training partner is itself a trainable skill.</p>
+        </div>
+        <img class="principle__calligraphy" src={`${base}/images/calligraphy/calligraphy_tomoninare.png`} alt="友になれ" />
+      </div>
+
+      <!-- Principle 3: Concepts > Techniques — calligraphy LEFT -->
+      <div class="principle principle--left fade-up" style="animation-delay:0.24s;">
+        <img class="principle__calligraphy" src={`${base}/images/calligraphy/calligraphy_taishingi.png`} alt="體心技" />
+        <div class="principle__text">
+          <span class="principle__number">3.</span>
+          <p><a href={`${base}/modules/quadtree`} class="text-accent font-semibold hover:text-cyan transition-colors">"Concepts over Techniques"</a>. Engrave concepts into your brain, collecting techniques is a bonus.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="max-w-2xl mb-16">
       <p class="text-sm text-text-muted leading-relaxed mb-4">
         I am organizing decades of notes, including <span class="text-accent font-semibold">{conceptCount}</span> concepts organized in <span class="text-accent font-semibold">{categoryCount}</span> categories in a <a href={`${base}/modules/quadtree`} class="text-accent underline hover:text-cyan transition-colors">quad tree map</a>, and interactive essays that represent how I would typically introduce these concepts live to new students. Although so much of what we do is highly kinetic and has a "it-has-to-be-felt" quality that is difficult to convey digitally. Doesn't mean we cannot try.
       </p>
@@ -244,6 +274,68 @@ const purgatorySections = [
     @keyframes rt-blink { 0%,100%{opacity:1} 50%{opacity:0} }
     #rt-cursor { animation: rt-blink 1s step-end infinite; }
     #retro-terminal.rt-gone { opacity:0; pointer-events:none; }
+
+    /* === Three Principles with Calligraphy === */
+    .principles-section {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .principle {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .principle--right {
+      justify-content: flex-end;
+    }
+
+    .principle__calligraphy {
+      width: 60px;
+      height: auto;
+      opacity: 0.85;
+      flex-shrink: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .principle:hover .principle__calligraphy {
+      opacity: 1;
+    }
+
+    .principle__text {
+      max-width: 520px;
+      font-size: var(--text-sm);
+      color: #9CA3AF;
+      line-height: 1.7;
+    }
+
+    .principle__text--right {
+      text-align: right;
+    }
+
+    .principle__number {
+      color: #4C8DFF;
+      font-weight: 700;
+      margin-right: 0.4em;
+      opacity: 0.7;
+    }
+
+    .principle__text p {
+      display: inline;
+    }
+
+    /* On small screens, reduce calligraphy size */
+    @media (max-width: 640px) {
+      .principle__calligraphy {
+        width: 40px;
+      }
+      .principle {
+        gap: 1rem;
+      }
+    }
   </style>
 
   <script>
