@@ -2,7 +2,7 @@
   {
     "id": "spaz",
     "name": "THE SPAZ",
-    "img": "PTP_TheSpaz512x.png",
+    "img": "PTP_TheSpaz512x.webp",
     "color": "#ff7043",
     "tagline": "All gas, no brakes",
     "desc": "Enthusiastic and well-meaning — but with zero body awareness. Training with them is a survival exercise. Injuries happen not from malice, but from pure uncontrolled chaos.",
@@ -32,7 +32,7 @@
   {
     "id": "injury",
     "name": "INJURY COLLECTOR",
-    "img": "PTP_InjuryCollector512x.png",
+    "img": "PTP_InjuryCollector512x.webp",
     "color": "#ef5350",
     "tagline": "Refuses to tap. Refuses to rest.",
     "desc": "Always injured, always training anyway. Won't communicate limits. Pushes through at full capacity and takes you with them. The most genuinely dangerous partner on this list.",
@@ -62,7 +62,7 @@
   {
     "id": "ig",
     "name": "IG BLUE BELT",
-    "img": "PTP_IGBlueBelt256x.png",
+    "img": "PTP_IGBlueBelt256x.webp",
     "color": "#42a5f5",
     "tagline": "The mat is a backdrop. Content is the goal.",
     "desc": "Has the gear, the aesthetics, and takes the photos. Instagram game is elite. Actual game varies. Ego is fragile — especially when the cameras are off.",
@@ -92,7 +92,7 @@
   {
     "id": "troll",
     "name": "STINKY TROLL",
-    "img": "PTP_StinkyTroll512x.png",
+    "img": "PTP_StinkyTroll512x.webp",
     "color": "#9ccc65",
     "tagline": "Great game. Please shower.",
     "desc": "Technical, collaborative, safe — genuinely one of the best partners on the mat. If only they'd fix the one issue. You want to roll with them. You also want a hazmat suit.",
@@ -123,7 +123,7 @@
   {
     "id": "gandalf",
     "name": "GANDALF THE WHITE BELT",
-    "img": "PTP_GandalfTheWhiteBelt256x.png",
+    "img": "PTP_GandalfTheWhiteBelt256x.webp",
     "color": "#cfd8dc",
     "tagline": "You shall not pass — but I'm fine with that",
     "desc": "New to BJJ but decades of life wisdom. Ego-free, curious, safe, genuinely grateful for every round. Loses constantly and couldn't care less. The dojo needs more Gandalfs.",
@@ -153,7 +153,7 @@
   {
     "id": "brute",
     "name": "THE BRUTE",
-    "img": "PTP_TheBrute512x.png",
+    "img": "PTP_TheBrute512x.webp",
     "color": "#ffb74d",
     "tagline": "Strength is the only answer",
     "desc": "Athletic, powerful, well-meaning — but has never met a technical problem they didn't try to muscle through. They don't mean to hurt you. They just don't know what they're doing yet.",
@@ -183,7 +183,7 @@
   {
     "id": "competitor",
     "name": "THE COMPETITOR",
-    "img": "PTP_TheCompetitor256x.png",
+    "img": "PTP_TheCompetitor256x.webp",
     "color": "#29b6f6",
     "tagline": "Every round is a championship final",
     "desc": "Skilled, disciplined, and reliable. But the dial never leaves 100%. No context for casual drilling, no ability to pace for a smaller or injured partner. Treats open mat like podium pressure.",

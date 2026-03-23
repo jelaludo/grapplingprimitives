@@ -174,6 +174,7 @@ let layoutNodes = [];
 let catBounds   = {};
 let searchQuery = '';
 let hoveredNode = null;
+let hoveredCat  = null;
 let dirty       = true;
 const markDirty = () => { if (!dirty) { dirty = true; requestAnimationFrame(drawLoop); } };
 
@@ -390,15 +391,19 @@ function drawFull() {
       ctx.strokeRect(cb.x + 0.5, cb.y + 0.5, cb.w - 1, cb.h - 1);
 
       if (cb.h > 16 && cb.w > 22) {
-        const fs   = Math.min(9, Math.max(6.5, cb.w / 14));
+        const isHovered = hoveredCat === cat.name;
+        const fs   = isHovered
+          ? Math.min(16, Math.max(12, cb.w / 8))
+          : Math.min(12, Math.max(9, cb.w / 12));
         const maxC = Math.floor(cb.w / (fs * 0.62));
         const lbl  = cat.name.length > maxC ? cat.name.slice(0, maxC - 1) + '…' : cat.name;
-        ctx.font = `${fs}px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-        ctx.fillStyle = hexToRgba(cc, 0.85);
+        ctx.font = `${isHovered ? 'bold ' : ''}${fs}px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.fillStyle = hexToRgba(cc, isHovered ? 1 : 0.85);
         ctx.fillText(lbl, cb.x + cb.w / 2, cb.y + 3);
 
         if (cb.h > 26) {
-          ctx.font = `6px ${FONT}`; ctx.fillStyle = hexToRgba(cc, 0.38);
+          const countFs = isHovered ? 9 : 7;
+          ctx.font = `${countFs}px ${FONT}`; ctx.fillStyle = hexToRgba(cc, isHovered ? 0.6 : 0.38);
           ctx.fillText(`[${cat.nodes.length}]`, cb.x + cb.w / 2, cb.y + 3 + fs + 2);
         }
       }
@@ -877,11 +882,14 @@ canvas.addEventListener('mousemove', e => {
   if (hit) {
     if (!kanriMode) showTooltip(hit, e.clientX, e.clientY);
     canvas.style.cursor = kanriMode && zoomedCat ? 'grab' : 'pointer';
+    if (hoveredCat) { hoveredCat = null; markDirty(); }
   } else {
     hideTooltip();
+    const hc = hitTestCategory(sx, sy);
+    if (hc !== hoveredCat) { hoveredCat = hc; markDirty(); }
     canvas.style.cursor = kanriMode && zoomedCat
       ? 'cell'
-      : (hitTestCategory(sx, sy) ? 'pointer' : 'crosshair');
+      : (hc ? 'pointer' : 'crosshair');
   }
 });
 
@@ -911,7 +919,7 @@ canvas.addEventListener('mouseup', e => {
 
 canvas.addEventListener('mouseleave', () => {
   if (kanriNode) { kanriNode = null; kanriMoved = false; }
-  drag = null; hoveredNode = null;
+  drag = null; hoveredNode = null; hoveredCat = null;
   hideTooltip();
   canvas.style.cursor = 'crosshair';
   markDirty();
