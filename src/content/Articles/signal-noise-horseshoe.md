@@ -4,74 +4,62 @@ date: "2026-03-24"
 tags: [culture, horseshoe, signal-noise]
 ---
 
-Every gym has them. The guy who treats every roll like a street fight that will determine the future of civilization. The guy who cannot get through a single drill without a quip about aggressive cuddling. Both exhausting. Both, somehow, producing the same outcome: you stop being able to focus on the thing you came to learn.
+Every gym has some of it. The guy who treats every roll a bit too seriously and the one who cannot get through a single drill without a quip about some version of self-deprecating aggressive cuddling.   Both can be tolerable at small doses, and a bit exhausting at high doses.   Both, somehow producing the same outcome of distracting from learning.
 
-This is the horseshoe model applied to grappling culture.
+So here is the horseshoe model (extremes are closer than they initially appear) applied to grappling culture.
 
 ---
 
 ## The shape of it
 
-In political theory, the horseshoe describes a counterintuitive geography: the far left and the far right, despite approaching from opposite directions, end up as neighbors. Their extremes resemble each other more than either resembles the center.
+In political theory, the horseshoe describes a counterintuitive idea that the far left and the far right, despite approaching from opposite directions, end up as neighbors. Their extremes resemble each other more in their disruption than either resembles the center.
 
 The same structure applies here.
 
-At the top of the arch: craft-orientation. High signal. The thing being studied is the point. Technique, pressure, timing, weight distribution — whatever the session is actually for.
+At the top of the arch: craft-orientation. High signal. The thing being studied is the point of being here. Technique, pressure, timing, weight distribution, etc. whatever the session is actually for.
 
-Along the left arm, descending: the alpha register. Tough-talk, real-politik framing, the language of predator and prey. At low dose, this can be exactly right — it checks complacency, it names the aliveness that makes grappling different from choreography. Follow the arm down far enough and it becomes a performance. The mat is now a stage for demonstrating toughness, not a place to develop skill.
+Along the left arm, descending: the alpha register. Tough-talk and real-politik framing, the language of predator and prey. At low dose, this can be helpful as it checks complacency, it does name the aliveness that makes grappling different from choreography.  Too far though and it becomes a boring performance. Ego r/iambaddass instead of actually striving to get better.
 
-Along the right arm, descending: the levity register. Self-deprecating humor, the conscious absurdity of two people voluntarily trying to choke each other. At low dose, this is a gift — it makes the room easier to be in, it defuses ego, it acknowledges the genuine strangeness of what we do. Follow that arm down far enough and it also becomes a performance. Every position is a bit. Every tap is content.
+Along the right side, descending: the buffoonery register. Self-deprecating humor, the conscious absurdity of two people voluntarily trying to choke each other. At low dose, this can ease tensions and make the room easier to be in, it defuses ego, it acknowledges the genuine strangeness of what we do.   Humor is fun and welcome.  Yet 'everything in moderation', including moderation itself.  Too much and it's another kind of performance detracting from the goal.
 
-At the open bottom: the extremes. Adjacent. Neither aware of the resemblance.
-
----
-
-## The key insight
-
-The problem is not the register. Both the tough-talk idiom and the self-deprecating idiom have legitimate, high-signal expressions. The problem is the dose.
-
-At low frequency, either register serves the craft. At high frequency, the register *becomes* the transmission — and the craft disappears underneath it.
-
-This is the TARS principle: humor is a setting, orthogonal to competence and mission. At 75%, it humanizes without corrupting. At 100%, it is the mission.
-
-**The problem isn't the ideas. It's the dose and the audience.**
-
-A well-placed "this is a real fight, treat it accordingly" can be exactly the thing someone needs to hear. Sustained across an entire training session, across every roll, across every correction — it stops being insight and starts being ambient noise that everyone around you has quietly learned to tune out.
-
-Same for the joke. One well-timed moment of absurdist self-awareness mid-roll can crack the tension and reset the room. A gym where every interaction is filtered through the bit, where the rainbow rashguard and the sexual innuendo are the primary mode — that gym has mistaken the decoration for the practice.
+So the extremes are adjacent.  Neither maybe really aware of the resemblance.  
 
 ---
 
-## The interior of the horseshoe
+## Dose is the only problem.
 
-There is one case the horseshoe curve doesn't capture on its own: the person who runs both registers simultaneously at high dose.
+The problem is neither the occasional tough-talk or self-deprecating jokes.  Just the dosage.
 
-They're not on the curve. They're inside the shape.
+At low frequency, either is fine, to each their own. 
 
-Maximum noise. No coherent register to engage with — just a rotating cast of bits and posturing. Probably the most exhausting person in the room precisely because there is no signal to find anywhere.
+Like TARS in Interstellar with his humor setting: it can be orthogonal to competence and mission. At 75%, it humanizes without corrupting. At 100%, tone it down.
 
----
+A well-placed "offer some real-resistance or he won't learn anything" can be exactly the thing someone needs to hear. Sustained across an entire training session, across every roll, with invectives and admonitions to toughen up.  That becomes a bit much.  
 
-## What this is not
-
-This is not an argument for humorlessness. It is not an argument against edge. It is not asking anyone to sand down their personality in service of some imagined neutrality.
-
-The craft center is not a personality type. It is a ratio. You can be dry and terse and still be craft-centered. You can crack jokes mid-roll and still be craft-centered. The idiom is not the issue. The ratio is.
-
-The model is descriptive, not prescriptive. It names the common failure mode that both extremes share — not to police register, but to make it visible. Most people in the noise zone are not aware they're there. That's the point of naming it.
+Same for the joke tropes. One well-timed moment of absurd self-awareness can crack some tension create some laughter-bonding. A gym where every interaction is filtered through the same bit, day-in and day-out, where the sexual innuendo are the primary mode... that gets old fast.   ymmv.
 
 ---
 
-## The Tolkien principle
+---
+
+## Humorlessness this is not
+
+Just an argument against constant edginess. Not asking anyone to censor their personality in service of some imagined neutrality.
+
+You can be dry and terse and still be craft-centered. You can crack jokes mid-roll and still be craft-centered. The jokes are not the issue. The ratio and tones are.
+
+Just descriptive, not prescriptive.  Just mapping some reflections.   I hear about how gay BJJ is from so many friends who don't train.  Maybe they're trying to connect with something they don't know.  I even find it amusing at small doses.
+
+---
+
+##  Tolkien and the timing of Jest
 
 > "It is the way of my people to use light words at such times and say less than they mean. We fear to say too much. It robs us of the right words when a jest is out of place."
 >
 > — *The Return of the King*
 
-Scarcity of register creates value. Hold it in reserve. A single well-placed moment — of toughness, of humor, of plain-spoken acknowledgment — lands precisely because it isn't the default mode.
-
-The best instructors do this without thinking about it. The lesson carries the signal. The moment of humor is a gift, not a mode. The hard word is a scalpel, not a posture.
+Scarcity creates value.  A single well-placed jokes lands because of contrast, because it isn't the default mode.
 
 ---
 
-*Part of the Grappling Primitives series — working through the underlying logic of what actually happens on the mat.*
+*Part of the Grappling Primitives series, working through the underlying logic and zeitgeist of what actually happens on the mat.*

@@ -22,8 +22,10 @@ const { Content: EssayContent } = await essayEntry!.render();
     <header class="hs-header">
       <p class="hs-eyebrow">Grappling Primitives</p>
       <h1 class="hs-title">Signal / Noise</h1>
-      <p class="hs-sub">Both registers are fine at low dose. At high dose, they're neighbors — and neither knows it.</p>
+      <p class="hs-sub">overdoing jokes and badassery</p>
     </header>
+
+    <button id="deeplink-btn" class="hs-deeplink">Link</button>
 
     <div class="hs-stage">
 
@@ -33,24 +35,28 @@ const { Content: EssayContent } = await essayEntry!.render();
       <!-- center panel -->
       <div class="hs-center">
         <svg viewBox="0 0 500 390" class="hs-svg">
-          <!-- horseshoe arc segments -->
-          <path d="M 185,313 A 130,130 0 0,1 120,200" stroke="#ff4444" stroke-width="40" fill="none" stroke-linecap="butt"/>
-          <path d="M 120,200 A 130,130 0 0,1 185,87"  stroke="#ffaa00" stroke-width="40" fill="none" stroke-linecap="butt"/>
-          <path d="M 185,87  A 130,130 0 0,1 315,87"  stroke="#4C8DFF" stroke-width="40" fill="none" stroke-linecap="butt"/>
-          <path d="M 315,87  A 130,130 0 0,1 380,200" stroke="#ffaa00" stroke-width="40" fill="none" stroke-linecap="butt"/>
-          <path d="M 380,200 A 130,130 0 0,1 315,313" stroke="#ff4444" stroke-width="40" fill="none" stroke-linecap="butt"/>
-          <!-- end caps -->
-          <circle cx="185" cy="313" r="20" fill="#ff4444"/>
-          <circle cx="315" cy="313" r="20" fill="#ff4444"/>
+          <defs>
+            <linearGradient id="hs-grad" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%"   stop-color="#b71c1c"/>
+              <stop offset="25%"  stop-color="#d32f2f"/>
+              <stop offset="40%"  stop-color="#ef6c00"/>
+              <stop offset="55%"  stop-color="#f9a825"/>
+              <stop offset="70%"  stop-color="#66bb6a"/>
+              <stop offset="85%"  stop-color="#43a047"/>
+              <stop offset="100%" stop-color="#2e7d32"/>
+            </linearGradient>
+          </defs>
+          <!-- horseshoe arc — single path with vertical gradient (red at bottom → green at top) -->
+          <path d="M 185,313 A 130,130 0 0,1 120,200 A 130,130 0 0,1 185,87 A 130,130 0 0,1 315,87 A 130,130 0 0,1 380,200 A 130,130 0 0,1 315,313" stroke="url(#hs-grad)" stroke-width="40" fill="none" stroke-linecap="round"/>
           <!-- neighbor line -->
           <line x1="185" y1="340" x2="315" y2="340" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
           <!-- labels -->
-          <text x="250" y="20"  text-anchor="middle" font-size="11" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.6)">craft · signal</text>
-          <text x="143" y="372" text-anchor="middle" font-size="11" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.45)">alpha bro</text>
-          <text x="357" y="372" text-anchor="middle" font-size="11" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.45)">buffoon</text>
-          <text x="250" y="363" text-anchor="middle" font-size="9.5" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.22)">extremes are neighbors</text>
+          <text x="250" y="18"  text-anchor="middle" font-size="16" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.6)">craft · signal</text>
+          <text x="143" y="375" text-anchor="middle" font-size="15" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.45)">alpha bro</text>
+          <text x="357" y="375" text-anchor="middle" font-size="15" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.45)">buffoon</text>
+          <text x="250" y="363" text-anchor="middle" font-size="13" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.22)">extremes are neighbors</text>
           <!-- dot -->
-          <circle id="hs-dot" cx="250" cy="70" r="10" fill="#050509" stroke="#4C8DFF" stroke-width="3"/>
+          <circle id="hs-dot" cx="250" cy="70" r="10" fill="#050509" stroke="#2e7d32" stroke-width="3"/>
         </svg>
 
         <div class="hs-slider-row">
@@ -70,24 +76,12 @@ const { Content: EssayContent } = await essayEntry!.render();
           <span class="hs-signal-pct" id="hs-pct">95%</span>
         </div>
 
-        <div class="hs-zone-info">
-          <div class="hs-zone-label" id="hs-label"></div>
-          <div class="hs-zone-desc" id="hs-desc"></div>
-        </div>
       </div>
 
       <!-- buffoon quote zone -->
       <div id="zone-buffoon" class="hs-quote-zone hs-quote-zone--buffoon"></div>
 
     </div>
-
-    <footer class="hs-tolkien">
-      <blockquote>
-        "It is the way of my people to use light words at such times and say less than they mean.<br>
-        We fear to say too much. It robs us of the right words when a jest is out of place."
-      </blockquote>
-      <cite>— Tolkien, The Return of the King</cite>
-    </footer>
 
     <details class="tldr">
       <summary class="tldr__toggle">The Grappling Horseshoe — full essay</summary>
@@ -104,15 +98,15 @@ const { Content: EssayContent } = await essayEntry!.render();
   'use strict';
 
   const ZONES = [
-    { max: 15,  label: 'Alpha extreme \u2014 performance crowding signal', color: '#ff4444',
+    { max: 15,  label: 'Alpha extreme \u2014 performance crowding signal', color: '#c62828',
       desc: 'Every roll is a proving ground. Training partners are prey. The mat serves the persona, not the other way around.' },
-    { max: 35,  label: 'Alpha register \u2014 signal dominant',            color: '#ffaa00',
+    { max: 35,  label: 'Alpha register \u2014 signal dominant',            color: '#ef6c00',
       desc: 'Real-politik edge that checks complacency. The tough register in service of the craft \u2014 not the craft in service of the idiom.' },
-    { max: 65,  label: 'Craft center',                                     color: '#4C8DFF',
+    { max: 65,  label: 'Craft center',                                     color: '#2e7d32',
       desc: 'The thing being studied is the point. Humor, edge, intensity \u2014 held in reserve, deployed with intent. Idiom serves the work.' },
-    { max: 85,  label: 'Levity register \u2014 signal dominant',           color: '#ffaa00',
+    { max: 85,  label: 'Levity register \u2014 signal dominant',           color: '#ef6c00',
       desc: 'Humor makes the room easier to be in. Self-deprecating acknowledgment of the absurdity. Signal intact \u2014 the joke is not the session.' },
-    { max: 100, label: 'Buffoon extreme \u2014 performance crowding signal', color: '#ff4444',
+    { max: 100, label: 'Buffoon extreme \u2014 performance crowding signal', color: '#c62828',
       desc: 'Every position is a bit. Every tap is a performance. The mat is a stage. Two people rolling are the audience. Signal gone.' },
   ];
 
@@ -120,13 +114,18 @@ const { Content: EssayContent } = await essayEntry!.render();
   const dot = document.getElementById('hs-dot');
   const bar = document.getElementById('hs-bar');
   const pct = document.getElementById('hs-pct');
-  const lbl = document.getElementById('hs-label');
-  const dsc = document.getElementById('hs-desc');
   const zA  = document.getElementById('zone-alpha');
   const zB  = document.getElementById('zone-buffoon');
 
-  let aTimer = null, bTimer = null;
-  let aUsed  = [],   bUsed  = [];
+  var CRAFT_Q = [
+    'Turn the resistance up but controlled',
+    "Don't take it too seriously, relax",
+    'Be aware of how you got tapped',
+    'Give them challenges, not injuries',
+  ];
+
+  let aTimer = null, bTimer = null, cTimer = null;
+  let aUsed  = [],   bUsed  = [], cUsed = [];
 
   function pick(arr, used) {
     if (used.length >= arr.length) used.length = 0;
@@ -136,11 +135,33 @@ const { Content: EssayContent } = await essayEntry!.render();
     return q;
   }
 
+  // ── Ordered slot system for quote positioning ──
+  // Divide vertical space into slots; cycle through them in order
+  // with a random offset so consecutive quotes are never adjacent.
+  var SLOTS = [0, 16, 32, 48, 64];
+  var aSlotIdx = 0, bSlotIdx = 0, cSlotIdx = 0;
+
+  function nextSlot(current) {
+    // jump 2-3 slots ahead (wrapping) so consecutive quotes are spaced apart
+    var jump = 2 + Math.floor(Math.random() * 2); // 2 or 3
+    return (current + jump) % SLOTS.length;
+  }
+
   function spawn(zone, text, cls) {
+    var slotIdx;
+    if (cls === 'alpha')      { slotIdx = aSlotIdx; aSlotIdx = nextSlot(aSlotIdx); }
+    else if (cls === 'craft') { slotIdx = cSlotIdx; cSlotIdx = nextSlot(cSlotIdx); }
+    else                      { slotIdx = bSlotIdx; bSlotIdx = nextSlot(bSlotIdx); }
+
+    var baseTop = SLOTS[slotIdx];
+    // small jitter within the slot (±4%) to avoid mechanical feel
+    var jitter = Math.floor(Math.random() * 8) - 4;
+    var top = Math.max(0, Math.min(72, baseTop + jitter));
+
     const el       = document.createElement('div');
     el.className   = 'hs-q-item hs-q-item--' + cls;
     el.textContent = '\u201C' + text + '\u201D';
-    el.style.top   = Math.floor(Math.random() * 72) + '%';
+    el.style.top   = top + '%';
     el.style.opacity = '0';
     zone.appendChild(el);
 
@@ -160,46 +181,154 @@ const { Content: EssayContent } = await essayEntry!.render();
     })(performance.now());
   }
 
-  function startAlpha() {
+  function startAlpha(fast) {
     if (aTimer) return;
+    var rate = fast ? 1200 : 2400;
     spawn(zA, pick(alphaQuotes, aUsed), 'alpha');
-    aTimer = setInterval(function () { spawn(zA, pick(alphaQuotes, aUsed), 'alpha'); }, 1900);
+    aTimer = setInterval(function () { spawn(zA, pick(alphaQuotes, aUsed), 'alpha'); }, rate);
   }
   function stopAlpha() { if (aTimer) { clearInterval(aTimer); aTimer = null; } }
 
-  function startBuff() {
+  function startBuff(fast) {
     if (bTimer) return;
+    var rate = fast ? 1200 : 2400;
     spawn(zB, pick(buffoonQuotes, bUsed), 'buffoon');
-    bTimer = setInterval(function () { spawn(zB, pick(buffoonQuotes, bUsed), 'buffoon'); }, 1900);
+    bTimer = setInterval(function () { spawn(zB, pick(buffoonQuotes, bUsed), 'buffoon'); }, rate);
   }
   function stopBuff() { if (bTimer) { clearInterval(bTimer); bTimer = null; } }
 
+  function startCraft() {
+    if (cTimer) return;
+    // alternate sides for craft quotes
+    var craftSide = 0;
+    function spawnCraft() {
+      var zone = craftSide % 2 === 0 ? zA : zB;
+      spawn(zone, pick(CRAFT_Q, cUsed), 'craft');
+      craftSide++;
+    }
+    spawnCraft();
+    cTimer = setInterval(spawnCraft, 3200);
+  }
+  function stopCraft() { if (cTimer) { clearInterval(cTimer); cTimer = null; } }
+
+  function updateQuotes(v) {
+    // orange/red zones: alpha or buffoon quotes
+    if (v <= 25) {
+      stopBuff(); stopCraft();
+      if (aTimer && ((v <= 15) !== prevAlphaFast)) { stopAlpha(); }
+      startAlpha(v <= 15);
+      prevAlphaFast = v <= 15;
+    } else if (v >= 75) {
+      stopAlpha(); stopCraft();
+      if (bTimer && ((v >= 85) !== prevBuffFast)) { stopBuff(); }
+      startBuff(v >= 85);
+      prevBuffFast = v >= 85;
+    } else if (v >= 36 && v <= 64) {
+      // green zone: positive craft quotes
+      stopAlpha(); stopBuff();
+      startCraft();
+    } else {
+      // transition zones (26-35, 65-74): quiet
+      stopAlpha(); stopBuff(); stopCraft();
+    }
+  }
+
+  var prevAlphaFast = false, prevBuffFast = false;
+
   function update(v) {
-    const t = v / 100;
-    const a = (120 + t * 300) * Math.PI / 180;
+    var t = v / 100;
+    var a = (120 + t * 300) * Math.PI / 180;
     dot.setAttribute('cx', (250 + 130 * Math.cos(a)).toFixed(2));
     dot.setAttribute('cy', (200 + 130 * Math.sin(a)).toFixed(2));
 
-    const z = ZONES.find(function (x) { return v <= x.max; }) || ZONES[4];
+    var z = ZONES.find(function (x) { return v <= x.max; }) || ZONES[4];
     dot.setAttribute('stroke', z.color);
 
-    const sig = Math.round(20 + 75 * (1 - Math.pow(2 * v / 100 - 1, 2)));
+    var sig = Math.round(20 + 75 * (1 - Math.pow(2 * v / 100 - 1, 2)));
     bar.style.width      = sig + '%';
     bar.style.background = z.color;
     pct.textContent      = sig + '%';
-    lbl.textContent      = z.label;
-    lbl.style.color      = z.color;
-    dsc.textContent      = z.desc;
 
     sl.style.setProperty('--thumb-color', z.color);
-
-    if      (v <= 15)  { startAlpha(); stopBuff();  }
-    else if (v >= 85)  { startBuff();  stopAlpha(); }
-    else               { stopAlpha();  stopBuff();  }
+    updateQuotes(v);
   }
 
-  sl.addEventListener('input', function (e) { update(+e.target.value); });
+  // ── Autoplay ──
+  var idleTimeout = null;
+  var autoplayRAF = null;
+  var autoplayActive = false;
+  var autoTarget = null;
+  var autoPauseUntil = 0;
+
+  function pickAutoTarget() {
+    // pick a random position, biased toward extremes for visual interest
+    var r = Math.random();
+    if (r < 0.35) return Math.floor(Math.random() * 30);        // left side
+    else if (r < 0.7) return 70 + Math.floor(Math.random() * 30); // right side
+    else return 25 + Math.floor(Math.random() * 50);              // middle
+  }
+
+  function autoplayStep(ts) {
+    if (!autoplayActive) return;
+    if (ts < autoPauseUntil) {
+      autoplayRAF = requestAnimationFrame(autoplayStep);
+      return;
+    }
+    var current = +sl.value;
+    if (autoTarget === null || Math.abs(current - autoTarget) < 1) {
+      // arrived — pause 2-4s then pick new target
+      autoTarget = pickAutoTarget();
+      autoPauseUntil = ts + 2000 + Math.random() * 2000;
+      autoplayRAF = requestAnimationFrame(autoplayStep);
+      return;
+    }
+    // move toward target slowly (~0.3 units per frame at 60fps)
+    var step = autoTarget > current ? 0.3 : -0.3;
+    var next = Math.round(current + step);
+    if (next === current) next = current + (step > 0 ? 1 : -1);
+    next = Math.max(0, Math.min(100, next));
+    sl.value = next;
+    update(next);
+    autoplayRAF = requestAnimationFrame(autoplayStep);
+  }
+
+  function startAutoplay() {
+    if (autoplayActive) return;
+    autoplayActive = true;
+    autoTarget = null;
+    autoPauseUntil = 0;
+    autoplayRAF = requestAnimationFrame(autoplayStep);
+  }
+
+  function stopAutoplay() {
+    autoplayActive = false;
+    if (autoplayRAF) { cancelAnimationFrame(autoplayRAF); autoplayRAF = null; }
+  }
+
+  function resetIdleTimer() {
+    if (idleTimeout) clearTimeout(idleTimeout);
+    idleTimeout = setTimeout(startAutoplay, 10000);
+  }
+
+  sl.addEventListener('input', function (e) {
+    stopAutoplay();
+    update(+e.target.value);
+    resetIdleTimer();
+  });
+
+  // start with autoplay
   update(50);
+  startAutoplay();
+
+  var dlBtn = document.getElementById('deeplink-btn');
+  if (dlBtn) {
+    dlBtn.addEventListener('click', function () {
+      navigator.clipboard.writeText(window.location.href).then(function () {
+        dlBtn.textContent = 'Copied!';
+        setTimeout(function () { dlBtn.textContent = 'Link'; }, 1500);
+      });
+    });
+  }
 })();
 </script>
 
@@ -219,7 +348,7 @@ const { Content: EssayContent } = await essayEntry!.render();
   }
 
   .hs-eyebrow {
-    font-size: 10px;
+    font-size: var(--text-xs);
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-dim);
@@ -232,7 +361,7 @@ const { Content: EssayContent } = await essayEntry!.render();
     letter-spacing: 0.02em;
     color: var(--text-primary);
     margin-bottom: 14px;
-    text-shadow: 0 0 12px #4C8DFF88;
+    text-shadow: 0 0 12px #2e7d3266;
   }
 
   .hs-sub {
@@ -240,6 +369,28 @@ const { Content: EssayContent } = await essayEntry!.render();
     color: var(--text-muted);
     line-height: 1.7;
     font-style: italic;
+  }
+
+  .hs-deeplink {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 60;
+    font-family: 'Courier New', Consolas, Monaco, monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 1px solid #21262d;
+    background: transparent;
+    color: #6b7280;
+    transition: all 0.15s;
+  }
+  .hs-deeplink:hover {
+    border-color: rgba(0,212,255,0.4);
+    color: #00d4ff;
   }
 
   /* ── main layout ── */
@@ -272,8 +423,9 @@ const { Content: EssayContent } = await essayEntry!.render();
     pointer-events: none;
   }
 
-  .hs-q-item--alpha   { color: #ff4444; text-align: right; right: 0; }
-  .hs-q-item--buffoon { color: #ea580c; text-align: left; left: 0; }
+  .hs-q-item--alpha   { color: #d32f2f; text-align: right; right: 0; }
+  .hs-q-item--buffoon { color: #ef6c00; text-align: left; left: 0; }
+  .hs-q-item--craft   { color: #43a047; }
 
   /* ── SVG panel ── */
   .hs-svg { width: 100%; display: block; }
@@ -289,7 +441,7 @@ const { Content: EssayContent } = await essayEntry!.render();
     appearance: none;
     width: 100%;
     height: 3px;
-    background: linear-gradient(to right, #ff4444 0%, #ffaa00 25%, #4C8DFF 50%, #ffaa00 75%, #ff4444 100%);
+    background: linear-gradient(to right, #b71c1c 0%, #c62828 10%, #ef6c00 25%, #f9a825 35%, #66bb6a 42%, #2e7d32 50%, #66bb6a 58%, #f9a825 65%, #ef6c00 75%, #c62828 90%, #b71c1c 100%);
     border-radius: 2px;
     outline: none;
     cursor: pointer;
@@ -302,7 +454,7 @@ const { Content: EssayContent } = await essayEntry!.render();
     height: 20px;
     border-radius: 50%;
     background: #050509;
-    border: 2.5px solid var(--thumb-color, #4C8DFF);
+    border: 2.5px solid var(--thumb-color, #2e7d32);
     cursor: grab;
     transition: border-color 0.15s;
   }
@@ -314,7 +466,7 @@ const { Content: EssayContent } = await essayEntry!.render();
     height: 20px;
     border-radius: 50%;
     background: #050509;
-    border: 2.5px solid var(--thumb-color, #4C8DFF);
+    border: 2.5px solid var(--thumb-color, #2e7d32);
     cursor: grab;
   }
 
@@ -322,7 +474,7 @@ const { Content: EssayContent } = await essayEntry!.render();
     display: flex;
     justify-content: space-between;
     margin-top: 6px;
-    font-size: 10px;
+    font-size: var(--text-sm);
     color: var(--text-dim);
     letter-spacing: 0.04em;
   }
@@ -337,7 +489,7 @@ const { Content: EssayContent } = await essayEntry!.render();
   }
 
   .hs-signal-label {
-    font-size: 10px;
+    font-size: var(--text-sm);
     color: var(--text-dim);
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -355,39 +507,19 @@ const { Content: EssayContent } = await essayEntry!.render();
   .hs-signal-fill {
     height: 100%;
     width: 95%;
-    background: #4C8DFF;
+    background: #2e7d32;
     border-radius: 2px;
     transition: width 0.15s ease, background 0.15s ease;
   }
 
   .hs-signal-pct {
-    font-size: 11px;
+    font-size: var(--text-base);
     color: var(--text-muted);
     min-width: 30px;
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
 
-  /* ── zone info ── */
-  .hs-zone-info {
-    border-top: 1px solid var(--border);
-    padding: 16px 16px 12px;
-    min-height: 80px;
-  }
-
-  .hs-zone-label {
-    font-size: var(--text-xs);
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    margin-bottom: 8px;
-    transition: color 0.15s;
-  }
-
-  .hs-zone-desc {
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-    line-height: 1.7;
-  }
 
   /* ── tolkien footer ── */
   .hs-tolkien {

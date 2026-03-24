@@ -2,28 +2,31 @@
 side: buffoon
 label: "buffoon"
 ---
-I'm only here for the oil check!
+I'm only here for the oil checks
 Father's milk lol
-Come into my guard ;)
+Come into daddy's open guard
 Aggressive cuddling is my love language
 My guard is basically a hug you can't escape
 I just paid to be choked by strangers
-Tap or nap, either works for me
-This is just therapeutic wrestling
-We don't shake hands, we spoon
-I call my closed guard the cuddle dungeon
+therapeutic wrestling
+you say back control, I see spooning
+I call our dojo the cuddle dungeon
 Just two dudes expressing themselves
-Rolling is floor yoga with drama
-I didn't choose the gi life, the gi life chose me
+Rolling is aggro yoga with drama
 New move just dropped: the accidental massage
 My therapist says I have boundary issues. She's never seen my guard.
 Technically it's not a choke, it's an aggressive nap request
 I submitted him with friendship
 Side control? More like side cuddle
-He tried to pass. I offered him a hug. He took neither.
 Rainbow gi, real consequences
 Bro, my guard retention is just attachment issues
-I don't roll, I negotiate
+I don't roll, I give free hugs
 The secret technique is vibes
-He thought it was sparring. I thought it was bonding.
-Consent forms before drilling, that's my gym's policy
+Sparring is just skinship.
+Drill all you want, with consent though
+It's only gay if you make eye-contact
+I was trying to frame but he gave me his full load
+My hobby is pinning other sweaty dudes
+Me and my friends love to choke each other
+I love trying to break my friend's bone
+I am a power bottom
