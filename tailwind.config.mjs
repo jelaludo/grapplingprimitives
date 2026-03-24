@@ -16,7 +16,7 @@ export default {
         'text-dim':     '#6B7280',
       },
       fontFamily: {
-        mono: ['"Courier New"', 'Courier', 'monospace'],
+        mono: ['"Source Code Pro"', '"Courier New"', 'monospace'],
       },
     },
   },

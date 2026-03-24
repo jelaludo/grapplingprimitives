@@ -1,0 +1,487 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout title="Font Test — Grappling Primitives">
+
+  <!-- Google Fonts: candidates for body text -->
+  <Fragment slot="default">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&family=Source+Code+Pro:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=Work+Sans:wght@300;400;500;600&family=Source+Sans+3:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <div class="ft-page">
+
+    <div class="ft-header">
+      <a href={`${base}/`} class="ft-back">&larr; Home</a>
+      <h1>Font Audit</h1>
+      <p class="ft-subtitle">Testing body font candidates against real content. Resize your browser or use devtools device emulation.</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="ft-controls">
+      <div class="ft-control-group">
+        <label>Viewport simulation</label>
+        <div class="ft-btn-row">
+          <button class="ft-btn" data-width="375">iPhone SE<br><span>375px</span></button>
+          <button class="ft-btn" data-width="390">iPhone 14<br><span>390px</span></button>
+          <button class="ft-btn" data-width="768">iPad<br><span>768px</span></button>
+          <button class="ft-btn ft-btn--active" data-width="0">Full<br><span>native</span></button>
+        </div>
+      </div>
+      <div class="ft-control-group">
+        <label>Background</label>
+        <div class="ft-btn-row">
+          <button class="ft-btn ft-btn--active" data-bg="dark">Dark (#050509)</button>
+          <button class="ft-btn" data-bg="surface">Surface (#0E1014)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sample container (width-constrained for mobile sim) -->
+    <div id="ft-samples" class="ft-samples">
+
+      <!-- ═══ CURRENT BASELINE ═══ -->
+      <section class="ft-section" data-font="courier">
+        <div class="ft-section-header">
+          <h2>Current: Courier New <span class="ft-tag ft-tag--warn">BASELINE</span></h2>
+          <span class="ft-meta">Monospace · System font · No download</span>
+        </div>
+        <div class="ft-card" style="font-family: 'Courier New', Courier, monospace;">
+          <div class="ft-sample-body"></div>
+        </div>
+      </section>
+
+      <!-- ═══ CANDIDATE A: Monospace upgrade ═══ -->
+      <section class="ft-section" data-font="jetbrains">
+        <div class="ft-section-header">
+          <h2>A: JetBrains Mono <span class="ft-tag ft-tag--mono">Monospace</span></h2>
+          <span class="ft-meta">Screen-optimized · Increased x-height · Ligatures · 88KB WOFF2</span>
+        </div>
+        <div class="ft-card" style="font-family: 'JetBrains Mono', monospace;">
+          <div class="ft-sample-body"></div>
+        </div>
+      </section>
+
+      <section class="ft-section" data-font="ibm-mono">
+        <div class="ft-section-header">
+          <h2>B: IBM Plex Mono <span class="ft-tag ft-tag--mono">Monospace</span></h2>
+          <span class="ft-meta">Neutral · Good CJK pairing · Used in pricing module already · 72KB WOFF2</span>
+        </div>
+        <div class="ft-card" style="font-family: 'IBM Plex Mono', monospace;">
+          <div class="ft-sample-body"></div>
+        </div>
+      </section>
+
+      <section class="ft-section" data-font="source-code">
+        <div class="ft-section-header">
+          <h2>C: Source Code Pro <span class="ft-tag ft-tag--mono">Monospace</span></h2>
+          <span class="ft-meta">Adobe · Wider counters · Strong at small sizes · 65KB WOFF2</span>
+        </div>
+        <div class="ft-card" style="font-family: 'Source Code Pro', monospace;">
+          <div class="ft-sample-body"></div>
+        </div>
+      </section>
+
+      <!-- ═══ CANDIDATE D-G: Hybrid approach (mono chrome + proportional body) ═══ -->
+      <div class="ft-divider">
+        <span>Hybrid: monospace chrome + proportional body</span>
+      </div>
+
+      <section class="ft-section" data-font="ibm-sans">
+        <div class="ft-section-header">
+          <h2>D: IBM Plex Sans <span class="ft-tag ft-tag--sans">Proportional</span></h2>
+          <span class="ft-meta">Pairs with Plex Mono for chrome · Already loaded in pricing · 68KB WOFF2</span>
+        </div>
+        <div class="ft-card" style="font-family: 'IBM Plex Sans', sans-serif;">
+          <div class="ft-sample-body"></div>
+        </div>
+        <div class="ft-card ft-card--chrome" style="font-family: 'IBM Plex Mono', monospace;">
+          <div class="ft-sample-chrome"></div>
+        </div>
+      </section>
+
+      <section class="ft-section" data-font="work-sans">
+        <div class="ft-section-header">
+          <h2>E: Work Sans <span class="ft-tag ft-tag--sans">Proportional</span></h2>
+          <span class="ft-meta">Geometric · Clean · Good at small sizes · 48KB WOFF2</span>
+        </div>
+        <div class="ft-card" style="font-family: 'Work Sans', sans-serif;">
+          <div class="ft-sample-body"></div>
+        </div>
+        <div class="ft-card ft-card--chrome" style="font-family: 'Courier New', monospace;">
+          <div class="ft-sample-chrome"></div>
+        </div>
+      </section>
+
+      <section class="ft-section" data-font="source-sans">
+        <div class="ft-section-header">
+          <h2>F: Source Sans 3 <span class="ft-tag ft-tag--sans">Proportional</span></h2>
+          <span class="ft-meta">Adobe · Humanist · Excellent readability · 52KB WOFF2</span>
+        </div>
+        <div class="ft-card" style="font-family: 'Source Sans 3', sans-serif;">
+          <div class="ft-sample-body"></div>
+        </div>
+        <div class="ft-card ft-card--chrome" style="font-family: 'Source Code Pro', monospace;">
+          <div class="ft-sample-chrome"></div>
+        </div>
+      </section>
+
+      <section class="ft-section" data-font="inter-tight">
+        <div class="ft-section-header">
+          <h2>G: Inter Tight <span class="ft-tag ft-tag--sans">Proportional</span></h2>
+          <span class="ft-meta">Condensed Inter variant · Saves horizontal space · 56KB WOFF2</span>
+        </div>
+        <div class="ft-card" style="font-family: 'Inter Tight', sans-serif;">
+          <div class="ft-sample-body"></div>
+        </div>
+        <div class="ft-card ft-card--chrome" style="font-family: 'Courier New', monospace;">
+          <div class="ft-sample-chrome"></div>
+        </div>
+      </section>
+
+      <!-- ═══ SIDE-BY-SIDE COMPARISON ═══ -->
+      <div class="ft-divider">
+        <span>Side-by-side at mobile width</span>
+      </div>
+
+      <div class="ft-comparison" id="ft-comparison">
+        <div class="ft-comp-col">
+          <h3>Courier New (current)</h3>
+          <p style="font-family: 'Courier New', monospace;">Your own body state is the real variable. That is the key insight. What separates an experienced grappler from a beginner isn't a larger catalog of techniques — it's an invisible quality of body.</p>
+        </div>
+        <div class="ft-comp-col">
+          <h3 id="ft-comp-label">JetBrains Mono</h3>
+          <p id="ft-comp-text" style="font-family: 'JetBrains Mono', monospace;">Your own body state is the real variable. That is the key insight. What separates an experienced grappler from a beginner isn't a larger catalog of techniques — it's an invisible quality of body.</p>
+        </div>
+      </div>
+
+      <div class="ft-comp-picker">
+        <label>Compare against:</label>
+        <select id="ft-comp-select">
+          <option value="JetBrains Mono" data-label="JetBrains Mono">A: JetBrains Mono</option>
+          <option value="IBM Plex Mono" data-label="IBM Plex Mono">B: IBM Plex Mono</option>
+          <option value="Source Code Pro" data-label="Source Code Pro">C: Source Code Pro</option>
+          <option value="IBM Plex Sans" data-label="IBM Plex Sans">D: IBM Plex Sans</option>
+          <option value="Work Sans" data-label="Work Sans">E: Work Sans</option>
+          <option value="Source Sans 3" data-label="Source Sans 3">F: Source Sans 3</option>
+          <option value="Inter Tight" data-label="Inter Tight">G: Inter Tight</option>
+        </select>
+      </div>
+
+      <!-- ═══ JAPANESE TEXT TEST ═══ -->
+      <div class="ft-divider">
+        <span>Japanese text rendering</span>
+      </div>
+
+      <div class="ft-jp-grid" id="ft-jp-grid">
+        <div class="ft-jp-card" style="font-family: 'Courier New', monospace;">
+          <h4>Courier New</h4>
+          <p>柔道の創始者・嘉納治五郎は技の原理を「作り」と「掛け」の二部構成として説いた。しかし「作り」の中に、翻訳で失われがちな重要な指示が埋もれている。</p>
+        </div>
+        <div class="ft-jp-card" style="font-family: 'JetBrains Mono', monospace;">
+          <h4>JetBrains Mono</h4>
+          <p>柔道の創始者・嘉納治五郎は技の原理を「作り」と「掛け」の二部構成として説いた。しかし「作り」の中に、翻訳で失われがちな重要な指示が埋もれている。</p>
+        </div>
+        <div class="ft-jp-card" style="font-family: 'IBM Plex Sans', sans-serif;">
+          <h4>IBM Plex Sans</h4>
+          <p>柔道の創始者・嘉納治五郎は技の原理を「作り」と「掛け」の二部構成として説いた。しかし「作り」の中に、翻訳で失われがちな重要な指示が埋もれている。</p>
+        </div>
+        <div class="ft-jp-card" style="font-family: 'Source Sans 3', sans-serif;">
+          <h4>Source Sans 3</h4>
+          <p>柔道の創始者・嘉納治五郎は技の原理を「作り」と「掛け」の二部構成として説いた。しかし「作り」の中に、翻訳で失われがちな重要な指示が埋もれている。</p>
+        </div>
+      </div>
+
+    </div><!-- /ft-samples -->
+  </div><!-- /ft-page -->
+
+  <style>
+    .ft-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+
+    .ft-header {
+      margin-bottom: 32px;
+    }
+    .ft-back {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--text-dim, #6B7280);
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .ft-back:hover { color: #00d4ff; }
+    .ft-header h1 {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 400;
+      margin: 12px 0 8px;
+      letter-spacing: 0.05em;
+    }
+    .ft-subtitle {
+      font-size: 13px;
+      color: var(--text-muted, #9CA3AF);
+      line-height: 1.6;
+    }
+
+    /* ── Controls ── */
+    .ft-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 32px;
+      padding: 16px;
+      border: 1px solid var(--border, #1C1F26);
+      background: var(--surface, #0E1014);
+    }
+    .ft-control-group label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim, #6B7280);
+      margin-bottom: 8px;
+    }
+    .ft-btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .ft-btn {
+      font-family: inherit;
+      font-size: 11px;
+      padding: 6px 12px;
+      border: 1px solid var(--border, #1C1F26);
+      background: transparent;
+      color: var(--text-muted, #9CA3AF);
+      cursor: pointer;
+      transition: all 0.15s;
+      line-height: 1.4;
+    }
+    .ft-btn span {
+      font-size: 9px;
+      color: var(--text-dim, #6B7280);
+    }
+    .ft-btn:hover {
+      border-color: rgba(0, 212, 255, 0.4);
+      color: #00d4ff;
+    }
+    .ft-btn--active {
+      border-color: rgba(76, 141, 255, 0.5);
+      color: #4C8DFF;
+      background: rgba(76, 141, 255, 0.08);
+    }
+
+    /* ── Samples container ── */
+    .ft-samples {
+      transition: max-width 0.3s ease;
+      margin: 0 auto;
+    }
+
+    /* ── Section ── */
+    .ft-section {
+      margin-bottom: 32px;
+    }
+    .ft-section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .ft-section-header h2 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary, #E5E7EB);
+      letter-spacing: 0.03em;
+    }
+    .ft-meta {
+      font-size: 11px;
+      color: var(--text-dim, #6B7280);
+    }
+    .ft-tag {
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border: 1px solid;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+    .ft-tag--warn { border-color: #FBBF2466; color: #FBBF24; }
+    .ft-tag--mono { border-color: #4C8DFF44; color: #4C8DFF; }
+    .ft-tag--sans { border-color: #34D39944; color: #34D399; }
+
+    /* ── Card ── */
+    .ft-card {
+      border: 1px solid var(--border, #1C1F26);
+      padding: 20px;
+      line-height: 1.8;
+      font-size: var(--text-base, 17px);
+      color: var(--text-muted, #9CA3AF);
+    }
+    .ft-card--chrome {
+      margin-top: 4px;
+      padding: 12px 20px;
+      border-top: none;
+      background: rgba(255,255,255,0.02);
+    }
+
+    /* ── Divider ── */
+    .ft-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 48px 0 24px;
+    }
+    .ft-divider::before, .ft-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border, #1C1F26);
+    }
+    .ft-divider span {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim, #6B7280);
+      white-space: nowrap;
+    }
+
+    /* ── Side-by-side ── */
+    .ft-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .ft-comparison { grid-template-columns: 1fr; }
+    }
+    .ft-comp-col {
+      border: 1px solid var(--border, #1C1F26);
+      padding: 16px;
+    }
+    .ft-comp-col h3 {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim, #6B7280);
+      margin-bottom: 12px;
+    }
+    .ft-comp-col p {
+      font-size: var(--text-base, 17px);
+      line-height: 1.8;
+      color: var(--text-muted, #9CA3AF);
+    }
+    .ft-comp-picker {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ft-comp-picker label {
+      font-size: 11px;
+      color: var(--text-dim, #6B7280);
+      letter-spacing: 0.1em;
+    }
+    .ft-comp-picker select {
+      font-family: inherit;
+      font-size: 12px;
+      padding: 4px 8px;
+      border: 1px solid var(--border, #1C1F26);
+      background: var(--surface, #0E1014);
+      color: var(--text-primary, #E5E7EB);
+      cursor: pointer;
+    }
+
+    /* ── Japanese grid ── */
+    .ft-jp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 640px) {
+      .ft-jp-grid { grid-template-columns: 1fr; }
+    }
+    .ft-jp-card {
+      border: 1px solid var(--border, #1C1F26);
+      padding: 16px;
+    }
+    .ft-jp-card h4 {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim, #6B7280);
+      margin-bottom: 10px;
+      font-family: 'Courier New', monospace;
+    }
+    .ft-jp-card p {
+      font-size: var(--text-base, 17px);
+      line-height: 2.0;
+      color: var(--text-muted, #9CA3AF);
+    }
+  </style>
+
+  <script is:inline>
+  (function() {
+    // ── Sample content ──
+    const bodyText = `<p style="margin-bottom:12px;"><strong style="color:#4C8DFF;">Your own body state is the real variable.</strong> That is the key insight, the 閃き. What separates an experienced grappler from a beginner isn't a larger catalog of techniques — it's an invisible quality of body. Some call it "invisible jiu-jitsu." We call it <em style="color:#00FFFF;font-style:normal;">self-organization</em>.</p>
+<p style="margin-bottom:12px;">Kano Jigoro, the founder of Judo, described the principle of technique as two parts: <strong style="color:#4C8DFF;">Tsukuri</strong> (set-up) and <strong style="color:#4C8DFF;">Kake</strong> (execution). But buried inside Tsukuri is an instruction that gets lost in translation.</p>
+<p style="font-size:0.85em;color:#6B7280;margin-bottom:12px;">This is smaller secondary text — captions, descriptions, and card content at var(--text-sm). Module cards truncate to one line on mobile, which wastes the full-width space.</p>
+<p style="font-size:0.75em;color:#6B7280;">This is label-size text at var(--text-xs): 01 · INTERACTIVE ESSAY · LIVE · 248 concepts · 22 categories</p>`;
+
+    const chromeText = `<div style="display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#6B7280;">
+<span>&larr; Home</span><span style="color:#1C1F26;">|</span><span>自分を作れ</span>
+<span style="margin-left:auto;padding:3px 10px;border:1px solid #1C1F26;">Link</span>
+<span style="padding:3px 10px;border:1px solid #1C1F26;">EN / JP</span>
+</div>
+<div style="margin-top:12px;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:#6B7280;">
+GRAPPLING PRIMITIVES <span style="color:#1C1F26;margin:0 6px;">|</span> Experiments <span style="color:#1C1F26;margin:0 6px;">|</span> Stats
+</div>`;
+
+    // Populate samples
+    document.querySelectorAll('.ft-sample-body').forEach(el => { el.innerHTML = bodyText; });
+    document.querySelectorAll('.ft-sample-chrome').forEach(el => { el.innerHTML = chromeText; });
+
+    // ── Viewport simulation ──
+    const samples = document.getElementById('ft-samples');
+    document.querySelectorAll('[data-width]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-width]').forEach(b => b.classList.remove('ft-btn--active'));
+        btn.classList.add('ft-btn--active');
+        const w = parseInt(btn.dataset.width);
+        samples.style.maxWidth = w ? w + 'px' : 'none';
+      });
+    });
+
+    // ── Background toggle ──
+    document.querySelectorAll('[data-bg]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-bg]').forEach(b => b.classList.remove('ft-btn--active'));
+        btn.classList.add('ft-btn--active');
+        const bg = btn.dataset.bg;
+        document.querySelectorAll('.ft-card, .ft-comp-col, .ft-jp-card').forEach(card => {
+          card.style.background = bg === 'surface' ? '#0E1014' : 'transparent';
+        });
+      });
+    });
+
+    // ── Comparison picker ──
+    const compSelect = document.getElementById('ft-comp-select');
+    const compText = document.getElementById('ft-comp-text');
+    const compLabel = document.getElementById('ft-comp-label');
+    compSelect.addEventListener('change', () => {
+      const opt = compSelect.selectedOptions[0];
+      compText.style.fontFamily = "'" + opt.value + "', sans-serif";
+      compLabel.textContent = opt.dataset.label;
+    });
+  })();
+  </script>
+
+</BaseLayout>

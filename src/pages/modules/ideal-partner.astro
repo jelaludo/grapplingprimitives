@@ -10,7 +10,7 @@ const tldr = await getEntry('module-text', 'ideal-partner-tldr');
 <BaseLayout title="Ideal Training Partner — Grappling Primitives" fullscreen={true}>
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
-<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
   <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
   <span style="color:#21262d;">|</span>
   <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Ideal Training Partner</span>
@@ -207,7 +207,7 @@ const tldr = await getEntry('module-text', 'ideal-partner-tldr');
   --text-primary: #E5E7EB;
   --text-muted:   #9CA3AF;
   --text-dim:     #6B7280;
-  --font-mono:    'Courier New', Consolas, Monaco, monospace;
+  --font-mono:    'Source Code Pro', 'Courier New', monospace;
   --glow-cyan:    0 0 12px #00FFFF88;
   --glow-blue:    0 0 12px #4C8DFF88;
   --glow-soft:    0 0 8px #A970FF66;
@@ -1964,7 +1964,7 @@ function initDriftViz(containerId) {
 
     // Y labels
     ctx.fillStyle = '#6B7280';
-    ctx.font = '12px Courier New';
+    ctx.font = '12px Source Code Pro, Courier New';
     ctx.textAlign = 'right';
     for (let v = 0; v <= 100; v += 25) {
       const y = pad.top + ph * (1 - v / 100);
@@ -1989,7 +1989,7 @@ function initDriftViz(containerId) {
       ctx.fillStyle = 'rgba(248,113,113,0.06)';
       ctx.fillRect(triggerX - 12, pad.top, 24, ph);
       ctx.fillStyle = '#F8717166';
-      ctx.font = '12px Courier New';
+      ctx.font = '12px Source Code Pro, Courier New';
       ctx.textAlign = 'center';
       ctx.fillText(isJa() ? '\u30A8\u30B4' : 'EGO', triggerX, pad.top + 14);
       ctx.fillText('\u2193', triggerX, pad.top + 24);
@@ -3174,7 +3174,7 @@ function initViolenceScatter(containerId) {
       // Y-axis label
       ctx.save();
       ctx.fillStyle = '#6B7280';
-      ctx.font = '12px Courier New';
+      ctx.font = '12px Source Code Pro, Courier New';
       ctx.textAlign = 'center';
       ctx.translate(12, pad.top + ph / 2);
       ctx.rotate(-Math.PI / 2);
@@ -3183,7 +3183,7 @@ function initViolenceScatter(containerId) {
 
       // Y-axis tick labels
       ctx.fillStyle = '#6B7280';
-      ctx.font = '12px Courier New';
+      ctx.font = '12px Source Code Pro, Courier New';
       ctx.textAlign = 'right';
       ctx.fillText(ja ? '平和' : 'Peace', pad.left - 6, h - pad.bottom + 3);
       ctx.fillText(ja ? '致命的' : 'Lethal', pad.left - 6, pad.top + 5);
@@ -3209,7 +3209,7 @@ function initViolenceScatter(containerId) {
 
       // Label the BJJ zone
       ctx.fillStyle = '#00d4ff44';
-      ctx.font = '12px Courier New';
+      ctx.font = '12px Source Code Pro, Courier New';
       ctx.textAlign = 'right';
       ctx.fillText(ja ? 'BJJトレーニング' : 'BJJ Training', zx2 - 4, zy1 + 12);
 
@@ -3244,7 +3244,7 @@ function initViolenceScatter(containerId) {
         if (isHovered || isSelected) {
           const label = ja ? pt.ja : pt.en;
           ctx.fillStyle = '#E5E7EB';
-          ctx.font = '12px Courier New';
+          ctx.font = '12px Source Code Pro, Courier New';
           ctx.textAlign = sx > w / 2 ? 'right' : 'left';
           const lx = sx > w / 2 ? sx - r - 6 : sx + r + 6;
           ctx.fillText(label, lx, sy + 3);

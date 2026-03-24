@@ -67,7 +67,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   </div>
 
   <!-- Category filter panel — vertical right-side overlay -->
-  <div id="filter-panel" class="hidden absolute top-9 right-0 bottom-0 z-30 w-52 border-l border-border flex flex-col" style="background: rgba(5,5,9,0.97); backdrop-filter: blur(8px); font-family: 'Courier New', Consolas, Monaco, monospace;">
+  <div id="filter-panel" class="hidden absolute top-9 right-0 bottom-0 z-30 w-52 border-l border-border flex flex-col" style="background: rgba(5,5,9,0.97); backdrop-filter: blur(8px); font-family: 'Source Code Pro', 'Courier New', monospace;">
     <div class="px-3 py-2 border-b border-border flex items-center justify-between flex-shrink-0">
       <span style="font-size:11px; letter-spacing:0.12em; color:#6b7280; text-transform:uppercase; user-select:none;">Categories</span>
       <div class="flex items-center gap-2">
@@ -122,7 +122,7 @@ const DPR       = Math.min(window.devicePixelRatio || 1, 2);
 const MARGIN    = 48;   // px around the plot area
 const DOT_R     = 4;    // base dot radius (CSS px)
 // Consolas is ClearType-optimised for Windows screens; much crisper than Courier New at small sizes
-const FONT      = '"Consolas", "Courier New", monospace';
+const FONT      = '"Source Code Pro", "Courier New", monospace';
 const C_BG      = '#050509';
 const C_GRID    = 'rgba(28,31,38,0.9)';
 const C_AXIS    = 'rgba(76,141,255,0.25)';

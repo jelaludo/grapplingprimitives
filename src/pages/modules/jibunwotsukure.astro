@@ -9,7 +9,7 @@ const tldr = await getEntry('module-text', 'jibunwotsukure-tldr');
 <BaseLayout title="自分を作れ / Build Yourself First / Grappling Primitives" fullscreen={true}>
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
-<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
   <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">&larr; Home</a>
   <span style="color:#21262d;">|</span>
   <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">自分を作れ</span>
@@ -408,7 +408,7 @@ We can call Tsukuri and Kake the technical principles that follow the basic prin
   --text-primary: #E5E7EB;
   --text-muted:   #9CA3AF;
   --text-dim:     #6B7280;
-  --font-mono:    'Courier New', Consolas, Monaco, monospace;
+  --font-mono:    'Source Code Pro', 'Courier New', monospace;
   --glow-cyan:    0 0 12px #00FFFF88;
   --glow-blue:    0 0 12px #4C8DFF88;
   --glow-soft:    0 0 8px #A970FF66;
@@ -818,7 +818,7 @@ body.lang-ja [lang="en"] { display: none; }
   padding: 4px 8px 8px;
 }
 .by-step-btn {
-  font-family: 'Courier New', Consolas, Monaco, monospace;
+  font-family: 'Source Code Pro', 'Courier New', monospace;
   font-size: clamp(9px, 1.4vw, 12px);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1249,10 +1249,10 @@ function initFunctionViz(containerId, dataKey, prefix) {
   const titleDiv = document.createElement('div');
   titleDiv.style.cssText = 'text-align:center;margin-bottom:16px;';
   titleDiv.innerHTML = `
-    <div style="font-size:1.2rem;font-weight:600;color:${theme.main};letter-spacing:0.05em;">
+    <div style="font-size:1.4rem;font-weight:600;color:${theme.main};letter-spacing:0.05em;">
       <span lang="en">ƒ(${vizData.title})</span><span lang="ja">ƒ(${vizData.titleJa})</span>
     </div>
-    <div style="font-size:0.8rem;color:${theme.glow};letter-spacing:0.1em;">
+    <div style="font-size:0.95rem;color:${theme.glow};letter-spacing:0.1em;">
       <span lang="en">${vizData.subtitle}</span><span lang="ja">${vizData.subtitleJa}</span>
     </div>`;
   container.appendChild(titleDiv);
@@ -1292,7 +1292,7 @@ function initFunctionViz(containerId, dataKey, prefix) {
   centerText.setAttribute('y', cy + 5);
   centerText.setAttribute('text-anchor', 'middle');
   centerText.setAttribute('fill', theme.glow);
-  centerText.setAttribute('font-size', '14px');
+  centerText.setAttribute('font-size', '16px');
   centerText.setAttribute('font-weight', 'bold');
   centerText.textContent = `ƒ(${vizData.title})`;
   svg.appendChild(centerText);
@@ -1301,7 +1301,7 @@ function initFunctionViz(containerId, dataKey, prefix) {
 
   // Tooltip
   const tooltip = document.createElement('div');
-  tooltip.style.cssText = `min-height:40px;margin-top:8px;text-align:center;font-size:0.8rem;color:${theme.glow};opacity:0;transition:opacity 0.2s;`;
+  tooltip.style.cssText = `min-height:40px;margin-top:8px;text-align:center;font-size:0.95rem;color:${theme.glow};opacity:0;transition:opacity 0.2s;`;
   container.appendChild(tooltip);
 
 
@@ -1374,7 +1374,7 @@ function initFunctionViz(containerId, dataKey, prefix) {
           subText.setAttribute('y', subY);
           subText.setAttribute('id', `${prefix}-text-${subComp.id}`);
           subText.setAttribute('text-anchor', 'middle');
-          subText.setAttribute('font-size', '10px');
+          subText.setAttribute('font-size', '11px');
           subText.setAttribute('fill', '#ccc');
           subText.textContent = isJa() ? (subComp.nameJa || subComp.name) : subComp.name;
           nodesGroup.appendChild(subText);
@@ -1412,7 +1412,7 @@ function initFunctionViz(containerId, dataKey, prefix) {
       const comp = vizData.components.find(c => c.id === id);
       if (comp) {
         tooltip.style.opacity = '1';
-        tooltip.innerHTML = `<strong>${isJa() ? (comp.nameJa || comp.name) : comp.name}</strong><br/><span style="color:#9CA3AF;font-size:0.75rem;">${comp.desc}</span>`;
+        tooltip.innerHTML = `<strong>${isJa() ? (comp.nameJa || comp.name) : comp.name}</strong><br/><span style="color:#9CA3AF;font-size:0.85rem;">${comp.desc}</span>`;
       }
     } else {
       tooltip.style.opacity = '0';
@@ -1474,7 +1474,7 @@ function initFunctionViz(containerId, dataKey, prefix) {
         text.setAttribute('x', nodeX);
         text.setAttribute('y', nodeY);
         text.setAttribute('fill', isHovered ? '#fff' : '#e5e0d8');
-        text.setAttribute('font-size', isHovered ? '11px' : '9px');
+        text.setAttribute('font-size', isHovered ? '13px' : '11px');
         text.setAttribute('font-weight', isHovered ? 'bold' : 'normal');
         text.setAttribute('dominant-baseline', 'central');
         text.textContent = isJa() ? (comp.nameJa || comp.name) : comp.name;
@@ -1509,7 +1509,7 @@ function initFunctionViz(containerId, dataKey, prefix) {
           const subText = document.getElementById(`${prefix}-text-${sub.id}`);
           if (subText) {
             subText.setAttribute('fill', isHovered ? '#fff' : '#ccc');
-            subText.setAttribute('font-size', '10px');
+            subText.setAttribute('font-size', '11px');
             const dx = subX - cx;
             const dy = subY - cy;
             const labelR = 14 + subSize;
@@ -1570,7 +1570,7 @@ function initFlowViz(containerId) {
 
     // Tsukuri label
     const tsukuriLabel = document.createElement('div');
-    tsukuriLabel.style.cssText = 'position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#0E1014;padding:0 10px;font-size:0.8rem;font-weight:700;color:#4C8DFF;letter-spacing:0.1em;white-space:nowrap;';
+    tsukuriLabel.style.cssText = 'position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#0E1014;padding:0 10px;font-size:0.95rem;font-weight:700;color:#4C8DFF;letter-spacing:0.1em;white-space:nowrap;';
     tsukuriLabel.textContent = ja ? '作り / Tsukuri' : 'Tsukuri / 作り';
     tsukuriFrame.appendChild(tsukuriLabel);
 
@@ -1582,14 +1582,14 @@ function initFlowViz(containerId) {
     const jibunBox = document.createElement('div');
     jibunBox.style.cssText = 'flex:1;min-width:150px;padding:16px 14px;border:1px solid #16a34a44;border-radius:6px;background:#052e16;text-align:center;';
     jibunBox.innerHTML = `
-      <div style="font-size:1rem;font-weight:700;color:#16a34a;margin-bottom:4px;">${ja ? '自分を作る' : 'Jibun wo Tsukuru'}</div>
-      <div style="font-size:0.7rem;color:#86efac;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;">${ja ? '自分を構築する' : 'Build Yourself'}</div>
-      <div style="font-size:0.7rem;color:#9CA3AF;line-height:1.5;">${ja ? '姿勢、グリップ、構造、整列' : 'Posture, grips, structure, alignment'}</div>`;
+      <div style="font-size:1.15rem;font-weight:700;color:#16a34a;margin-bottom:4px;">${ja ? '自分を作る' : 'Jibun wo Tsukuru'}</div>
+      <div style="font-size:0.85rem;color:#86efac;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;">${ja ? '自分を構築する' : 'Build Yourself'}</div>
+      <div style="font-size:0.85rem;color:#9CA3AF;line-height:1.5;">${ja ? '姿勢、グリップ、構造、整列' : 'Posture, grips, structure, alignment'}</div>`;
     inner.appendChild(jibunBox);
 
     // + sign
     const plus = document.createElement('div');
-    plus.style.cssText = 'display:flex;align-items:center;font-size:1.2rem;color:#6B7280;flex-shrink:0;';
+    plus.style.cssText = 'display:flex;align-items:center;font-size:1.4rem;color:#6B7280;flex-shrink:0;';
     plus.textContent = '+';
     inner.appendChild(plus);
 
@@ -1597,9 +1597,9 @@ function initFlowViz(containerId) {
     const kuzushiBox = document.createElement('div');
     kuzushiBox.style.cssText = 'flex:1;min-width:150px;padding:16px 14px;border:1px solid #ea580c44;border-radius:6px;background:#431407;text-align:center;';
     kuzushiBox.innerHTML = `
-      <div style="font-size:1rem;font-weight:700;color:#ea580c;margin-bottom:4px;">${ja ? '崩し' : 'Kuzushi'}</div>
-      <div style="font-size:0.7rem;color:#fdba74;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;">${ja ? '崩壊' : 'Break / Disrupt'}</div>
-      <div style="font-size:0.7rem;color:#9CA3AF;line-height:1.5;">${ja ? '不整列、ベース除去、孤立化' : 'Misalign, remove base, isolate'}</div>`;
+      <div style="font-size:1.15rem;font-weight:700;color:#ea580c;margin-bottom:4px;">${ja ? '崩し' : 'Kuzushi'}</div>
+      <div style="font-size:0.85rem;color:#fdba74;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;">${ja ? '崩壊' : 'Break / Disrupt'}</div>
+      <div style="font-size:0.85rem;color:#9CA3AF;line-height:1.5;">${ja ? '不整列、ベース除去、孤立化' : 'Misalign, remove base, isolate'}</div>`;
     inner.appendChild(kuzushiBox);
 
     tsukuriFrame.appendChild(inner);
@@ -1607,7 +1607,7 @@ function initFlowViz(containerId) {
 
     // Arrow → Kake
     const arrow = document.createElement('div');
-    arrow.style.cssText = 'display:flex;align-items:center;padding:0 12px;font-size:1.4rem;color:#6B7280;flex-shrink:0;';
+    arrow.style.cssText = 'display:flex;align-items:center;padding:0 12px;font-size:1.6rem;color:#6B7280;flex-shrink:0;';
     arrow.textContent = '→';
     flow.appendChild(arrow);
 
@@ -1615,16 +1615,16 @@ function initFlowViz(containerId) {
     const kakeBox = document.createElement('div');
     kakeBox.style.cssText = 'min-width:140px;max-width:180px;padding:20px 16px;border:1px solid #dc262644;border-radius:6px;background:#450a0a;text-align:center;align-self:stretch;display:flex;flex-direction:column;justify-content:center;';
     kakeBox.innerHTML = `
-      <div style="font-size:1.1rem;font-weight:700;color:#dc2626;margin-bottom:4px;">${ja ? '掛け' : 'Kake'}</div>
-      <div style="font-size:0.7rem;color:#fca5a5;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;">${ja ? '実行' : 'Execute'}</div>
-      <div style="font-size:0.7rem;color:#9CA3AF;line-height:1.5;">${ja ? '条件が揃った時に技を実行' : 'Perform the technique when conditions are met'}</div>`;
+      <div style="font-size:1.25rem;font-weight:700;color:#dc2626;margin-bottom:4px;">${ja ? '掛け' : 'Kake'}</div>
+      <div style="font-size:0.85rem;color:#fca5a5;letter-spacing:0.1em;margin-bottom:8px;text-transform:uppercase;">${ja ? '実行' : 'Execute'}</div>
+      <div style="font-size:0.85rem;color:#9CA3AF;line-height:1.5;">${ja ? '条件が揃った時に技を実行' : 'Perform the technique when conditions are met'}</div>`;
     flow.appendChild(kakeBox);
 
     container.appendChild(flow);
 
     // Insight text
     const insight = document.createElement('div');
-    insight.style.cssText = 'text-align:center;margin-top:16px;font-size:0.8rem;color:#9CA3AF;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto;';
+    insight.style.cssText = 'text-align:center;margin-top:16px;font-size:0.95rem;color:#9CA3AF;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto;';
     insight.innerHTML = ja
       ? '最初の二つは入れ替え可能というよりも、どちらも前提条件である。相手を常に崩しの状態に置くことはできないが、自分の身体を常にレジリエントな状態に保つことはコントロールできるはずだ。「ベース」はこの概念に関連する用語で、<span style="color:#00d4ff;">「力を吸収し、力を生み出す能力」</span>と表現されることがある。'
       : 'It\'s not really that the first two are interchangeable, more like they\'re both pre-requisites. While we cannot always have the other in a state of Kuzushi, we should be able to control our body to always be in a resilient state. "Base" is another term associated with this idea, I heard it described by Canadians as <span style="color:#00d4ff;">"the ability to absorb and generate force"</span>. Great definition.';
@@ -1759,7 +1759,7 @@ function drawArrow(ctx, from, to, color, width, headSize) {
 }
 
 function drawLabel(ctx, text, x, y, fontSize, color) {
-  ctx.font = (fontSize || 14) + "px 'Courier New', Consolas, monospace";
+  ctx.font = (fontSize || 14) + "px 'Source Code Pro', 'Courier New', monospace";
   ctx.fillStyle = color || COLORS.text;
   ctx.textAlign = 'center';
   ctx.fillText(text, x, y);
@@ -1767,7 +1767,7 @@ function drawLabel(ctx, text, x, y, fontSize, color) {
 
 function drawPanelTitle(ctx, title, subtitle, w, h, pos) {
   var pad = 12;
-  ctx.font = "bold 18px 'Courier New', Consolas, monospace";
+  ctx.font = "bold 18px 'Source Code Pro', 'Courier New', monospace";
   ctx.fillStyle = COLORS.label;
   if (pos === 'tl') { ctx.textAlign = 'left';  ctx.fillText(title, pad, 26); }
   else if (pos === 'tr') { ctx.textAlign = 'right'; ctx.fillText(title, w - pad, 26); }
@@ -2143,7 +2143,7 @@ function drawSpine(ctx, positions, strength, time, sc) {
 
   if (strength > 0.4) {
     var midPt = pts[Math.floor(pts.length / 2)];
-    ctx.font = Math.round(13 * sc) + "px 'Courier New', Consolas, monospace";
+    ctx.font = Math.round(13 * sc) + "px 'Source Code Pro', 'Courier New', monospace";
     ctx.fillStyle = color + Math.round(alpha * 200).toString(16).padStart(2, '0');
     ctx.textAlign = 'center';
     ctx.fillText('spine', midPt.x + 24 * sc, midPt.y);
@@ -2190,7 +2190,7 @@ function drawArch(ctx, positions, strength, time, sc) {
   if (strength > 0.4) {
     var midX = (archPts[2].x + archPts[3].x) / 2;
     var midY = (archPts[2].y + archPts[3].y) / 2 - 14 * sc;
-    ctx.font = Math.round(13 * sc) + "px 'Courier New', Consolas, monospace";
+    ctx.font = Math.round(13 * sc) + "px 'Source Code Pro', 'Courier New', monospace";
     ctx.fillStyle = '#e056fd' + Math.round(alpha * 200).toString(16).padStart(2, '0');
     ctx.textAlign = 'center';
     ctx.fillText('arch', midX, midY);

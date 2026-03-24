@@ -6,7 +6,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <BaseLayout title="Grappling Timer — Grappling Primitives" fullscreen={true}>
 
   <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
-  <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+  <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
     <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
     <span style="color:#21262d;">|</span>
     <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Grappling Timer</span>
@@ -15,7 +15,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   </div>
 
   <!-- ── Main ─────────────────────────────────────────────────────────────────── -->
-  <div style="min-height:100vh;padding-top:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;font-family:'Courier New',Consolas,Monaco,monospace;background:#050509;padding-bottom:24px;">
+  <div style="min-height:100vh;padding-top:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;font-family:'Source Code Pro','Courier New',monospace;background:#050509;padding-bottom:24px;">
 
     <!-- Phase label -->
     <div id="phase-label" style="font-family:'DS-Digital',monospace;font-size:clamp(16px,3.5vw,24px);font-weight:700;letter-spacing:0.12em;color:#6b7280;margin-bottom:8px;min-height:32px;transition:color 0.3s;">PAUSED</div>

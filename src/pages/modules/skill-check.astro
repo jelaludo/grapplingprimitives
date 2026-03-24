@@ -45,7 +45,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
 <BaseLayout title="Skill Assessment — Grappling Primitives" fullscreen={true}>
 
   <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
-  <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+  <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
     <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
     <span style="color:#21262d;">|</span>
     <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Skill Assessment</span>
@@ -54,7 +54,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
   </div>
 
   <!-- ── Content ──────────────────────────────────────────────────────────────── -->
-  <div style="padding-top:52px;max-width:680px;margin:0 auto;padding-left:16px;padding-right:16px;padding-bottom:60px;font-family:'Courier New',Consolas,Monaco,monospace;">
+  <div style="padding-top:52px;max-width:680px;margin:0 auto;padding-left:16px;padding-right:16px;padding-bottom:60px;font-family:'Source Code Pro','Courier New',monospace;">
 
     <!-- ── VIEW: SETUP ──────────────────────────────────────────────────────── -->
     <div id="v-setup">
@@ -189,7 +189,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
 
   <style>
     .mode-btn {
-      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-family: 'Source Code Pro', 'Source Code Pro', 'Courier New', monospace;
       background: rgba(13,17,23,0.8);
       border: 1px solid #21262d;
       border-radius: 4px;
@@ -225,7 +225,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
     #q-confirm:hover { background: rgba(0,212,255,0.15); border-color: #00d4ff; }
 
     .retake-btn {
-      font-family: 'Courier New', Consolas, Monaco, monospace;
+      font-family: 'Source Code Pro', 'Source Code Pro', 'Courier New', monospace;
       font-size: 9px;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -367,7 +367,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
         label.setAttribute('fill', SCORE_COLORS[beltValues[i]]);
         label.setAttribute('font-size', '11');
         label.setAttribute('font-weight', '700');
-        label.setAttribute('font-family', "'Courier New', monospace");
+        label.setAttribute('font-family', "'Source Code Pro', 'Courier New', monospace");
         label.classList.add('bc-score-label');
         label.textContent = beltValues[i];
         bcSvg.appendChild(label);
@@ -671,7 +671,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
       });
 
       // Labels
-      ctx.font = "9px 'Courier New', monospace";
+      ctx.font = "9px 'Source Code Pro', 'Courier New', monospace";
       ctx.textBaseline = 'middle';
       for (let i = 0; i < n; i++) {
         const a = startAngle + i * angleStep;
@@ -708,7 +708,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
 
       // Title
       ctx.fillStyle = '#6b7280';
-      ctx.font = "10px 'Courier New', monospace";
+      ctx.font = "10px 'Source Code Pro', 'Courier New', monospace";
       ctx.letterSpacing = '3px';
       ctx.textAlign = 'left';
       ctx.fillText('SKILL ASSESSMENT', PAD, PAD + 12);
@@ -717,11 +717,11 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
       // Overall score
       const oc = fillColor(lastOverall / 10);
       ctx.fillStyle = oc;
-      ctx.font = "bold 52px 'Courier New', monospace";
+      ctx.font = "bold 52px 'Source Code Pro', 'Courier New', monospace";
       ctx.fillText(lastOverall + '%', PAD, PAD + 62);
 
       ctx.fillStyle = '#6b7280';
-      ctx.font = "10px 'Courier New', monospace";
+      ctx.font = "10px 'Source Code Pro', 'Courier New', monospace";
       const dlValid = lastCatResults.filter(r => r.pct != null);
       ctx.fillText(dlValid.length + ' of ' + CAT_DATA.length + ' areas assessed', PAD + 140, PAD + 52);
 
@@ -775,7 +775,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
         ctx.fill();
       });
 
-      ctx.font = "9px 'Courier New', monospace";
+      ctx.font = "9px 'Source Code Pro', 'Courier New', monospace";
       ctx.textBaseline = 'middle';
       for (let i = 0; i < n; i++) {
         const a = sa + i * step;
@@ -797,7 +797,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
         const color = na ? '#6b7280' : fillColor(pct / 10);
 
         ctx.fillStyle = color;
-        ctx.font = "10px 'Courier New', monospace";
+        ctx.font = "10px 'Source Code Pro', 'Courier New', monospace";
         ctx.textAlign = 'left';
         ctx.fillText(r.name.length > 16 ? r.name.slice(0, 15) + '\u2026' : r.name, barLeft, y + 3);
 
@@ -814,14 +814,14 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
         }
 
         ctx.fillStyle = color;
-        ctx.font = "bold 11px 'Courier New', monospace";
+        ctx.font = "bold 11px 'Source Code Pro', 'Courier New', monospace";
         ctx.textAlign = 'right';
         ctx.fillText(na ? '\u2014' : pct + '%', W - PAD, y + 3);
       });
 
       // Watermark
       ctx.fillStyle = '#21262d';
-      ctx.font = "9px 'Courier New', monospace";
+      ctx.font = "9px 'Source Code Pro', 'Courier New', monospace";
       ctx.textAlign = 'right';
       ctx.fillText('grapplingprimitives.com', W - PAD, H - PAD + 8);
 

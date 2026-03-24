@@ -77,7 +77,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <link rel="preload" as="image" href={`${base}/images/memory/Memory_JJJ_Back_440x.webp`}>
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────── -->
-<div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+<div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
   <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
   <span style="color:#21262d;">|</span>
   <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Memory Game</span>
@@ -91,7 +91,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <!-- ── Phase banner ──────────────────────────────────────────────────────── -->
 <div id="phase-banner" style="opacity:0;">
-  <div style="background:rgba(0,0,0,0.85);border:1px solid #21262d;border-radius:4px;padding:5px 14px;font-family:'Courier New',Consolas,Monaco,monospace;font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;" id="phase-text"></div>
+  <div style="background:rgba(0,0,0,0.85);border:1px solid #21262d;border-radius:4px;padding:5px 14px;font-family:'Source Code Pro','Courier New',monospace;font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;" id="phase-text"></div>
 </div>
 
 <!-- ── Game area ──────────────────────────────────────────────────────────── -->
@@ -104,7 +104,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <!-- ── Win modal ─────────────────────────────────────────────────────────── -->
 <div id="win-modal" style="display:none;position:fixed;inset:0;z-index:100;">
   <div style="position:absolute;inset:0;background:rgba(0,0,0,0.72);"></div>
-  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,340px);background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:24px;font-family:'Courier New',Consolas,Monaco,monospace;text-align:center;">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,340px);background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:24px;font-family:'Source Code Pro','Courier New',monospace;text-align:center;">
     <div style="font-size:18px;font-weight:700;color:#c9d1d9;letter-spacing:0.08em;margin-bottom:6px;">All pairs matched!</div>
     <div id="win-badge" style="display:none;font-size:12px;letter-spacing:0.25em;color:#ffaa00;text-transform:uppercase;margin-bottom:14px;">★ New best time!</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:14px 10px;background:rgba(255,255,255,0.03);border-radius:4px;margin-bottom:14px;">
@@ -133,7 +133,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <div id="splash" style="position:fixed;inset:0;z-index:80;background:rgba(0,0,0,0.88);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:20px;">
   <img id="splash-img" src={`${base}/images/memory/Memory_JJJ_Back_440x.webp`} alt="card back" width="440" height="597"
     style="width:min(55vw,200px);height:auto;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.9);display:block;">
-  <div style="font-family:'Courier New',Consolas,Monaco,monospace;text-align:center;">
+  <div style="font-family:'Source Code Pro','Courier New',monospace;text-align:center;">
     <div style="font-size:13px;font-weight:600;letter-spacing:0.08em;color:#c9d1d9;margin-bottom:6px;">Memory Game</div>
     <div style="font-size:10px;letter-spacing:0.15em;color:#6b7280;text-transform:uppercase;">8 pairs · 4×4 grid · tap to begin</div>
   </div>

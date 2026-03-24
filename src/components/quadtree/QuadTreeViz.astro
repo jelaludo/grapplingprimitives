@@ -89,15 +89,15 @@ const isDev = import.meta.env.DEV;
   <!-- Tooltip -->
   <div id="qt-tooltip" class="pointer-events-none fixed z-30 hidden" style="max-width: min(340px, 90vw)">
     <div id="qt-tooltip-inner" class="p-3" style="background: rgba(0,5,12,0.97); border: 1px solid #333; box-shadow: 0 0 24px rgba(0,0,0,0.6)">
-      <div id="qt-tip-title" class="text-sm font-bold text-text-primary mb-1" style="font-family: 'Courier New', monospace"></div>
-      <div id="qt-tip-cat"   class="text-[11px] tracking-[2px] uppercase mb-2" style="font-family: 'Courier New', monospace"></div>
-      <div id="qt-tip-desc"  class="text-xs leading-relaxed"                   style="font-family: 'Courier New', monospace; color: #7ee8f0"></div>
+      <div id="qt-tip-title" class="text-sm font-bold text-text-primary mb-1" style="font-family: 'Source Code Pro', 'Courier New', monospace"></div>
+      <div id="qt-tip-cat"   class="text-[11px] tracking-[2px] uppercase mb-2" style="font-family: 'Source Code Pro', 'Courier New', monospace"></div>
+      <div id="qt-tip-desc"  class="text-xs leading-relaxed"                   style="font-family: 'Source Code Pro', 'Courier New', monospace; color: #7ee8f0"></div>
     </div>
   </div>
 
   <!-- Card modal -->
   <div id="qt-card-modal" class="hidden fixed inset-0 z-40 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div id="qt-card-inner" class="w-full flex flex-col" style="font-family:'Courier New',monospace; background:#000d18; max-width:min(640px,98vw); max-height:88vh; border:1px solid #333; box-shadow:0 0 40px rgba(0,0,0,0.8)">
+    <div id="qt-card-inner" class="w-full flex flex-col" style="font-family:'Source Code Pro','Courier New',monospace; background:#000d18; max-width:min(640px,98vw); max-height:88vh; border:1px solid #333; box-shadow:0 0 40px rgba(0,0,0,0.8)">
       <div class="flex items-start justify-between gap-3 p-5" style="border-bottom:1px solid rgba(255,255,255,0.08)">
         <div>
           <div id="qt-card-title" class="text-base font-bold text-text-primary mb-1"></div>
@@ -111,7 +111,7 @@ const isDev = import.meta.env.DEV;
 
   <!-- HUD bottom bar -->
   <div id="qt-hud" class="absolute bottom-0 left-0 right-0 h-7 border-t flex items-center px-4 gap-4 z-10 select-none"
-       style="font-family:'Courier New',monospace; font-size:10px; letter-spacing:1px; color:rgba(0,200,230,0.4); background:rgba(0,4,10,0.92); border-color:rgba(0,200,230,0.15)">
+       style="font-family:'Source Code Pro','Courier New',monospace; font-size:10px; letter-spacing:1px; color:rgba(0,200,230,0.4); background:rgba(0,4,10,0.92); border-color:rgba(0,200,230,0.15)">
     <span id="qt-hud-total"></span>
     <span id="qt-hud-cat" class="hidden" style="color:rgba(255,255,255,0.45)"></span>
     <span class="flex-1"></span>
@@ -126,7 +126,7 @@ const isDev = import.meta.env.DEV;
 'use strict';
 
 const DPR        = Math.min(window.devicePixelRatio || 1, 2);
-const FONT       = "'Courier New', Consolas, monospace";
+const FONT       = "'Source Code Pro', 'Courier New', monospace";
 const TOOLBAR_H  = 36;
 const HUD_H      = 28;
 const BOX_PAD    = 3;

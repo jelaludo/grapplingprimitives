@@ -2,7 +2,7 @@
 role: ux
 owner: Gerald
 status: active
-last-updated: 2026-03-23
+last-updated: 2026-03-24
 ---
 
 # User Experience
@@ -27,6 +27,11 @@ Readability, interaction design, responsive behavior, visual hierarchy, and info
 <!-- APPEND ONLY. Never delete. -->
 | Date | What was tried | Why it failed / was rejected |
 |---|---|---|
+| 2026-03-24 | Horseshoe: remapping to site blue/cyan palette (#4C8DFF, #00d4ff) | User rejected as "looks like a cheap Google." The blue/orange/red combination lacked cohesion. Iterated through 3 color schemes before settling on the beyond-offense-defense red-to-green gradient. |
+| 2026-03-24 | Horseshoe: flanking side quote zones (3-column grid) | Quotes overflowed on mobile. Side zones hidden at 600px breakpoint meant mobile users saw no quotes at all. |
+| 2026-03-24 | Horseshoe: 3 fixed positions (top/center/bottom) inside arc with max 2 visible | Text at top and bottom positions overlapped with the horseshoe arc stroke, making quotes hard to read. Simplified to single centered quote. |
+| 2026-03-24 | Horseshoe: interval-based quote spawning with rate tiers (1.2s/2.4s/3.2s/4s) | Quotes desynced from slider position during autoplay. A green quote could persist while the dot moved to red. Zone-change-triggered display is cleaner. |
+| 2026-03-24 | Horseshoe: inline event handlers (onmouseover/onmouseout) on deeplink button | Astro strips inline handlers during processing. Button appeared but hover effects didn't work. Fixed with CSS class + :hover. |
 | 2026-03-20 | Keeping original article visual identities (paper-light theme for bjj, dark-amber for theory) | User explicitly wanted both adapted to site terminal palette. Preserving original themes would create visual inconsistency with the rest of the site. Both articles now use the same dark/monospace/accent-blue identity. |
 | 2026-03-18 | Small font sizes across toolbox (10-11px, --text-xs) | User reported "extremely hard to read on desktop." Bumped to --text-sm/--text-base throughout. |
 | 2026-03-18 | Toolbox placed above simulation | Disrupted flow. User wanted simulation first, explanation after. Moved below. |
@@ -37,6 +42,9 @@ Readability, interaction design, responsive behavior, visual hierarchy, and info
 | 2026-03-19 | Global font scale with low clamp ceilings (max 16-18px) | Unreadable on 2560px+ monitors. Monospace needs larger sizes than sans-serif. Bumped to 16-24px range with vw+px formula. |
 
 ## Lessons
+- When adapting a standalone HTML widget to a site, borrow the site's existing module palette (e.g. beyond-offense-defense colors) rather than inventing a new one or using the site's primary accent. The module needs to feel part of the family, not identical to the chrome. -- from dead end on 2026-03-24
+- Interactive quote/text overlays inside SVG containers: use a single centered position with constrained max-width. Multiple positions cause overlap with the visualization. One quote at a time, triggered by state change, is cleaner than interval spawning. -- from dead end on 2026-03-24
+- Astro strips inline event handlers (onmouseover etc.) from non-is:inline elements. Always use CSS :hover or addEventListener for interactive styling. -- from dead end on 2026-03-24
 - Default font sizes for data-dense sections should start at --text-sm minimum, not --text-xs — from dead end on 2026-03-18
 - "Show then explain" ordering: let the user experience the interactive before reading the structural breakdown — from dead end on 2026-03-18
 - Never mix SVG coordinate positioning with HTML nodes styled by CSS font variables. The two systems are decoupled and will break independently. — from dead end on 2026-03-19
@@ -46,10 +54,39 @@ Readability, interaction design, responsive behavior, visual hierarchy, and info
 - Font size sweep is safe as batch replace_all when rules are clear (7→10, 8→11, 9→12). Toolbar chrome (tracking-heavy uppercase) is the exception — intentionally small at 10-11px. — from audit on 2026-03-23
 
 ## Open Questions
-- [ ] Mobile (iPhone) readability not yet tested. Simulation 5-column layout may need further work. — owner: Gerald — since: 2026-03-18
+- [x] Mobile (iPhone) readability not yet tested. Simulation 5-column layout may need further work. — owner: Gerald — since: 2026-03-18 — **resolved 2026-03-24: full mobile audit completed, see Mobile-First Audit TODO below**
+
+## Mobile-First Audit TODO (2026-03-24)
+Priority order. User feedback: fonts hard to read, items break on small screens, zoom feels half-assed.
+
+### P0 — Critical (address first)
+- [ ] **Swap body font**: Courier New is hostile to mobile readability (~30% wider than proportional, thin strokes vanish on low-DPI). Keep monospace for UI chrome (header, labels, toolbars, act-numbers). Use a proportional or screen-optimized mono for body text. Test candidates on `/modules/font-test` page. — [[dev]]
+- [ ] **Remove `maximum-scale=1` from essay pages**: jibunwotsukure, ideal-partner, flow-roll, back-control all set fullscreen=true which locks zoom via viewport meta. This is an accessibility violation (WCAG 1.4.4). Essays have NO canvas — zoom lock is purely punitive. Canvas pages can keep `touch-action:none` on the canvas element itself. — [[dev]]
+- [ ] **Extract inline styles from toolbars**: 14 module toolbars use inline styles exclusively (~50+ lines each). Inline styles cannot be overridden by media queries, making responsive adaptation impossible. Create shared `.module-toolbar` CSS class. — [[dev]], [[arch]]
+- [ ] **Add intermediate breakpoints**: Essays have ONE breakpoint (600px or 640px). Missing tablet (768px) and small-phone (480px). Content either fits or doesn't — no graceful degradation. — [[dev]]
+
+### P1 — High (directly cited in user feedback)
+- [ ] **Canvas touch UX**: QuadTree and ConceptMatrix pinch-zoom is functional but incomplete. Missing: double-tap-to-zoom, zoom level indicator, reset button visible on mobile, momentum/inertia on pan. Add brief onboarding overlay on first visit. — [[dev]]
+- [ ] **Module card text clipping**: `line-clamp-1` on descriptions wastes full-width mobile cards. Use `line-clamp-2` on mobile or remove clamp in single-column layout. — [[dev]]
+- [ ] **Scroll progress for essays**: 6-8 acts at 100vh each with no progress indicator. Add thin progress bar or side dots. — [[dev]]
+- [ ] **Splash overlay persistence**: Uses `sessionStorage` (reappears every tab). Switch to `localStorage` with 24h or permanent expiry. — [[dev]]
+
+### P2 — Medium (structural improvements)
+- [ ] **Auto-hide toolbar on scroll-down**: Fixed 36px toolbar + browser chrome = ~20% viewport loss on iPhone. Show on scroll-up only. — [[dev]]
+- [ ] **Replace hardcoded pixel spacing with clamp()**: `.act { padding: 80px 24px }` is excessive on 667px screens. Use `clamp(40px, 8vh, 80px)` pattern. Same for margins (32px fixed). — [[dev]]
+- [ ] **Mobile modal overflow**: Modals in jibunwotsukure have no max-height or overflow handling. Add `max-height: 85vh; overflow-y: auto;` and safe-area padding. — [[dev]]
+- [ ] **Safe-area insets for notched phones**: No `env(safe-area-inset-*)` usage anywhere. Toolbar and footer collide with system UI on iPhones with notch/Dynamic Island. — [[dev]]
+- [ ] **Japanese text handling**: No CJK font in stack, no `word-break` or `overflow-wrap` for long JP strings. Add CJK font fallback. — [[dev]]
+
+### P3 — Polish
+- [ ] **Reduce text glow on mobile**: `text-shadow: 0 0 12px` blur halo makes text edges fuzzy on OLED. Reduce or remove for body-adjacent text on small screens. — [[dev]]
+- [ ] **Wider scrollbars on touch devices**: 4px custom scrollbar is ungrabable on touch. Consider native scrollbar on mobile. — [[dev]]
+- [ ] **Increase line-height for monospace on mobile**: 1.7-1.8 is fine for proportional, but monospace benefits from 1.9-2.0 on small screens. — [[dev]]
+- [ ] **`prefers-reduced-motion` support**: `.fade-up` and act transitions ignore system preferences. — [[dev]]
+- [ ] **Convert DS-Digital TTF to WOFF2**: TTF files are larger, slower on mobile connections. — [[devops]]
 
 ## Assumptions
-- Desktop is the primary consumption device for this content
+- ~~Desktop is the primary consumption device for this content~~ **Invalidated 2026-03-24**: mobile-first audit reveals significant mobile traffic issues. Reframing to mobile-first.
 - CSS filter inversion of black-on-white PNGs reads well on dark backgrounds
 
 ## Dependencies
@@ -58,6 +95,8 @@ Feeds into: [[dev]], [[qa]]
 
 ## Session Log
 <!-- One line per session, newest first -->
+2026-03-24 (session 7) — Full mobile-first audit completed. 18 issues identified across 4 priority tiers. Font test page created at /modules/font-test with 7 candidates (3 monospace upgrades, 4 proportional hybrids). Assumption invalidated: desktop-primary. TODO list written.
+2026-03-24 (session 6) — Horseshoe module UX: 3 color scheme iterations (site blue rejected, beyond-offense-defense palette adopted). Quote display iterated 4 times: side zones -> inner 3-slot -> single centered. Auto/manual mode split. User dislikes emdashes. 5 dead ends recorded, 3 lessons extracted.
 2026-03-23 (session 5 audit) — Site-wide font size sweep completed: 13 modules fixed, zero remain with sub-10px readable text. Rules: 7-8→10-11 (labels), 9→12 (body), toolbar chrome stays 10-11px. Audit found 669 inline styles and 432 hardcoded colors across 17 modules — deferred to incremental cleanup.
 2026-03-23 (session 5) — Landing page: calligraphy-flanked principles layout, module reorder, clickable principle links. TLDRs moved to page top. Jibunwotsukure hero text repositioned top-left. "Basic Components" dropped from title rotation (now 3 words).
 2026-03-20 (session 4) — Flow-Roll module visual adaptation: two articles with distinct themes (paper-light, dark-amber) unified under site terminal palette. Slider zones mapped to 6 distinguishable colors (dim/green/cyan/amber/accent/red). Cyan used for Tab 2 hero em to visually differentiate research tab from sparring tab. Chinese characters use system CJK fallback (platform-dependent rendering, accepted).

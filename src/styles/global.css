@@ -15,7 +15,7 @@
   html {
     background-color: #050509;
     color: #E5E7EB;
-    font-family: "Courier New", "Consolas", "Monaco", monospace;
+    font-family: "Source Code Pro", "Courier New", monospace;
   }
 
   /* Thin scrollbars everywhere */
@@ -129,7 +129,7 @@
   }
   .act-title {
     font-size: clamp(1.4rem, 4vw, 2rem);
-    font-weight: 400;
+    font-weight: 500;
     color: var(--text-primary);
     margin-bottom: 16px;
     text-shadow: 0 0 12px #4C8DFF88;

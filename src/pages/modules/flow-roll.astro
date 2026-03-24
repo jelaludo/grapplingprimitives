@@ -6,7 +6,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <BaseLayout title="Flow & Roll — Grappling Primitives" fullscreen={true}>
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
-<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
   <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
   <span style="color:#21262d;">|</span>
   <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Flow &amp; Roll</span>
@@ -195,36 +195,36 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <line x1="300" y1="30"  x2="300" y2="310" stroke="rgba(229,231,235,0.1)" stroke-width="1" stroke-dasharray="4,3"/>
 
           <!-- Bottom-left: passive -->
-          <text x="175" y="234" font-family="'Courier New',Consolas,Monaco,monospace" font-style="italic" font-size="13" fill="rgba(107,114,128,0.65)" text-anchor="middle">Passive comfort zone</text>
-          <text x="175" y="252" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(107,114,128,0.5)" text-anchor="middle">"flow rolling" as commonly practiced</text>
-          <text x="175" y="268" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(107,114,128,0.5)" text-anchor="middle">low transfer / feels good</text>
+          <text x="175" y="234" font-family="'Source Code Pro','Courier New',monospace" font-style="italic" font-size="13" fill="rgba(107,114,128,0.65)" text-anchor="middle">Passive comfort zone</text>
+          <text x="175" y="252" font-family="'Source Code Pro','Courier New',monospace" font-size="8.5" fill="rgba(107,114,128,0.5)" text-anchor="middle">"flow rolling" as commonly practiced</text>
+          <text x="175" y="268" font-family="'Source Code Pro','Courier New',monospace" font-size="8.5" fill="rgba(107,114,128,0.5)" text-anchor="middle">low transfer / feels good</text>
 
           <!-- Top-left: technical flow (cyan) -->
-          <text x="175" y="90" font-family="'Courier New',Consolas,Monaco,monospace" font-style="italic" font-size="14.5" fill="rgba(0,255,255,0.9)" text-anchor="middle">Technical Flow Zone</text>
-          <text x="175" y="109" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(0,255,255,0.7)" text-anchor="middle">real puzzles &middot; modulated resistance</text>
-          <text x="175" y="124" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(0,255,255,0.7)" text-anchor="middle">highest flow state accessibility</text>
-          <text x="175" y="139" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(0,255,255,0.65)" text-anchor="middle">&#x6D3B;&#x4EBA;&#x7DF4;&#x6D3B;&#x6B7B;&#x529F;&#x592B; &mdash; alive</text>
+          <text x="175" y="90" font-family="'Source Code Pro','Courier New',monospace" font-style="italic" font-size="14.5" fill="rgba(0,255,255,0.9)" text-anchor="middle">Technical Flow Zone</text>
+          <text x="175" y="109" font-family="'Source Code Pro','Courier New',monospace" font-size="8.5" fill="rgba(0,255,255,0.7)" text-anchor="middle">real puzzles &middot; modulated resistance</text>
+          <text x="175" y="124" font-family="'Source Code Pro','Courier New',monospace" font-size="8.5" fill="rgba(0,255,255,0.7)" text-anchor="middle">highest flow state accessibility</text>
+          <text x="175" y="139" font-family="'Source Code Pro','Courier New',monospace" font-size="8.5" fill="rgba(0,255,255,0.65)" text-anchor="middle">&#x6D3B;&#x4EBA;&#x7DF4;&#x6D3B;&#x6B7B;&#x529F;&#x592B; &mdash; alive</text>
 
           <!-- Bottom-right: muscling (red-ish) -->
-          <text x="442" y="234" font-family="'Courier New',Consolas,Monaco,monospace" font-style="italic" font-size="13" fill="rgba(239,68,68,0.65)" text-anchor="middle">Muscling Through</text>
-          <text x="442" y="252" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(239,68,68,0.5)" text-anchor="middle">high intensity &middot; low technique</text>
-          <text x="442" y="268" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(239,68,68,0.5)" text-anchor="middle">&#x6B7B;&#x529F;&#x592B; with cardio</text>
+          <text x="442" y="234" font-family="'Source Code Pro','Courier New',monospace" font-style="italic" font-size="13" fill="rgba(239,68,68,0.65)" text-anchor="middle">Muscling Through</text>
+          <text x="442" y="252" font-family="'Source Code Pro','Courier New',monospace" font-size="8.5" fill="rgba(239,68,68,0.5)" text-anchor="middle">high intensity &middot; low technique</text>
+          <text x="442" y="268" font-family="'Source Code Pro','Courier New',monospace" font-size="8.5" fill="rgba(239,68,68,0.5)" text-anchor="middle">&#x6B7B;&#x529F;&#x592B; with cardio</text>
 
           <!-- Top-right: hard technical (accent blue) -->
-          <text x="442" y="90" font-family="'Courier New',Consolas,Monaco,monospace" font-style="italic" font-size="14.5" fill="rgba(76,141,255,0.85)" text-anchor="middle">Hard Technical Rolling</text>
-          <text x="442" y="109" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(76,141,255,0.65)" text-anchor="middle">competition / elite training</text>
-          <text x="442" y="124" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(76,141,255,0.65)" text-anchor="middle">flow state: rarer, different quality</text>
-          <text x="442" y="139" font-family="'Courier New',Consolas,Monaco,monospace" font-size="8.5" fill="rgba(76,141,255,0.55)" text-anchor="middle">threat response active</text>
+          <text x="442" y="90" font-family="'Source Code Pro','Courier New',monospace" font-style="italic" font-size="14.5" fill="rgba(76,141,255,0.85)" text-anchor="middle">Hard Technical Rolling</text>
+          <text x="442" y="109" font-family="'Source Code Pro','Courier New',monospace" font-size="8.5" fill="rgba(76,141,255,0.65)" text-anchor="middle">competition / elite training</text>
+          <text x="442" y="124" font-family="'Source Code Pro','Courier New',monospace" font-size="8.5" fill="rgba(76,141,255,0.65)" text-anchor="middle">flow state: rarer, different quality</text>
+          <text x="442" y="139" font-family="'Source Code Pro','Courier New',monospace" font-size="8.5" fill="rgba(76,141,255,0.55)" text-anchor="middle">threat response active</text>
 
           <!-- Axis labels -->
-          <text x="325" y="328" font-family="'Courier New',Consolas,Monaco,monospace" font-size="9" fill="#6B7280" text-anchor="middle" letter-spacing="0.06em">INTENSITY &rarr;</text>
-          <text transform="translate(18,170) rotate(-90)" font-family="'Courier New',Consolas,Monaco,monospace" font-size="9" fill="#6B7280" text-anchor="middle" letter-spacing="0.05em">PROBLEM DENSITY &uarr;</text>
+          <text x="325" y="328" font-family="'Source Code Pro','Courier New',monospace" font-size="9" fill="#6B7280" text-anchor="middle" letter-spacing="0.06em">INTENSITY &rarr;</text>
+          <text transform="translate(18,170) rotate(-90)" font-family="'Source Code Pro','Courier New',monospace" font-size="9" fill="#6B7280" text-anchor="middle" letter-spacing="0.05em">PROBLEM DENSITY &uarr;</text>
 
           <!-- Low/High markers -->
-          <text x="66" y="323" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280">LOW</text>
-          <text x="567" y="323" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280">HIGH</text>
-          <text x="46" y="316" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle">LOW</text>
-          <text x="46" y="38"  font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle">HIGH</text>
+          <text x="66" y="323" font-family="'Source Code Pro','Courier New',monospace" font-size="7.5" fill="#6B7280">LOW</text>
+          <text x="567" y="323" font-family="'Source Code Pro','Courier New',monospace" font-size="7.5" fill="#6B7280">HIGH</text>
+          <text x="46" y="316" font-family="'Source Code Pro','Courier New',monospace" font-size="7.5" fill="#6B7280" text-anchor="middle">LOW</text>
+          <text x="46" y="38"  font-family="'Source Code Pro','Courier New',monospace" font-size="7.5" fill="#6B7280" text-anchor="middle">HIGH</text>
         </svg>
       </div>
 
@@ -435,8 +435,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
             <text x="92" y="86" font-family="Georgia,serif" font-style="italic" font-size="15" fill="rgba(210,108,92,0.9)">Anxiety</text>
             <text x="255" y="250" font-family="Georgia,serif" font-style="italic" font-size="15" fill="rgba(128,128,162,0.85)">Boredom</text>
             <text transform="translate(202,146) rotate(-44)" font-family="Georgia,serif" font-size="10.5" fill="rgba(76,141,255,0.88)" text-anchor="middle">Flow (play, creativity, and so on)</text>
-            <text x="196" y="281" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle" letter-spacing="0.04em">ACTION CAPABILITIES (SKILLS)</text>
-            <text transform="translate(17,150) rotate(-90)" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7" fill="#6B7280" text-anchor="middle" letter-spacing="0.03em">ACTION OPPORTUNITIES</text>
+            <text x="196" y="281" font-family="'Source Code Pro','Courier New',monospace" font-size="7.5" fill="#6B7280" text-anchor="middle" letter-spacing="0.04em">ACTION CAPABILITIES (SKILLS)</text>
+            <text transform="translate(17,150) rotate(-90)" font-family="'Source Code Pro','Courier New',monospace" font-size="7" fill="#6B7280" text-anchor="middle" letter-spacing="0.03em">ACTION OPPORTUNITIES</text>
           </svg>
           <p class="fr-vis-note">Three zones only. No sub-division of the non-flow space. The 1975 book diagram is more honest than its successors about the limits of the evidence.</p>
         </div>
@@ -462,8 +462,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
             <line x1="210" y1="194" x2="100" y2="304" stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
             <line x1="210" y1="194" x2="210" y2="349" stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
             <line x1="210" y1="194" x2="320" y2="304" stroke="rgba(107,114,128,0.48)" stroke-width="0.8"/>
-            <text x="372" y="197" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280">SKILLS&rarr;</text>
-            <text x="210" y="28" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle">&uarr; CHALLENGE</text>
+            <text x="372" y="197" font-family="'Source Code Pro','Courier New',monospace" font-size="7.5" fill="#6B7280">SKILLS&rarr;</text>
+            <text x="210" y="28" font-family="'Source Code Pro','Courier New',monospace" font-size="7.5" fill="#6B7280" text-anchor="middle">&uarr; CHALLENGE</text>
             <text x="289" y="157" font-family="Georgia,serif" font-style="italic" font-size="13.5" fill="rgba(76,141,255,0.95)" text-anchor="middle">Flow</text>
             <text x="244" y="110" font-family="Georgia,serif" font-style="italic" font-size="11" fill="rgba(245,158,11,0.85)" text-anchor="middle">Arousal</text>
             <text x="174" y="110" font-family="Georgia,serif" font-style="italic" font-size="11" fill="rgba(239,68,68,0.85)" text-anchor="middle">Anxiety</text>
@@ -497,15 +497,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
             <line x1="310" y1="107" x2="310" y2="275" stroke="rgba(107,114,128,0.38)" stroke-width="0.8"/>
             <line x1="50" y1="277" x2="50" y2="13" stroke="#6B7280" stroke-width="1.5" marker-end="url(#a3y)"/>
             <line x1="44" y1="275" x2="393" y2="275" stroke="#6B7280" stroke-width="1.5" marker-end="url(#a3x)"/>
-            <text transform="translate(212,155) rotate(-34)" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.8" fill="rgba(76,141,255,0.75)" text-anchor="middle" letter-spacing="0.08em">FLOW CHANNEL</text>
+            <text transform="translate(212,155) rotate(-34)" font-family="'Source Code Pro','Courier New',monospace" font-size="7.8" fill="rgba(76,141,255,0.75)" text-anchor="middle" letter-spacing="0.08em">FLOW CHANNEL</text>
             <text x="92"  y="122" font-family="Georgia,serif" font-style="italic" font-size="13.5" fill="rgba(210,106,90,0.9)">Anxiety</text>
             <text x="268" y="50"  font-family="Georgia,serif" font-style="italic" font-size="13" fill="rgba(192,146,60,0.88)">Arousal</text>
             <text x="52"  y="263" font-family="Georgia,serif" font-style="italic" font-size="8.5" fill="rgba(112,112,152,0.75)">Apathy</text>
             <text x="108" y="262" font-family="Georgia,serif" font-style="italic" font-size="11.5" fill="rgba(102,116,162,0.85)">Boredom</text>
             <text x="216" y="258" font-family="Georgia,serif" font-style="italic" font-size="12" fill="rgba(62,122,175,0.85)">Relaxation</text>
             <text x="322" y="208" font-family="Georgia,serif" font-style="italic" font-size="12" fill="rgba(58,138,106,0.85)">Control</text>
-            <text x="214" y="287" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle" letter-spacing="0.04em">SKILLS &rarr;</text>
-            <text transform="translate(17,150) rotate(-90)" font-family="'Courier New',Consolas,Monaco,monospace" font-size="7.5" fill="#6B7280" text-anchor="middle" letter-spacing="0.03em">CHALLENGE &uarr;</text>
+            <text x="214" y="287" font-family="'Source Code Pro','Courier New',monospace" font-size="7.5" fill="#6B7280" text-anchor="middle" letter-spacing="0.04em">SKILLS &rarr;</text>
+            <text transform="translate(17,150) rotate(-90)" font-family="'Source Code Pro','Courier New',monospace" font-size="7.5" fill="#6B7280" text-anchor="middle" letter-spacing="0.03em">CHALLENGE &uarr;</text>
           </svg>
           <p class="fr-vis-note">The clean zone boundaries imply empirical precision the literature does not really support.</p>
         </div>
@@ -563,15 +563,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
               <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <ellipse cx="60" cy="58" rx="46" ry="42" fill="#0E1014" stroke="#3a3a50" stroke-width="1.5"/>
                 <path d="M20 40 Q30 22 55 20 Q70 18 78 28 Q68 35 55 36 Q38 37 20 40Z" fill="rgba(239,68,68,0.25)" stroke="#EF4444" stroke-width="1"/>
-                <text x="46" y="33" font-size="7" fill="#EF4444" font-family="'Courier New',Consolas,Monaco,monospace" text-anchor="middle">PFC</text>
+                <text x="46" y="33" font-size="7" fill="#EF4444" font-family="'Source Code Pro','Courier New',monospace" text-anchor="middle">PFC</text>
                 <ellipse cx="58" cy="64" rx="16" ry="12" fill="rgba(52,211,153,0.2)" stroke="#34D399" stroke-width="1"/>
-                <text x="58" y="67" font-size="5.5" fill="#34D399" font-family="'Courier New',Consolas,Monaco,monospace" text-anchor="middle">BASAL</text>
-                <text x="58" y="74" font-size="5.5" fill="#34D399" font-family="'Courier New',Consolas,Monaco,monospace" text-anchor="middle">GANGLIA</text>
+                <text x="58" y="67" font-size="5.5" fill="#34D399" font-family="'Source Code Pro','Courier New',monospace" text-anchor="middle">BASAL</text>
+                <text x="58" y="74" font-size="5.5" fill="#34D399" font-family="'Source Code Pro','Courier New',monospace" text-anchor="middle">GANGLIA</text>
                 <ellipse cx="60" cy="93" rx="22" ry="10" fill="#0E1014" stroke="#3a3a50" stroke-width="1.5"/>
-                <text x="25" y="65" font-size="5" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace">EXPLICIT</text>
-                <text x="25" y="72" font-size="5" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace">FLEXIBLE</text>
-                <text x="80" y="65" font-size="5" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace">IMPLICIT</text>
-                <text x="80" y="72" font-size="5" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace">EFFICIENT</text>
+                <text x="25" y="65" font-size="5" fill="#6B7280" font-family="'Source Code Pro','Courier New',monospace">EXPLICIT</text>
+                <text x="25" y="72" font-size="5" fill="#6B7280" font-family="'Source Code Pro','Courier New',monospace">FLEXIBLE</text>
+                <text x="80" y="65" font-size="5" fill="#6B7280" font-family="'Source Code Pro','Courier New',monospace">IMPLICIT</text>
+                <text x="80" y="72" font-size="5" fill="#6B7280" font-family="'Source Code Pro','Courier New',monospace">EFFICIENT</text>
                 <defs>
                   <marker id="brainArr" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
                     <path d="M0,0 L4,2 L0,4Z" fill="#6B7280"/>
@@ -852,7 +852,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   }
 
   .fr-tab {
-    font-family: 'Courier New', Consolas, Monaco, monospace;
+    font-family: 'Source Code Pro', 'Courier New', monospace;
     font-size: var(--text-xs);
     text-transform: uppercase;
     letter-spacing: 0.15em;
@@ -1266,7 +1266,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   /* Tab toggles (within research tab) */
   .fr-tab-row { display: flex; gap: 0; border: 1px solid var(--fr-border); overflow: hidden; margin-bottom: 2rem; flex-wrap: wrap; }
-  .fr-tab-btn { flex: 1; padding: 0.7rem 1rem; background: none; border: none; border-right: 1px solid var(--fr-border); color: var(--fr-dim); font-family: 'Courier New', Consolas, Monaco, monospace; font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, color 0.2s; }
+  .fr-tab-btn { flex: 1; padding: 0.7rem 1rem; background: none; border: none; border-right: 1px solid var(--fr-border); color: var(--fr-dim); font-family: 'Source Code Pro', 'Courier New', monospace; font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, color 0.2s; }
   .fr-tab-btn:last-child { border-right: none; }
   .fr-tab-btn:hover { background: rgba(14,16,20,0.8); color: var(--fr-muted); }
   .fr-tab-btn.active { background: rgba(76,141,255,0.1); color: var(--fr-accent); }
@@ -1580,7 +1580,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     function drawCanvasLabels() {
       cCtx.save();
-      cCtx.font = '9px "Courier New", Consolas, Monaco, monospace';
+      cCtx.font = '9px "Source Code Pro", "Courier New", monospace';
       cCtx.fillStyle = '#6B7280';
 
       cCtx.save();
@@ -1611,7 +1611,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         cCtx.lineWidth = isHov ? 1.5 : 0.5;
         cCtx.strokeRect(px + 1, py + 1, pw - 2, ph - 2);
 
-        cCtx.font = `${isHov ? '700' : '400'} 9px "Courier New", Consolas, Monaco, monospace`;
+        cCtx.font = `${isHov ? '700' : '400'} 9px "Source Code Pro", "Courier New", monospace`;
         cCtx.fillStyle = isHov ? '#00FFFF' : '#9CA3AF';
         cCtx.textAlign = 'center';
         cCtx.textBaseline = 'middle';

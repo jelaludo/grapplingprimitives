@@ -6,7 +6,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <BaseLayout title="Back Control — Grappling Primitives" fullscreen={true}>
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
-<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
   <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
   <span style="color:#21262d;">|</span>
   <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Control Their Rotation</span>
@@ -460,16 +460,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <line x1="170" y1="15" x2="170" y2="325" stroke="#1C1F26" stroke-width="1"/>
         <line x1="15" y1="170" x2="325" y2="170" stroke="#1C1F26" stroke-width="1"/>
         <!-- Labels -->
-        <text x="22" y="164" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace" font-size="12">Self</text>
-        <text x="280" y="164" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace" font-size="12">Opponent</text>
-        <text x="176" y="28" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace" font-size="12">Mental</text>
-        <text x="176" y="322" fill="#6B7280" font-family="'Courier New',Consolas,Monaco,monospace" font-size="12">Physical</text>
+        <text x="22" y="164" fill="#6B7280" font-family="'Source Code Pro','Courier New',monospace" font-size="12">Self</text>
+        <text x="280" y="164" fill="#6B7280" font-family="'Source Code Pro','Courier New',monospace" font-size="12">Opponent</text>
+        <text x="176" y="28" fill="#6B7280" font-family="'Source Code Pro','Courier New',monospace" font-size="12">Mental</text>
+        <text x="176" y="322" fill="#6B7280" font-family="'Source Code Pro','Courier New',monospace" font-size="12">Physical</text>
         <!-- Concept dot: opponent-focused (-0.3 => x=219), physical (-0.7 => y=282) -->
         <a href={`${base}/modules/quadtree#cat=Grappling%20Primitives`} class="qt-dot-link">
           <circle cx="219" cy="282" r="7" fill="#ea580c" opacity="0.9"/>
           <circle cx="219" cy="282" r="14" fill="none" stroke="#ea580c" stroke-width="0.8" opacity="0.4"/>
           <circle cx="219" cy="282" r="18" fill="transparent" class="qt-dot-hit"/>
-          <text x="219" y="262" text-anchor="middle" fill="#9CA3AF" font-family="'Courier New',Consolas,Monaco,monospace" font-size="12" font-weight="bold">Rotational Control</text>
+          <text x="219" y="262" text-anchor="middle" fill="#9CA3AF" font-family="'Source Code Pro','Courier New',monospace" font-size="12" font-weight="bold">Rotational Control</text>
         </a>
       </svg>
     </div>
@@ -511,7 +511,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   --text-primary: #E5E7EB;
   --text-muted:   #9CA3AF;
   --text-dim:     #6B7280;
-  --font-mono:    'Courier New', Consolas, Monaco, monospace;
+  --font-mono:    'Source Code Pro', 'Courier New', monospace;
   --glow-cyan:    0 0 12px #00FFFF88;
   --glow-blue:    0 0 12px #4C8DFF88;
   --glow-soft:    0 0 8px #A970FF66;

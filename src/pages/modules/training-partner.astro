@@ -8,7 +8,7 @@ const imgBase = base + '/images/partners/';
 <BaseLayout title="Training Partners — Grappling Primitives" fullscreen={true}>
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
-<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;">
+<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Source Code Pro','Courier New',monospace;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;">
   <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;white-space:nowrap;flex-shrink:0;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
   <span style="color:#21262d;flex-shrink:0;">|</span>
   <span class="toolbar-title" style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;white-space:nowrap;flex-shrink:0;">Training Partners</span>
@@ -33,7 +33,7 @@ const imgBase = base + '/images/partners/';
 <div id="pill-rail" style="position:fixed;top:36px;left:0;right:0;z-index:40;display:none;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);max-height:60vh;overflow-y:auto;"></div>
 
 <!-- ── App layout ────────────────────────────────────────────────────────────── -->
-<div id="app" style="position:fixed;top:36px;left:0;right:0;bottom:0;display:flex;overflow:hidden;font-family:'Courier New',Consolas,Monaco,monospace;background:#050509;">
+<div id="app" style="position:fixed;top:36px;left:0;right:0;bottom:0;display:flex;overflow:hidden;font-family:'Source Code Pro','Source Code Pro','Courier New',monospace;background:#050509;">
 
   <!-- Left panel ──────────────────────────────────────────────────────────── -->
   <div id="panel-left" style="width:260px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #0d1117;overflow-y:auto;background:#070710;">
@@ -578,9 +578,9 @@ function downloadSelf() {
   ctx.fillStyle='#050509'; ctx.fillRect(0,0,W,H);
 
   // Title
-  ctx.font=`bold 15px 'Courier New',monospace`; ctx.fillStyle='#c9d1d9'; ctx.textAlign='left';
+  ctx.font=`bold 15px 'Source Code Pro','Courier New',monospace`; ctx.fillStyle='#c9d1d9'; ctx.textAlign='left';
   ctx.fillText('TRAINING PARTNER  ·  SELF-ASSESSMENT',LP,26);
-  ctx.font=`12px 'Courier New',monospace`; ctx.fillStyle='#6b7280';
+  ctx.font=`12px 'Source Code Pro','Courier New',monospace`; ctx.fillStyle='#6b7280';
   const {arch,pct}=findClosest(selfScores);
   ctx.fillText(`AVG ${avgScore(selfScores)}  ·  Closest match: ${arch.name} (${pct}%)`,LP,44);
 
@@ -588,7 +588,7 @@ function downloadSelf() {
   ATTRIBUTES.forEach(attr => {
     if(attr.cat!==lastC){
       lastC=attr.cat; y+=6;
-      ctx.font=`bold 10px 'Courier New',monospace`; ctx.fillStyle='#00d4ff'; ctx.textAlign='left';
+      ctx.font=`bold 10px 'Source Code Pro','Courier New',monospace`; ctx.fillStyle='#00d4ff'; ctx.textAlign='left';
       ctx.fillText(attr.cat.toUpperCase(),LP,y+16);
       ctx.strokeStyle='#0d1117'; ctx.lineWidth=1;
       ctx.beginPath(); ctx.moveTo(LP,y+22); ctx.lineTo(W-LP,y+22); ctx.stroke();
@@ -597,7 +597,7 @@ function downloadSelf() {
     const v=selfScores[attr.id]??0, pct2=v/10;
     const barX=LP+LW, barY=y+(RH-BH)/2;
     // label
-    ctx.font=`12px 'Courier New',monospace`; ctx.fillStyle='#8b949e'; ctx.textAlign='right';
+    ctx.font=`12px 'Source Code Pro','Courier New',monospace`; ctx.fillStyle='#8b949e'; ctx.textAlign='right';
     ctx.fillText(attr.label, barX-8, barY+BH/2+3);
     // zone gradient strip
     ctx.globalAlpha=1;
@@ -609,7 +609,7 @@ function downloadSelf() {
     const fc2=fillColor(attr.inverted?10-v:v); ctx.globalAlpha=0.72; ctx.fillStyle=fc2;
     ctx.fillRect(barX,barY,BW*pct2,BH); ctx.globalAlpha=1;
     // number
-    ctx.font=`bold 12px 'Courier New',monospace`; ctx.fillStyle=fc2; ctx.textAlign='right';
+    ctx.font=`bold 12px 'Source Code Pro','Courier New',monospace`; ctx.fillStyle=fc2; ctx.textAlign='right';
     ctx.fillText(String(v),barX+BW-4,barY+BH/2+3);
     // dot pos
     dots.push({x:barX+BW*pct2, y:barY+BH/2, c:fc2});
@@ -627,7 +627,7 @@ function downloadSelf() {
     ctx.strokeStyle=d.c; ctx.lineWidth=2; ctx.stroke();
   });
   // quote
-  ctx.font=`italic 13px 'Courier New',monospace`; ctx.fillStyle='rgba(200,210,220,0.45)'; ctx.textAlign='center';
+  ctx.font=`italic 13px 'Source Code Pro','Courier New',monospace`; ctx.fillStyle='rgba(200,210,220,0.45)'; ctx.textAlign='center';
   ctx.fillText('"Be the Training Partner you wish you had"',W/2,H-28);
 
   const link=document.createElement('a');
@@ -747,7 +747,7 @@ if (isLocal) {
 
     overlay = document.createElement('div');
     overlay.id = 'kanri-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:200;display:flex;justify-content:flex-end;font-family:"Courier New",monospace;';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:200;display:flex;justify-content:flex-end;font-family:"Source Code Pro","Courier New",monospace;';
 
     const backdrop = document.createElement('div');
     backdrop.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,0.55);';

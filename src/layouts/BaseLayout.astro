@@ -25,6 +25,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <Fragment set:html={`<style>
+      /* Source Code Pro — self-hosted variable WOFF2 (weights 200-900), latin subset */
+      @font-face { font-family:'Source Code Pro'; src:url('${base}/fonts/SourceCodePro/SourceCodePro-VF-latin.woff2') format('woff2'); font-weight:200 900; font-style:normal; font-display:swap; unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+      @font-face { font-family:'Source Code Pro'; src:url('${base}/fonts/SourceCodePro/SourceCodePro-VF-italic-latin.woff2') format('woff2'); font-weight:200 900; font-style:italic; font-display:swap; unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+      /* DS-Digital — retro display font */
       @font-face { font-family:'DS-Digital'; src:url('${base}/fonts/DS_Digital/DS-DIGI.TTF')  format('truetype'); font-weight:400; font-style:normal; }
       @font-face { font-family:'DS-Digital'; src:url('${base}/fonts/DS_Digital/DS-DIGIB.TTF') format('truetype'); font-weight:700; font-style:normal; }
       @font-face { font-family:'DS-Digital'; src:url('${base}/fonts/DS_Digital/DS-DIGII.TTF') format('truetype'); font-weight:400; font-style:italic; }
@@ -36,11 +40,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     {!fullscreen && (
       <header class="fixed top-0 left-0 right-0 z-50 h-10 border-b border-border bg-bg/95 backdrop-blur-sm flex items-center px-4 gap-4">
-        <a href={`${base}/`} class="text-[10px] tracking-[3px] text-text-muted uppercase hover:text-accent transition-colors">
+        <a href={`${base}/`} class="text-[11px] tracking-[2px] text-text-muted uppercase hover:text-accent transition-colors font-medium">
           GRAPPLING PRIMITIVES
         </a>
         <span class="text-border">|</span>
-        <nav class="flex items-center gap-4 text-[10px] tracking-[2px] text-text-dim uppercase">
+        <nav class="flex items-center gap-4 text-[11px] tracking-[1.5px] text-text-dim uppercase">
           <a href={`${base}/experiments`} class="hover:text-accent transition-colors">Experiments</a>
           {import.meta.env.DEV && <a href={`${base}/modules/stats`} class="hover:text-accent transition-colors text-[#00ff41]/60">Stats</a>}
         </nav>
@@ -52,7 +56,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </main>
 
     {!fullscreen && (
-      <footer class="border-t border-border py-3 px-4 text-[9px] tracking-[2px] text-text-dim uppercase text-center">
+      <footer class="border-t border-border py-3 px-4 text-[10px] tracking-[1.5px] text-text-dim uppercase text-center">
         Grappling Primitives — grapplingprimitives.com
       </footer>
     )}

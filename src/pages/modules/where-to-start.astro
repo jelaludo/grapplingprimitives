@@ -6,7 +6,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <BaseLayout title="Where to Start — Grappling Primitives" fullscreen={true}>
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
-<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Courier New',Consolas,Monaco,monospace;">
+<div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
   <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
   <span style="color:#21262d;">|</span>
   <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Where to Start</span>
@@ -250,7 +250,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   --text-primary: #E5E7EB;
   --text-muted:   #9CA3AF;
   --text-dim:     #6B7280;
-  --font-mono:    'Courier New', Consolas, Monaco, monospace;
+  --font-mono:    'Source Code Pro', 'Courier New', monospace;
   --glow-cyan:    0 0 12px #00FFFF88;
   --glow-blue:    0 0 12px #4C8DFF88;
   --glow-green:   0 0 12px #34D39988;
