@@ -29,12 +29,11 @@ const { Content: EssayContent } = await essayEntry!.render();
 
     <div class="hs-stage">
 
-      <!-- alpha quote zone -->
-      <div id="zone-alpha" class="hs-quote-zone hs-quote-zone--alpha"></div>
-
       <!-- center panel -->
-      <div class="hs-center">
-        <svg viewBox="0 0 500 390" class="hs-svg">
+      <div class="hs-center" style="position:relative;">
+        <!-- quote overlay inside the horseshoe -->
+        <div id="zone-inner" class="hs-inner-quotes"></div>
+        <svg viewBox="0 0 500 420" class="hs-svg">
           <defs>
             <linearGradient id="hs-grad" x1="0" y1="1" x2="0" y2="0">
               <stop offset="0%"   stop-color="#b71c1c"/>
@@ -46,17 +45,16 @@ const { Content: EssayContent } = await essayEntry!.render();
               <stop offset="100%" stop-color="#2e7d32"/>
             </linearGradient>
           </defs>
-          <!-- horseshoe arc — single path with vertical gradient (red at bottom → green at top) -->
-          <path d="M 185,313 A 130,130 0 0,1 120,200 A 130,130 0 0,1 185,87 A 130,130 0 0,1 315,87 A 130,130 0 0,1 380,200 A 130,130 0 0,1 315,313" stroke="url(#hs-grad)" stroke-width="40" fill="none" stroke-linecap="round"/>
+          <!-- horseshoe arc: center (250,210), radius 210, stroke 20 -->
+          <path d="M 100,340 A 210,210 0 0,1 40,210 A 210,210 0 0,1 100,80 A 210,210 0 0,1 400,80 A 210,210 0 0,1 460,210 A 210,210 0 0,1 400,340" stroke="url(#hs-grad)" stroke-width="20" fill="none" stroke-linecap="round"/>
           <!-- neighbor line -->
-          <line x1="185" y1="340" x2="315" y2="340" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="100" y1="365" x2="400" y2="365" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
           <!-- labels -->
-          <text x="250" y="18"  text-anchor="middle" font-size="16" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.6)">craft · signal</text>
-          <text x="143" y="375" text-anchor="middle" font-size="15" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.45)">alpha bro</text>
-          <text x="357" y="375" text-anchor="middle" font-size="15" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.45)">buffoon</text>
-          <text x="250" y="363" text-anchor="middle" font-size="13" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.22)">extremes are neighbors</text>
+          <text x="70"  y="395" text-anchor="middle" font-size="14" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.45)">alpha bro</text>
+          <text x="430" y="395" text-anchor="middle" font-size="14" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.45)">buffoon</text>
+          <text x="250" y="388" text-anchor="middle" font-size="12" font-family="'Courier New',Consolas,monospace" fill="rgba(229,231,235,0.22)">extremes are neighbors</text>
           <!-- dot -->
-          <circle id="hs-dot" cx="250" cy="70" r="10" fill="#050509" stroke="#2e7d32" stroke-width="3"/>
+          <circle id="hs-dot" cx="250" cy="70" r="8" fill="#050509" stroke="#2e7d32" stroke-width="2.5"/>
         </svg>
 
         <div class="hs-slider-row">
@@ -78,13 +76,10 @@ const { Content: EssayContent } = await essayEntry!.render();
 
       </div>
 
-      <!-- buffoon quote zone -->
-      <div id="zone-buffoon" class="hs-quote-zone hs-quote-zone--buffoon"></div>
-
     </div>
 
     <details class="tldr">
-      <summary class="tldr__toggle">The Grappling Horseshoe — full essay</summary>
+      <summary class="tldr__toggle">short essay on the 'grappling horseshoe zeitgeist'</summary>
       <div class="tldr__body article-prose">
         <EssayContent />
       </div>
@@ -114,8 +109,7 @@ const { Content: EssayContent } = await essayEntry!.render();
   const dot = document.getElementById('hs-dot');
   const bar = document.getElementById('hs-bar');
   const pct = document.getElementById('hs-pct');
-  const zA  = document.getElementById('zone-alpha');
-  const zB  = document.getElementById('zone-buffoon');
+  const zI  = document.getElementById('zone-inner');
 
   var CRAFT_Q = [
     'Turn the resistance up but controlled',
@@ -124,122 +118,65 @@ const { Content: EssayContent } = await essayEntry!.render();
     'Give them challenges, not injuries',
   ];
 
-  let aTimer = null, bTimer = null, cTimer = null;
-  let aUsed  = [],   bUsed  = [], cUsed = [];
+  var aUsed = [], bUsed = [], cUsed = [];
 
   function pick(arr, used) {
     if (used.length >= arr.length) used.length = 0;
-    const rem = arr.filter(function (q) { return used.indexOf(q) < 0; });
-    const q   = rem[Math.floor(Math.random() * rem.length)];
+    var rem = arr.filter(function (q) { return used.indexOf(q) < 0; });
+    var q = rem[Math.floor(Math.random() * rem.length)];
     used.push(q);
     return q;
   }
 
-  // ── Ordered slot system for quote positioning ──
-  // Divide vertical space into slots; cycle through them in order
-  // with a random offset so consecutive quotes are never adjacent.
-  var SLOTS = [0, 16, 32, 48, 64];
-  var aSlotIdx = 0, bSlotIdx = 0, cSlotIdx = 0;
+  // ── Quote display: one at a time, triggered by movement ──
+  var activeKill = null;
 
-  function nextSlot(current) {
-    // jump 2-3 slots ahead (wrapping) so consecutive quotes are spaced apart
-    var jump = 2 + Math.floor(Math.random() * 2); // 2 or 3
-    return (current + jump) % SLOTS.length;
+  function clearQuote() {
+    if (activeKill) { activeKill(); activeKill = null; }
   }
 
-  function spawn(zone, text, cls) {
-    var slotIdx;
-    if (cls === 'alpha')      { slotIdx = aSlotIdx; aSlotIdx = nextSlot(aSlotIdx); }
-    else if (cls === 'craft') { slotIdx = cSlotIdx; cSlotIdx = nextSlot(cSlotIdx); }
-    else                      { slotIdx = bSlotIdx; bSlotIdx = nextSlot(bSlotIdx); }
+  function showQuote(text, cls) {
+    clearQuote();
 
-    var baseTop = SLOTS[slotIdx];
-    // small jitter within the slot (±4%) to avoid mechanical feel
-    var jitter = Math.floor(Math.random() * 8) - 4;
-    var top = Math.max(0, Math.min(72, baseTop + jitter));
-
-    const el       = document.createElement('div');
-    el.className   = 'hs-q-item hs-q-item--' + cls;
+    var el = document.createElement('div');
+    el.className = 'hs-q-item hs-q-item--' + cls;
     el.textContent = '\u201C' + text + '\u201D';
-    el.style.top   = top + '%';
     el.style.opacity = '0';
-    zone.appendChild(el);
+    zI.appendChild(el);
 
-    const FI = 350, STAY = 2200, FO = 800, total = FI + STAY + FO;
-    let t0 = null;
+    var killed = false;
+    activeKill = function () { killed = true; el.remove(); };
+
+    var FI = 350, STAY = 2200, FO = 700, total = FI + STAY + FO;
+    var t0 = null;
 
     (function frame(ts) {
+      if (killed) return;
       if (!t0) t0 = ts;
-      const e = ts - t0;
-      let op;
-      if      (e < FI)          op = e / FI;
-      else if (e < FI + STAY)   op = 1;
-      else if (e < total)       op = 1 - (e - FI - STAY) / FO;
-      else { el.remove(); return; }
+      var e = ts - t0;
+      var op;
+      if      (e < FI)        op = e / FI;
+      else if (e < FI + STAY) op = 1;
+      else if (e < total)     op = 1 - (e - FI - STAY) / FO;
+      else { el.remove(); activeKill = null; return; }
       el.style.opacity = op.toFixed(3);
       requestAnimationFrame(frame);
     })(performance.now());
   }
 
-  function startAlpha(fast) {
-    if (aTimer) return;
-    var rate = fast ? 1200 : 2400;
-    spawn(zA, pick(alphaQuotes, aUsed), 'alpha');
-    aTimer = setInterval(function () { spawn(zA, pick(alphaQuotes, aUsed), 'alpha'); }, rate);
-  }
-  function stopAlpha() { if (aTimer) { clearInterval(aTimer); aTimer = null; } }
-
-  function startBuff(fast) {
-    if (bTimer) return;
-    var rate = fast ? 1200 : 2400;
-    spawn(zB, pick(buffoonQuotes, bUsed), 'buffoon');
-    bTimer = setInterval(function () { spawn(zB, pick(buffoonQuotes, bUsed), 'buffoon'); }, rate);
-  }
-  function stopBuff() { if (bTimer) { clearInterval(bTimer); bTimer = null; } }
-
-  function startCraft() {
-    if (cTimer) return;
-    // alternate sides for craft quotes
-    var craftSide = 0;
-    function spawnCraft() {
-      var zone = craftSide % 2 === 0 ? zA : zB;
-      spawn(zone, pick(CRAFT_Q, cUsed), 'craft');
-      craftSide++;
-    }
-    spawnCraft();
-    cTimer = setInterval(spawnCraft, 3200);
-  }
-  function stopCraft() { if (cTimer) { clearInterval(cTimer); cTimer = null; } }
-
-  function updateQuotes(v) {
-    // orange/red zones: alpha or buffoon quotes
-    if (v <= 25) {
-      stopBuff(); stopCraft();
-      if (aTimer && ((v <= 15) !== prevAlphaFast)) { stopAlpha(); }
-      startAlpha(v <= 15);
-      prevAlphaFast = v <= 15;
-    } else if (v >= 75) {
-      stopAlpha(); stopCraft();
-      if (bTimer && ((v >= 85) !== prevBuffFast)) { stopBuff(); }
-      startBuff(v >= 85);
-      prevBuffFast = v >= 85;
-    } else if (v >= 36 && v <= 64) {
-      // green zone: positive craft quotes
-      stopAlpha(); stopBuff();
-      startCraft();
-    } else {
-      // transition zones (26-35, 65-74): quiet
-      stopAlpha(); stopBuff(); stopCraft();
-    }
+  function quoteForValue(v) {
+    if (v <= 25)                return { text: pick(alphaQuotes, aUsed),   cls: 'alpha' };
+    if (v >= 75)                return { text: pick(buffoonQuotes, bUsed), cls: 'buffoon' };
+    if (v >= 36 && v <= 64)     return { text: pick(CRAFT_Q, cUsed),      cls: 'craft' };
+    return null; // transition zones: no quote
   }
 
-  var prevAlphaFast = false, prevBuffFast = false;
-
-  function update(v) {
+  // ── Render (no quote logic, just visuals) ──
+  function render(v) {
     var t = v / 100;
     var a = (120 + t * 300) * Math.PI / 180;
-    dot.setAttribute('cx', (250 + 130 * Math.cos(a)).toFixed(2));
-    dot.setAttribute('cy', (200 + 130 * Math.sin(a)).toFixed(2));
+    dot.setAttribute('cx', (250 + 210 * Math.cos(a)).toFixed(2));
+    dot.setAttribute('cy', (210 + 210 * Math.sin(a)).toFixed(2));
 
     var z = ZONES.find(function (x) { return v <= x.max; }) || ZONES[4];
     dot.setAttribute('stroke', z.color);
@@ -250,59 +187,63 @@ const { Content: EssayContent } = await essayEntry!.render();
     pct.textContent      = sig + '%';
 
     sl.style.setProperty('--thumb-color', z.color);
-    updateQuotes(v);
   }
 
-  // ── Autoplay ──
+  // ── Autoplay mode ──
+  var autoMode = true;
   var idleTimeout = null;
-  var autoplayRAF = null;
-  var autoplayActive = false;
-  var autoTarget = null;
-  var autoPauseUntil = 0;
+  var autoTimeout = null;
+  var autoTargets = [];
+  var autoIdx = 0;
 
-  function pickAutoTarget() {
-    // pick a random position, biased toward extremes for visual interest
-    var r = Math.random();
-    if (r < 0.35) return Math.floor(Math.random() * 30);        // left side
-    else if (r < 0.7) return 70 + Math.floor(Math.random() * 30); // right side
-    else return 25 + Math.floor(Math.random() * 50);              // middle
+  // pre-build a tour: a sequence of interesting positions
+  function buildTour() {
+    var pts = [];
+    // visit a few zones in a natural-feeling order
+    var stops = [50, 20, 5, 40, 80, 95, 55, 10, 70, 45];
+    for (var i = 0; i < stops.length; i++) pts.push(stops[i]);
+    return pts;
   }
+  autoTargets = buildTour();
 
-  function autoplayStep(ts) {
-    if (!autoplayActive) return;
-    if (ts < autoPauseUntil) {
-      autoplayRAF = requestAnimationFrame(autoplayStep);
-      return;
-    }
+  function autoStep() {
+    if (!autoMode) return;
+
+    var target = autoTargets[autoIdx % autoTargets.length];
+    autoIdx++;
     var current = +sl.value;
-    if (autoTarget === null || Math.abs(current - autoTarget) < 1) {
-      // arrived — pause 2-4s then pick new target
-      autoTarget = pickAutoTarget();
-      autoPauseUntil = ts + 2000 + Math.random() * 2000;
-      autoplayRAF = requestAnimationFrame(autoplayStep);
-      return;
+    var dir = target > current ? 1 : -1;
+    var steps = Math.abs(target - current);
+    var stepNum = 0;
+
+    function tick() {
+      if (!autoMode) return;
+      if (stepNum >= steps) {
+        // arrived: show a quote, then wait 2s before next move
+        var q = quoteForValue(target);
+        if (q) showQuote(q.text, q.cls);
+        autoTimeout = setTimeout(autoStep, 2000);
+        return;
+      }
+      stepNum++;
+      var v = current + dir * stepNum;
+      v = Math.max(0, Math.min(100, v));
+      sl.value = v;
+      render(v);
+      // move at ~20 units/sec (50ms per step)
+      autoTimeout = setTimeout(tick, 50);
     }
-    // move toward target slowly (~0.3 units per frame at 60fps)
-    var step = autoTarget > current ? 0.3 : -0.3;
-    var next = Math.round(current + step);
-    if (next === current) next = current + (step > 0 ? 1 : -1);
-    next = Math.max(0, Math.min(100, next));
-    sl.value = next;
-    update(next);
-    autoplayRAF = requestAnimationFrame(autoplayStep);
+    tick();
   }
 
   function startAutoplay() {
-    if (autoplayActive) return;
-    autoplayActive = true;
-    autoTarget = null;
-    autoPauseUntil = 0;
-    autoplayRAF = requestAnimationFrame(autoplayStep);
+    autoMode = true;
+    autoStep();
   }
 
   function stopAutoplay() {
-    autoplayActive = false;
-    if (autoplayRAF) { cancelAnimationFrame(autoplayRAF); autoplayRAF = null; }
+    autoMode = false;
+    if (autoTimeout) { clearTimeout(autoTimeout); autoTimeout = null; }
   }
 
   function resetIdleTimer() {
@@ -310,14 +251,27 @@ const { Content: EssayContent } = await essayEntry!.render();
     idleTimeout = setTimeout(startAutoplay, 10000);
   }
 
+  // ── Manual mode: show quote on significant slide ──
+  var lastQuoteValue = 50;
+
   sl.addEventListener('input', function (e) {
     stopAutoplay();
-    update(+e.target.value);
+    var v = +e.target.value;
+    render(v);
+
+    // trigger a new quote every 15+ units of movement
+    if (Math.abs(v - lastQuoteValue) >= 15) {
+      var q = quoteForValue(v);
+      if (q) showQuote(q.text, q.cls);
+      else clearQuote();
+      lastQuoteValue = v;
+    }
+
     resetIdleTimer();
   });
 
-  // start with autoplay
-  update(50);
+  // init
+  render(50);
   startAutoplay();
 
   var dlBtn = document.getElementById('deeplink-btn');
@@ -395,36 +349,36 @@ const { Content: EssayContent } = await essayEntry!.render();
 
   /* ── main layout ── */
   .hs-stage {
-    display: grid;
-    grid-template-columns: 1fr minmax(0, 480px) 1fr;
-    gap: 0;
+    max-width: 480px;
+    margin: 0 auto;
     width: 100%;
-    align-items: start;
   }
 
-  /* ── quote zones ── */
-  .hs-quote-zone {
-    position: relative;
-    min-height: 340px;
-    overflow: hidden;
-    padding: 0 8px;
+  /* ── quote overlay (centered inside horseshoe) ── */
+  .hs-inner-quotes {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-
-  .hs-quote-zone--alpha  { padding-right: 12px; }
-  .hs-quote-zone--buffoon { padding-left: 12px; }
 
   .hs-q-item {
-    position: absolute;
     font-size: var(--text-xs);
-    line-height: 1.55;
+    line-height: 1.6;
     font-style: italic;
     opacity: 0;
-    max-width: 100%;
     pointer-events: none;
+    text-align: center;
+    max-width: 180px;
+    padding: 4px 8px;
+    word-wrap: break-word;
   }
 
-  .hs-q-item--alpha   { color: #d32f2f; text-align: right; right: 0; }
-  .hs-q-item--buffoon { color: #ef6c00; text-align: left; left: 0; }
+  .hs-q-item--alpha   { color: #d32f2f; }
+  .hs-q-item--buffoon { color: #ef6c00; }
   .hs-q-item--craft   { color: #43a047; }
 
   /* ── SVG panel ── */
@@ -548,8 +502,6 @@ const { Content: EssayContent } = await essayEntry!.render();
 
   /* ── responsive ── */
   @media (max-width: 600px) {
-    .hs-stage { grid-template-columns: 1fr; }
-    .hs-quote-zone { display: none; }
     .hs-header { margin-bottom: 32px; }
   }
 </style>
