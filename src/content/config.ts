@@ -62,4 +62,14 @@ const WordLists = defineCollection({
   schema: z.object({}).passthrough(),
 });
 
-export const collections = { concepts, categories, Articles, 'module-text': module_text, WordLists };
+// ── Horseshoe Quotes ────────────────────────────────────────────────────────
+// One file per side (alpha / buffoon). Body = one quote per line.
+const horseshoeQuotes = defineCollection({
+  type: 'content',
+  schema: z.object({
+    side: z.enum(['alpha', 'buffoon']),
+    label: z.string(),
+  }),
+});
+
+export const collections = { concepts, categories, Articles, 'module-text': module_text, WordLists, 'horseshoe-quotes': horseshoeQuotes };
