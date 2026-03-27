@@ -14,7 +14,6 @@ const concepts = conceptEntries.map(e => ({
   slug: e.slug,
   concept: e.data.concept,
   category: e.data.category,
-  categoryColor: catColorMap.get(e.data.category) ?? '#888',
   shortDescription: e.data.short_description ?? '',
   body: e.body ?? '',
   related: e.data.related ?? [],
@@ -666,7 +665,7 @@ const categories = categoryEntries
       currentConcept = null;
       $("r-reader").classList.remove("active");
       $("r-landing").style.display = "";
-      history.pushState(null, "", window.location.pathname);
+      history.back();
     }
 
     // ===== Event Listeners =====
