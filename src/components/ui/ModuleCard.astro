@@ -95,7 +95,7 @@ const isDisabled = status !== 'live';
 
     <!-- Status badge (top-right over thumbnail) -->
     <span class:list={[
-      'absolute top-2 right-2 text-[9px] tracking-[2px] border px-1.5 py-0.5 backdrop-blur-sm',
+      'absolute top-2 right-2 text-[length:var(--text-chrome)] tracking-[2px] border px-1.5 py-0.5 backdrop-blur-sm',
       statusColor[status],
     ]}>
       {statusLabel[status]}
@@ -114,7 +114,7 @@ const isDisabled = status !== 'live';
         {title}
       </h3>
       {tag && (
-        <span class="text-[9px] tracking-[2px] text-text-dim border border-border px-1.5 py-0.5 flex-shrink-0">
+        <span class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim border border-border px-1.5 py-0.5 flex-shrink-0">
           {tag}
         </span>
       )}

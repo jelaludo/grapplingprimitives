@@ -117,7 +117,7 @@ if (isDev) {
 <BaseLayout title="Dev Stats — Grappling Primitives">
   <div class="max-w-4xl mx-auto px-4 py-12 fade-up">
 
-    <a href={`${base}/`} class="text-[9px] tracking-[3px] text-text-dim uppercase hover:text-accent transition-colors mb-6 inline-block">
+    <a href={`${base}/`} class="text-[length:var(--text-chrome)] tracking-[3px] text-text-dim uppercase hover:text-accent transition-colors mb-6 inline-block">
       &larr; BACK TO MODULES
     </a>
 
@@ -132,7 +132,7 @@ if (isDev) {
 
       <!-- Code -->
       <div class="p-5 border border-accent/30 bg-accent/5 rounded-sm">
-        <div class="text-[9px] tracking-[2px] text-accent uppercase mb-3">Code</div>
+        <div class="text-[length:var(--text-chrome)] tracking-[2px] text-accent uppercase mb-3">Code</div>
         <div class="space-y-2 text-xs text-text-muted">
           <div class="flex justify-between">
             <span>.astro files</span>
@@ -143,9 +143,9 @@ if (isDev) {
             <span class="text-text-primary font-bold">{totalLOC.toLocaleString()}</span>
           </div>
           <div class="mt-3 pt-3 border-t border-border/30">
-            <div class="text-[9px] tracking-[2px] text-text-dim uppercase mb-2">Largest files</div>
+            <div class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase mb-2">Largest files</div>
             {topFiles.map(f => (
-              <div class="flex justify-between text-[10px] mb-1">
+              <div class="flex justify-between text-[length:var(--text-chrome)] mb-1">
                 <span class="truncate mr-2 text-text-dim">{f.file}</span>
                 <span class="flex-shrink-0">{f.lines} lines</span>
               </div>
@@ -156,7 +156,7 @@ if (isDev) {
 
       <!-- Content -->
       <div class="p-5 border border-[#A970FF]/30 bg-[#A970FF]/5 rounded-sm">
-        <div class="text-[9px] tracking-[2px] text-[#A970FF] uppercase mb-3">Content</div>
+        <div class="text-[length:var(--text-chrome)] tracking-[2px] text-[#A970FF] uppercase mb-3">Content</div>
         <div class="space-y-2 text-xs text-text-muted">
           <div class="flex justify-between">
             <span>Concepts</span>
@@ -175,7 +175,7 @@ if (isDev) {
 
       <!-- Assets -->
       <div class="p-5 border border-[#00ff41]/30 bg-[#00ff41]/5 rounded-sm">
-        <div class="text-[9px] tracking-[2px] text-[#00ff41] uppercase mb-3">Assets</div>
+        <div class="text-[length:var(--text-chrome)] tracking-[2px] text-[#00ff41] uppercase mb-3">Assets</div>
         <div class="space-y-2 text-xs text-text-muted">
           <div class="flex justify-between">
             <span>Total images</span>
@@ -190,9 +190,9 @@ if (isDev) {
             <span class="text-text-primary font-bold">{thumbCount}</span>
           </div>
           <div class="mt-3 pt-3 border-t border-border/30">
-            <div class="text-[9px] tracking-[2px] text-text-dim uppercase mb-2">By directory</div>
+            <div class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase mb-2">By directory</div>
             {imageSubdirs.map(d => (
-              <div class="flex justify-between text-[10px] mb-1">
+              <div class="flex justify-between text-[length:var(--text-chrome)] mb-1">
                 <span class="text-text-dim">{d.name}/</span>
                 <span>{d.count} files &middot; {fmtBytes(d.bytes)}</span>
               </div>
@@ -203,7 +203,7 @@ if (isDev) {
 
       <!-- Dependencies -->
       <div class="p-5 border border-border bg-surface rounded-sm">
-        <div class="text-[9px] tracking-[2px] text-text-dim uppercase mb-3">Dependencies</div>
+        <div class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase mb-3">Dependencies</div>
         <div class="space-y-1 text-xs">
           {deps.map(([name, version]) => (
             <div class="flex justify-between">
@@ -216,7 +216,7 @@ if (isDev) {
 
       <!-- Build -->
       <div class="p-5 border border-border bg-surface rounded-sm">
-        <div class="text-[9px] tracking-[2px] text-text-dim uppercase mb-3">Build</div>
+        <div class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase mb-3">Build</div>
         <div class="space-y-2 text-xs text-text-muted">
           <div class="flex justify-between">
             <span>Astro</span>
@@ -228,14 +228,14 @@ if (isDev) {
           </div>
           <div class="flex justify-between">
             <span>Generated</span>
-            <span class="text-text-primary text-[10px]">{buildTimestamp}</span>
+            <span class="text-text-primary text-[length:var(--text-chrome)]">{buildTimestamp}</span>
           </div>
         </div>
       </div>
 
       <!-- Git -->
       <div class="p-5 border border-border bg-surface rounded-sm">
-        <div class="text-[9px] tracking-[2px] text-text-dim uppercase mb-3">Git</div>
+        <div class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase mb-3">Git</div>
         <div class="space-y-2 text-xs text-text-muted">
           <div class="flex justify-between">
             <span>Commits</span>
@@ -243,7 +243,7 @@ if (isDev) {
           </div>
           <div class="flex justify-between">
             <span>Last commit</span>
-            <span class="text-text-primary text-[10px]">{lastCommit}</span>
+            <span class="text-text-primary text-[length:var(--text-chrome)]">{lastCommit}</span>
           </div>
         </div>
       </div>

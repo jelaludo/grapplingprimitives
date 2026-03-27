@@ -46,9 +46,9 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
 
   <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
   <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
-    <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+    <a href={`${base}/`} style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
     <span style="color:#21262d;">|</span>
-    <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Skill Assessment</span>
+    <span style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Skill Assessment</span>
     <div style="flex:1;"></div>
     <button id="btn-deeplink" style="font-family:inherit;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;padding:3px 9px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;">Link</button>
   </div>
@@ -79,7 +79,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
       </div>
 
       <div style="border-left:2px solid #21262d;padding-left:16px;">
-        <p style="font-size:11px;color:#6b7280;margin:0;line-height:1.7;">
+        <p style="font-size:12px;color:#6b7280;margin:0;line-height:1.7;">
           Covers {categories.length} areas: takedowns, guard passing &amp; retention, closed guard, open guard, half guard, mount, back mount, and leg/wrist locks.
         </p>
       </div>
@@ -101,7 +101,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
 
       <!-- Question -->
       <div style="margin-bottom:28px;min-height:80px;">
-        <div id="q-level" style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#6b7280;margin-bottom:10px;"></div>
+        <div id="q-level" style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#6b7280;margin-bottom:10px;"></div>
         <div id="q-text" style="font-size:clamp(14px,3vw,20px);color:#c9d1d9;line-height:1.6;font-weight:500;"></div>
       </div>
 
@@ -118,7 +118,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
           <span style="font-size:12px;letter-spacing:1px;color:#6b7280;">Fully confident</span>
         </div>
         <button id="q-confirm"
-          style="margin-top:16px;width:100%;font-family:inherit;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 24px;border-radius:3px;cursor:pointer;border:1px solid #00d4ff44;background:rgba(0,212,255,0.08);color:#00d4ff;transition:all 0.15s;">
+          style="margin-top:16px;width:100%;font-family:inherit;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:10px 24px;border-radius:3px;cursor:pointer;border:1px solid #00d4ff44;background:rgba(0,212,255,0.08);color:#00d4ff;transition:all 0.15s;">
           Confirm
         </button>
       </div>
@@ -140,15 +140,15 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
           </svg>
         </div>
         <div style="display:flex;gap:6px;justify-content:center;margin-top:6px;">
-          <div class="bc-label" style="width:48px;text-align:center;font-size:10px;font-weight:700;color:#e0e0e0;">W</div>
-          <div class="bc-label" style="width:48px;text-align:center;font-size:10px;font-weight:700;color:#1565c0;">B</div>
-          <div class="bc-label" style="width:48px;text-align:center;font-size:10px;font-weight:700;color:#7b1fa2;">P</div>
-          <div class="bc-label" style="width:48px;text-align:center;font-size:10px;font-weight:700;color:#6d4c41;">Br</div>
-          <div class="bc-label" style="width:48px;text-align:center;font-size:10px;font-weight:700;color:#ccc;">Bk</div>
+          <div class="bc-label" style="width:48px;text-align:center;font-size:12px;font-weight:700;color:#e0e0e0;">W</div>
+          <div class="bc-label" style="width:48px;text-align:center;font-size:12px;font-weight:700;color:#1565c0;">B</div>
+          <div class="bc-label" style="width:48px;text-align:center;font-size:12px;font-weight:700;color:#7b1fa2;">P</div>
+          <div class="bc-label" style="width:48px;text-align:center;font-size:12px;font-weight:700;color:#6d4c41;">Br</div>
+          <div class="bc-label" style="width:48px;text-align:center;font-size:12px;font-weight:700;color:#ccc;">Bk</div>
         </div>
         <div id="bc-hint" style="text-align:center;font-size:12px;color:#6b7280;margin-top:8px;">5 belt levels remaining</div>
         <button id="bc-confirm"
-          style="margin-top:16px;width:100%;font-family:inherit;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 24px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:rgba(0,212,255,0.03);color:#6b7280;transition:all 0.15s;opacity:0.5;"
+          style="margin-top:16px;width:100%;font-family:inherit;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:10px 24px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:rgba(0,212,255,0.03);color:#6b7280;transition:all 0.15s;opacity:0.5;"
           disabled>
           Confirm
         </button>
@@ -203,7 +203,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
     .mode-btn:hover { border-color: #00d4ff; background: rgba(0,212,255,0.04); }
     .mode-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; color: #c9d1d9; }
     .mode-count { font-size: 13px; color: #00d4ff; margin-bottom: 4px; }
-    .mode-desc  { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #6b7280; }
+    .mode-desc  { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #6b7280; }
 
     #q-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
@@ -226,7 +226,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
 
     .retake-btn {
       font-family: 'Source Code Pro', 'Source Code Pro', 'Courier New', monospace;
-      font-size: 9px;
+      font-size: 12px;
       letter-spacing: 2px;
       text-transform: uppercase;
       background: transparent;
@@ -558,8 +558,8 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
       document.getElementById('r-overall').innerHTML = `
         <div style="font-size:52px;font-weight:800;color:${oc};line-height:1;letter-spacing:-0.02em;">${overall}<span style="font-size:22px;color:#6b7280;font-weight:400;">%</span></div>
         <div>
-          <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">Overall Confidence</div>
-          <div style="font-size:11px;color:#8b949e;">${valid.length} of ${CAT_DATA.length} areas assessed</div>
+          <div style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">Overall Confidence</div>
+          <div style="font-size:12px;color:#8b949e;">${valid.length} of ${CAT_DATA.length} areas assessed</div>
         </div>
       `;
       document.getElementById('r-overall').style.borderColor = oc + '44';
@@ -583,7 +583,7 @@ const totalShort = CAT_DATA.reduce((s, c) => s + c.questions.filter(q => q.short
                 : `<div style="position:absolute;top:0;left:0;height:100%;width:${pct}%;background:${color};opacity:0.75;transition:width 0.7s;z-index:1;"></div>`
               }
             </div>
-            <div style="flex:0 0 36px;font-size:11px;font-weight:700;color:${color};text-align:right;">${na ? '—' : pct + '%'}</div>
+            <div style="flex:0 0 36px;font-size:12px;font-weight:700;color:${color};text-align:right;">${na ? '—' : pct + '%'}</div>
           </div>
         `;
       }).join('');

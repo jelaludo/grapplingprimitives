@@ -18,9 +18,9 @@ const title = article.data.title || article.slug.replace(/-/g, ' ').replace(/\b\
 ---
 
 <BaseLayout title={`${title} - Grappling Primitives`}>
-  <div class="max-w-3xl mx-auto px-4 py-12 fade-up">
+  <div class="mx-auto px-4 py-12 fade-up" style="max-width:min(90vw,60ch)">
 
-    <a href={`${base}/modules/articles`} class="text-[9px] tracking-[3px] text-text-dim uppercase hover:text-accent transition-colors mb-6 inline-block">
+    <a href={`${base}/modules/articles`} class="text-[length:var(--text-chrome)] tracking-[3px] text-text-dim uppercase hover:text-accent transition-colors mb-6 inline-block">
       &larr; ALL ARTICLES
     </a>
 
@@ -37,7 +37,7 @@ const title = article.data.title || article.slug.replace(/-/g, ' ').replace(/\b\
     </article>
 
     <div class="mt-12 pt-6 border-t border-border">
-      <a href={`${base}/modules/articles`} class="text-[9px] tracking-[3px] text-text-dim uppercase hover:text-accent transition-colors">
+      <a href={`${base}/modules/articles`} class="text-[length:var(--text-chrome)] tracking-[3px] text-text-dim uppercase hover:text-accent transition-colors">
         &larr; ALL ARTICLES
       </a>
     </div>
@@ -47,13 +47,13 @@ const title = article.data.title || article.slug.replace(/-/g, ' ').replace(/\b\
 
 <style is:global>
   .article-prose {
+    font-size: var(--text-base);
     line-height: 1.8;
     color: #D1D5DB;
   }
 
   .article-prose p {
     margin-bottom: 1.25rem;
-    font-size: 0.875rem;
   }
 
   .article-prose strong {
@@ -80,6 +80,7 @@ const title = article.data.title || article.slug.replace(/-/g, ' ').replace(/\b\
   .article-prose h4 {
     color: #E5E7EB;
     font-weight: 700;
+    line-height: 1.15;
     margin-top: 2rem;
     margin-bottom: 0.75rem;
   }
@@ -96,7 +97,6 @@ const title = article.data.title || article.slug.replace(/-/g, ' ').replace(/\b\
 
   .article-prose li {
     margin-bottom: 0.35rem;
-    font-size: 0.875rem;
   }
 
   .article-prose blockquote {
@@ -119,7 +119,7 @@ const title = article.data.title || article.slug.replace(/-/g, ' ').replace(/\b\
     background: #1C1F26;
     padding: 0.15rem 0.4rem;
     border-radius: 2px;
-    font-size: 0.8rem;
+    font-size: 0.875rem;
   }
 
   .article-prose pre {

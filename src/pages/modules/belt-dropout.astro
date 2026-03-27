@@ -15,13 +15,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <!-- ── Toolbar ──────────────────────────────────────────────────────────── -->
   <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:10px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
-    <a href={`${base}/`} style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+    <a href={`${base}/`} style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
     <span id="tb-sep1" style="color:#21262d;">|</span>
-    <span id="tb-title" style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Belt Dropout</span>
+    <span id="tb-title" style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Belt Dropout</span>
     <span id="tb-sep2" style="color:#21262d;">|</span>
-    <span id="year-label" style="font-size:11px;letter-spacing:0.1em;color:#c9d1d9;min-width:52px;">Year 0</span>
+    <span id="year-label" style="font-size:12px;letter-spacing:0.1em;color:#c9d1d9;min-width:52px;">Year 0</span>
     <div style="flex:1;"></div>
-    <button id="btn-deeplink" style="font-family:inherit;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
+    <button id="btn-deeplink" style="font-family:inherit;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
     <button id="btn-info" title="Context &amp; notes" style="font-family:inherit;font-size:13px;padding:2px 9px;border-radius:3px;border:1px solid #21262d;background:transparent;color:#6b7280;cursor:pointer;" onmouseover="this.style.color='#00d4ff';this.style.borderColor='#00d4ff'" onmouseout="this.style.color='#6b7280';this.style.borderColor='#21262d'">ℹ</button>
     <button id="btn-gear" title="Simulation settings" style="font-family:inherit;font-size:15px;padding:2px 9px;border-radius:3px;border:1px solid #21262d;background:transparent;color:#6b7280;cursor:pointer;" onmouseover="this.style.color='#00d4ff';this.style.borderColor='#00d4ff'" onmouseout="this.style.color='#6b7280';this.style.borderColor='#21262d'">⚙</button>
     <button id="btn-play" style="font-family:inherit;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;border:1px solid #00d4ff;background:rgba(0,212,255,0.1);color:#00d4ff;cursor:pointer;">▶ Play</button>
@@ -50,7 +50,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <!-- ── Character hover modal ────────────────────────────────────────────── -->
   <div id="char-modal" style="display:none;position:fixed;z-index:80;pointer-events:none;max-width:270px;background:rgba(8,11,18,0.97);border:1px solid #30363d;border-radius:3px;font-family:'Source Code Pro','Courier New',monospace;padding:12px 14px;box-shadow:0 6px 24px rgba(0,0,0,0.7);">
-    <div id="cm-label" style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;"></div>
+    <div id="cm-label" style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;"></div>
     <div id="cm-name"  style="font-size:15px;font-weight:700;color:#c9d1d9;margin-bottom:8px;"></div>
     <div id="cm-desc"  style="font-size:12px;color:#8b949e;line-height:1.65;font-style:italic;"></div>
   </div>
@@ -59,35 +59,35 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <div id="info-overlay" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.74);backdrop-filter:blur(5px);">
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#0d1117;border:1px solid #30363d;border-radius:4px;width:560px;max-width:96vw;max-height:86vh;overflow-y:auto;font-family:'Source Code Pro','Courier New',monospace;">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #21262d;position:sticky;top:0;background:#0d1117;z-index:1;">
-        <span style="font-size:11px;letter-spacing:0.2em;color:#c9d1d9;text-transform:uppercase;">ℹ Context &amp; Notes</span>
+        <span style="font-size:12px;letter-spacing:0.2em;color:#c9d1d9;text-transform:uppercase;">ℹ Context &amp; Notes</span>
         <button id="info-close" style="background:none;border:none;color:#6b7280;font-size:20px;cursor:pointer;line-height:1;padding:0 4px;" onmouseover="this.style.color='#c9d1d9'" onmouseout="this.style.color='#6b7280'">×</button>
       </div>
       <div style="padding:20px 22px;font-size:13px;color:#8b949e;line-height:1.85;">
 
         <section style="margin-bottom:22px;">
-          <div style="font-size:11px;letter-spacing:0.15em;color:#00d4ff;text-transform:uppercase;margin-bottom:10px;">Skill Overlap Between Belts</div>
+          <div style="font-size:12px;letter-spacing:0.15em;color:#00d4ff;text-transform:uppercase;margin-bottom:10px;">Skill Overlap Between Belts</div>
           <p style="margin:0 0 8px;color:#c9d1d9;">While higher belts generally indicate greater skill, there's significant overlap between levels. An experienced blue belt may outperform a newer purple belt.</p>
           <p style="margin:0;font-style:italic;color:#6b7280;font-size:12px;">* "other things being equal" (which they rarely are) — The "average" belt will typically best the "average" belt below, but ymmv.</p>
         </section>
 
         <section style="border-top:1px solid #1c2230;padding-top:20px;margin-bottom:22px;">
-          <div style="font-size:11px;letter-spacing:0.15em;color:#00d4ff;text-transform:uppercase;margin-bottom:10px;">Belt as Ability Proxy</div>
+          <div style="font-size:12px;letter-spacing:0.15em;color:#00d4ff;text-transform:uppercase;margin-bottom:10px;">Belt as Ability Proxy</div>
           <p style="margin:0 0 8px;color:#c9d1d9;">Belt color is a decent proxy for ability, but there are wide discrepancies within belt colors.</p>
           <p style="margin:0;color:#374151;font-size:12px;">「能力の概算」として帯色が悪くないですが、同じ帯色でも幅広く分布されています。</p>
         </section>
 
         <section style="border-top:1px solid #1c2230;padding-top:20px;margin-bottom:22px;">
-          <div style="font-size:11px;letter-spacing:0.15em;color:#00d4ff;text-transform:uppercase;margin-bottom:10px;">Belt Distribution</div>
+          <div style="font-size:12px;letter-spacing:0.15em;color:#00d4ff;text-transform:uppercase;margin-bottom:10px;">Belt Distribution</div>
           <p style="margin:0;color:#c9d1d9;">There are typically lots of white belts, fewest brown belts — they either go to black or quit before brown.</p>
         </section>
 
         <section style="border-top:1px solid #1c2230;padding-top:20px;margin-bottom:22px;">
-          <div style="font-size:11px;letter-spacing:0.15em;color:#00d4ff;text-transform:uppercase;margin-bottom:10px;">Not All Training Hours Are Equal</div>
+          <div style="font-size:12px;letter-spacing:0.15em;color:#00d4ff;text-transform:uppercase;margin-bottom:10px;">Not All Training Hours Are Equal</div>
           <p style="margin:0;color:#c9d1d9;">One hour of half-assed shrimping and resistance-less armbar drills <em style="color:#6b7280;">vs.</em> the same one hour with a great mentor giving tailor-made pointers and increasingly challenging drills — keeping you in the flow zone.</p>
         </section>
 
         <section style="border-top:1px solid #1c2230;padding-top:20px;">
-          <div style="font-size:11px;letter-spacing:0.15em;color:#00d4ff;text-transform:uppercase;margin-bottom:14px;">Outliers &amp; Edge Cases</div>
+          <div style="font-size:12px;letter-spacing:0.15em;color:#00d4ff;text-transform:uppercase;margin-bottom:14px;">Outliers &amp; Edge Cases</div>
           <div style="display:flex;flex-direction:column;gap:12px;">
             <div><span style="color:#c9d1d9;">— Ex-wrestling champ or trained since age 5: Blue Belt</span><br><span style="color:#374151;font-size:12px;">レスリング背景や5歳から練習している青帯</span></div>
             <div><span style="color:#c9d1d9;">— Out-of-prime hobbyist Brown / Black Belt with a bad knee</span><br><span style="color:#374151;font-size:12px;">「最近練習不足の茶黒帯、膝も痛いし」</span></div>
@@ -111,7 +111,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #21262d;position:sticky;top:0;background:#0d1117;z-index:1;">
-        <span style="font-size:11px;letter-spacing:0.2em;color:#c9d1d9;text-transform:uppercase;">⚙ Simulation Settings</span>
+        <span style="font-size:12px;letter-spacing:0.2em;color:#c9d1d9;text-transform:uppercase;">⚙ Simulation Settings</span>
         <button id="gear-close" style="background:none;border:none;color:#6b7280;font-size:20px;cursor:pointer;line-height:1;padding:0 4px;" onmouseover="this.style.color='#c9d1d9'" onmouseout="this.style.color='#6b7280'">×</button>
       </div>
 
@@ -125,13 +125,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
         <!-- Section: Avg years to reach each belt -->
         <div style="font-size:12px;letter-spacing:0.14em;color:#8b949e;text-transform:uppercase;margin-bottom:10px;">Avg years to reach each belt</div>
-        <div style="font-size:11px;color:#374151;margin-bottom:12px;line-height:1.6;">"From previous" = time spent at that belt level. "Total" = cumulative from white belt.</div>
+        <div style="font-size:12px;color:#374151;margin-bottom:12px;line-height:1.6;">"From previous" = time spent at that belt level. "Total" = cumulative from white belt.</div>
         <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
           <thead>
             <tr style="border-bottom:1px solid #1c2230;">
-              <th style="text-align:left;padding:6px 0;font-size:11px;letter-spacing:0.10em;color:#4b5563;font-weight:400;">Target Belt</th>
-              <th style="text-align:center;padding:6px 8px;font-size:11px;letter-spacing:0.08em;color:#4b5563;font-weight:400;">From Previous</th>
-              <th style="text-align:center;padding:6px 0;font-size:11px;letter-spacing:0.08em;color:#4b5563;font-weight:400;">Total (calculated)</th>
+              <th style="text-align:left;padding:6px 0;font-size:12px;letter-spacing:0.10em;color:#4b5563;font-weight:400;">Target Belt</th>
+              <th style="text-align:center;padding:6px 8px;font-size:12px;letter-spacing:0.08em;color:#4b5563;font-weight:400;">From Previous</th>
+              <th style="text-align:center;padding:6px 0;font-size:12px;letter-spacing:0.08em;color:#4b5563;font-weight:400;">Total (calculated)</th>
             </tr>
           </thead>
           <tbody id="gear-prog-tbody"></tbody>
@@ -139,13 +139,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
         <!-- Section: Per-belt dropout + sigma -->
         <div style="font-size:12px;letter-spacing:0.14em;color:#8b949e;text-transform:uppercase;margin-bottom:10px;">Attrition &amp; skill spread per belt</div>
-        <div style="font-size:11px;color:#374151;margin-bottom:12px;line-height:1.6;">"% Quit at Belt" = total fraction who drop out <em>over their entire time</em> at that belt — not per year. Converted to an annual rate internally using the avg-years period. Skill σ = spread within belt (wider = more overlap between belts).</div>
+        <div style="font-size:12px;color:#374151;margin-bottom:12px;line-height:1.6;">"% Quit at Belt" = total fraction who drop out <em>over their entire time</em> at that belt — not per year. Converted to an annual rate internally using the avg-years period. Skill σ = spread within belt (wider = more overlap between belts).</div>
         <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
           <thead>
             <tr style="border-bottom:1px solid #1c2230;">
-              <th style="text-align:left;padding:6px 0;font-size:11px;letter-spacing:0.10em;color:#4b5563;font-weight:400;">Belt</th>
-              <th style="text-align:center;padding:6px 8px;font-size:11px;letter-spacing:0.08em;color:#4b5563;font-weight:400;">% Quit at Belt</th>
-              <th style="text-align:center;padding:6px 0;font-size:11px;letter-spacing:0.08em;color:#4b5563;font-weight:400;">Skill σ</th>
+              <th style="text-align:left;padding:6px 0;font-size:12px;letter-spacing:0.10em;color:#4b5563;font-weight:400;">Belt</th>
+              <th style="text-align:center;padding:6px 8px;font-size:12px;letter-spacing:0.08em;color:#4b5563;font-weight:400;">% Quit at Belt</th>
+              <th style="text-align:center;padding:6px 0;font-size:12px;letter-spacing:0.08em;color:#4b5563;font-weight:400;">Skill σ</th>
             </tr>
           </thead>
           <tbody id="gear-attr-tbody"></tbody>
@@ -502,10 +502,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
                <div style="font-size:26px;font-weight:700;color:#c9d1d9;">${total}</div></div>
           <div><div style="font-size:13px;letter-spacing:0.14em;color:#4b5563;text-transform:uppercase;margin-bottom:4px;">Dropped Out</div>
                <div style="font-size:26px;font-weight:700;color:#f87171;">${droppedTotal}</div>
-               <div style="font-size:11px;color:#f87171;">${pct(droppedTotal,total)} dropout</div></div>
+               <div style="font-size:12px;color:#f87171;">${pct(droppedTotal,total)} dropout</div></div>
           <div><div style="font-size:13px;letter-spacing:0.14em;color:#4b5563;text-transform:uppercase;margin-bottom:4px;">Active</div>
                <div style="font-size:26px;font-weight:700;color:#34d399;">${activeTotal}</div>
-               <div style="font-size:11px;color:#34d399;">${pct(activeTotal,total)} retention</div></div>
+               <div style="font-size:12px;color:#34d399;">${pct(activeTotal,total)} retention</div></div>
         </div>
         <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;">
           <thead><tr style="border-bottom:1px solid #21262d;">
@@ -898,7 +898,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     });
 
     // ── Gear modal ────────────────────────────────────────────────────────────
-    const INP = 'width:66px;background:#161b22;border:1px solid #30363d;border-radius:3px;color:#c9d1d9;font-family:inherit;font-size:11px;padding:5px 6px;text-align:center;outline:none;';
+    const INP = 'width:66px;background:#161b22;border:1px solid #30363d;border-radius:3px;color:#c9d1d9;font-family:inherit;font-size:12px;padding:5px 6px;text-align:center;outline:none;';
 
     // Build the "avg years to reach belt" section (4 rows: →Blue →Purple →Brown →Black)
     function buildProgTable() {
@@ -918,7 +918,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
               value="${S.belts[b].avgYears}" style="${INP}">
           </td>
           <td style="padding:9px 0;text-align:center;">
-            <span class="cfg-cum" data-belt="${b}" style="font-size:11px;color:#6b7280;">${cumul[b].toFixed(1)} yr</span>
+            <span class="cfg-cum" data-belt="${b}" style="font-size:12px;color:#6b7280;">${cumul[b].toFixed(1)} yr</span>
           </td>`;
         tbody.appendChild(tr);
       }

@@ -30,7 +30,7 @@ const games = [
 
     <!-- Header -->
     <div class="mb-10 fade-up">
-      <p class="text-[9px] tracking-[4px] text-accent uppercase mb-3">Modules / Games</p>
+      <p class="text-[length:var(--text-chrome)] tracking-[4px] text-accent uppercase mb-3">Modules / Games</p>
       <h1 class="font-digital text-text-primary mb-3" style="font-size:clamp(2.4rem,7vw,4rem);font-weight:700;letter-spacing:0.04em;text-shadow:0 0 18px #00d4ff66,0 0 40px #00d4ff22;">
         Games Hub
       </h1>
@@ -49,14 +49,14 @@ const games = [
       ].map(({ n, label }) => (
         <div class="bg-surface px-4 py-3 text-center">
           <div class="font-digital text-accent" style="font-size:2rem;font-weight:700;line-height:1;text-shadow:0 0 12px #00d4ff55;">{n}</div>
-          <div class="text-[9px] tracking-[2px] text-text-dim uppercase mt-1">{label}</div>
+          <div class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase mt-1">{label}</div>
         </div>
       ))}
     </div>
 
     <!-- Games grid -->
     <div class="mb-4">
-      <p class="text-[9px] tracking-[3px] text-text-dim uppercase mb-4">All Games</p>
+      <p class="text-[length:var(--text-chrome)] tracking-[3px] text-text-dim uppercase mb-4">All Games</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {games.map((g) => (
           <ModuleCard {...g} />
@@ -66,7 +66,7 @@ const games = [
 
     <!-- Back -->
     <div class="mt-10 fade-up">
-      <a href={`${base}/`} class="text-[10px] tracking-[3px] text-text-dim uppercase hover:text-accent transition-colors">
+      <a href={`${base}/`} class="text-[length:var(--text-chrome)] tracking-[3px] text-text-dim uppercase hover:text-accent transition-colors">
         ← All Modules
       </a>
     </div>

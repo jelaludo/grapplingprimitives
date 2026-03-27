@@ -6,7 +6,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 <BaseLayout title="Weight Class Tool - Grappling Primitives">
   <div class="max-w-4xl mx-auto px-4 py-12 fade-up">
 
-    <a href={`${base}/`} class="text-[9px] tracking-[3px] text-text-dim uppercase hover:text-accent transition-colors mb-6 inline-block">
+    <a href={`${base}/`} class="text-[length:var(--text-chrome)] tracking-[3px] text-text-dim uppercase hover:text-accent transition-colors mb-6 inline-block">
       &larr; BACK TO MODULES
     </a>
 
@@ -23,21 +23,21 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <!-- Row 1: Gender / Age / Organization -->
       <div class="grid grid-cols-3 gap-3">
         <div>
-          <label class="text-[9px] tracking-[2px] text-text-dim uppercase block mb-2">Gender</label>
+          <label class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase block mb-2">Gender</label>
           <div class="flex border border-border rounded-sm overflow-hidden">
             <button id="btn-male" class="wc-toggle flex-1 py-1.5 text-xs active" data-group="gender" data-val="male">Male</button>
             <button id="btn-female" class="wc-toggle flex-1 py-1.5 text-xs" data-group="gender" data-val="female">Female</button>
           </div>
         </div>
         <div>
-          <label class="text-[9px] tracking-[2px] text-text-dim uppercase block mb-2">Age</label>
+          <label class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase block mb-2">Age</label>
           <div class="flex border border-border rounded-sm overflow-hidden">
             <button id="btn-juvenile" class="wc-toggle flex-1 py-1.5 text-xs" data-group="age" data-val="juvenile">Juvenile</button>
             <button id="btn-adult" class="wc-toggle flex-1 py-1.5 text-xs active" data-group="age" data-val="adult">Adult</button>
           </div>
         </div>
         <div>
-          <label class="text-[9px] tracking-[2px] text-text-dim uppercase block mb-2">Organization</label>
+          <label class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase block mb-2">Organization</label>
           <div class="flex border border-border rounded-sm overflow-hidden">
             <button id="btn-ibjjf" class="wc-toggle flex-1 py-1.5 text-xs active" data-group="org" data-val="ibjjf">IBJJF</button>
             <button id="btn-adcc" class="wc-toggle flex-1 py-1.5 text-xs" data-group="org" data-val="adcc">ADCC</button>
@@ -49,10 +49,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <!-- Row 2: Weight slider -->
       <div>
         <div class="flex justify-between items-center mb-2">
-          <label class="text-[9px] tracking-[2px] text-text-dim uppercase">Weight</label>
+          <label class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase">Weight</label>
           <div class="flex border border-border rounded-sm overflow-hidden">
-            <button id="btn-lbs" class="wc-toggle px-2 py-0.5 text-[10px] active" data-group="units" data-val="lbs">lbs</button>
-            <button id="btn-kg" class="wc-toggle px-2 py-0.5 text-[10px]" data-group="units" data-val="kg">kg</button>
+            <button id="btn-lbs" class="wc-toggle px-2 py-0.5 text-[length:var(--text-chrome)] active" data-group="units" data-val="lbs">lbs</button>
+            <button id="btn-kg" class="wc-toggle px-2 py-0.5 text-[length:var(--text-chrome)]" data-group="units" data-val="kg">kg</button>
           </div>
         </div>
         <input id="weight-slider" type="range" min="100" max="300" value="170" step="1" class="wc-slider w-full" />
@@ -66,10 +66,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <!-- Row 3: Height slider -->
       <div>
         <div class="flex justify-between items-center mb-2">
-          <label class="text-[9px] tracking-[2px] text-text-dim uppercase">Height (for gi sizing)</label>
+          <label class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase">Height (for gi sizing)</label>
           <div class="flex border border-border rounded-sm overflow-hidden">
-            <button id="btn-cm" class="wc-toggle px-2 py-0.5 text-[10px] active" data-group="hunits" data-val="cm">cm</button>
-            <button id="btn-ft" class="wc-toggle px-2 py-0.5 text-[10px]" data-group="hunits" data-val="ft">ft</button>
+            <button id="btn-cm" class="wc-toggle px-2 py-0.5 text-[length:var(--text-chrome)] active" data-group="hunits" data-val="cm">cm</button>
+            <button id="btn-ft" class="wc-toggle px-2 py-0.5 text-[length:var(--text-chrome)]" data-group="hunits" data-val="ft">ft</button>
           </div>
         </div>
         <input id="height-slider" type="range" min="140" max="210" value="175" step="1" class="wc-slider w-full" />
@@ -83,37 +83,37 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     <!-- Results -->
     <div class="space-y-4">
-      <p class="text-[9px] tracking-[3px] text-text-dim uppercase mb-2">Your Classifications</p>
+      <p class="text-[length:var(--text-chrome)] tracking-[3px] text-text-dim uppercase mb-2">Your Classifications</p>
 
       <!-- Weight class results -->
       <div id="results-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div id="result-gi" class="p-5 border border-accent/30 bg-accent/5 rounded-sm">
-          <div class="text-[9px] tracking-[2px] text-accent uppercase mb-2">Gi Division</div>
+          <div class="text-[length:var(--text-chrome)] tracking-[2px] text-accent uppercase mb-2">Gi Division</div>
           <div id="gi-name" class="text-xl font-bold text-accent mb-0.5">—</div>
           <div id="gi-portuguese" class="text-xs text-accent/70 mb-2"></div>
-          <div id="gi-range" class="text-[10px] text-accent/50"></div>
+          <div id="gi-range" class="text-[length:var(--text-chrome)] text-accent/50"></div>
         </div>
         <div id="result-nogi" class="p-5 border border-[#A970FF]/30 bg-[#A970FF]/5 rounded-sm">
-          <div class="text-[9px] tracking-[2px] text-[#A970FF] uppercase mb-2">No-Gi Division</div>
+          <div class="text-[length:var(--text-chrome)] tracking-[2px] text-[#A970FF] uppercase mb-2">No-Gi Division</div>
           <div id="nogi-name" class="text-xl font-bold text-[#A970FF] mb-0.5">—</div>
           <div id="nogi-portuguese" class="text-xs text-[#A970FF]/70 mb-2"></div>
-          <div id="nogi-range" class="text-[10px] text-[#A970FF]/50"></div>
+          <div id="nogi-range" class="text-[length:var(--text-chrome)] text-[#A970FF]/50"></div>
         </div>
       </div>
 
       <!-- ADCC / WNO single result (shown when org != ibjjf) -->
       <div id="result-single" class="hidden p-5 border border-accent/30 bg-accent/5 rounded-sm">
-        <div id="single-org-label" class="text-[9px] tracking-[2px] text-accent uppercase mb-2">—</div>
+        <div id="single-org-label" class="text-[length:var(--text-chrome)] tracking-[2px] text-accent uppercase mb-2">—</div>
         <div id="single-name" class="text-xl font-bold text-accent mb-0.5">—</div>
-        <div id="single-range" class="text-[10px] text-accent/50"></div>
-        <div id="single-note" class="text-[10px] text-text-dim mt-2 italic"></div>
+        <div id="single-range" class="text-[length:var(--text-chrome)] text-accent/50"></div>
+        <div id="single-note" class="text-[length:var(--text-chrome)] text-text-dim mt-2 italic"></div>
       </div>
 
       <!-- Gi Sizes -->
       <div id="gi-sizes-section" class="p-5 border border-[#00ff41]/30 bg-[#00ff41]/5 rounded-sm">
-        <div class="text-[9px] tracking-[2px] text-[#00ff41] uppercase mb-3">Recommended Gi Sizes</div>
+        <div class="text-[length:var(--text-chrome)] tracking-[2px] text-[#00ff41] uppercase mb-3">Recommended Gi Sizes</div>
         <div id="gi-sizes" class="flex flex-wrap gap-2 mb-3"></div>
-        <div class="space-y-1 text-[10px] text-[#00ff41]/60">
+        <div class="space-y-1 text-[length:var(--text-chrome)] text-[#00ff41]/60">
           <div class="flex items-center gap-2">
             <span class="inline-block w-2 h-2 rounded-full bg-[#00ff41]"></span>
             Perfect fit (height + weight match)
@@ -127,7 +127,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <!-- All divisions table -->
       <details class="border border-border rounded-sm">
-        <summary class="px-5 py-3 text-[9px] tracking-[2px] text-text-dim uppercase cursor-pointer hover:text-accent transition-colors">
+        <summary class="px-5 py-3 text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase cursor-pointer hover:text-accent transition-colors">
           View all weight classes for current selection
         </summary>
         <div id="all-classes-table" class="px-5 pb-4"></div>
@@ -135,8 +135,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <!-- Notes -->
       <div class="p-4 border border-border bg-surface rounded-sm">
-        <p class="text-[9px] tracking-[2px] text-text-dim uppercase mb-2">Notes</p>
-        <ul class="space-y-1 text-[10px] text-text-muted list-disc list-inside">
+        <p class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase mb-2">Notes</p>
+        <ul class="space-y-1 text-[length:var(--text-chrome)] text-text-muted list-disc list-inside">
           <li>IBJJF Gi weigh-ins include the gi (~2 kg / 4.5 lbs). No-Gi is body weight only.</li>
           <li>ADCC uses kg only (5 men's / 2 women's classes). Biennial worlds, most prestigious no-gi event.</li>
           <li>WNO (Who's Number One) uses lbs. Pro no-gi series by FloGrappling.</li>
@@ -539,7 +539,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         results.sort((a, b) => (a.perfect === b.perfect ? 0 : a.perfect ? -1 : 1));
 
         if (results.length === 0) {
-          el.innerHTML = '<span class="text-[10px] text-[#00ff41]/60">No standard sizes match. Consider custom sizing.</span>';
+          el.innerHTML = '<span class="text-[length:var(--text-chrome)] text-[#00ff41]/60">No standard sizes match. Consider custom sizing.</span>';
           return;
         }
         el.innerHTML = results.map(r =>
@@ -553,7 +553,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       function renderTable(classes) {
         const el = document.getElementById('all-classes-table');
-        let html = '<table class="w-full text-[10px] mt-3"><thead><tr class="text-text-dim text-left">' +
+        let html = '<table class="w-full text-[length:var(--text-chrome)] mt-3"><thead><tr class="text-text-dim text-left">' +
           '<th class="py-1 pr-3">Class</th><th class="py-1 pr-3">Portuguese</th>' +
           '<th class="py-1 pr-3">Gi max (kg)</th><th class="py-1 pr-3">Gi max (lbs)</th>' +
           '<th class="py-1 pr-3">No-Gi max (kg)</th><th class="py-1">No-Gi max (lbs)</th></tr></thead><tbody>';
@@ -579,7 +579,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       function renderTableSimpleKg(classes) {
         const el = document.getElementById('all-classes-table');
-        let html = '<table class="w-full text-[10px] mt-3"><thead><tr class="text-text-dim text-left">' +
+        let html = '<table class="w-full text-[length:var(--text-chrome)] mt-3"><thead><tr class="text-text-dim text-left">' +
           '<th class="py-1 pr-3">Class</th><th class="py-1 pr-3">Max (kg)</th><th class="py-1">Max (lbs)</th></tr></thead><tbody>';
         for (const c of classes) {
           html += '<tr class="border-t border-border/30 text-text-muted">' +
@@ -593,7 +593,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       function renderTableSimpleLbs(classes) {
         const el = document.getElementById('all-classes-table');
-        let html = '<table class="w-full text-[10px] mt-3"><thead><tr class="text-text-dim text-left">' +
+        let html = '<table class="w-full text-[length:var(--text-chrome)] mt-3"><thead><tr class="text-text-dim text-left">' +
           '<th class="py-1 pr-3">Class</th><th class="py-1 pr-3">Max (lbs)</th><th class="py-1">Max (kg)</th></tr></thead><tbody>';
         for (const c of classes) {
           html += '<tr class="border-t border-border/30 text-text-muted">' +

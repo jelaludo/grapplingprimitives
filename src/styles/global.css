@@ -6,6 +6,7 @@
   :root {
     /* Typography scale: monospace needs larger sizes than proportional fonts for equivalent readability */
     /* Tested against claude.ai (~18px sans) and submeta.io (~16-18px sans) on 2560px monitor */
+    --text-chrome: clamp(12px, 0.8vw + 6px, 14px); /* toolbar labels, breadcrumbs, nav chrome */
     --text-xs:   clamp(12px, 0.9vw + 4px, 16px);   /* UI chrome, labels, breadcrumbs */
     --text-sm:   clamp(14px, 1.0vw + 5px, 18px);   /* secondary text, captions, cards */
     --text-base: clamp(16px, 1.1vw + 6px, 21px);   /* body text, paragraphs */
@@ -13,6 +14,7 @@
   }
 
   html {
+    color-scheme: dark;
     background-color: #050509;
     color: #E5E7EB;
     font-family: "Source Code Pro", "Courier New", monospace;
@@ -70,7 +72,7 @@
     margin: 8px auto 0 24px;
   }
   .tldr__toggle {
-    font-size: 11px;
+    font-size: var(--text-chrome);
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--text-dim);
@@ -117,12 +119,12 @@
     transform: translateY(0);
   }
   .act-inner {
-    max-width: 780px;
+    max-width: min(90vw, 60ch);
     width: 100%;
   }
   .act-number {
     display: block;
-    font-size: 11px;
+    font-size: var(--text-chrome);
     letter-spacing: 0.3em;
     color: var(--text-dim);
     margin-bottom: 4px;

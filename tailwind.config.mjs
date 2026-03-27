@@ -13,7 +13,7 @@ export default {
         cyan:         '#00FFFF',
         'text-primary': '#E5E7EB',
         'text-muted':   '#9CA3AF',
-        'text-dim':     '#6B7280',
+        'text-dim':     '#7B8290',
       },
       fontFamily: {
         mono: ['"Source Code Pro"', '"Courier New"', 'monospace'],

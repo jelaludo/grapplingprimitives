@@ -11,11 +11,11 @@ const tldr = await getEntry('module-text', 'ideal-partner-tldr');
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
 <div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
-  <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+  <a href={`${base}/`} style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
   <span style="color:#21262d;">|</span>
-  <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Ideal Training Partner</span>
+  <span style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Ideal Training Partner</span>
   <div style="flex:1;"></div>
-  <button id="deeplink-btn" style="font-family:inherit;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
+  <button id="deeplink-btn" style="font-family:inherit;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
   <button id="lang-toggle" style="font-family:inherit;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;">
     <span class="lang-label" data-active="en">EN</span> / <span class="lang-label">JP</span>
   </button>
@@ -313,7 +313,7 @@ body.lang-ja [lang="en"] { display: none; }
   display: flex;
   justify-content: center;
   gap: 10px;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.05em;
   margin-top: 4px;
 }
@@ -358,7 +358,7 @@ body.lang-ja [lang="en"] { display: none; }
 }
 .overstim-blocks {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1px;
   color: var(--text-dim);
   min-height: 1.2em;
@@ -470,7 +470,7 @@ body.lang-ja [lang="en"] { display: none; }
 .intensity-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   color: var(--text-dim);
   text-transform: uppercase;
@@ -536,7 +536,7 @@ body.lang-ja [lang="en"] { display: none; }
 }
 
 .mismatch-axis-label {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--text-dim);
@@ -555,7 +555,7 @@ body.lang-ja [lang="en"] { display: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--text-dim);
@@ -601,7 +601,7 @@ body.lang-ja [lang="en"] { display: none; }
   object-fit: contain;
 }
 .mismatch-cell-label {
-  font-size: 9px;
+  font-size: 12px;
   color: var(--text-dim);
   margin-top: 4px;
   text-align: center;
@@ -679,7 +679,7 @@ body.lang-ja [lang="en"] { display: none; }
   flex: 1;
 }
 .tradeoff-level {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   font-weight: 700;
@@ -719,7 +719,7 @@ body.lang-ja [lang="en"] { display: none; }
   margin-bottom: 0;
 }
 .tradeoff-section-label {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   margin-bottom: 6px;
@@ -776,7 +776,7 @@ body.lang-ja [lang="en"] { display: none; }
   display: flex;
   gap: 20px;
   justify-content: center;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-dim);
 }
 .drift-legend-item {
@@ -797,7 +797,7 @@ body.lang-ja [lang="en"] { display: none; }
 }
 .drift-btn {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   padding: 6px 16px;
@@ -881,7 +881,7 @@ body.lang-ja [lang="en"] { display: none; }
 .cta-button {
   display: inline-block;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   text-decoration: none;
@@ -928,7 +928,7 @@ body.lang-ja [lang="en"] { display: none; }
   top: 50%;
   transform: translateX(-100%) rotate(-90deg);
   transform-origin: right center;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-dim);
@@ -936,7 +936,7 @@ body.lang-ja [lang="en"] { display: none; }
 }
 .quadrant-axis-x {
   text-align: center;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-dim);
@@ -1014,7 +1014,7 @@ body.lang-ja [lang="en"] { display: none; }
 }
 
 .quadrant-cell-label {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-weight: 700;
@@ -1092,7 +1092,7 @@ body.lang-ja [lang="en"] { display: none; }
   margin-top: 10px;
 }
 .quadrant-tag {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 2px 8px;
@@ -1148,7 +1148,7 @@ body.lang-ja [lang="en"] { display: none; }
 }
 
 .cla-circle-label {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent-soft);
@@ -1224,7 +1224,7 @@ body.lang-ja [lang="en"] { display: none; }
 .cla-link {
   display: inline-block;
   margin-top: 8px;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--accent-soft);
@@ -1366,7 +1366,7 @@ body.lang-ja [lang="en"] { display: none; }
   top: -16px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--green);
@@ -1384,7 +1384,7 @@ body.lang-ja [lang="en"] { display: none; }
   gap: 3px;
 }
 .week-day-label {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-dim);
@@ -1454,7 +1454,7 @@ body.lang-ja [lang="en"] { display: none; }
 .week-warning {
   text-align: center;
   padding: 10px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   font-weight: 700;
@@ -1549,7 +1549,7 @@ body.lang-ja [lang="en"] { display: none; }
 
 /* Zone group headers */
 .vspectrum-zone-header {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   text-align: center;
@@ -1565,7 +1565,7 @@ body.lang-ja [lang="en"] { display: none; }
   top: 50%;
   transform: translateY(4px);
   margin-left: 8px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--cyan-dim);
   white-space: nowrap;
@@ -1606,7 +1606,7 @@ body.lang-ja [lang="en"] { display: none; }
   transition: border-color 0.3s;
 }
 .vscatter-detail-title {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-bottom: 4px;
@@ -1617,7 +1617,7 @@ body.lang-ja [lang="en"] { display: none; }
   gap: 16px;
   justify-content: center;
   margin-top: 10px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-dim);
 }
 .vscatter-legend-item {
@@ -1643,15 +1643,15 @@ body.lang-ja [lang="en"] { display: none; }
   .quadrant-grid { max-height: 280px; }
   .quadrant-cell { padding: 12px 8px; }
   .quadrant-geo { width: 32px; height: 32px; }
-  .quadrant-cell-label { font-size: 9px; }
+  .quadrant-cell-label { font-size: 12px; }
   .week-grid { gap: 2px; }
   .week-slot { height: 24px; }
   .week-slot-time { font-size: 8px; }
-  .week-day-label { font-size: 9px; }
+  .week-day-label { font-size: 12px; }
   .vspectrum-ja { font-size: 0.7rem; padding-right: 6px; }
   .vspectrum-en { font-size: 0.72rem; padding-left: 6px; }
-  .vspectrum-marker { font-size: 9px; margin-left: 6px; }
-  .vspectrum-zone-header { font-size: 10px; }
+  .vspectrum-marker { font-size: 12px; margin-left: 6px; }
+  .vspectrum-zone-header { font-size: 12px; }
   .vscatter-canvas-wrap { aspect-ratio: 1; }
 }
 </style>
@@ -1831,7 +1831,7 @@ function initMismatchViz(containerId) {
 
     // Data rows
     for (let r = 0; r < 3; r++) {
-      html += `<div class="mismatch-header" style="writing-mode:vertical-lr;transform:rotate(180deg);font-size:10px">${ja ? '\u3042\u306A\u305F' : 'You'}: ${lvl(r)}</div>`;
+      html += `<div class="mismatch-header" style="writing-mode:vertical-lr;transform:rotate(180deg);font-size:12px">${ja ? '\u3042\u306A\u305F' : 'You'}: ${lvl(r)}</div>`;
       for (let c = 0; c < 3; c++) {
         const cell = cells[r][c];
         html += `<div class="mismatch-cell ${cell.type}" data-r="${r}" data-c="${c}"><img src="${cell.icon}" alt="" class="mismatch-cell-icon"><div class="mismatch-cell-label">${(ja ? cell.ja.title : cell.en.title).split(' \u2014 ').pop()}</div></div>`;

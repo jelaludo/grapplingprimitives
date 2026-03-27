@@ -41,12 +41,12 @@ const images = filenames.map(f => ({
 
   <!-- ── Toolbar ──────────────────────────────────────────────────────────── -->
   <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Source Code Pro','Courier New',monospace;">
-    <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+    <a href={`${base}/`} style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
     <span style="color:#21262d;">|</span>
-    <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Visual Notes</span>
+    <span style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Visual Notes</span>
     <div style="flex:1;"></div>
-    <button id="btn-deeplink" style="font-family:inherit;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
-    <span style="font-size:10px;letter-spacing:0.1em;color:#6b7280;">{images.length} notes</span>
+    <button id="btn-deeplink" style="font-family:inherit;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
+    <span style="font-size:12px;letter-spacing:0.1em;color:#6b7280;">{images.length} notes</span>
   </div>
 
   <!-- ── Header ───────────────────────────────────────────────────────────── -->
@@ -78,7 +78,7 @@ const images = filenames.map(f => ({
     <button id="lb-close" aria-label="Close" style="position:absolute;top:12px;right:14px;z-index:10;background:transparent;border:1px solid #21262d;color:#6b7280;font-size:18px;width:36px;height:36px;border-radius:3px;cursor:pointer;font-family:monospace;display:flex;align-items:center;justify-content:center;transition:color 0.15s,border-color 0.15s;">✕</button>
 
     <!-- Counter -->
-    <div id="lb-counter" style="position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Source Code Pro','Courier New',monospace;font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;z-index:10;"></div>
+    <div id="lb-counter" style="position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Source Code Pro','Courier New',monospace;font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;z-index:10;"></div>
 
     <!-- Image -->
     <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:48px 60px;">

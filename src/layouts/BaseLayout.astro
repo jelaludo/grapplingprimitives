@@ -24,6 +24,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <meta name="description" content={description} />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="preload" href={`${base}/fonts/SourceCodePro/SourceCodePro-VF-latin.woff2`} as="font" type="font/woff2" crossorigin />
     <Fragment set:html={`<style>
       /* Source Code Pro — self-hosted variable WOFF2 (weights 200-900), latin subset */
       @font-face { font-family:'Source Code Pro'; src:url('${base}/fonts/SourceCodePro/SourceCodePro-VF-latin.woff2') format('woff2'); font-weight:200 900; font-style:normal; font-display:swap; unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
@@ -40,11 +41,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     {!fullscreen && (
       <header class="fixed top-0 left-0 right-0 z-50 h-10 border-b border-border bg-bg/95 backdrop-blur-sm flex items-center px-4 gap-4">
-        <a href={`${base}/`} class="text-[11px] tracking-[2px] text-text-muted uppercase hover:text-accent transition-colors font-medium">
+        <a href={`${base}/`} class="text-[length:var(--text-chrome)] tracking-[2px] text-text-muted uppercase hover:text-accent transition-colors font-medium">
           GRAPPLING PRIMITIVES
         </a>
         <span class="text-border">|</span>
-        <nav class="flex items-center gap-4 text-[11px] tracking-[1.5px] text-text-dim uppercase">
+        <nav class="flex items-center gap-4 text-[length:var(--text-chrome)] tracking-[1.5px] text-text-dim uppercase">
           <a href={`${base}/experiments`} class="hover:text-accent transition-colors">Experiments</a>
           {import.meta.env.DEV && <a href={`${base}/modules/stats`} class="hover:text-accent transition-colors text-[#00ff41]/60">Stats</a>}
         </nav>
@@ -56,7 +57,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </main>
 
     {!fullscreen && (
-      <footer class="border-t border-border py-3 px-4 text-[10px] tracking-[1.5px] text-text-dim uppercase text-center">
+      <footer class="border-t border-border py-3 px-4 text-[length:var(--text-chrome)] tracking-[1.5px] text-text-dim uppercase text-center">
         Grappling Primitives — grapplingprimitives.com
       </footer>
     )}

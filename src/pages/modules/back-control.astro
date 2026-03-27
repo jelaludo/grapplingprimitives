@@ -7,11 +7,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────────── -->
 <div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
-  <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+  <a href={`${base}/`} style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
   <span style="color:#21262d;">|</span>
-  <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Control Their Rotation</span>
+  <span style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;">Control Their Rotation</span>
   <div style="flex:1;"></div>
-  <button id="deeplink-btn" style="font-family:inherit;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
+  <button id="deeplink-btn" style="font-family:inherit;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
   <button id="lang-toggle" style="font-family:inherit;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;">
     <span class="lang-label" data-active="en">EN</span> / <span class="lang-label">JP</span>
   </button>
@@ -721,7 +721,7 @@ body.lang-ja [lang="en"] { display: none; }
   position: absolute;
   top: -9px;
   right: 10px;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.12em;
   color: var(--amber);
   background: var(--surface);
@@ -746,7 +746,7 @@ body.lang-ja [lang="en"] { display: none; }
   padding: 4px 14px;
   border-radius: 20px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   font-family: var(--font-mono);
   font-weight: bold;
   letter-spacing: 1px;
@@ -848,7 +848,7 @@ body.lang-ja [lang="en"] { display: none; }
 }
 .sim-stage-goal {
   text-align: center;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-dim);
   margin-bottom: 14px;
   line-height: 1.3;
@@ -895,7 +895,7 @@ body.lang-ja [lang="en"] { display: none; }
 }
 .sim-state-arrow {
   color: var(--border);
-  font-size: 9px;
+  font-size: 12px;
 }
 
 /* Tools */
@@ -913,7 +913,7 @@ body.lang-ja [lang="en"] { display: none; }
   border: 1px solid #282828;
   padding: 2px 6px;
   border-radius: 3px;
-  font-size: 9px;
+  font-size: 12px;
   color: #444;
   transition: all 0.3s;
 }
@@ -936,7 +936,7 @@ body.lang-ja [lang="en"] { display: none; }
   margin-top: 12px;
 }
 .sim-bridge-label {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
   color: var(--text-dim);
   letter-spacing: 1px;
@@ -980,7 +980,7 @@ body.lang-ja [lang="en"] { display: none; }
   text-align: center;
   font-weight: bold;
   color: #888;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1px;
   margin-bottom: 10px;
 }
@@ -1045,7 +1045,7 @@ body.lang-ja [lang="en"] { display: none; }
 
 .sim-terminal-label {
   display: none;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: bold;
   margin-top: 6px;
   text-align: center;
@@ -1106,7 +1106,7 @@ body.lang-ja [lang="en"] { display: none; }
   border-radius: 3px;
   padding: 2px 6px;
   margin: 2px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
 }
 
@@ -1128,7 +1128,7 @@ body.lang-ja [lang="en"] { display: none; }
   white-space: nowrap;
 }
 .sim-auxiliary-footer .sim-aux-desc {
-  font-size: 10px;
+  font-size: 12px;
   color: #444;
 }
 .sim-auxiliary-footer .sim-aux-tools {
@@ -1162,7 +1162,7 @@ body.lang-ja [lang="en"] { display: none; }
   overflow-y: auto;
   padding: 8px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   margin-top: 12px;
 }
 .sim-event-log-container::-webkit-scrollbar { width: 6px; }
@@ -1182,7 +1182,7 @@ body.lang-ja [lang="en"] { display: none; }
   display: flex;
   gap: 20px;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-dim);
   padding: 4px 0;
   margin-top: 12px;
@@ -1303,7 +1303,7 @@ body.lang-ja [lang="en"] { display: none; }
   margin: 24px auto;
 }
 .primitive-id {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   color: var(--text-dim);
   text-transform: uppercase;
@@ -1335,7 +1335,7 @@ body.lang-ja [lang="en"] { display: none; }
   gap: 8px;
 }
 .related-tag {
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--accent);
   border: 1px solid rgba(76,141,255,0.3);

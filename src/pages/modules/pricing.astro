@@ -64,13 +64,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       font-family: 'Source Code Pro', 'Courier New', monospace;
     }
     .pricing-toolbar a {
-      font-size: 10px; letter-spacing: 0.2em; color: #6b7280;
+      font-size: 12px; letter-spacing: 0.2em; color: #6b7280;
       text-transform: uppercase; text-decoration: none;
     }
     .pricing-toolbar a:hover { color: #00d4ff; }
     .pricing-toolbar span.sep { color: #21262d; }
     .pricing-toolbar span.title {
-      font-size: 11px; letter-spacing: 0.2em; color: #6b7280;
+      font-size: 12px; letter-spacing: 0.2em; color: #6b7280;
       text-transform: uppercase; user-select: none;
     }
 
@@ -92,7 +92,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       border: 1px solid var(--border); border-radius: 8px; padding: 3px; gap: 2px;
     }
     .currency-btn {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 500;
       padding: 5px 13px; border-radius: 5px; border: none;
       background: transparent; color: var(--text-secondary);
       cursor: pointer; transition: all 0.15s ease; letter-spacing: 0.04em;
@@ -105,7 +105,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       max-width: 1200px; margin: 0 auto; padding: 5px 48px 0; text-align: right;
     }
     .rate-note {
-      font-family: var(--font-mono); font-size: 10px;
+      font-family: var(--font-mono); font-size: 12px;
       color: var(--text-tertiary); letter-spacing: 0.03em;
     }
 
@@ -151,14 +151,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       display: flex; flex-direction: column; gap: 2px;
     }
     .summary-cell-label {
-      font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em;
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em;
       text-transform: uppercase; color: var(--text-tertiary);
     }
     .summary-cell-value {
       font-family: var(--font-display); font-size: 21px;
       font-weight: 700; letter-spacing: -0.02em;
     }
-    .summary-cell-sub { font-size: 10px; color: var(--text-secondary); }
+    .summary-cell-sub { font-size: 12px; color: var(--text-secondary); }
 
     /* ── MAP ── */
     .map-container {
@@ -166,22 +166,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       border-radius: 12px; padding: 22px; margin-bottom: 24px;
     }
     .map-label {
-      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 14px;
     }
     #region-map { width: 100%; display: block; cursor: pointer; }
     .region-shape { transition: all 0.2s ease; cursor: pointer; }
     .region-shape:hover { opacity: 0.85; }
     .region-text {
-      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; font-weight: 500;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 500;
       fill: white; pointer-events: none; text-anchor: middle;
     }
     .region-subtext {
-      font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+      font-family: 'IBM Plex Mono', monospace; font-size: 12px;
       fill: rgba(255,255,255,0.85); pointer-events: none; text-anchor: middle;
     }
     .region-hint {
-      font-size: 11px; color: var(--text-tertiary); margin-top: 9px; font-style: italic;
+      font-size: 12px; color: var(--text-tertiary); margin-top: 9px; font-style: italic;
     }
 
     /* ── SELECTION BAR ── */
@@ -194,11 +194,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0;
     }
     .selection-bar-text {
-      font-family: var(--font-mono); font-size: 11px;
+      font-family: var(--font-mono); font-size: 12px;
       color: var(--accent); letter-spacing: 0.04em;
     }
     .selection-clear {
-      margin-left: auto; font-size: 11px; color: var(--accent); cursor: pointer;
+      margin-left: auto; font-size: 12px; color: var(--accent); cursor: pointer;
       text-decoration: underline; background: none; border: none;
       font-family: var(--font-body); padding: 0;
     }
@@ -219,7 +219,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       font-weight: 600; letter-spacing: -0.01em;
     }
     .boxplot-badge {
-      font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em;
       text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
       background: var(--accent-light); color: var(--accent);
     }
@@ -229,7 +229,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     }
     .legend-item {
       display: flex; align-items: center; gap: 7px;
-      font-size: 10px; color: var(--text-secondary);
+      font-size: 12px; color: var(--text-secondary);
     }
     .legend-swatch { width: 18px; height: 3px; border-radius: 2px; }
     .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
@@ -262,13 +262,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     .seminar-row-info p { font-size: 12px; color: var(--text-secondary); font-weight: 300; }
     .seminar-tags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
     .seminar-tag {
-      font-size: 10px; padding: 3px 10px; border-radius: 20px; font-family: var(--font-mono);
+      font-size: 12px; padding: 3px 10px; border-radius: 20px; font-family: var(--font-mono);
     }
 
     /* ── SEMINAR SUB-TABS ── */
     .seminar-subtab-bar { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
     .seminar-subtab-btn {
-      font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 500;
       letter-spacing: 0.05em; padding: 6px 16px; border-radius: 20px;
       border: 1px solid var(--border); background: var(--surface);
       color: var(--text-secondary); cursor: pointer; transition: all 0.15s ease;
@@ -280,7 +280,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     }
     .seminar-subtab-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
     .seminar-context-note {
-      font-size: 11px; color: var(--text-tertiary); font-style: italic;
+      font-size: 12px; color: var(--text-tertiary); font-style: italic;
       margin-bottom: 18px; padding: 8px 12px; background: var(--bg);
       border-radius: 6px; border-left: 2px solid var(--border);
     }
@@ -300,7 +300,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     .pricing-tooltip.visible { opacity: 1; }
     .tooltip-title { font-weight: 600; font-size: 12px; margin-bottom: 5px; }
     .tooltip-price { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: #93C5FD; margin-bottom: 5px; }
-    .tooltip-examples { color: #D1D5DB; font-size: 11px; }
+    .tooltip-examples { color: #D1D5DB; font-size: 12px; }
     .tooltip-example { display: block; padding: 1px 0; }
 
     /* ── DARK SEMINAR OVERRIDES ── */
@@ -315,7 +315,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     /* ── DARK MODE TOGGLE ── */
     .theme-toggle {
-      font-family: inherit; font-size: 11px; letter-spacing: 0.1em;
+      font-family: inherit; font-size: 12px; letter-spacing: 0.1em;
       text-transform: uppercase; padding: 3px 10px; border-radius: 3px;
       cursor: pointer; border: 1px solid #21262d; background: transparent;
       color: #6b7280; transition: all 0.15s;
@@ -327,7 +327,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       padding: 22px 48px; max-width: 1200px; margin: 0 auto;
       border-top: 1px solid var(--border);
     }
-    .footer-text { font-size: 10px; color: var(--text-tertiary); line-height: 1.8; }
+    .footer-text { font-size: 12px; color: var(--text-tertiary); line-height: 1.8; }
 
     @media (max-width: 768px) {
       .top-bar, .rate-note-bar, .tab-bar-wrap, .pricing-page main, .pricing-page footer {
@@ -344,7 +344,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <span class="title">BJJ Pricing</span>
     <div style="flex:1;"></div>
     <button id="btn-theme" class="theme-toggle" onclick="togglePricingTheme()">Dark</button>
-    <button id="btn-deeplink" style="font-family:inherit;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
+    <button id="btn-deeplink" style="font-family:inherit;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
   </div>
 
   <!-- ── Page wrapper ── -->
@@ -1149,7 +1149,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           </div>\
         </div>\
         <div id="sem-chart-' + i + '"></div>\
-        <div style="margin-top:10px;font-size:11px;color:var(--text-secondary);font-style:italic;padding-top:10px;border-top:1px solid var(--border)">' + s.note + '</div>\
+        <div style="margin-top:10px;font-size:12px;color:var(--text-secondary);font-style:italic;padding-top:10px;border-top:1px solid var(--border)">' + s.note + '</div>\
         <div class="seminar-tags">' + tags + '</div>';
       grid.appendChild(row);
       drawSeminarBar('sem-chart-' + i, s, dMaxUsd);

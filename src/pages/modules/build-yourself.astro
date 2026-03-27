@@ -16,9 +16,9 @@ if (window.self !== window.top) document.body.classList.add('is-embedded');
 
 <!-- ── Toolbar (hidden when embedded) ──────────────────────────────────────── -->
 <div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;">
-  <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;white-space:nowrap;flex-shrink:0;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">&larr; Home</a>
+  <a href={`${base}/`} style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;white-space:nowrap;flex-shrink:0;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">&larr; Home</a>
   <span style="color:#21262d;flex-shrink:0;">|</span>
-  <a href="#" id="title-link" style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;white-space:nowrap;flex-shrink:0;text-decoration:none;cursor:pointer;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'" title="Click for about info">BUILD YOURSELF</a>
+  <a href="#" id="title-link" style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;white-space:nowrap;flex-shrink:0;text-decoration:none;cursor:pointer;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'" title="Click for about info">BUILD YOURSELF</a>
   <div style="flex:1;min-width:4px;flex-shrink:1;"></div>
   <button id="btn-deeplink" style="font-family:inherit;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;padding:3px 9px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;white-space:nowrap;flex-shrink:0;">Link</button>
 </div>
@@ -39,9 +39,9 @@ if (window.self !== window.top) document.body.classList.add('is-embedded');
   <div style="font-size:clamp(10px,1.5vw,13px);color:#6b7280;letter-spacing:0.06em;margin-top:1px;">Self-organization as the primary variable, four lenses, one body</div>
   <!-- Slider row -->
   <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-    <span style="font-size:11px;letter-spacing:0.14em;color:#6b7280;text-transform:uppercase;flex-shrink:0;">Unbuilt</span>
+    <span style="font-size:12px;letter-spacing:0.14em;color:#6b7280;text-transform:uppercase;flex-shrink:0;">Unbuilt</span>
     <input type="range" id="slider" min="0" max="1" step="0.001" value="0" style="flex:1;height:4px;cursor:pointer;accent-color:#00d4ff;" aria-label="Build progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1" />
-    <span style="font-size:11px;letter-spacing:0.14em;color:#6b7280;text-transform:uppercase;flex-shrink:0;">Built</span>
+    <span style="font-size:12px;letter-spacing:0.14em;color:#6b7280;text-transform:uppercase;flex-shrink:0;">Built</span>
   </div>
   <!-- Stage label -->
   <div id="slider-label" style="font-size:clamp(11px,1.6vw,14px);color:#6b7280;text-align:center;margin:2px 0 1px;letter-spacing:0.08em;min-height:16px;"></div>
@@ -72,7 +72,7 @@ if (window.self !== window.top) document.body.classList.add('is-embedded');
 </div>
 
 <!-- ── Tooltip ─────────────────────────────────────────────────────────────── -->
-<div id="tooltip" style="position:fixed;z-index:100;max-width:240px;padding:10px 12px;border-radius:4px;background:rgba(5,5,9,0.95);border:1px solid #21262d;color:#c9d1d9;font-family:'Source Code Pro','Courier New',monospace;font-size:10px;line-height:1.6;pointer-events:none;opacity:0;transition:opacity 0.15s;" aria-hidden="true"></div>
+<div id="tooltip" style="position:fixed;z-index:100;max-width:240px;padding:10px 12px;border-radius:4px;background:rgba(5,5,9,0.95);border:1px solid #21262d;color:#c9d1d9;font-family:'Source Code Pro','Courier New',monospace;font-size:12px;line-height:1.6;pointer-events:none;opacity:0;transition:opacity 0.15s;" aria-hidden="true"></div>
 
 <!-- ── Card modal (Quadtree-style) ──────────────────────────────────────────── -->
 <div id="about-modal" class="hidden" style="position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0.80);backdrop-filter:blur(4px);" role="dialog" aria-label="About Build Yourself">
@@ -80,7 +80,7 @@ if (window.self !== window.top) document.body.classList.add('is-embedded');
     <div style="display:flex;align-items:start;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid rgba(255,255,255,0.08);">
       <div>
         <div style="font-size:14px;font-weight:700;color:#c9d1d9;margin-bottom:4px;">{concept.data.concept}</div>
-        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#848a94;">Grappling Primitives</div>
+        <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#848a94;">Grappling Primitives</div>
       </div>
       <button id="modal-close" style="font-family:inherit;font-size:18px;background:none;border:none;color:#6b7280;cursor:pointer;padding:4px 8px;flex-shrink:0;line-height:1;" aria-label="Close">&times;</button>
     </div>

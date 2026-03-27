@@ -78,20 +78,20 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <!-- ── Toolbar ──────────────────────────────────────────────────────────── -->
 <div style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
-  <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+  <a href={`${base}/`} style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
   <span style="color:#21262d;">|</span>
-  <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Memory Game</span>
+  <span style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Memory Game</span>
   <div style="flex:1;"></div>
-  <button id="btn-deeplink" style="font-family:inherit;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
-  <span style="font-size:10px;letter-spacing:0.1em;color:#6b7280;">Pairs: <span id="pairs-val" style="color:#c9d1d9;">0/8</span></span>
-  <span style="font-size:10px;letter-spacing:0.1em;color:#6b7280;">Moves: <span id="moves-val" style="color:#c9d1d9;">0</span></span>
-  <span style="font-size:10px;letter-spacing:0.1em;color:#6b7280;">Time: <span id="timer-val" style="color:#c9d1d9;">0:00</span></span>
-  <button id="btn-new" style="font-family:inherit;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border:1px solid #21262d;background:transparent;color:#6b7280;border-radius:3px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='#00d4ff';this.style.color='#00d4ff'" onmouseout="this.style.borderColor='#21262d';this.style.color='#6b7280'">⟳ New</button>
+  <button id="btn-deeplink" style="font-family:inherit;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
+  <span style="font-size:12px;letter-spacing:0.1em;color:#6b7280;">Pairs: <span id="pairs-val" style="color:#c9d1d9;">0/8</span></span>
+  <span style="font-size:12px;letter-spacing:0.1em;color:#6b7280;">Moves: <span id="moves-val" style="color:#c9d1d9;">0</span></span>
+  <span style="font-size:12px;letter-spacing:0.1em;color:#6b7280;">Time: <span id="timer-val" style="color:#c9d1d9;">0:00</span></span>
+  <button id="btn-new" style="font-family:inherit;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border:1px solid #21262d;background:transparent;color:#6b7280;border-radius:3px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='#00d4ff';this.style.color='#00d4ff'" onmouseout="this.style.borderColor='#21262d';this.style.color='#6b7280'">⟳ New</button>
 </div>
 
 <!-- ── Phase banner ──────────────────────────────────────────────────────── -->
 <div id="phase-banner" style="opacity:0;">
-  <div style="background:rgba(0,0,0,0.85);border:1px solid #21262d;border-radius:4px;padding:5px 14px;font-family:'Source Code Pro','Courier New',monospace;font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;" id="phase-text"></div>
+  <div style="background:rgba(0,0,0,0.85);border:1px solid #21262d;border-radius:4px;padding:5px 14px;font-family:'Source Code Pro','Courier New',monospace;font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;" id="phase-text"></div>
 </div>
 
 <!-- ── Game area ──────────────────────────────────────────────────────────── -->
@@ -121,10 +121,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <div style="font-size:12px;letter-spacing:0.15em;color:#6b7280;text-transform:uppercase;margin-top:3px;">Efficiency</div>
       </div>
     </div>
-    <div id="win-prev" style="font-size:11px;color:#6b7280;margin-bottom:18px;min-height:16px;"></div>
+    <div id="win-prev" style="font-size:12px;color:#6b7280;margin-bottom:18px;min-height:16px;"></div>
     <div style="display:flex;gap:8px;">
-      <button id="btn-again" style="flex:1;padding:10px;font-family:inherit;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;cursor:pointer;border:1px solid #00d4ff;background:rgba(0,212,255,0.1);color:#00d4ff;">Play Again</button>
-      <a href={`${base}/`} style="flex:1;padding:10px;font-family:inherit;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;text-decoration:none;border:1px solid #21262d;background:transparent;color:#8b949e;display:flex;align-items:center;justify-content:center;">← Home</a>
+      <button id="btn-again" style="flex:1;padding:10px;font-family:inherit;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;cursor:pointer;border:1px solid #00d4ff;background:rgba(0,212,255,0.1);color:#00d4ff;">Play Again</button>
+      <a href={`${base}/`} style="flex:1;padding:10px;font-family:inherit;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;text-decoration:none;border:1px solid #21262d;background:transparent;color:#8b949e;display:flex;align-items:center;justify-content:center;">← Home</a>
     </div>
   </div>
 </div>
@@ -135,7 +135,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     style="width:min(55vw,200px);height:auto;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.9);display:block;">
   <div style="font-family:'Source Code Pro','Courier New',monospace;text-align:center;">
     <div style="font-size:13px;font-weight:600;letter-spacing:0.08em;color:#c9d1d9;margin-bottom:6px;">Memory Game</div>
-    <div style="font-size:10px;letter-spacing:0.15em;color:#6b7280;text-transform:uppercase;">8 pairs · 4×4 grid · tap to begin</div>
+    <div style="font-size:12px;letter-spacing:0.15em;color:#6b7280;text-transform:uppercase;">8 pairs · 4×4 grid · tap to begin</div>
   </div>
 </div>
 

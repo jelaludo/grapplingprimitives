@@ -7,15 +7,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <!-- ── Toolbar ──────────────────────────────────────────────────────────── -->
   <div id="toolbar" style="position:fixed;top:0;left:0;right:0;height:36px;z-index:50;display:flex;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid #21262d;background:rgba(5,5,9,0.97);backdrop-filter:blur(8px);font-family:'Source Code Pro','Courier New',monospace;">
-    <a href={`${base}/`} style="font-size:10px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
+    <a href={`${base}/`} style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;text-decoration:none;transition:color 0.15s;" onmouseover="this.style.color='#00d4ff'" onmouseout="this.style.color='#6b7280'">← Home</a>
     <span style="color:#21262d;">|</span>
-    <span style="font-size:11px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Centroid Game</span>
+    <span style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;user-select:none;">Centroid Game</span>
     <div style="flex:1;"></div>
-    <button id="btn-deeplink" style="font-family:inherit;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
+    <button id="btn-deeplink" style="font-family:inherit;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#6b7280;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)';this.style.color='#00d4ff'" onmouseout="if(this.textContent==='Link'){this.style.borderColor='#21262d';this.style.color='#6b7280'}">Link</button>
     <!-- HUD (hidden until game starts) -->
-    <span id="hud-round" style="display:none;font-size:10px;letter-spacing:0.1em;color:#6b7280;text-transform:uppercase;">R<span id="hud-r">0</span>/10</span>
-    <span id="hud-diff" style="display:none;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#00ff88;"></span>
-    <span id="hud-timer-wrap" style="display:none;font-size:10px;letter-spacing:0.1em;color:#6b7280;">⏱ <span id="hud-timer" style="font-family:'DS-Digital',monospace;font-size:14px;font-weight:700;color:#00ff88;">0:00</span><span id="hud-penalty" style="color:#ff4444;display:none;"></span></span>
+    <span id="hud-round" style="display:none;font-size:12px;letter-spacing:0.1em;color:#6b7280;text-transform:uppercase;">R<span id="hud-r">0</span>/10</span>
+    <span id="hud-diff" style="display:none;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#00ff88;"></span>
+    <span id="hud-timer-wrap" style="display:none;font-size:12px;letter-spacing:0.1em;color:#6b7280;">⏱ <span id="hud-timer" style="font-family:'DS-Digital',monospace;font-size:14px;font-weight:700;color:#00ff88;">0:00</span><span id="hud-penalty" style="color:#ff4444;display:none;"></span></span>
   </div>
 
   <!-- ── Main ─────────────────────────────────────────────────────────────── -->
@@ -26,7 +26,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <!-- Header -->
       <div style="text-align:center;">
         <div style="font-size:15px;font-weight:700;letter-spacing:0.08em;color:#c9d1d9;">Centroid (x̄, ȳ) — GRID FAST</div>
-        <div style="font-size:10px;color:#6b7280;letter-spacing:0.05em;margin-top:3px;">10 rounds · lowest score wins</div>
+        <div style="font-size:12px;color:#6b7280;letter-spacing:0.05em;margin-top:3px;">10 rounds · lowest score wins</div>
       </div>
 
       <!-- Score row (hidden until playing) -->
@@ -52,7 +52,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <div id="idle-screen">
         <div style="background:rgba(255,255,255,0.03);border:1px solid #21262d;border-radius:6px;padding:14px;">
           <div style="font-size:12px;font-weight:600;color:#c9d1d9;margin-bottom:8px;letter-spacing:0.05em;">How it works</div>
-          <p style="font-size:11px;color:#8b949e;line-height:1.65;margin-bottom:12px;">
+          <p style="font-size:12px;color:#8b949e;line-height:1.65;margin-bottom:12px;">
             Estimate the <strong style="color:#c9d1d9;">centroid</strong> (center of mass) of the blue squares.<br>
             Click a cell to place your guess, then press <strong style="color:#c9d1d9;">VALIDATE</strong><br>
             (or click the same cell again to confirm).<br>
@@ -60,7 +60,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           </p>
           <div style="display:flex;gap:14px;align-items:center;">
             <canvas id="sample-canvas" style="border-radius:4px;flex-shrink:0;"></canvas>
-            <div style="font-size:11px;line-height:2;color:#8b949e;">
+            <div style="font-size:12px;line-height:2;color:#8b949e;">
               <div><span style="color:#4d8fcc;">■</span> Dots</div>
               <div><span style="color:#66bb6a;">■</span> True centroid</div>
               <div><span style="color:#ff6b6b;">■</span> Your guess</div>
@@ -76,7 +76,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </button>
 
       <!-- Hint -->
-      <div id="hint-text" style="font-size:10px;color:#6b7280;text-align:center;letter-spacing:0.05em;min-height:14px;">Click START GAME to begin</div>
+      <div id="hint-text" style="font-size:12px;color:#6b7280;text-align:center;letter-spacing:0.05em;min-height:14px;">Click START GAME to begin</div>
 
     </div>
   </div>
@@ -88,7 +88,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <div style="text-align:center;margin-bottom:16px;">
         <div style="font-size:18px;font-weight:700;color:#c9d1d9;letter-spacing:0.08em;">Game Over</div>
-        <div id="recap-msg" style="font-size:11px;color:#8b949e;margin-top:6px;line-height:1.55;"></div>
+        <div id="recap-msg" style="font-size:12px;color:#8b949e;margin-top:6px;line-height:1.55;"></div>
       </div>
 
       <div style="text-align:center;padding:12px;background:rgba(255,255,255,0.03);border-radius:4px;margin-bottom:14px;">
@@ -96,14 +96,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <div style="font-size:12px;letter-spacing:0.2em;color:#6b7280;text-transform:uppercase;margin-top:4px;">Total Score</div>
       </div>
 
-      <div style="display:flex;justify-content:space-between;margin-bottom:14px;font-size:11px;color:#8b949e;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:14px;font-size:12px;color:#8b949e;">
         <span>Perfect: <strong id="recap-perfect" style="color:#66bb6a;"></strong></span>
         <span>Avg score: <strong id="recap-avg" style="color:#c9d1d9;"></strong></span>
         <span>Avg time: <strong id="recap-time" style="color:#c9d1d9;"></strong>s</span>
       </div>
 
       <!-- Round history -->
-      <div id="recap-rounds" style="font-size:11px;color:#8b949e;margin-bottom:14px;"></div>
+      <div id="recap-rounds" style="font-size:12px;color:#8b949e;margin-bottom:14px;"></div>
 
       <!-- Histogram -->
       <div style="font-size:12px;letter-spacing:0.15em;color:#6b7280;text-transform:uppercase;margin-bottom:6px;">Score Distribution</div>
@@ -111,8 +111,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <!-- Buttons -->
       <div style="display:flex;gap:8px;">
-        <button id="btn-play-again" style="flex:1;padding:10px;font-family:inherit;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;cursor:pointer;border:1px solid #00d4ff;background:rgba(0,212,255,0.1);color:#00d4ff;">Play Again</button>
-        <button id="btn-home" data-href={`${base}/`} style="flex:1;padding:10px;font-family:inherit;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#8b949e;">← Home</button>
+        <button id="btn-play-again" style="flex:1;padding:10px;font-family:inherit;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;cursor:pointer;border:1px solid #00d4ff;background:rgba(0,212,255,0.1);color:#00d4ff;">Play Again</button>
+        <button id="btn-home" data-href={`${base}/`} style="flex:1;padding:10px;font-family:inherit;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;cursor:pointer;border:1px solid #21262d;background:transparent;color:#8b949e;">← Home</button>
       </div>
 
     </div>

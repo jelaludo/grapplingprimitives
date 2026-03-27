@@ -34,9 +34,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   <!-- Toolbar -->
   <div id="toolbar" class="absolute top-0 left-0 right-0 z-20 h-9 bg-bg/95 border-b border-border flex items-center gap-3 px-3 backdrop-blur-sm">
-    <a href={`${base}/`} class="text-[10px] tracking-[2px] text-text-dim hover:text-accent transition-colors uppercase whitespace-nowrap">← Home</a>
+    <a href={`${base}/`} class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim hover:text-accent transition-colors uppercase whitespace-nowrap">← Home</a>
     <span class="text-border">|</span>
-    <span class="text-[11px] tracking-[2px] text-text-dim uppercase whitespace-nowrap select-none">Concept Map</span>
+    <span class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim uppercase whitespace-nowrap select-none">Concept Map</span>
     <span class="text-border">|</span>
 
     <!-- Search -->
@@ -46,22 +46,22 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       placeholder="Search concepts..."
       class="flex-1 max-w-xs h-6 bg-transparent border border-border text-xs text-text-primary placeholder-text-dim px-2 focus:outline-none focus:border-accent font-mono"
     />
-    <span id="search-count" class="text-[11px] tracking-[2px] text-text-dim whitespace-nowrap hidden"></span>
+    <span id="search-count" class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim whitespace-nowrap hidden"></span>
 
     <span class="flex-1"></span>
 
     <!-- Category filter toggle -->
-    <button id="filter-toggle" class="text-[11px] tracking-[2px] text-text-dim border border-border px-2 h-6 hover:border-accent/50 hover:text-accent transition-all uppercase">
+    <button id="filter-toggle" class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim border border-border px-2 h-6 hover:border-accent/50 hover:text-accent transition-all uppercase">
       Filter
     </button>
 
     <!-- Back button (zoom-out) -->
-    <button id="back-btn" class="hidden text-[11px] tracking-[2px] text-accent border border-accent/40 px-2 h-6 hover:bg-accent/10 transition-all uppercase">
+    <button id="back-btn" class="hidden text-[length:var(--text-chrome)] tracking-[2px] text-accent border border-accent/40 px-2 h-6 hover:bg-accent/10 transition-all uppercase">
       ← All
     </button>
 
     <!-- Reset camera -->
-    <button id="reset-btn" class="text-[11px] tracking-[2px] text-text-dim border border-border px-2 h-6 hover:border-accent/50 hover:text-accent transition-all uppercase">
+    <button id="reset-btn" class="text-[length:var(--text-chrome)] tracking-[2px] text-text-dim border border-border px-2 h-6 hover:border-accent/50 hover:text-accent transition-all uppercase">
       Reset
     </button>
   </div>
@@ -69,9 +69,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <!-- Category filter panel — vertical right-side overlay -->
   <div id="filter-panel" class="hidden absolute top-9 right-0 bottom-0 z-30 w-52 border-l border-border flex flex-col" style="background: rgba(5,5,9,0.97); backdrop-filter: blur(8px); font-family: 'Source Code Pro', 'Courier New', monospace;">
     <div class="px-3 py-2 border-b border-border flex items-center justify-between flex-shrink-0">
-      <span style="font-size:11px; letter-spacing:0.12em; color:#6b7280; text-transform:uppercase; user-select:none;">Categories</span>
+      <span style="font-size:12px; letter-spacing:0.12em; color:#6b7280; text-transform:uppercase; user-select:none;">Categories</span>
       <div class="flex items-center gap-2">
-        <button id="filter-clear" class="hidden hover:text-accent transition-all" style="font-size:10px; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em;">Clear</button>
+        <button id="filter-clear" class="hidden hover:text-accent transition-all" style="font-size:12px; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em;">Clear</button>
         <button id="filter-close" class="hover:text-text-primary" style="font-size:16px; line-height:1; color:#6b7280; padding:0 4px;">×</button>
       </div>
     </div>
@@ -89,9 +89,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <div id="tooltip" class="pointer-events-none fixed z-30 hidden" style="max-width: min(340px, 90vw)">
     <div class="bg-bg border border-border p-3" style="box-shadow: 0 0 20px rgba(76,141,255,0.12)">
       <div id="tip-title"  class="text-sm font-bold text-text-primary mb-1"></div>
-      <div id="tip-cat"    class="text-[11px] tracking-[2px] uppercase mb-2"></div>
+      <div id="tip-cat"    class="text-[length:var(--text-chrome)] tracking-[2px] uppercase mb-2"></div>
       <div id="tip-desc"   class="text-xs text-text-muted leading-relaxed"></div>
-      <div id="tip-hint"   class="text-[11px] text-text-dim mt-2 text-right">CLICK FOR MORE →</div>
+      <div id="tip-hint"   class="text-[length:var(--text-chrome)] text-text-dim mt-2 text-right">CLICK FOR MORE →</div>
     </div>
   </div>
 
@@ -102,7 +102,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <div class="flex items-start justify-between gap-3 p-5 border-b border-border">
         <div>
           <div id="card-title" class="text-base font-bold text-text-primary mb-1"></div>
-          <div id="card-cat"   class="text-[11px] tracking-[2px] uppercase"></div>
+          <div id="card-cat"   class="text-[length:var(--text-chrome)] tracking-[2px] uppercase"></div>
         </div>
         <button id="card-close" class="text-text-dim hover:text-text-primary text-xl leading-none flex-shrink-0 mt-0.5">×</button>
       </div>
@@ -539,7 +539,7 @@ function buildFilterPanel() {
   allRow.innerHTML =
     `<span style="width:10px;height:10px;border-radius:50%;flex-shrink:0;border:1.5px solid ${allActive ? '#4C8DFF' : '#30363d'};display:inline-block;"></span>` +
     `<span style="font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">All</span>` +
-    `<span style="font-size:11px;color:#6b7280;flex-shrink:0;">${concepts.length}</span>`;
+    `<span style="font-size:12px;color:#6b7280;flex-shrink:0;">${concepts.length}</span>`;
   allRow.addEventListener('click', () => {
     activeCategories.clear();
     buildFilterPanel();
@@ -559,7 +559,7 @@ function buildFilterPanel() {
     row.innerHTML =
       `<span style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:${cat.color};opacity:${active ? 1 : 0.5};display:inline-block;"></span>` +
       `<span style="font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${cat.name}</span>` +
-      `<span style="font-size:11px;color:#6b7280;flex-shrink:0;">${count}</span>`;
+      `<span style="font-size:12px;color:#6b7280;flex-shrink:0;">${count}</span>`;
     row.addEventListener('click', () => {
       if (activeCategories.has(cat.name)) activeCategories.delete(cat.name);
       else activeCategories.add(cat.name);
