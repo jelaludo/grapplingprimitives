@@ -19,7 +19,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
     #notes-toggle {
       position: fixed;
       bottom: 16px;
-      right: 16px;
+      left: 16px;
       width: 36px;
       height: 36px;
       border-radius: 50%;
@@ -41,7 +41,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
       display: none;
       position: fixed;
       bottom: 60px;
-      right: 16px;
+      left: 16px;
       width: min(360px, calc(100vw - 32px));
       max-height: min(50vh, 400px);
       overflow-y: auto;
@@ -114,6 +114,8 @@ The exhale is the universal key. It clears CO\u2082, engages the core, and signa
     let chars: CharInfo[] = [];
     let centerX = 0;
     let centerY = 0;
+    let contentHeight = 0;
+    let scrollY = 0;
     let needsRelayout = true;
 
     const graphemeSegmenter = typeof Intl !== 'undefined' && Intl.Segmenter
@@ -172,10 +174,14 @@ The exhale is the universal key. It clears CO\u2082, engages the core, and signa
       const lines = wrapText(TEXT, textWidth);
       const totalHeight = lines.length * LINE_HEIGHT;
       const startX = Math.floor((window.innerWidth - textWidth) / 2);
-      const startY = Math.floor((window.innerHeight - totalHeight) / 2);
+      // If content fits in viewport, center it; otherwise start with top padding
+      const startY = totalHeight <= window.innerHeight
+        ? Math.floor((window.innerHeight - totalHeight) / 2)
+        : PADDING;
 
+      contentHeight = totalHeight + PADDING * 2;
       centerX = window.innerWidth / 2;
-      centerY = window.innerHeight / 2;
+      centerY = startY + totalHeight / 2;
 
       chars = [];
       for (let i = 0; i < lines.length; i++) {
@@ -209,9 +215,12 @@ The exhale is the universal key. It clears CO\u2082, engages the core, and signa
         if (c.char.trim() === '') continue;
 
         const charCenterX = c.x + c.w / 2;
-        const charCenterY = c.y + FONT_SIZE / 2;
+        const charCenterY = c.y + FONT_SIZE / 2 - scrollY;
+
+        // Skip chars that are off-screen
+        if (charCenterY < -FONT_SIZE || charCenterY > window.innerHeight + FONT_SIZE) continue;
         const dx = charCenterX - centerX;
-        const dy = charCenterY - centerY;
+        const dy = charCenterY - (centerY - scrollY);
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         const localPhase = phase - (dist / WAVE_RADIUS) * WAVE_DELAY;
@@ -257,9 +266,33 @@ The exhale is the universal key. It clears CO\u2082, engages the core, and signa
       });
     }
 
-    window.addEventListener('resize', resize);
+    function clampScroll() {
+      const maxScroll = Math.max(0, contentHeight - window.innerHeight);
+      scrollY = Math.max(0, Math.min(scrollY, maxScroll));
+    }
+
+    window.addEventListener('wheel', (e) => {
+      scrollY += e.deltaY;
+      clampScroll();
+    }, { passive: true });
+
+    // Touch scrolling
+    let touchStartY = 0;
+    let touchScrollStart = 0;
+    window.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+      touchScrollStart = scrollY;
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      const dy = touchStartY - e.touches[0].clientY;
+      scrollY = touchScrollStart + dy;
+      clampScroll();
+    }, { passive: true });
+
+    window.addEventListener('resize', () => { resize(); clampScroll(); });
     document.fonts.ready.then(() => {
       resize();
+      clampScroll();
       requestAnimationFrame(render);
     });
   </script>
